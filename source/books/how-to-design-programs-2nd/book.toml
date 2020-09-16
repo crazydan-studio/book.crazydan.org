@@ -8,5 +8,8 @@ multilingual = true
 
 [build]
 
+[output.html]
+additional-css = ["theme/manual-fonts.css", "theme/racket.css", "theme/manual-racket.css", "theme/custom.css"]
+
 [output.html.search]
 limit-results = 15
