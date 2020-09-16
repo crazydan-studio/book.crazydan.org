@@ -187,17 +187,7 @@ This second edition of *How to Design Programs* differs from the first one in se
 
 1. The book’s examples and exercises employ new teachpacks. The preferred style is to link in these libraries via [require](https://docs.racket-lang.org/htdp-langs/beginner.html#%28form._%28%28lib._lang%2Fhtdp-beginner..rkt%29._require%29%29), but it is still possible to add teachpacks via a menu in DrRacket.
 
-1. Finally, this second edition differs from the first in a few aspects of terminology and notation:
-
-| Second Edition | First Edition |
-| -------------- | ------------- |
-| signature | contract |
-| itemization | union |
-| <span style="color: #228b22;">'()</span> | [empty](https://docs.racket-lang.org/htdp-langs/beginner.html#%28def._%28%28lib._lang%2Fhtdp-beginner..rkt%29._empty%29%29) |
-| <span style="color: #228b22;">#true</span> | [true](https://docs.racket-lang.org/htdp-langs/beginner.html#%28def._%28%28lib._lang%2Fhtdp-beginner..rkt%29._true%29%29) |
-| <span style="color: #228b22;">#false</span> | [false](https://docs.racket-lang.org/htdp-langs/beginner.html#%28def._%28%28lib._lang%2Fhtdp-beginner..rkt%29._false%29%29) |
-
-The last three differences greatly improve quotation for lists.
+1. Finally, this second edition differs from the first in a few aspects of terminology and notation: <blockquote><table style="border-collapse: collapse;" cellspacing="0" cellpadding="0"><tbody><tr><td style="border-bottom: 1px solid black;" align="left"><p>Second Edition</p></td><td style="border-bottom: 1px solid black;" align="left"><p><span class="hspace">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></p></td><td style="border-bottom: 1px solid black;" align="left"><p>First Edition</p></td></tr><tr><td align="left"><p>signature</p></td><td align="left"><p><span class="hspace">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></p></td><td align="left"><p>contract</p></td></tr><tr><td align="left"><p>itemization</p></td><td align="left"><p><span class="hspace">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></p></td><td align="left"><p>union</p></td></tr><tr><td align="left"><p><span class="RktVal">'</span><span class="RktVal">(</span><span class="RktVal">)</span></p></td><td align="left"><p><span class="hspace">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></p></td><td align="left"><p><span class="RktSym"><a href="https://docs.racket-lang.org/htdp-langs/beginner.html#%28def._%28%28lib._lang%2Fhtdp-beginner..rkt%29._empty%29%29" class="RktValLink" data-pltdoc="x">empty</a></span></p></td></tr><tr><td align="left"><p><span class="RktVal">#true</span></p></td><td align="left"><p><span class="hspace">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></p></td><td align="left"><p><span class="RktSym"><a href="https://docs.racket-lang.org/htdp-langs/beginner.html#%28def._%28%28lib._lang%2Fhtdp-beginner..rkt%29._true%29%29" class="RktValLink" data-pltdoc="x">true</a></span></p></td></tr><tr><td align="left"><p><span class="RktVal">#false</span></p></td><td align="left"><p><span class="hspace">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></p></td><td align="left"><p><span class="RktSym"><a href="https://docs.racket-lang.org/htdp-langs/beginner.html#%28def._%28%28lib._lang%2Fhtdp-beginner..rkt%29._false%29%29" class="RktValLink" data-pltdoc="x">false</a></span></p></td></tr></tbody></table></blockquote> The last three differences greatly improve quotation for lists.
 
 ## Acknowledgments from the First Edition
 
