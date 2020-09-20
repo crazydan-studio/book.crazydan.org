@@ -24,38 +24,56 @@ image::images/cover.png[]
 
 [toc]
 
-include::preface.adoc[Preface]
+// Preface
+include::preface.adoc[]
 
-include::introduction.adoc[Chapter 1. Introduction]
+// Chapter 1. Introduction
+include::introduction.adoc[]
 
-include::getting-started.adoc[Chapter 2. Getting Started]
+// Chapter 2. Getting Started
+include::getting-started.adoc[]
 
-include::going-further.adoc[Chapter 3. Going Further]
+// Chapter 3. Going Further
+include::going-further.adoc[]
 
-include::procedures-and-variable-bindings.adoc[Chapter 4. Procedures and Variable Bindings]
+// Chapter 4. Procedures and Variable Bindings
+include::procedures-and-variable-bindings.adoc[]
 
-include::control-operations.adoc[Chapter 5. Control Operations]
+// Chapter 5. Control Operations
+include::control-operations.adoc[]
 
-include::operations-on-objects.adoc[Chapter 6. Operations on Objects]
+// Chapter 6. Operations on Objects
+include::operations-on-objects.adoc[]
 
-include::input-and-output.adoc[Chapter 7. Input and Output]
+// Chapter 7. Input and Output
+include::input-and-output.adoc[]
 
-include::syntactic-extension.adoc[Chapter 8. Syntactic Extension]
+// Chapter 8. Syntactic Extension
+include::syntactic-extension.adoc[]
 
-include::records.adoc[Chapter 9. Records]
+// Chapter 9. Records
+include::records.adoc[]
 
-include::libraries-and-top-level-programs.adoc[Chapter 10. Libraries and Top-Level Programs]
+// Chapter 10. Libraries and Top-Level Programs
+include::libraries-and-top-level-programs.adoc[]
 
-include::exceptions-and-conditions.adoc[Chapter 11. Exceptions and Conditions]
+// Chapter 11. Exceptions and Conditions
+include::exceptions-and-conditions.adoc[]
 
-include::extended-examples.adoc[Chapter 12. Extended Examples]
+// Chapter 12. Extended Examples
+include::extended-examples.adoc[]
 
-include::references.adoc[References]
+// References
+include::references.adoc[]
 
-include::answers-to-selected-exercises.adoc[Answers to Selected Exercises]
+// Answers to Selected Exercises
+include::answers-to-selected-exercises.adoc[]
 
-include::formal-syntax.adoc[Formal Syntax]
+// Formal Syntax
+include::formal-syntax.adoc[]
 
-include::summary-of-forms.adoc[Summary of Forms]
+// Summary of Forms
+include::summary-of-forms.adoc[]
 
-include::index.adoc[Index]
+// Index
+include::index.adoc[]
