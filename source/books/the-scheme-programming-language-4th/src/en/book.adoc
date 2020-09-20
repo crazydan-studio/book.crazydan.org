@@ -1,0 +1,61 @@
+= The Scheme Programming Language, Fourth Edition
+
+Illustrations by Jean-Pierre Hébert
+
+:author: R. Kent Dybvig
+:doctype: book
+:source-highlighter: rouge
+:footer-copyright: R. Kent Dybvig / The Scheme Programming Language, Fourth Edition + \
+                    Copyright (C) 2009 https://mitpress.mit.edu/books/scheme-programming-language-fourth-edition[The MIT Press]. \
+                    Electronically reproduced by permission. + \
+                    Illustrations (C) 2009 http://hebert.kitp.ucsb.edu/[Jean-Pierre Hébert] + \
+                    ISBN 978-0-262-51298-5 / LOC QA76.73.S34D93 + \
+                    https://mitpress.mit.edu/books/scheme-programming-language-fourth-edition[to order this book] \
+                    / https://www.scheme.com/tspl4/canned/about.html[about this book] + \
+                    &nbsp; + \
+                    https://www.scheme.com
+
+
+image::images/cover.png[]
+
+
+'''
+{footer-copyright}
+
+[toc]
+
+include::preface.adoc[Preface]
+
+include::introduction.adoc[Chapter 1. Introduction]
+
+include::getting-started.adoc[Chapter 2. Getting Started]
+
+include::going-further.adoc[Chapter 3. Going Further]
+
+include::procedures-and-variable-bindings.adoc[Chapter 4. Procedures and Variable Bindings]
+
+include::control-operations.adoc[Chapter 5. Control Operations]
+
+include::operations-on-objects.adoc[Chapter 6. Operations on Objects]
+
+include::input-and-output.adoc[Chapter 7. Input and Output]
+
+include::syntactic-extension.adoc[Chapter 8. Syntactic Extension]
+
+include::records.adoc[Chapter 9. Records]
+
+include::libraries-and-top-level-programs.adoc[Chapter 10. Libraries and Top-Level Programs]
+
+include::exceptions-and-conditions.adoc[Chapter 11. Exceptions and Conditions]
+
+include::extended-examples.adoc[Chapter 12. Extended Examples]
+
+include::references.adoc[References]
+
+include::answers-to-selected-exercises.adoc[Answers to Selected Exercises]
+
+include::formal-syntax.adoc[Formal Syntax]
+
+include::summary-of-forms.adoc[Summary of Forms]
+
+include::index.adoc[Index]

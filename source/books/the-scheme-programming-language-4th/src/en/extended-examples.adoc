@@ -1,0 +1,5 @@
+== Chapter 12. Extended Examples
+
+
+'''
+{footer-copyright}
