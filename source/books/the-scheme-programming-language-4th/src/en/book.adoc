@@ -1,10 +1,14 @@
 = The Scheme Programming Language, Fourth Edition
-
+R\. Kent Dybvig
 Illustrations by Jean-Pierre Hébert
-
 :author: R. Kent Dybvig
 :doctype: book
-:source-highlighter: rouge
+:toc: left
+:toc-title: Table of Contents
+:toclevels: 3
+ifdef::backend-pdf[]
+:title-logo-image: image::images/cover.png[align=center]
+endif::[]
 :footer-copyright: R. Kent Dybvig / The Scheme Programming Language, Fourth Edition + \
                     Copyright (C) 2009 https://mitpress.mit.edu/books/scheme-programming-language-fourth-edition[The MIT Press]. \
                     Electronically reproduced by permission. + \
@@ -16,11 +20,9 @@ Illustrations by Jean-Pierre Hébert
                     https://www.scheme.com
 
 
-image::images/cover.png[]
-
-
-'''
-{footer-copyright}
+ifndef::backend-pdf[]
+image::images/cover.png[align=center]
+endif::[]
 
 [toc]
 
