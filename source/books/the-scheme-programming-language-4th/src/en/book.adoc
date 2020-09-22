@@ -6,6 +6,8 @@ Illustrations by Jean-Pierre Hébert
 :toc: left
 :toc-title: Table of Contents
 :toclevels: 3
+:favicon: ./images/cover.png
+:data-uri:
 ifdef::backend-pdf[]
 :title-logo-image: image::images/cover.png[align=center]
 endif::[]
@@ -23,6 +25,7 @@ endif::[]
 ifndef::backend-pdf[]
 image::images/cover.png[align=center]
 endif::[]
+
 
 [toc]
 
