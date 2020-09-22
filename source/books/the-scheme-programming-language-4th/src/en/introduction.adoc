@@ -2,5 +2,3 @@
 
 image::images/ch1.png[]
 
-'''
-{footer-copyright}

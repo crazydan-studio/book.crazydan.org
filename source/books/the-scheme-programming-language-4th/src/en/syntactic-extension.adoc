@@ -1,5 +1,2 @@
 == Chapter 8. Syntactic Extension
 
-
-'''
-{footer-copyright}

@@ -1,5 +1,2 @@
 == Answers to Selected Exercises
 
-
-'''
-{footer-copyright}

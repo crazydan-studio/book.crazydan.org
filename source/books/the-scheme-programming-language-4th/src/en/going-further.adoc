@@ -1,5 +1,2 @@
 == Chapter 3. Going Further
 
-
-'''
-{footer-copyright}

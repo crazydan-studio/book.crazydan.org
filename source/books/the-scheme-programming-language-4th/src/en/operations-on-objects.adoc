@@ -1,5 +1,2 @@
 == Chapter 6. Operations on Objects
 
-
-'''
-{footer-copyright}

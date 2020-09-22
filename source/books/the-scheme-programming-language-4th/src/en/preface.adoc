@@ -32,9 +32,3 @@ _About the illustrations_: The cover illustration and the illustration at the fr
 All the images are created by a single Scheme program that makes most of the decisions, based heavily on chance. The artist controls only canvas size, aspect ratio, the overall palette of colors, and levels of chance and fuzziness. The task of the artist is to introduce just enough chance at the right place so that the results are at the same time surprising, interesting, and in line with the artist's sense of aesthetics. This is a game of uncertainty, chaos, and harmony.
 
 _Acknowledgments_: Many individuals contributed in one way or another to the preparation of one or more editions of this book, including Bruce Smith, Eugene Kohlbecker, Matthias Felleisen, Dan Friedman, Bruce Duba, Phil Dybvig, Guy Steele, Bob Hieb, Chris Haynes, Dave Plaisted, Joan Curry, Frank Silbermann, Pavel Curtis, John Wait, Carl Bruggeman, Sam Daniel, Oscar Waddell, Mike Ashley, John LaLonde, John Zuckerman, John Simmons, Bob Prior, Bob Burger, and Aziz Ghuloum. Many others have offered minor corrections and suggestions. Oscar Waddell helped create the typesetting system used to format the printed and online versions of this book. A small amount of text and a few examples have been adapted from the Revised^6^ Report for this book, for which credit goes to the editors of that report and many others who contributed to it. Finally and most importantly, my wife, Susan Dybvig, suggested that I write this book in the first place and lent her expertise and assistance to the production and publication of this and the previous editions.
-
-
-[NOTE]
-====
-{footer-copyright}
-====

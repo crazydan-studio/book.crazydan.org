@@ -64,9 +64,3 @@
 - [[[ref31,31]]] Oscar Waddell, Dipanwita Sarkar, and R. Kent Dybvig. Fixing letrec: A faithful yet efficient implementation of Scheme's recursive binding construct. _Higher-Order and Symbolic Computation_, 18(3/4):299-326, 2005.
 
 - [[[ref32,32]]] Mitchell Wand. Continuation-based multiprocessing. _Higher-Order and Symbolic Computation_, 12(3):285-299, 1999. Reprinted from the proceedings of the 1980 Lisp Conference, with a foreword.
-
-
-[abstract]
---
-{footer-copyright}
---

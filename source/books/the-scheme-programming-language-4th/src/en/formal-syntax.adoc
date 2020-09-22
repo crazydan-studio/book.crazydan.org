@@ -1,5 +1,2 @@
 == Formal Syntax
 
-
-'''
-{footer-copyright}

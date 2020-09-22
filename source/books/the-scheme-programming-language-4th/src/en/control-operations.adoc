@@ -1,5 +1,2 @@
 == Chapter 5. Control Operations
 
-
-'''
-{footer-copyright}

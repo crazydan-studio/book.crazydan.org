@@ -1,5 +1,2 @@
 == Chapter 4. Procedures and Variable Bindings
 
-
-'''
-{footer-copyright}
