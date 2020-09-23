@@ -1,2 +1,3 @@
+[#formal_syntax]
 == Formal Syntax
 
