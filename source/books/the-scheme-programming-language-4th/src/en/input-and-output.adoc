@@ -1,2 +1,4 @@
+[#chp_input_and_output]
 == Chapter 7. Input and Output
+
 

@@ -1,2 +1,4 @@
+[#chp_operations_on_objects]
 == Chapter 6. Operations on Objects
+
 
