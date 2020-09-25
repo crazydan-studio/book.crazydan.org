@@ -5,9 +5,12 @@ Illustrations by Jean-Pierre Hébert
 :doctype: book
 :toc: left
 :toc-title: Table of Contents
-:toclevels: 3
+:toclevels: 2
 :favicon: ./images/favicon.png
 :data-uri:
+:stem: latexmath
+:source-highlighter: highlightjs
+:highlightjs-languages: scheme, bash
 ifdef::backend-pdf[]
 :title-logo-image: image::images/cover.png[align=center]
 endif::[]
