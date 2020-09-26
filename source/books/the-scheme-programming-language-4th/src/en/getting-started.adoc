@@ -1423,6 +1423,7 @@ The lists must be of the same length, and the procedure should accept as many ar
 
 Looking at the first definition of `abs-all` above, you should be able to derive, before studying it, the following definition of `map1`, a restricted version of `map` that maps a one-argument procedure over a single list.
 
+[#defn:map1]
 [source,scheme,subs="replacements"]
 ----
 (define map1
