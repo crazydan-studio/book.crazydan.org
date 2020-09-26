@@ -145,7 +145,7 @@ Procedure applications may be nested, in which case the innermost values are com
 (/ (* 6/7 7/2) (- 4.5 1.5)) &#8658; 1.0
 ----
 
-These examples demonstrate everything you need to use Scheme as a four-function desk calculator. While we will not discuss them in this chapter, Scheme supports many other arithmetic procedures. Now might be a good time to turn to <<section_6.4,Section 6.4>> and experiment with some of them.
+These examples demonstrate everything you need to use Scheme as a four-function desk calculator. While we will not discuss them in this chapter, Scheme supports many other arithmetic procedures. Now might be a good time to turn to <<section_6.4.,Section 6.4>> and experiment with some of them.
 
 Simple numeric objects are sufficient for many tasks, but sometimes aggregate data structures containing two or more values are needed. In many languages, the basic aggregate data structure is the array. In Scheme, it is the _list_. Lists are written as sequences of objects surrounded by parentheses. For instance, `(1 2 3 4 5)` is a list of numbers, and `("this" "is" "a" "list")` is a list of strings. Lists need not contain only one type of object, so `(4.2 "hi")` is a valid list containing a number and a string. Lists may be nested (may contain other lists), so `((1 2) (3 4))` is a valid list with two elements, each of which is a list of two elements.
 
@@ -184,7 +184,7 @@ Not all `quote` expressions involve lists. Try the following expression with and
 
 The symbol `hello` must be quoted in order to prevent Scheme from treating `hello` as a _variable_. Symbols and variables in Scheme are similar to symbols and variables in mathematical expressions and equations. When we evaluate the mathematical expression stem:[1 - x] for some value of stem:[x], we think of stem:[x] as a variable. On the other hand, when we consider the algebraic equation stem:[x^2 - 1 = (x - 1)(x + 1)], we think of stem:[x] as a symbol (in fact, we think of the whole equation symbolically). Just as quoting a list tells Scheme to treat a parenthesized form as a list rather than as a procedure application, quoting an identifier tells Scheme to treat the identifier as a symbol rather than as a variable. While symbols are commonly used to represent variables in symbolic representations of equations or programs, symbols may also be used, for example, as words in the representation of natural language sentences.
 
-You might wonder why applications and variables share notations with lists and symbols. The shared notation allows Scheme programs to be represented as Scheme data, simplifying the writing of interpreters, compilers, editors, and other tools in Scheme. This is demonstrated by the Scheme interpreter given in <<section_12.7,Section 12.7>>, which is itself written in Scheme. Many people believe this to be one of the most important features of Scheme.
+You might wonder why applications and variables share notations with lists and symbols. The shared notation allows Scheme programs to be represented as Scheme data, simplifying the writing of interpreters, compilers, editors, and other tools in Scheme. This is demonstrated by the Scheme interpreter given in <<section_12.7.,Section 12.7>>, which is itself written in Scheme. Many people believe this to be one of the most important features of Scheme.
 
 Numbers and strings may be quoted, too.
 
@@ -264,7 +264,7 @@ The procedure `list` is similar to `cons`, except that it takes an arbitrary num
 (list) &#8658; ()
 ----
 
-<<section_6.3,Section 6.3>> provides more information on lists and the Scheme procedures for manipulating them. This might be a good time to turn to that section and familiarize yourself with the other procedures given there.
+<<section_6.3.,Section 6.3>> provides more information on lists and the Scheme procedures for manipulating them. This might be a good time to turn to that section and familiarize yourself with the other procedures given there.
 
 ==== Exercise 2.2.1 [[exercise_2.2.1]]
 
@@ -342,7 +342,7 @@ By applying this process at each level, we can find the value of the nested expr
 
 This rule works for procedure applications but not for `quote` expressions because the subexpressions of a procedure application are evaluated, whereas the subexpression of a `quote` expression is not. The evaluation of a `quote` expression is more similar to the evaluation of constant objects. The value of a `quote` expression of the form `(quote _object_)` is simply `_object_`.
 
-Constant objects, procedure applications, and `quote` expressions are only three of the many syntactic forms provided by Scheme. Fortunately, only a few of the other syntactic forms need to be understood directly by a Scheme programmer; these are referred to as _core_ syntactic forms. The remaining syntactic forms are _syntactic extensions_ defined, ultimately, in terms of the core syntactic forms. We will discuss the remaining core syntactic forms and a few syntactic extensions in the remaining sections of this chapter. <<section_3.1,Section 3.1>> summarizes the core syntactic forms and introduces the syntactic extension mechanism.
+Constant objects, procedure applications, and `quote` expressions are only three of the many syntactic forms provided by Scheme. Fortunately, only a few of the other syntactic forms need to be understood directly by a Scheme programmer; these are referred to as _core_ syntactic forms. The remaining syntactic forms are _syntactic extensions_ defined, ultimately, in terms of the core syntactic forms. We will discuss the remaining core syntactic forms and a few syntactic extensions in the remaining sections of this chapter. <<section_3.1.,Section 3.1>> summarizes the core syntactic forms and introduces the syntactic extension mechanism.
 
 Before we go on to more syntactic forms and procedures, two points related to the evaluation of procedure applications are worthy of note. First, the process given above is overspecified, in that it requires the subexpressions to be evaluated from left to right. That is, `_procedure_` is evaluated before `_arg1_`, `_arg1_` is evaluated before `_arg2_`, and so on. This need not be the case. A Scheme evaluator is free to evaluate the expressions in any order---left to right, right to left, or any other sequential order. In fact, the subexpressions may be evaluated in different orders for different applications, even in the same implementation.
 
@@ -626,7 +626,7 @@ is equivalent to the following.
  _expr_ \...)
 ----
 
-See <<section_3.1,Section 3.1>> for more about core forms and syntactic extensions.
+See <<section_3.1.,Section 3.1>> for more about core forms and syntactic extensions.
 
 As mentioned above, the general form of `lambda` is a bit more complicated than the form we saw earlier, in that the formal parameter specification, `(_var_ \...)`, need not be a proper list, or indeed even a list at all. The formal parameter specification can be in any of the following three forms:
 
@@ -945,7 +945,7 @@ A more elegant (though possibly less efficient) way to define `cadr` and `cddr` 
 
 ==== Exercise 2.6.3 [[exercise_2.6.3]]
 
-Scheme also provides `caar`, `cdar`, `caaar`, `caadr`, and so on, with any combination of up to four ``a``'s (representing `car`) and ``d``'s (representing `cdr`) between the `c` and the `r` (see <<section_6.3,Section 6.3>>). Define each of these with the `compose` procedure of the preceding exercise.
+Scheme also provides `caar`, `cdar`, `caaar`, `caadr`, and so on, with any combination of up to four ``a``'s (representing `car`) and ``d``'s (representing `cdr`) between the `c` and the `r` (see <<section_6.3.,Section 6.3>>). Define each of these with the `compose` procedure of the preceding exercise.
 
 === Section 2.7. Conditional Expressions [[section_2.7.]]
 
@@ -1108,7 +1108,7 @@ Another useful predicate is `eqv?`, which requires two arguments. If the two arg
 (eqv? (cons 'a 'b) (cons 'a 'b)) &#8658; #f
 ----
 
-As you can see, `eqv?` returns true if the arguments are the same symbol, boolean, number, pair, or string. Two pairs are not the same by `eqv?` if they are created by different calls to `cons`, even if they have the same contents. Detailed equivalence rules for `eqv?` are given in <<section_6.2,Section 6.2>>.
+As you can see, `eqv?` returns true if the arguments are the same symbol, boolean, number, pair, or string. Two pairs are not the same by `eqv?` if they are created by different calls to `cons`, even if they have the same contents. Detailed equivalence rules for `eqv?` are given in <<section_6.2.,Section 6.2>>.
 
 Scheme also provides a set of _type predicates_ that return true or false depending on the type of the object, e.g., `pair?`, `symbol?`, `number?`, and `string?`. The predicate `pair?`, for example, returns true only if its argument is a pair.
 
@@ -1372,7 +1372,7 @@ Up to now, the recursion has been only on the cdr of a list. It is sometimes use
 
 The natural base argument for a tree structure is anything that is not a pair, since the recursion traverses pairs rather than lists. The recursive step in this case is _doubly recursive_, finding the value recursively for the car as well as the cdr of the argument.
 
-At this point, readers who are familiar with other languages that provide special iteration constructs, e.g., _while_ or _for_ loops, might wonder whether similar constructs are required in Scheme. Such constructs are unnecessary; iteration in Scheme is expressed more clearly and succinctly via recursion. Recursion is more general and eliminates the need for the variable assignments required by many other languages' iteration constructs, resulting in code that is more reliable and easier to follow. Some recursion is essentially iteration and executes as such; <<section_3.2,Section 3.2>> has more to say about this. Often, there is no need to make a distinction, however. Concentrate instead on writing clear, concise, and correct programs.
+At this point, readers who are familiar with other languages that provide special iteration constructs, e.g., _while_ or _for_ loops, might wonder whether similar constructs are required in Scheme. Such constructs are unnecessary; iteration in Scheme is expressed more clearly and succinctly via recursion. Recursion is more general and eliminates the need for the variable assignments required by many other languages' iteration constructs, resulting in code that is more reliable and easier to follow. Some recursion is essentially iteration and executes as such; <<section_3.2.,Section 3.2>> has more to say about this. Often, there is no need to make a distinction, however. Concentrate instead on writing clear, concise, and correct programs.
 
 Before we leave the topic of recursion, let's consider a special form of repetition called _mapping_. Consider the following procedure, `abs-all`, that takes a list of numbers as input and returns a list of their absolute values.
 
@@ -1435,7 +1435,7 @@ Looking at the first definition of `abs-all` above, you should be able to derive
 (map1 abs '(1 -2 3 -4 5 -6)) &#8658; (1 2 3 4 5 6)
 ----
 
-All we have done is to replace the call to `abs` in `abs-all` with a call to the new parameter `p`. A definition of the more general `map` is given in <<section_5.4,Section 5.4>>.
+All we have done is to replace the call to `abs` in `abs-all` with a call to the new parameter `p`. A definition of the more general `map` is given in <<section_5.4.,Section 5.4>>.
 
 ==== Exercise 2.8.1 [[exercise_2.8.1]]
 
@@ -1443,7 +1443,7 @@ Describe what would happen if you switched the order of the arguments to `cons` 
 
 ==== Exercise 2.8.2 [[exercise_2.8.2]]
 
-Consult <<section_6.3,Section 6.3>> for the description of `append` and define a two-argument version of it. What would happen if you switched the order of the arguments in the call to `append` within your definition of `append`?
+Consult <<section_6.3.,Section 6.3>> for the description of `append` and define a two-argument version of it. What would happen if you switched the order of the arguments in the call to `append` within your definition of `append`?
 
 ==== Exercise 2.8.3 [[exercise_2.8.3]]
 
@@ -1646,7 +1646,7 @@ If a state variable must be shared by more than one procedure defined at top lev
 secret &#8658; _exception: variable secret is not bound_
 ----
 
-Variables must be defined before they can be assigned, so we define `shhh` and `tell` to be `#f` initially. (Any initial value would do.) We'll see this structure again in <<section_3.5,Section 3.5>> and a better way to structure code like this as a library in <<section_3.6,Section 3.6>>.
+Variables must be defined before they can be assigned, so we define `shhh` and `tell` to be `#f` initially. (Any initial value would do.) We'll see this structure again in <<section_3.5.,Section 3.5>> and a better way to structure code like this as a library in <<section_3.6.,Section 3.6>>.
 
 Local state is sometimes useful for caching computed values or allowing a computation to be evaluated _lazily_, i.e., only once and only on demand. The procedure `lazy` below accepts a _thunk_, or zero-argument procedure, as an argument. Thunks are often used to "freeze" computations that must be delayed for some reason, which is exactly what we need to do in this situation. When passed a thunk `_t_`, `lazy` returns a new thunk that, when invoked, returns the value of invoking `_t_`. Once computed, the value is saved in a local variable so that the computation need not be performed again. A boolean flag is used to record whether `_t_` has been invoked and its value saved.
 
@@ -1719,7 +1719,7 @@ Each stack is stored as a list bound to the variable `ls`; `set!` is used to cha
 (list (stack1 'empty?) (stack2 'empty?)) &#8658; (#t #f)
 ----
 
-As with the counters created by `make-counter`, the state maintained by each stack object is directly accessible only within the object. Each reference or change to this state is made explicitly by the object itself. One important benefit is that we can change the internal structure of the stack, perhaps to use a vector (see <<section_6.9,Section 6.9>>) instead of a list to hold the elements, without changing its external behavior. Because the behavior of the object is known abstractly (not operationally), it is known as an _abstract object_. See <<section_12.8,Section 12.8>> for more about creating abstract objects.
+As with the counters created by `make-counter`, the state maintained by each stack object is directly accessible only within the object. Each reference or change to this state is made explicitly by the object itself. One important benefit is that we can change the internal structure of the stack, perhaps to use a vector (see <<section_6.9.,Section 6.9>>) instead of a list to hold the elements, without changing its external behavior. Because the behavior of the object is known abstractly (not operationally), it is known as an _abstract object_. See <<section_12.8.,Section 12.8>> for more about creating abstract objects.
 
 In addition to changing the values of variables, we can also change the values of the car and cdr fields of a pair, using the procedures `set-car!` and `set-cdr!`.
 
@@ -1788,7 +1788,7 @@ Modify `make-counter` to take two arguments: an initial value for the counter to
 
 ==== Exercise 2.9.2 [[exercise_2.9.2]]
 
-Look up the description of `case` in <<section_5.3,Section 5.3>>. Replace the `cond` expression in `make-stack` with an equivalent `case` expression. Add `mt?` as a second name for the `empty?` message.
+Look up the description of `case` in <<section_5.3.,Section 5.3>>. Replace the `cond` expression in `make-stack` with an equivalent `case` expression. Add `mt?` as a second name for the `empty?` message.
 
 ==== Exercise 2.9.3 [[exercise_2.9.3]]
 
@@ -1821,7 +1821,7 @@ image::images/7.gif[]
 
 This makes vectors more suitable for applications needing fast access to any element of the aggregate but less suitable for applications needing data structures that grow and shrink as needed.
 
-Look up the basic vector operations in <<section_6.9,Section 6.9>> and reimplement the `stack` object to use a vector instead of a list to hold the stack contents. Include the `ref` and `set!` messages of <<exercise_2.9.3,Exercise 2.9.3>>. Have the new `make-stack` accept a size argument _n_ and make the vector length _n_, but do not otherwise change the external (abstract) interface.
+Look up the basic vector operations in <<section_6.9.,Section 6.9>> and reimplement the `stack` object to use a vector instead of a list to hold the stack contents. Include the `ref` and `set!` messages of <<exercise_2.9.3,Exercise 2.9.3>>. Have the new `make-stack` accept a size argument _n_ and make the vector length _n_, but do not otherwise change the external (abstract) interface.
 
 ==== Exercise 2.9.5 [[exercise_2.9.5]]
 
@@ -1846,7 +1846,7 @@ What happens when you enter the above expression during an interactive Scheme se
 
 ==== Exercise 2.9.8 [[exercise_2.9.8]]
 
-Define the predicate `list?`, which returns `#t` if its argument is a proper list and `#f` otherwise (see <<section_6.3,Section 6.3>>). It should return `#f` for cyclic lists as well as for lists terminated by objects other than `()`.
+Define the predicate `list?`, which returns `#t` if its argument is a proper list and `#f` otherwise (see <<section_6.3.,Section 6.3>>). It should return `#f` for cyclic lists as well as for lists terminated by objects other than `()`.
 
 [source,scheme,subs="replacements"]
 ----
