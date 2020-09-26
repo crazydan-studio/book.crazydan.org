@@ -432,7 +432,7 @@ The second is an iterative version that employs the iterative definition stem:[n
           (fact (- i 1) (* a i))))))
 ----
 
-A similar problem is to compute the __n__th Fibonacci number for a given _n_. The _Fibonacci numbers_ are an infinite sequence of integers, 0, 1, 1, 2, 3, 5, 8, etc., in which each number is the sum of the two preceding numbers in the sequence. A procedure to compute the __n__th Fibonacci number is most naturally defined recursively as follows.
+[[fibonacci]] A similar problem is to compute the __n__th Fibonacci number for a given _n_. The _Fibonacci numbers_ are an infinite sequence of integers, 0, 1, 1, 2, 3, 5, 8, etc., in which each number is the sum of the two preceding numbers in the sequence. A procedure to compute the __n__th Fibonacci number is most naturally defined recursively as follows.
 
 [source,scheme,subs="quotes,replacements"]
 ----
