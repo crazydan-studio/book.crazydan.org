@@ -387,6 +387,7 @@ with-syntax may be defined as a syntactic extension in terms of syntax-case.
 
 The following definition of full cond demonstrates the use of with-syntax to support transformers that employ recursion internally to construct their output.
 
+[#defn:cond]
 (define-syntax cond
   (lambda (x)
     (syntax-case x ()
@@ -424,6 +425,7 @@ quasisyntax expressions may be nested, with each quasisyntax introducing a new l
 
 quasisyntax can be used in place of with-syntax in many cases. For example, the following definition of case employs quasisyntax to construct its output, using internal recursion in a manner similar to the definition of cond given under the description of with-syntax above.
 
+[#defn:case]
 (define-syntax case
   (lambda (x)
     (syntax-case x ()
@@ -666,6 +668,7 @@ To be completely robust, the ids? and unique-ids? checks employed in the definit
 
 Both variants of let are easily described by simple one-line patterns, but do requires a bit more work. The precise syntax of do cannot be expressed directly with a single pattern because some of the bindings in a do expression's binding list may take the form (var val) while others take the form (var val update). The following definition of do uses syntax-case internally to parse the bindings separately from the overall form.
 
+[#defn:do]
 (define-syntax do
   (lambda (x)
     (syntax-case x ()

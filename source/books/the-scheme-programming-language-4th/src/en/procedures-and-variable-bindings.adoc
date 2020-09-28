@@ -406,7 +406,7 @@ x &#8658; 3
 (f 3) &#8658; 4
 ----
 
-A set of definitions may be grouped by enclosing them in a `begin` form. Definitions grouped in this manner may appear wherever ordinary variable and syntax definitions may appear. They are treated as if written separately, i.e., without the enclosing `begin` form. This feature allows syntactic extensions to expand into groups of definitions.
+A set of definitions may be grouped by enclosing them in a `begin` form. Definitions grouped in this manner may appear wherever ordinary variable and syntax definitions may appear. They are treated as if written separately, i.e., without the enclosing `begin` form. [[multi-define-syntax]] This feature allows syntactic extensions to expand into groups of definitions.
 
 [source,scheme,subs="quotes,replacements"]
 ----

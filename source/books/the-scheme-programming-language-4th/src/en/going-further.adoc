@@ -79,6 +79,7 @@ The single rule in our definition of `let` should be fairly self-explanatory, bu
 
 The definition of `and` below is somewhat more complex than the one for `let`.
 
+[#defn:and]
 [source,scheme,subs="quotes,replacements"]
 ----
 (define-syntax and
@@ -143,6 +144,7 @@ The final answer if `x` is not zero is `#t`, not the value of `(/ 1 x)`.
 
 The definition of `or` below is similar to the one for `and` except that a temporary variable must be introduced for each intermediate value so that we can both test the value and return it if it is a true value. (A temporary variable is not needed for `and` since there is only one false value, `#f`.)
 
+[#defn:or]
 [source,scheme,subs="quotes,replacements"]
 ----
 (define-syntax or
