@@ -1217,21 +1217,21 @@ A mantissa width `|_w_` may appear as the suffix of a real number or the real co
 
 Exact and inexact real numbers are written as exact or inexact integers or rational numbers; no provision is made in the syntax of Scheme numbers for nonrational real numbers, i.e., irrational numbers.
 
-Complex numbers may be written in either rectangular or polar form. In rectangular form, a complex number is written as `_x_+_y_i` or `_x_-_y_i`, where `_x_` is an integer, rational, or real number and `_y_` is an unsigned integer, rational, or real number. The real part, _x_, may be omitted, in which case it is assumed to be zero. For example, `3+4i`, `3.2-3/4i`, `+i`, and `-3e-5i` are complex numbers written in rectangular form. In polar form, a complex number is written as `_x_@_y_`, where `_x_` and `_y_` are integer, rational, or real numbers. For example, `1.1@1.764` and `-1@-1/2` are complex numbers written in polar form.
+Complex numbers may be written in either rectangular or polar form. In rectangular form, a complex number is written as `_x_+_y~i~_` or `_x_-_y~i~_`, where `_x_` is an integer, rational, or real number and `_y_` is an unsigned integer, rational, or real number. The real part, _x_, may be omitted, in which case it is assumed to be zero. For example, `3+4i`, `3.2-3/4i`, `+i`, and `-3e-5i` are complex numbers written in rectangular form. In polar form, a complex number is written as `_x_@_y_`, where `_x_` and `_y_` are integer, rational, or real numbers. For example, `1.1@1.764` and `-1@-1/2` are complex numbers written in polar form.
 
 The syntaxes `+inf.0` and `-inf.0` represent inexact real numbers that represent positive and negative infinity. The syntaxes `+nan.0` and `-nan.0` represent an inexact "not-a-number" (NaN) value. Infinities may be produced by dividing inexact positive and negative values by inexact zero, and NaNs may also be produced by dividing inexact zero by inexact zero, among other ways.
 
-The exactness of a numeric representation may be overridden by preceding the representation by either `#e` or `#i`. `#e` forces the number to be exact, and `#i` forces it to be inexact. For example, `1`, `#e1`, 1/1, `#e1/1`, `#e1.0`, and `#e1e0` all represent the exact integer 1, and `#i3/10`, `0.3`, `#i0.3`, and `3e-1` all represent the inexact rational 0.3.
+The exactness of a numeric representation may be overridden by preceding the representation by either `#e` or `#i`. `#e` forces the number to be exact, and `#i` forces it to be inexact. For example, `1`, `#e1`, `1/1`, `#e1/1`, `#e1.0`, and `#e1e0` all represent the exact integer 1, and `#i3/10`, `0.3`, `#i0.3`, and `3e-1` all represent the inexact rational 0.3.
 
-Numbers are written by default in base 10, although the special prefixes `#b` (binary), `#o` (octal), `#d` (decimal), and `#x` (hexadecimal) can be used to specify base 2, base 8, base 10, or base 16. For radix 16, the letters `a` through `f` or `A` through `F` serve as the additional numerals required to express digit values 10 through 15. For example, `#b10101` is the binary equivalent of 21~10~, `#o72` is the octal equivalent of 58~10~, and `#xC7` is the hexadecimal equivalent of 199~10~. Numbers written in floating-point and scientific notations are always written in base 10.
+Numbers are written by default in base 10, although the special prefixes `#b` (binary), `#o` (octal), `#d` (decimal), and `#x` (hexadecimal) can be used to specify base 2, base 8, base 10, or base 16. For radix 16, the letters `a` through `f` or `A` through `F` serve as the additional numerals required to express digit values 10 through 15. For example, `#b10101` is the binary equivalent of `21~10~`, `#o72` is the octal equivalent of `58~10~`, and `#xC7` is the hexadecimal equivalent of `199~10~`. Numbers written in floating-point and scientific notations are always written in base 10.
 
 If both are present, radix and exactness prefixes may appear in either order.
 
 A Scheme implementation may support more than one size of internal representation for inexact quantities. The exponent markers `s` (_short_), `f` (_single_), `d` (_double_), and `l` (_long_) may appear in place of the default exponent marker `e` to override the default size for numbers written in scientific notation. In implementations that support multiple representations, the default size has at least as much precision as _double_.
 
-A precise grammar for Scheme numbers is given on page 459.
+A precise grammar for Scheme numbers is given on <<grammar_numbers,page 459>>.
 
-Any number can be written in a variety of different ways, but the system printer (invoked by `put-datum`, `write`, and `display`) and `number->string` express numbers in a compact form, using the fewest number of digits necessary to retain the property that, when read, the printed number is identical to the original number.
+Any number can be written in a variety of different ways, but the system printer (invoked by `put-datum`, `write`, and `display`) and `number\->string` express numbers in a compact form, using the fewest number of digits necessary to retain the property that, when read, the printed number is identical to the original number.
 
 The remainder of this section describes "generic arithmetic" procedures that operate on numbers. The two sections that follow this section describe operations specific to _fixnums_ and _flonums_, which are representations of exact, fixed-precision integer values and inexact real values.
 
@@ -1242,41 +1242,45 @@ procedure:: `(exact? _num_)`
 returns:: `#t` if `_num_` is exact, `#f` otherwise
 libraries:: `(rnrs base)`, `(rnrs)`
 
-` (exact? 1) ⇒ #t
+[source,scheme,subs=""]
+----
+(exact? 1) ⇒ #t
 (exact? -15/16) ⇒ #t
 (exact? 2.01) ⇒ #f
 (exact? #i77) ⇒ #f
 (exact? #i2/3) ⇒ #f
-(exact? 1.0-2i) ⇒ #f`
+(exact? 1.0-2i) ⇒ #f
+----
 
 [horizontal]
 procedure:: `(inexact? _num_)`
 returns:: `#t` if `_num_` is inexact, `#f` otherwise
 libraries:: `(rnrs base)`, `(rnrs)`
 
-` (inexact? -123) ⇒ #f
+[source,scheme,subs=""]
+----
+(inexact? -123) ⇒ #f
 (inexact? #i123) ⇒ #t
 (inexact? 1e23) ⇒ #t
-(inexact? +i) ⇒ #f`
+(inexact? +i) ⇒ #f
+----
 
 [horizontal]
 procedure:: `(= _num~1~_ _num~2~_ _num~3~_ \...)`
-[horizontal]
 procedure:: `(< _real~1~_ _real~2~_ _real~3~_ \...)`
-[horizontal]
 procedure:: `(> _real~1~_ _real~2~_ _real~3~_ \...)`
-[horizontal]
-procedure:: `(<= _real~1~_ _real~2~_ _real~3~_ \...)`
-[horizontal]
+procedure:: `(\<= _real~1~_ _real~2~_ _real~3~_ \...)`
 procedure:: `(>= _real~1~_ _real~2~_ _real~3~_ \...)`
 returns:: `#t` if the relation holds, `#f` otherwise
 libraries:: `(rnrs base)`, `(rnrs)`
 
-The predicate `=` returns `#t` if its arguments are equal. The predicate `<` returns `#t` if its arguments are monotonically increasing, i.e., each argument is greater than the preceding ones, while `>` returns `#t` if its arguments are monotonically decreasing. The predicate `<=` returns `#t` if its arguments are monotonically nondecreasing, i.e., each argument is not less than the preceding ones, while `>=` returns `#t` if its arguments are monotonically nonincreasing.
+The predicate `=` returns `#t` if its arguments are equal. The predicate `<` returns `#t` if its arguments are monotonically increasing, i.e., each argument is greater than the preceding ones, while `>` returns `#t` if its arguments are monotonically decreasing. The predicate `\<=` returns `#t` if its arguments are monotonically nondecreasing, i.e., each argument is not less than the preceding ones, while `>=` returns `#t` if its arguments are monotonically nonincreasing.
 
 As implied by the names of the arguments, `=` is defined for complex arguments while the other relational predicates are defined only for real arguments. Two complex numbers are considered equal if their real and imaginary parts are equal. Comparisons involving NaNs always return `#f`.
 
-`(= 7 7) ⇒ #t
+[source,scheme,subs=""]
+----
+(= 7 7) ⇒ #t
 (= 7 9) ⇒ #f
 
 (< 2e3 3e2) ⇒ #f
@@ -1308,7 +1312,8 @@ As implied by the names of the arguments, `=` is defined for complex arguments w
 (> +nan.0 +nan.0) ⇒ #f
 (>= +inf.0 +nan.0) ⇒ #f
 (>= +nan.0 -inf.0) ⇒ #f
-(> +nan.0 0.0) ⇒ #f`
+(> +nan.0 0.0) ⇒ #f
+----
 
 [horizontal]
 procedure:: `(+ _num_ \...)`
@@ -1317,27 +1322,32 @@ libraries:: `(rnrs base)`, `(rnrs)`
 
 When called with no arguments, `+` returns 0.
 
-`(+) ⇒ 0
+[source,scheme,subs=""]
+----
+(+) ⇒ 0
 (+ 1 2) ⇒ 3
 (+ 1/2 2/3) ⇒ 7/6
 (+ 3 4 5) ⇒ 12
 (+ 3.0 4) ⇒ 7.0
 (+ 3+4i 4+3i) ⇒ 7+7i
-(apply + '(1 2 3 4 5)) ⇒ 15`
+(apply + '(1 2 3 4 5)) ⇒ 15
+----
 
 [horizontal]
 procedure:: `(- _num_)`
 returns:: the additive inverse of `_num_`
-[horizontal]
 procedure:: `(- _num~1~_ _num~2~_ _num~3~_ \...)`
 returns:: the difference between `_num~1~_` and the sum of `_num~2~_ _num~3~_ \...`
 libraries:: `(rnrs base)`, `(rnrs)`
 
-`(- 3) ⇒ -3
+[source,scheme,subs=""]
+----
+(- 3) ⇒ -3
 (- -2/3) ⇒ 2/3
 (- 4 3.0) ⇒ 1.0
 (- 3.25+4.25i 1/4+1/4i) ⇒ 3.0+4.0i
-(- 4 3 2 1) ⇒ -2`
+(- 4 3 2 1) ⇒ -2
+----
 
 [horizontal]
 procedure:: `(* _num_ \...)`
@@ -1346,28 +1356,33 @@ libraries:: `(rnrs base)`, `(rnrs)`
 
 When called with no arguments, `*` returns 1.
 
-`(*) ⇒ 1
+[source,scheme,subs=""]
+----
+(*) ⇒ 1
 (* 3.4) ⇒ 3.4
 (* 1 1/2) ⇒ 1/2
 (* 3 4 5.5) ⇒ 66.0
 (* 1+2i 3+4i) ⇒ -5+10i
-(apply * '(1 2 3 4 5)) ⇒ 120`
+(apply * '(1 2 3 4 5)) ⇒ 120
+----
 
 [horizontal]
 procedure:: `(/ _num_)`
 returns:: the multiplicative inverse of `_num_`
-[horizontal]
 procedure:: `(/ _num~1~_ _num~2~_ _num~3~_ \...)`
 returns:: the result of dividing `_num~1~_` by the product of `_num~2~_ _num~3~_ \...`
 libraries:: `(rnrs base)`, `(rnrs)`
 
-` (/ -17) ⇒ -1/17
+[source,scheme,subs=""]
+----
+(/ -17) ⇒ -1/17
 (/ 1/2) ⇒ 2
 (/ .5) ⇒ 2.0
 (/ 3 4) ⇒ 3/4
 (/ 3.0 4) ⇒ .75
 (/ -5+10i 3+4i) ⇒ 1+2i
-(/ 60 5 4 3 2) ⇒ 1/2`
+(/ 60 5 4 3 2) ⇒ 1/2
+----
 
 [horizontal]
 procedure:: `(zero? _num_)`
@@ -1376,12 +1391,15 @@ libraries:: `(rnrs base)`, `(rnrs)`
 
 `zero?` is equivalent to `(lambda (x) (= x 0))`.
 
-`(zero? 0) ⇒ #t
+[source,scheme,subs=""]
+----
+(zero? 0) ⇒ #t
 (zero? 1) ⇒ #f
 (zero? (- 3.0 3.0)) ⇒ #t
 (zero? (+ 1/2 1/2)) ⇒ #f
 (zero? 0+0i) ⇒ #t
-(zero? 0.0-0.0i) ⇒ #t`
+(zero? 0.0-0.0i) ⇒ #t
+----
 
 [horizontal]
 procedure:: `(positive? _real_)`
@@ -1390,11 +1408,14 @@ libraries:: `(rnrs base)`, `(rnrs)`
 
 `positive?` is equivalent to `(lambda (x) (> x 0))`.
 
-`(positive? 128) ⇒ #t
+[source,scheme,subs="quotes"]
+----
+(positive? 128) ⇒ #t
 (positive? 0.0) ⇒ #f
 (positive? 1.8e-15) ⇒ #t
 (positive? -2/3) ⇒ #f
-(positive? .001-0.0i) ⇒ _exception: not a real number_`
+(positive? .001-0.0i) ⇒ _exception: not a real number_
+----
 
 [horizontal]
 procedure:: `(negative? _real_)`
@@ -1403,21 +1424,25 @@ libraries:: `(rnrs base)`, `(rnrs)`
 
 `negative?` is equivalent to `(lambda (x) (< x 0))`.
 
-`(negative? -65) ⇒ #t
+[source,scheme,subs="quotes"]
+----
+(negative? -65) ⇒ #t
 (negative? 0) ⇒ #f
 (negative? -0.0121) ⇒ #t
 (negative? 15/16) ⇒ #f
-(negative? -7.0+0.0i) ⇒ _exception: not a real number_`
+(negative? -7.0+0.0i) ⇒ _exception: not a real number_
+----
 
 [horizontal]
 procedure:: `(even? _int_)`
 returns:: `#t` if `_int_` is even, `#f` otherwise
-[horizontal]
 procedure:: `(odd? _int_)`
 returns:: `#t` if `_int_` is odd, `#f` otherwise
 libraries:: `(rnrs base)`, `(rnrs)`
 
-` (even? 0) ⇒ #t
+[source,scheme,subs="quotes"]
+----
+(even? 0) ⇒ #t
 (even? 1) ⇒ #f
 (even? 2.0) ⇒ #t
 (even? -120762398465) ⇒ #f
@@ -1427,20 +1452,21 @@ libraries:: `(rnrs base)`, `(rnrs)`
 (odd? 1) ⇒ #t
 (odd? 2.0) ⇒ #f
 (odd? -120762398465) ⇒ #t
-(odd? 2.0+0.0i) ⇒ _exception: not an integer_`
+(odd? 2.0+0.0i) ⇒ _exception: not an integer_
+----
 
 [horizontal]
 procedure:: `(finite? _real_)`
 returns:: `#t` if `_real_` is finite, `#f` otherwise
-[horizontal]
 procedure:: `(infinite? _real_)`
 returns:: `#t` if `_real_` is infinite, `#f` otherwise
-[horizontal]
 procedure:: `(nan? _real_)`
 returns:: `#t` if `_real_` is a NaN, `#f` otherwise
 libraries:: `(rnrs base)`, `(rnrs)`
 
-` (finite? 2/3) ⇒ #t
+[source,scheme,subs=""]
+----
+(finite? 2/3) ⇒ #t
 (infinite? 2/3) ⇒ #f
 (nan? 2/3) ⇒ #f
 
@@ -1454,22 +1480,23 @@ libraries:: `(rnrs base)`, `(rnrs)`
 
 (finite? +nan.0) ⇒ #f
 (infinite? +nan.0) ⇒ #f
-(nan? +nan.0) ⇒ #t`
+(nan? +nan.0) ⇒ #t
+----
 
 [horizontal]
 procedure:: `(quotient _int~1~_ _int~2~_)`
 returns:: the integer quotient of `_int~1~_` and `_int~2~_`
-[horizontal]
 procedure:: `(remainder _int~1~_ _int~2~_)`
 returns:: the integer remainder of `_int~1~_` and `_int~2~_`
-[horizontal]
 procedure:: `(modulo _int~1~_ _int~2~_)`
 returns:: the integer modulus of `_int~1~_` and `_int~2~_`
 libraries:: `(rnrs r5rs)`
 
 The result of `remainder` has the same sign as `_int~1~_`, while the result of `modulo` has the same sign as `_int~2~_`.
 
-`(quotient 45 6) ⇒ 7
+[source,scheme,subs=""]
+----
+(quotient 45 6) ⇒ 7
 (quotient 6.0 2.0) ⇒ 3.0
 (quotient 3.0 -2) ⇒ -1.0
 
@@ -1483,28 +1510,32 @@ The result of `remainder` has the same sign as `_int~1~_`, while the result of `
 (modulo 5 2) ⇒ 1
 (modulo -45.0 7) ⇒ 4.0
 (modulo 10.0 -3.0) ⇒ -2.0
-(modulo -17 -9) ⇒ -8`
+(modulo -17 -9) ⇒ -8
+----
 
 [horizontal]
 procedure:: `(div _x~1~_ _x~2~_)`
-[horizontal]
 procedure:: `(mod _x~1~_ _x~2~_)`
-[horizontal]
 procedure:: `(div-and-mod _x~1~_ _x~2~_)`
 returns:: see below
 libraries:: `(rnrs base)`, `(rnrs)`
 
 If `_x~1~_` and `_x~2~_` are exact, `_x~2~_` must not be zero. These procedures implement number-theoretic integer division, with the `div` operation being related to `quotient` and the `mod` operation being related to `remainder` or `modulo`, but in both cases extended to handle real numbers.
 
-The value `_n~d~_` of `(div _x~1~_ _x~2~_)` is an integer, and the value `_x~m~_` of `(mod _x~1~_ _x~2~_)` is a real number such that _x_~1~ = _n_~d~ · _x_~2~ + _x_~m~ and 0 ≤ _x_~m~ < |_x_~2~|. In situations where the implementation cannot represent the mathematical results prescribed by these equations as a number object, `div` and `mod` return an unspecified number or raise an exception with condition type `&implementation-restriction`.
+The value `_n~d~_` of `(div _x~1~_ _x~2~_)` is an integer, and the value `_x~m~_` of `(mod _x~1~_ _x~2~_)` is a real number such that stem:[x_1 = n_d \cdot x_2 + x_m] and stem:[0 \le x_m \lt |x_2|]. In situations where the implementation cannot represent the mathematical results prescribed by these equations as a number object, `div` and `mod` return an unspecified number or raise an exception with condition type `&implementation-restriction`.
 
 The `div-and-mod` procedure behaves as if defined as follows.
 
-`(define (div-and-mod x1 x2) (values (div x1 x2) (mod x1 x2)))`
+[source,scheme,subs=""]
+----
+(define (div-and-mod x1 x2) (values (div x1 x2) (mod x1 x2)))
+----
 
 That is, unless it raises an exception in the circumstance described above, it returns two values: the result of calling `div` on the two arguments and the result of calling `mod` on the two arguments.
 
-`(div 17 3) ⇒ 5
+[source,scheme,subs=""]
+----
+(div 17 3) ⇒ 5
 (mod 17 3) ⇒ 2
 (div -17 3) ⇒ -6
 (mod -17 3) ⇒ 1
@@ -1514,26 +1545,30 @@ That is, unless it raises an exception in the circumstance described above, it r
 (mod -17 -3) ⇒ 1
 
 (div-and-mod 17.5 3) ⇒ 5.0
-                      2.5`
+                        2.5
+----
 
 [horizontal]
 procedure:: `(div0 _x~1~_ _x~2~_)`
-[horizontal]
 procedure:: `(mod0 _x~1~_ _x~2~_)`
-[horizontal]
 procedure:: `(div0-and-mod0 _x~1~_ _x~2~_)`
 returns:: see below
 libraries:: `(rnrs base)`, `(rnrs)`
 
-If `_x~1~_` and `_x~2~_` are exact, `_x~2~_` must not be zero. These procedures are similar to `div`, `mod`, and `div-and-mod`, but constrain the "mod" value differently, which also affects the "div" value. The value `_n~d~_` of `(div0 _x~1~_ _x~2~_)` is an integer, and the value `_x~m~_` of `(mod0 _x~1~_ _x~2~_)` is a real number such that _x_~1~ = _n_~d~ · _x_~2~ + _x_~m~ and -|_x_~2~/2| ≤ _x_~m~ < |_x_~2~/2|. In situations where the implementation cannot represent the mathematical results prescribed by these equations as a number object, `div0` and `mod0` return an unspecified number or raise an exception with condition type `&implementation-restriction`.
+If `_x~1~_` and `_x~2~_` are exact, `_x~2~_` must not be zero. These procedures are similar to `div`, `mod`, and `div-and-mod`, but constrain the "mod" value differently, which also affects the "div" value. The value `_n~d~_` of `(div0 _x~1~_ _x~2~_)` is an integer, and the value `_x~m~_` of `(mod0 _x~1~_ _x~2~_)` is a real number such that stem:[x_1 = n_d \cdot x_2 + x_m] and stem:[-|x_2 / 2| \leq x_m \lt |x_2 / 2|]. In situations where the implementation cannot represent the mathematical results prescribed by these equations as a number object, `div0` and `mod0` return an unspecified number or raise an exception with condition type `&implementation-restriction`.
 
 The `div0-and-mod0` procedure behaves as if defined as follows.
 
-`(define (div0-and-mod0 x1 x2) (values (div0 x1 x2) (mod0 x1 x2)))`
+[source,scheme,subs=""]
+----
+(define (div0-and-mod0 x1 x2) (values (div0 x1 x2) (mod0 x1 x2)))
+----
 
 That is, unless it raises an exception in the circumstance described above, it returns two values: the result of calling `div0` on the two arguments and the result of calling `mod0` on the two arguments.
 
-`(div0 17 3) ⇒ 6
+[source,scheme,subs=""]
+----
+(div0 17 3) ⇒ 6
 (mod0 17 3) ⇒ -1
 (div0 -17 3) ⇒ -6
 (mod0 -17 3) ⇒ 1
@@ -1543,7 +1578,8 @@ That is, unless it raises an exception in the circumstance described above, it r
 (mod0 -17 -3) ⇒ 1
 
 (div0-and-mod0 17.5 3) ⇒ 6.0
-                        -0.5`
+                          -0.5
+----
 
 [horizontal]
 procedure:: `(truncate _real_)`
@@ -1552,11 +1588,14 @@ libraries:: `(rnrs base)`, `(rnrs)`
 
 If `_real_` is an infinity or NaN, `truncate` returns `_real_`.
 
-`(truncate 19) ⇒ 19
+[source,scheme,subs=""]
+----
+(truncate 19) ⇒ 19
 (truncate 2/3) ⇒ 0
 (truncate -2/3) ⇒ 0
 (truncate 17.3) ⇒ 17.0
-(truncate -17/2) ⇒ -8`
+(truncate -17/2) ⇒ -8
+----
 
 [horizontal]
 procedure:: `(floor _real_)`
@@ -1565,11 +1604,14 @@ libraries:: `(rnrs base)`, `(rnrs)`
 
 If `_real_` is an infinity or NaN, `floor` returns `_real_`.
 
-`(floor 19) ⇒ 19
+[source,scheme,subs=""]
+----
+(floor 19) ⇒ 19
 (floor 2/3) ⇒ 0
 (floor -2/3) ⇒ -1
 (floor 17.3) ⇒ 17.0
-(floor -17/2) ⇒ -9`
+(floor -17/2) ⇒ -9
+----
 
 [horizontal]
 procedure:: `(ceiling _real_)`
@@ -1578,11 +1620,14 @@ libraries:: `(rnrs base)`, `(rnrs)`
 
 If `_real_` is an infinity or NaN, `ceiling` returns `_real_`.
 
-`(ceiling 19) ⇒ 19
+[source,scheme,subs=""]
+----
+(ceiling 19) ⇒ 19
 (ceiling 2/3) ⇒ 1
 (ceiling -2/3) ⇒ 0
 (ceiling 17.3) ⇒ 18.0
-(ceiling -17/2) ⇒ -8`
+(ceiling -17/2) ⇒ -8
+----
 
 [horizontal]
 procedure:: `(round _real_)`
@@ -1591,51 +1636,64 @@ libraries:: `(rnrs base)`, `(rnrs)`
 
 If `_real_` is exactly between two integers, the closest even integer is returned. If `_real_` is an infinity or NaN, `round` returns `_real_`.
 
-`(round 19) ⇒ 19
+[source,scheme,subs=""]
+----
+(round 19) ⇒ 19
 (round 2/3) ⇒ 1
 (round -2/3) ⇒ -1
 (round 17.3) ⇒ 17.0
 (round -17/2) ⇒ -8
 (round 2.5) ⇒ 2.0
-(round 3.5) ⇒ 4.0`
+(round 3.5) ⇒ 4.0
+----
 
+[#page_abs]
 [horizontal]
 procedure:: `(abs _real_)`
 returns:: the absolute value of `_real_`
 libraries:: `(rnrs base)`, `(rnrs)`
 
-`abs` is equivalent to `(lambda (x) (if (< x 0) (- x) x))`. `abs` and `magnitude` (see page 183) are identical for real inputs.
+`abs` is equivalent to `(lambda (x) (if (< x 0) (- x) x))`. `abs` and `magnitude` (see <<page_magnitude,page 183>>) are identical for real inputs.
 
-`(abs 1) ⇒ 1
+[source,scheme,subs=""]
+----
+(abs 1) ⇒ 1
 (abs -3/4) ⇒ 3/4
 (abs 1.83) ⇒ 1.83
-(abs -0.093) ⇒ 0.093`
+(abs -0.093) ⇒ 0.093
+----
 
 [horizontal]
 procedure:: `(max _real~1~_ _real~2~_ \...)`
 returns:: the maximum of `_real~1~_ _real~2~_ \...`
 libraries:: `(rnrs base)`, `(rnrs)`
 
-` (max 4 -7 2 0 -6) ⇒ 4
+[source,scheme,subs=""]
+----
+(max 4 -7 2 0 -6) ⇒ 4
 (max 1/2 3/4 4/5 5/6 6/7) ⇒ 6/7
 (max 1.5 1.3 -0.3 0.4 2.0 1.8) ⇒ 2.0
 (max 5 2.0) ⇒ 5.0
 (max -5 -2.0) ⇒ -2.0
 (let ([ls '(7 3 5 2 9 8)])
-  (apply max ls)) ⇒ 9`
+  (apply max ls)) ⇒ 9
+----
 
 [horizontal]
 procedure:: `(min _real~1~_ _real~2~_ \...)`
 returns:: the minimum of `_real~1~_ _real~2~_ \...`
 libraries:: `(rnrs base)`, `(rnrs)`
 
-` (min 4 -7 2 0 -6) ⇒ -7
+[source,scheme,subs=""]
+----
+(min 4 -7 2 0 -6) ⇒ -7
 (min 1/2 3/4 4/5 5/6 6/7) ⇒ 1/2
 (min 1.5 1.3 -0.3 0.4 2.0 1.8) ⇒ -0.3
 (min 5 2.0) ⇒ 2.0
 (min -5 -2.0) ⇒ -5.0
 (let ([ls '(7 3 5 2 9 8)])
-  (apply min ls)) ⇒ 2`
+  (apply min ls)) ⇒ 2
+----
 
 [horizontal]
 procedure:: `(gcd _int_ \...)`
@@ -1644,10 +1702,13 @@ libraries:: `(rnrs base)`, `(rnrs)`
 
 The result is always nonnegative, i.e., factors of -1 are ignored. When called with no arguments, `gcd` returns 0.
 
-`(gcd) ⇒ 0
+[source,scheme,subs=""]
+----
+(gcd) ⇒ 0
 (gcd 34) ⇒ 34
 (gcd 33.0 15.0) ⇒ 3.0
-(gcd 70 -42 28) ⇒ 14`
+(gcd 70 -42 28) ⇒ 14
+----
 
 [horizontal]
 procedure:: `(lcm _int_ \...)`
@@ -1656,11 +1717,14 @@ libraries:: `(rnrs base)`, `(rnrs)`
 
 The result is always nonnegative, i.e., common multiples of -1 are ignored. Although `lcm` should probably return <graphic> when called with no arguments, it is defined to return 1. If one or more of the arguments is 0, `lcm` returns 0.
 
-`(lcm) ⇒ 1
+[source,scheme,subs=""]
+----
+(lcm) ⇒ 1
 (lcm 34) ⇒ 34
 (lcm 33.0 15.0) ⇒ 165.0
 (lcm 70 -42 28) ⇒ 420
-(lcm 17.0 0) ⇒ 0.0`
+(lcm 17.0 0) ⇒ 0.0
+----
 
 [horizontal]
 procedure:: `(expt _num~1~_ _num~2~_)`
@@ -1669,12 +1733,15 @@ libraries:: `(rnrs base)`, `(rnrs)`
 
 If both arguments are 0, `expt` returns 1.
 
-`(expt 2 10) ⇒ 1024
+[source,scheme,subs=""]
+----
+(expt 2 10) ⇒ 1024
 (expt 2 -10) ⇒ 1/1024
 (expt 2 -10.0) ⇒ 9.765625e-4
 (expt -1/2 5) ⇒ -1/32
 (expt 3.0 3) ⇒ 27.0
-(expt +i 2) ⇒ -1`
+(expt +i 2) ⇒ -1
+----
 
 [horizontal]
 procedure:: `(inexact _num_)`
@@ -1683,11 +1750,14 @@ libraries:: `(rnrs base)`, `(rnrs)`
 
 If `_num_` is already inexact, it is returned unchanged. If no inexact representation for `_num_` is supported by the implementation, an exception with condition type `&implementation-violation` may be raised. `inexact` may also return `+inf.0` or `-inf.0` for inputs whose magnitude exceeds the range of the implementation's inexact number representations.
 
-`(inexact 3) ⇒ 3.0
+[source,scheme,subs=""]
+----
+(inexact 3) ⇒ 3.0
 (inexact 3.0) ⇒ 3.0
 (inexact -1/4) ⇒ -.25
 (inexact 3+4i) ⇒ 3.0+4.0i
-(inexact (expt 10 20)) ⇒ 1e20`
+(inexact (expt 10 20)) ⇒ 1e20
+----
 
 [horizontal]
 procedure:: `(exact _num_)`
@@ -1696,17 +1766,19 @@ libraries:: `(rnrs base)`, `(rnrs)`
 
 If `_num_` is already exact, it is returned unchanged. If no exact representation for `_num_` is supported by the implementation, an exception with condition type `&implementation-violation` may be raised.
 
-`(exact 3.0) ⇒ 3
+[source,scheme,subs=""]
+----
+(exact 3.0) ⇒ 3
 (exact 3) ⇒ 3
 (exact -.25) ⇒ -1/4
 (exact 3.0+4.0i) ⇒ 3+4i
-(exact 1e20) ⇒ 100000000000000000000`
+(exact 1e20) ⇒ 100000000000000000000
+----
 
 [horizontal]
-procedure:: `(exact->inexact _num_)`
+procedure:: `(exact\->inexact _num_)`
 returns:: an inexact representation of `_num_`
-[horizontal]
-procedure:: `(inexact->exact _num_)`
+procedure:: `(inexact\->exact _num_)`
 returns:: an exact representation of `_num_`
 libraries:: `(rnrs r5rs)`
 
@@ -1717,11 +1789,14 @@ procedure:: `(rationalize _real~1~_ _real~2~_)`
 returns:: see below
 libraries:: `(rnrs base)`, `(rnrs)`
 
-`rationalize` returns the simplest rational number that differs from `_real~1~_` by no more than `_real~2~_`. A rational number _q_~1~ = _n_~1~/_m_~1~ is simpler than another rational number _q_~2~ = _n_~2~/_m_~2~ if |_n_~1~| ≤ |_n_~2~| and |_m_~1~| ≤ |_m_~2~| and either |_n_~1~| < |_n_~2~| or |_m_~1~| < |_m_~2~|.
+`rationalize` returns the simplest rational number that differs from `_real~1~_` by no more than `_real~2~_`. A rational number stem:[q_1 = n_1/m_1] is simpler than another rational number stem:[q_2 = n_2/m_2] if stem:[|n_1| \leq |n_2|] and stem:[|m_1| \leq |m_2|] and either stem:[|n_1| \lt |n_2|] or stem:[|m_1| \lt |m_2|].
 
-`(rationalize 3/10 1/10) ⇒ 1/3
+[source,scheme,subs=""]
+----
+(rationalize 3/10 1/10) ⇒ 1/3
 (rationalize .3 1/10) ⇒ 0.3333333333333333
-(eqv? (rationalize .3 1/10) #i1/3) ⇒ #t`
+(eqv? (rationalize .3 1/10) #i1/3) ⇒ #t
+----
 
 [horizontal]
 procedure:: `(numerator _rat_)`
@@ -1730,12 +1805,15 @@ libraries:: `(rnrs base)`, `(rnrs)`
 
 If `_rat_` is an integer, the numerator is `_rat_`.
 
-`(numerator 9) ⇒ 9
+[source,scheme,subs=""]
+----
+(numerator 9) ⇒ 9
 (numerator 9.0) ⇒ 9.0
 (numerator 0.0) ⇒ 0.0
 (numerator 2/3) ⇒ 2
 (numerator -9/4) ⇒ -9
-(numerator -2.25) ⇒ -9.0`
+(numerator -2.25) ⇒ -9.0
+----
 
 [horizontal]
 procedure:: `(denominator _rat_)`
@@ -1744,13 +1822,16 @@ libraries:: `(rnrs base)`, `(rnrs)`
 
 If `_rat_` is an integer, including zero, the denominator is one.
 
-`(denominator 9) ⇒ 1
+[source,scheme,subs=""]
+----
+(denominator 9) ⇒ 1
 (denominator 9.0) ⇒ 1.0
 (denominator 0) ⇒ 1
 (denominator 0.0) ⇒ 1.0
 (denominator 2/3) ⇒ 3
 (denominator -9/4) ⇒ 4
-(denominator -2.25) ⇒ 4.0`
+(denominator -2.25) ⇒ 4.0
+----
 
 [horizontal]
 procedure:: `(real-part _num_)`
@@ -1759,11 +1840,14 @@ libraries:: `(rnrs base)`, `(rnrs)`
 
 If `_num_` is real, `real-part` returns `_num_`.
 
-`(real-part 3+4i) ⇒ 3
+[source,scheme,subs=""]
+----
+(real-part 3+4i) ⇒ 3
 (real-part -2.3+0.7i) ⇒ -2.3
 (real-part -i) ⇒ 0
 (real-part 17.2) ⇒ 17.2
-(real-part -17/100) ⇒ -17/100`
+(real-part -17/100) ⇒ -17/100
+----
 
 [horizontal]
 procedure:: `(imag-part _num_)`
@@ -1772,54 +1856,70 @@ libraries:: `(rnrs base)`, `(rnrs)`
 
 If `_num_` is real, `imag-part` returns exact zero.
 
-`(imag-part 3+4i) ⇒ 4
+[source,scheme,subs=""]
+----
+(imag-part 3+4i) ⇒ 4
 (imag-part -2.3+0.7i) ⇒ 0.7
 (imag-part -i) ⇒ -1
 (imag-part -2.5) ⇒ 0
-(imag-part -17/100) ⇒ 0`
+(imag-part -17/100) ⇒ 0
+----
 
 [horizontal]
 procedure:: `(make-rectangular _real~1~_ _real~2~_)`
 returns:: a complex number with real component `_real~1~_` and imaginary component `_real~2~_`
 libraries:: `(rnrs base)`, `(rnrs)`
 
-` (make-rectangular -2 7) ⇒ -2+7i
+[source,scheme,subs=""]
+----
+(make-rectangular -2 7) ⇒ -2+7i
 (make-rectangular 2/3 -1/2) ⇒ 2/3-1/2i
-(make-rectangular 3.2 5.3) ⇒ 3.2+5.3i`
+(make-rectangular 3.2 5.3) ⇒ 3.2+5.3i
+----
 
 [horizontal]
 procedure:: `(make-polar _real~1~_ _real~2~_)`
 returns:: a complex number with magnitude `_real~1~_` and angle `_real~2~_`
 libraries:: `(rnrs base)`, `(rnrs)`
 
-` (make-polar 2 0) ⇒ 2
+[source,scheme,subs=""]
+----
+(make-polar 2 0) ⇒ 2
 (make-polar 2.0 0.0) ⇒ 2.0+0.0i
 (make-polar 1.0 (asin -1.0)) ⇒ 0.0-1.0i
-(eqv? (make-polar 7.2 -0.588) 7.2@-0.588) ⇒ #t`
+(eqv? (make-polar 7.2 -0.588) 7.2@-0.588) ⇒ #t
+----
 
 [horizontal]
 procedure:: `(angle _num_)`
 returns:: the angle part of the polar representation of `_num_`
 libraries:: `(rnrs base)`, `(rnrs)`
 
-The range of the result is <graphic> (exclusive) to <graphic> (inclusive).
+The range of the result is stem:[-π] (exclusive) to stem:[+π] (inclusive).
 
-`(angle 7.3@1.5708) ⇒ 1.5708
-(angle 5.2) ⇒ 0.0`
+[source,scheme,subs=""]
+----
+(angle 7.3@1.5708) ⇒ 1.5708
+(angle 5.2) ⇒ 0.0
+----
 
+[#page_magnitude]
 [horizontal]
 procedure:: `(magnitude _num_)`
 returns:: the magnitude of `_num_`
 libraries:: `(rnrs base)`, `(rnrs)`
 
-`magnitude` and `abs` (see page 178) are identical for real arguments. The magnitude of a complex number _x_ + _yi_ is <graphic>.
+`magnitude` and `abs` (see <<page_abs,page 178>>) are identical for real arguments. The magnitude of a complex number stem:[x + y_i] is stem:[+\sqrt{x^2+y^2}].
 
-`(magnitude 1) ⇒ 1
+[source,scheme,subs=""]
+----
+(magnitude 1) ⇒ 1
 (magnitude -3/4) ⇒ 3/4
 (magnitude 1.83) ⇒ 1.83
 (magnitude -0.093) ⇒ 0.093
 (magnitude 3+4i) ⇒ 5
-(magnitude 7.25@1.5708) ⇒ 7.25`
+(magnitude 7.25@1.5708) ⇒ 7.25
+----
 
 [horizontal]
 procedure:: `(sqrt _num_)`
@@ -1828,121 +1928,146 @@ libraries:: `(rnrs base)`, `(rnrs)`
 
 Implementations are encouraged, but not required, to return exact results for exact inputs to `sqrt` whenever feasible.
 
-`(sqrt 16) ⇒ 4
+[source,scheme,subs=""]
+----
+(sqrt 16) ⇒ 4
 (sqrt 1/4) ⇒ 1/2
 (sqrt 4.84) ⇒ 2.2
 (sqrt -4.84) ⇒ 0.0+2.2i
 (sqrt 3+4i) ⇒ 2+1i
-(sqrt -3.0-4.0i) ⇒ 1.0-2.0i`
+(sqrt -3.0-4.0i) ⇒ 1.0-2.0i
+----
 
 [horizontal]
 procedure:: `(exact-integer-sqrt _n_)`
 returns:: see below
 libraries:: `(rnrs base)`, `(rnrs)`
 
-This procedure returns two nonnegative exact integers _s_ and _r_ where _n_ = _s_2 + _r_ and _n_ < (_s_ + 1)2.
+This procedure returns two nonnegative exact integers _s_ and _r_ where stem:[n = s_2 + r] and stem:[n < (s + 1)^2].
 
-`(exact-integer-sqrt 0) ⇒ 0
-                        0
+[source,scheme,subs=""]
+----
+(exact-integer-sqrt 0) ⇒ 0
+                          0
 (exact-integer-sqrt 9) ⇒ 3
                        ⇒ 0
 (exact-integer-sqrt 19) ⇒ 4
-                        ⇒ 3`
+                        ⇒ 3
+----
 
 [horizontal]
 procedure:: `(exp _num_)`
 returns:: _e_ to the `_num_` power
 libraries:: `(rnrs base)`, `(rnrs)`
 
-` (exp 0.0) ⇒ 1.0
+[source,scheme,subs=""]
+----
+(exp 0.0) ⇒ 1.0
 (exp 1.0) ⇒ 2.7182818284590455
-(exp -.5) ⇒ 0.6065306597126334`
+(exp -.5) ⇒ 0.6065306597126334
+----
 
 [horizontal]
 procedure:: `(log _num_)`
 returns:: the natural logarithm of `_num_`
-[horizontal]
 procedure:: `(log _num~1~_ _num~2~_)`
-returns:: the base-`_num~2~_` logarithm of `_num~1~_`
+returns:: the base-``_num~2~_`` logarithm of `_num~1~_`
 libraries:: `(rnrs base)`, `(rnrs)`
 
-` (log 1.0) ⇒ 0.0
+[source,scheme,subs=""]
+----
+(log 1.0) ⇒ 0.0
 (log (exp 1.0)) ⇒ 1.0
 (/ (log 100) (log 10)) ⇒ 2.0
 (log (make-polar (exp 2.0) 1.0)) ⇒ 2.0+1.0i
 
 (log 100.0 10.0) ⇒ 2.0
-(log .125 2.0) ⇒ -3.0`
+(log .125 2.0) ⇒ -3.0
+----
 
 [horizontal]
 procedure:: `(sin _num_)`
-[horizontal]
 procedure:: `(cos _num_)`
-[horizontal]
 procedure:: `(tan _num_)`
 returns:: the sine, cosine, or tangent of `_num_`
 libraries:: `(rnrs base)`, `(rnrs)`
 
 The argument is specified in radians.
 
-`(sin 0.0) ⇒ 0.0
+[source,scheme,subs=""]
+----
+(sin 0.0) ⇒ 0.0
 (cos 0.0) ⇒ 1.0
-(tan 0.0) ⇒ 0.0`
+(tan 0.0) ⇒ 0.0
+----
 
 [horizontal]
 procedure:: `(asin _num_)`
-[horizontal]
 procedure:: `(acos _num_)`
 returns:: the arc sine or the arc cosine of `_num_`
 libraries:: `(rnrs base)`, `(rnrs)`
 
 The result is in radians. The arc sine and arc cosine of a complex number _z_ are defined as follows.
 
-<graphic>
+[stem]
+++++
+\sin^{-1}(z) = -i \log(iz + \sqrt{1 - z^2})
+++++
 
-<graphic>
+[stem]
+++++
+\cos^{-1}(z) = π/2 - \sin^{-1}(z)
+++++
 
-`(define pi (* (asin 1) 2))
-(= (* (acos 0) 2) pi) ⇒ #t`
+[source,scheme,subs=""]
+----
+(define pi (* (asin 1) 2))
+(= (* (acos 0) 2) pi) ⇒ #t
+----
 
 [horizontal]
 procedure:: `(atan _num_)`
-[horizontal]
 procedure:: `(atan _real~1~_ _real~2~_)`
 returns:: see below
 libraries:: `(rnrs base)`, `(rnrs)`
 
 When passed a single complex argument `_num_` (the first form), `atan` returns the arc tangent of `_num_`. The arc tangent of a complex number _z_ is defined as follows.
 
-<graphic>
+[stem]
+++++
+\tan^{-1}(z) = (\log(1 + iz) - \log(1 - iz)) / (2i)
+++++
 
 When passed two real arguments (the second form), `atan` is equivalent to `(lambda (y x) (angle (make-rectangular x y)))`.
 
-`(define pi (* (atan 1) 4))
-(= (* (atan 1.0 0.0) 2) pi) ⇒ #t`
+[source,scheme,subs=""]
+----
+(define pi (* (atan 1) 4))
+(= (* (atan 1.0 0.0) 2) pi) ⇒ #t
+----
 
 [horizontal]
 procedure:: `(bitwise-not _exint_)`
 returns:: the bitwise not of `_exint_`
-[horizontal]
 procedure:: `(bitwise-and _exint_ \...)`
 returns:: the bitwise and of `_exint_ \...`
-[horizontal]
 procedure:: `(bitwise-ior _exint_ \...)`
 returns:: the bitwise inclusive or of `_exint_ \...`
-[horizontal]
 procedure:: `(bitwise-xor _exint_ \...)`
 returns:: the bitwise exclusive or of `_exint_ \...`
 libraries:: `(rnrs arithmetic bitwise)`, `(rnrs)`
 
 The inputs are treated as if represented in two's complement, even if they are not represented that way internally.
 
-`(bitwise-not 0) ⇒ -1
+[source,scheme,subs=""]
+----
+(bitwise-not 0) ⇒ -1
 (bitwise-not 3) ⇒ -4
 
 (bitwise-and #b01101 #b00111) ⇒ #b00101
 (bitwise-ior #b01101 #b00111) ⇒ #b01111
-(bitwise-xor #b01101 #b00111) ⇒ #b01010`
+(bitwise-xor #b01101 #b00111) ⇒ #b01010
+----
 
 [horizontal]
 procedure:: `(bitwise-if _exint~1~_ _exint~2~_ _exint~3~_)`
@@ -1953,15 +2078,21 @@ The inputs are treated as if represented in two's complement, even if they are n
 
 For each bit set in `_exint~1~_`, the corresponding bit of the result is taken from `_exint~2~_`, and for each bit not set in `_exint~1~_`, the corresponding bit of the result is taken from `_x~3~_`.
 
-`(bitwise-if #b101010 #b111000 #b001100) ⇒ #b101100`
+[source,scheme,subs=""]
+----
+(bitwise-if #b101010 #b111000 #b001100) ⇒ #b101100
+----
 
 `bitwise-if` might be defined as follows:
 
-`(define bitwise-if
+[source,scheme,subs=""]
+----
+(define bitwise-if
   (lambda (exint1 exint2 exint3)
     (bitwise-ior
       (bitwise-and exint1 exint2)
-      (bitwise-and (bitwise-not exint1) exint3))))`
+      (bitwise-and (bitwise-not exint1) exint3))))
+----
 
 [horizontal]
 procedure:: `(bitwise-bit-count _exint_)`
@@ -1970,14 +2101,17 @@ libraries:: `(rnrs arithmetic bitwise)`, `(rnrs)`
 
 For nonnegative inputs, `bitwise-bit-count` returns the number of bits set in the two's complement representation of `_exint_`. For negative inputs, it returns a negative number whose magnitude is one greater than the number of bits not set in the two's complement representation of `_exint_`, which is equivalent to `(bitwise-not (bitwise-bit-count (bitwise-not _exint_)))`.
 
-`(bitwise-bit-count #b00000) ⇒ 0
+[source,scheme,subs=""]
+----
+(bitwise-bit-count #b00000) ⇒ 0
 (bitwise-bit-count #b00001) ⇒ 1
 (bitwise-bit-count #b00100) ⇒ 1
 (bitwise-bit-count #b10101) ⇒ 3
 
 (bitwise-bit-count -1) ⇒ -1
 (bitwise-bit-count -2) ⇒ -2
-(bitwise-bit-count -4) ⇒ -3`
+(bitwise-bit-count -4) ⇒ -3
+----
 
 [horizontal]
 procedure:: `(bitwise-length _exint_)`
@@ -1986,14 +2120,17 @@ libraries:: `(rnrs arithmetic bitwise)`, `(rnrs)`
 
 This procedure returns the number of bits of the smallest two's complement representation of `_exint_`, not including the sign bit for negative numbers. For 0 `bitwise-length` returns 0.
 
-`(bitwise-length #b00000) ⇒ 0
+[source,scheme,subs=""]
+----
+(bitwise-length #b00000) ⇒ 0
 (bitwise-length #b00001) ⇒ 1
 (bitwise-length #b00100) ⇒ 3
 (bitwise-length #b00110) ⇒ 3
 
 (bitwise-length -1) ⇒ 0
 (bitwise-length -6) ⇒ 3
-(bitwise-length -9) ⇒ 4`
+(bitwise-length -9) ⇒ 4
+----
 
 [horizontal]
 procedure:: `(bitwise-first-bit-set _exint_)`
@@ -2004,13 +2141,16 @@ The input is treated as if represented in two's complement, even if it is not re
 
 If `_exint_` is 0, `bitwise-first-bit-set` returns -1.
 
-`(bitwise-first-bit-set #b00000) ⇒ -1
+[source,scheme,subs=""]
+----
+(bitwise-first-bit-set #b00000) ⇒ -1
 (bitwise-first-bit-set #b00001) ⇒ 0
 (bitwise-first-bit-set #b01100) ⇒ 2
 
 (bitwise-first-bit-set -1) ⇒ 0
 (bitwise-first-bit-set -2) ⇒ 1
-(bitwise-first-bit-set -3) ⇒ 0`
+(bitwise-first-bit-set -3) ⇒ 0
+----
 
 [horizontal]
 procedure:: `(bitwise-bit-set? _exint~1~_ _exint~2~_)`
@@ -2019,7 +2159,9 @@ libraries:: `(rnrs arithmetic bitwise)`, `(rnrs)`
 
 `_exint~2~_` is taken as a zero-based index for the bits in the two's complement representation of `_exint~1~_`. The two's complement representation of a nonnegative number conceptually extends to the left (toward more significant bits) with an infinite number of zero bits, and the two's complement representation of a negative number conceptually extends to the left with an infinite number of one bits. Thus, exact integers can be used to represent arbitrarily large sets, where 0 is the empty set, -1 is the universe, and `bitwise-bit-set?` is used to test for membership.
 
-`(bitwise-bit-set? #b01011 0) ⇒ #t
+[source,scheme,subs=""]
+----
+(bitwise-bit-set? #b01011 0) ⇒ #t
 (bitwise-bit-set? #b01011 2) ⇒ #f
 
 (bitwise-bit-set? -1 0) ⇒ #t
@@ -2027,7 +2169,8 @@ libraries:: `(rnrs arithmetic bitwise)`, `(rnrs)`
 (bitwise-bit-set? -3 1) ⇒ #f
 
 (bitwise-bit-set? 0 5000) ⇒ #f
-(bitwise-bit-set? -1 5000) ⇒ #t`
+(bitwise-bit-set? -1 5000) ⇒ #t
+----
 
 [horizontal]
 procedure:: `(bitwise-copy-bit _exint~1~_ _exint~2~_ _exint~3~_)`
@@ -2036,8 +2179,11 @@ libraries:: `(rnrs arithmetic bitwise)`, `(rnrs)`
 
 `_exint~2~_` is taken as a zero-based index for the bits in the two's complement representation of `_exint~1~_`. `_exint~3~_` must be 0 or 1. This procedure effectively clears or sets the specified bit depending on the value of `_exint~3~_`. `_exint~1~_` is treated as if represented in two's complement, even if it is not represented that way internally.
 
-`(bitwise-copy-bit #b01110 0 1) ⇒ #b01111
-(bitwise-copy-bit #b01110 2 0) ⇒ #b01010`
+[source,scheme,subs=""]
+----
+(bitwise-copy-bit #b01110 0 1) ⇒ #b01111
+(bitwise-copy-bit #b01110 2 0) ⇒ #b01010
+----
 
 [horizontal]
 procedure:: `(bitwise-bit-field _exint~1~_ _exint~2~_ _exint~3~_)`
@@ -2046,10 +2192,13 @@ libraries:: `(rnrs arithmetic bitwise)`, `(rnrs)`
 
 `_exint~2~_` and `_exint~3~_` must be nonnegative, and `_exint~2~_` must not be greater than `_exint~3~_`. This procedure returns the number represented by extracting from `_exint~1~_` the sequence of bits from `_exint~2~_` (inclusive) to `_exint~3~_` (exclusive). `_exint~1~_` is treated as if represented in two's complement, even if it is not represented that way internally.
 
-`(bitwise-bit-field #b10110 0 3) ⇒ #b00110
+[source,scheme,subs=""]
+----
+(bitwise-bit-field #b10110 0 3) ⇒ #b00110
 (bitwise-bit-field #b10110 1 3) ⇒ #b00011
 (bitwise-bit-field #b10110 2 3) ⇒ #b00001
-(bitwise-bit-field #b10110 3 3) ⇒ #b00000`
+(bitwise-bit-field #b10110 3 3) ⇒ #b00000
+----
 
 [horizontal]
 procedure:: `(bitwise-copy-bit-field _exint~1~_ _exint~2~_ _exint~3~_ _exint~4~_)`
@@ -2058,27 +2207,32 @@ libraries:: `(rnrs arithmetic bitwise)`, `(rnrs)`
 
 `_exint~2~_` and `_exint~3~_` must be nonnegative, and `_exint~2~_` must not be greater than `_exint~3~_`. This procedure returns `_exint~1~_` with the `_n_` bits from `_exint~2~_` (inclusive) to `_exint~3~_` (exclusive) replaced by the low-order `_n_` bits of `_exint~4~_`. `_exint~1~_` and `_exint~4~_` are treated as if represented in two's complement, even if they are not represented that way internally.
 
-`(bitwise-copy-bit-field #b10000 0 3 #b10101) ⇒ #b10101
+[source,scheme,subs=""]
+----
+(bitwise-copy-bit-field #b10000 0 3 #b10101) ⇒ #b10101
 (bitwise-copy-bit-field #b10000 1 3 #b10101) ⇒ #b10010
 (bitwise-copy-bit-field #b10000 2 3 #b10101) ⇒ #b10100
-(bitwise-copy-bit-field #b10000 3 3 #b10101) ⇒ #b10000`
+(bitwise-copy-bit-field #b10000 3 3 #b10101) ⇒ #b10000
+----
 
 [horizontal]
 procedure:: `(bitwise-arithmetic-shift-right _exint~1~_ _exint~2~_)`
 returns:: `_exint~1~_` arithmetically shifted right by `_exint~2~_` bits
-[horizontal]
 procedure:: `(bitwise-arithmetic-shift-left _exint~1~_ _exint~2~_)`
 returns:: `_exint~1~_` shifted left by `_exint~2~_` bits
 libraries:: `(rnrs arithmetic bitwise)`, `(rnrs)`
 
 `_exint~2~_` must be nonnegative. `_exint~1~_` is treated as if represented in two's complement, even if it is not represented that way internally.
 
-`(bitwise-arithmetic-shift-right #b10000 3) ⇒ #b00010
+[source,scheme,subs=""]
+----
+(bitwise-arithmetic-shift-right #b10000 3) ⇒ #b00010
 (bitwise-arithmetic-shift-right -1 1) ⇒ -1
 (bitwise-arithmetic-shift-right -64 3) ⇒ -8
 
 (bitwise-arithmetic-shift-left #b00010 2) ⇒ #b01000
-(bitwise-arithmetic-shift-left -1 2) ⇒ -4`
+(bitwise-arithmetic-shift-left -1 2) ⇒ -4
+----
 
 [horizontal]
 procedure:: `(bitwise-arithmetic-shift _exint~1~_ _exint~2~_)`
@@ -2087,19 +2241,25 @@ libraries:: `(rnrs arithmetic bitwise)`, `(rnrs)`
 
 If `_exint~2~_` is negative, `bitwise-arithmetic-shift` returns the result of arithmetically shifting `_exint~1~_` right by `-_exint~2~_` bits. Otherwise, `bitwise-arithmetic-shift` returns the result of shifting `_exint~1~_` left by `_exint~2~_` bits. `_exint~1~_` is treated as if represented in two's complement, even if it is not represented that way internally.
 
-`(bitwise-arithmetic-shift #b10000 -3) ⇒ #b00010
+[source,scheme,subs=""]
+----
+(bitwise-arithmetic-shift #b10000 -3) ⇒ #b00010
 (bitwise-arithmetic-shift -1 -1) ⇒ -1
 (bitwise-arithmetic-shift -64 -3) ⇒ -8
 (bitwise-arithmetic-shift #b00010 2) ⇒ #b01000
-(bitwise-arithmetic-shift -1 2) ⇒ -4`
+(bitwise-arithmetic-shift -1 2) ⇒ -4
+----
 
 Thus, `bitwise-arithmetic-shift` behaves as if defined as follows.
 
-`(define bitwise-arithmetic-shift
+[source,scheme,subs=""]
+----
+(define bitwise-arithmetic-shift
   (lambda (exint1 exint2)
     (if (< exint2 0)
         (bitwise-arithmetic-shift-right exint1 (- exint2))
-        (bitwise-arithmetic-shift-left exint1 exint2))))`
+        (bitwise-arithmetic-shift-left exint1 exint2))))
+----
 
 [horizontal]
 procedure:: `(bitwise-rotate-bit-field _exint~1~_ _exint~2~_ _exint~3~_ _exint~4~_)`
@@ -2108,8 +2268,11 @@ libraries:: `(rnrs arithmetic bitwise)`, `(rnrs)`
 
 `_exint~2~_`, `_exint~3~_`, and `_exint~4~_` must be nonnegative, and `_exint~2~_` must not be greater than `_exint~3~_`. This procedure returns the result of shifting the bits of `_exint~1~_` from bit `_exint~2~_` (inclusive) through bit `_exint~3~_` (exclusive) left by `(mod _exint~4~_ (- _exint~3~_ _exint~2~_))` bits, with the bits shifted out of the range inserted at the bottom end of the range. `_exint~1~_` is treated as if represented in two's complement, even if it is not represented that way internally.
 
-`(bitwise-rotate-bit-field #b00011010 0 5 3) ⇒ #b00010110
-(bitwise-rotate-bit-field #b01101011 2 7 3) ⇒ #b01011011`
+[source,scheme,subs=""]
+----
+(bitwise-rotate-bit-field #b00011010 0 5 3) ⇒ #b00010110
+(bitwise-rotate-bit-field #b01101011 2 7 3) ⇒ #b01011011
+----
 
 [horizontal]
 procedure:: `(bitwise-reverse-bit-field _exint~1~_ _exint~2~_ _exint~3~_)`
@@ -2118,42 +2281,48 @@ libraries:: `(rnrs arithmetic bitwise)`, `(rnrs)`
 
 `_exint~2~_` and `_exint~3~_` must be nonnegative, and `_exint~2~_` must not be greater than `_exint~3~_`. This procedure returns the result of reversing the bits of `_exint~1~_` from bit `_exint~2~_` (inclusive) through bit `_exint~3~_` (exclusive). `_exint~1~_` is treated as if represented in two's complement, even if it is not represented that way internally.
 
-`(bitwise-reverse-bit-field #b00011010 0 5) ⇒ #b00001011
-(bitwise-reverse-bit-field #b01101011 2 7) ⇒ #b00101111`
+[source,scheme,subs=""]
+----
+(bitwise-reverse-bit-field #b00011010 0 5) ⇒ #b00001011
+(bitwise-reverse-bit-field #b01101011 2 7) ⇒ #b00101111
+----
 
 [horizontal]
-procedure:: `(string->number _string_)`
-[horizontal]
-procedure:: `(string->number _string_ _radix_)`
+procedure:: `(string\->number _string_)`
+procedure:: `(string\->number _string_ _radix_)`
 returns:: the number represented by `_string_`, or `#f`
 libraries:: `(rnrs base)`, `(rnrs)`
 
 If `_string_` is a valid representation of a number, that number is returned, otherwise `#f` is returned. The number is interpreted in radix `_radix_`, which must be an exact integer in the set {2,8,10,16}. If not specified, `_radix_` defaults to 10. Any radix specifier within `_string_`, e.g., `#x`, overrides the `_radix_` argument.
 
-`(string->number "0") ⇒ 0
+[source,scheme,subs=""]
+----
+(string->number "0") ⇒ 0
 (string->number "3.4e3") ⇒ 3400.0
 (string->number "#x#e-2e2") ⇒ -738
 (string->number "#e-2e2" 16) ⇒ -738
 (string->number "#i15/16") ⇒ 0.9375
-(string->number "10" 16) ⇒ 16`
+(string->number "10" 16) ⇒ 16
+----
 
 [horizontal]
-procedure:: `(number->string _num_)`
-[horizontal]
-procedure:: `(number->string _num_ _radix_)`
-[horizontal]
-procedure:: `(number->string _num_ _radix_ _precision_)`
+procedure:: `(number\->string _num_)`
+procedure:: `(number\->string _num_ _radix_)`
+procedure:: `(number\->string _num_ _radix_ _precision_)`
 returns:: an external representation of `_num_` as a string
 libraries:: `(rnrs base)`, `(rnrs)`
 
 The num is expressed in radix `_radix_`, which must be an exact integer in the set {2,8,10,16}. If not specified, `_radix_` defaults to 10. In any case, no radix specifier appears in the resulting string.
 
-The external representation is such that, when converted back into a number using `string->number`, the resulting numeric value is equivalent to `_num_`. That is, for all inputs:
+The external representation is such that, when converted back into a number using `string\->number`, the resulting numeric value is equivalent to `_num_`. That is, for all inputs:
 
-`(eqv? (string->number
+[source,scheme,subs="quotes"]
+----
+(eqv? (string->number
         (number->string _num_ _radix_)
         _radix_)
-      _num_)`
+      _num_)
+----
 
 returns `#t`. An exception with condition type `&implementation-restriction` is raised if this is not possible.
 
@@ -2161,15 +2330,18 @@ If `_precision_` is provided, it must be an exact positive integer, `_num_` must
 
 If `_radix_` is 10, inexact values of `_num_` are expressed using the fewest number of significant digits possible <<ref5>> without violating the above restriction.
 
-`(number->string 3.4) ⇒ "3.4"
+[source,scheme,subs=""]
+----
+(number->string 3.4) ⇒ "3.4"
 (number->string 1e2) ⇒ "100.0"
 (number->string 1e-23) ⇒ "1e-23"
 (number->string -7/2) ⇒ "-7/2"
-(number->string 220/9 16) ⇒ "DC/9"`
+(number->string 220/9 16) ⇒ "DC/9"
+----
 
 === Section 6.5. Fixnums [[section_6.5.]]
 
-_Fixnums_ represent exact integers in the fixnum range, which is required to be a closed range [-2_w_-1,2_w_-1 - 1], where _w_ (the _fixnum width_) is at least 24. The implementation-specific value of _w_ may be determined via the procedure `fixnum-width`, and the endpoints of the range may be determined via the procedures `least-fixnum` and `greatest-fixnum`.
+_Fixnums_ represent exact integers in the fixnum range, which is required to be a closed range stem:[[-2^{w-1}, 2^{w-1} - 1\]], where _w_ (the _fixnum width_) is at least 24. The implementation-specific value of _w_ may be determined via the procedure `fixnum-width`, and the endpoints of the range may be determined via the procedures `least-fixnum` and `greatest-fixnum`.
 
 The names of arithmetic procedures that operate only on fixnums begin with the prefix "`fx`" to set them apart from their generic counterparts.
 
@@ -2184,23 +2356,28 @@ procedure:: `(fixnum? _obj_)`
 returns:: `#t` if `_obj_` is a fixnum, `#f` otherwise
 libraries:: `(rnrs arithmetic fixnums)`, `(rnrs)`
 
-` (fixnum? 0) ⇒ #t
+[source,scheme,subs=""]
+----
+(fixnum? 0) ⇒ #t
 (fixnum? -1) ⇒ #t
 (fixnum? (- (expt 2 23))) ⇒ #t
-(fixnum? (- (expt 2 23) 1)) ⇒ #t`
+(fixnum? (- (expt 2 23) 1)) ⇒ #t
+----
 
 [horizontal]
 procedure:: `(least-fixnum)`
 returns:: the least (most negative) fixnum supported by the implementation
-[horizontal]
 procedure:: `(greatest-fixnum)`
 returns:: the greatest (most positive) fixnum supported by the implementation
 libraries:: `(rnrs arithmetic fixnums)`, `(rnrs)`
 
-` (fixnum? (- (least-fixnum) 1)) ⇒ #f
+[source,scheme,subs=""]
+----
+(fixnum? (- (least-fixnum) 1)) ⇒ #f
 (fixnum? (least-fixnum)) ⇒ #t
 (fixnum? (greatest-fixnum)) ⇒ #t
-(fixnum? (+ (greatest-fixnum) 1)) ⇒ #f`
+(fixnum? (+ (greatest-fixnum) 1)) ⇒ #f
+----
 
 [horizontal]
 procedure:: `(fixnum-width)`
@@ -2209,48 +2386,50 @@ libraries:: `(rnrs arithmetic fixnums)`, `(rnrs)`
 
 As described in the lead-in to this section, the fixnum width determines the size of the fixnum range and must be at least 24.
 
-`(define w (fixnum-width))
+[source,scheme,subs=""]
+----
+(define w (fixnum-width))
 (= (least-fixnum) (- (expt 2 (- w 1)))) ⇒ #t
 (= (greatest-fixnum) (- (expt 2 (- w 1)) 1)) ⇒ #t
-(>= w 24) ⇒ #t`
+(>= w 24) ⇒ #t
+----
 
 [horizontal]
 procedure:: `(fx=? _fx~1~_ _fx~2~_ _fx~3~_ \...)`
-[horizontal]
 procedure:: `(fx<? _fx~1~_ _fx~2~_ _fx~3~_ \...)`
-[horizontal]
 procedure:: `(fx>? _fx~1~_ _fx~2~_ _fx~3~_ \...)`
-[horizontal]
-procedure:: `(fx<=? _fx~1~_ _fx~2~_ _fx~3~_ \...)`
-[horizontal]
+procedure:: `(fx\<=? _fx~1~_ _fx~2~_ _fx~3~_ \...)`
 procedure:: `(fx>=? _fx~1~_ _fx~2~_ _fx~3~_ \...)`
 returns:: `#t` if the relation holds, `#f` otherwise
 libraries:: `(rnrs arithmetic fixnums)`, `(rnrs)`
 
-The predicate `fx=?` returns `#t` if its arguments are equal. The predicate `fx<?` returns `#t` if its arguments are monotonically increasing, i.e., each argument is greater than the preceding ones, while `fx>?` returns `#t` if its arguments are monotonically decreasing. The predicate `fx<=?` returns `#t` if its arguments are monotonically nondecreasing, i.e., each argument is not less than the preceding ones, while `fx>=?` returns `#t` if its arguments are monotonically nonincreasing.
+The predicate `fx=?` returns `#t` if its arguments are equal. The predicate `fx<?` returns `#t` if its arguments are monotonically increasing, i.e., each argument is greater than the preceding ones, while `fx>?` returns `#t` if its arguments are monotonically decreasing. The predicate `fx\<=?` returns `#t` if its arguments are monotonically nondecreasing, i.e., each argument is not less than the preceding ones, while `fx>=?` returns `#t` if its arguments are monotonically nonincreasing.
 
-`(fx=? 0 0) ⇒ #t
+[source,scheme,subs=""]
+----
+(fx=? 0 0) ⇒ #t
 (fx=? -1 1) ⇒ #f
 (fx<? (least-fixnum) 0 (greatest-fixnum)) ⇒ #t
 (let ([x 3]) (fx<=? 0 x 9)) ⇒ #t
 (fx>? 5 4 3 2 1) ⇒ #t
 (fx<=? 1 3 2) ⇒ #f
-(fx>=? 0 0 (least-fixnum)) ⇒ #t`
+(fx>=? 0 0 (least-fixnum)) ⇒ #t
+----
 
 [horizontal]
 procedure:: `(fxzero? _fx_)`
 returns:: `#t` if `_fx_` is zero, `#f` otherwise
-[horizontal]
 procedure:: `(fxpositive? _fx_)`
 returns:: `#t` if `_fx_` is greater than zero, `#f` otherwise
-[horizontal]
 procedure:: `(fxnegative? _fx_)`
 returns:: `#t` if `_fx_` is less than zero, `#f` otherwise
 libraries:: `(rnrs arithmetic fixnums)`, `(rnrs)`
 
 `fxzero?` is equivalent to `(lambda (x) (fx=? x 0))`, `fxpositive?` is equivalent to `(lambda (x) (fx>? x 0))`, and `fxnegative?` to `(lambda (x) (fx<? x 0))`.
 
-`(fxzero? 0) ⇒ #t
+[source,scheme,subs=""]
+----
+(fxzero? 0) ⇒ #t
 (fxzero? 1) ⇒ #f
 
 (fxpositive? 128) ⇒ #t
@@ -2259,17 +2438,19 @@ libraries:: `(rnrs arithmetic fixnums)`, `(rnrs)`
 
 (fxnegative? -65) ⇒ #t
 (fxnegative? 0) ⇒ #f
-(fxnegative? 1) ⇒ #f`
+(fxnegative? 1) ⇒ #f
+----
 
 [horizontal]
 procedure:: `(fxeven? _fx_)`
 returns:: `#t` if `_fx_` is even, `#f` otherwise
-[horizontal]
 procedure:: `(fxodd? _fx_)`
 returns:: `#t` if `_fx_` is odd, `#f` otherwise
 libraries:: `(rnrs arithmetic fixnums)`, `(rnrs)`
 
-` (fxeven? 0) ⇒ #t
+[source,scheme,subs=""]
+----
+(fxeven? 0) ⇒ #t
 (fxeven? 1) ⇒ #f
 (fxeven? -1) ⇒ #f
 (fxeven? -10) ⇒ #t
@@ -2277,17 +2458,19 @@ libraries:: `(rnrs arithmetic fixnums)`, `(rnrs)`
 (fxodd? 0) ⇒ #f
 (fxodd? 1) ⇒ #t
 (fxodd? -1) ⇒ #t
-(fxodd? -10) ⇒ #f`
+(fxodd? -10) ⇒ #f
+----
 
 [horizontal]
 procedure:: `(fxmin _fx~1~_ _fx~2~_ \...)`
 returns:: the minimum of `_fx~1~_` `_fx~2~_` \...
-[horizontal]
 procedure:: `(fxmax _fx~1~_ _fx~2~_ \...)`
 returns:: the maximum of `_fx~1~_` `_fx~2~_` \...
 libraries:: `(rnrs arithmetic fixnums)`, `(rnrs)`
 
-` (fxmin 4 -7 2 0 -6) ⇒ -7
+[source,scheme,subs=""]
+----
+(fxmin 4 -7 2 0 -6) ⇒ -7
 
 (let ([ls '(7 3 5 2 9 8)])
   (apply fxmin ls)) ⇒ 2
@@ -2295,45 +2478,54 @@ libraries:: `(rnrs arithmetic fixnums)`, `(rnrs)`
 (fxmax 4 -7 2 0 -6) ⇒ 4
 
 (let ([ls '(7 3 5 2 9 8)])
-  (apply fxmax ls)) ⇒ 9`
+  (apply fxmax ls)) ⇒ 9
+----
 
 [horizontal]
 procedure:: `(fx+ _fx~1~_ _fx~2~_)`
 returns:: the sum of `_fx~1~_` and `_fx~2~_`
 libraries:: `(rnrs arithmetic fixnums)`, `(rnrs)`
 
-` (fx+ -3 4) ⇒ 1`
+[source,scheme,subs=""]
+----
+(fx+ -3 4) ⇒ 1
+----
 
 [horizontal]
 procedure:: `(fx- _fx_)`
 returns:: the additive inverse of `_fx_`
-[horizontal]
 procedure:: `(fx- _fx~1~_ _fx~2~_)`
 returns:: the difference between `_fx~1~_` and `_fx~2~_`
 libraries:: `(rnrs arithmetic fixnums)`, `(rnrs)`
 
-` (fx- 3) ⇒ -3
-(fx- -3 4) ⇒ -7`
+[source,scheme,subs=""]
+----
+(fx- 3) ⇒ -3
+(fx- -3 4) ⇒ -7
+----
 
 [horizontal]
 procedure:: `(fx* _fx~1~_ _fx~2~_)`
 returns:: the product of `_fx~1~_` and `_fx~2~_`
 libraries:: `(rnrs arithmetic fixnums)`, `(rnrs)`
 
-` (fx* -3 4) ⇒ -12`
+[source,scheme,subs=""]
+----
+(fx* -3 4) ⇒ -12
+----
 
 [horizontal]
 procedure:: `(fxdiv _fx~1~_ _fx~2~_)`
-[horizontal]
 procedure:: `(fxmod _fx~1~_ _fx~2~_)`
-[horizontal]
 procedure:: `(fxdiv-and-mod _fx~1~_ _fx~2~_)`
 returns:: see below
 libraries:: `(rnrs arithmetic fixnums)`, `(rnrs)`
 
 `_fx~2~_` must not be zero. These are fixnum-specific versions of the generic `div`, `mod`, and `div-and-mod`.
 
-`(fxdiv 17 3) ⇒ 5
+[source,scheme,subs=""]
+----
+(fxdiv 17 3) ⇒ 5
 (fxmod 17 3) ⇒ 2
 (fxdiv -17 3) ⇒ -6
 (fxmod -17 3) ⇒ 1
@@ -2343,20 +2535,21 @@ libraries:: `(rnrs arithmetic fixnums)`, `(rnrs)`
 (fxmod -17 -3) ⇒ 1
 
 (fxdiv-and-mod 17 3) ⇒ 5
-                      2`
+                        2
+----
 
 [horizontal]
 procedure:: `(fxdiv0 _fx~1~_ _fx~2~_)`
-[horizontal]
 procedure:: `(fxmod0 _fx~1~_ _fx~2~_)`
-[horizontal]
 procedure:: `(fxdiv0-and-mod0 _fx~1~_ _fx~2~_)`
 returns:: see below
 libraries:: `(rnrs arithmetic fixnums)`, `(rnrs)`
 
 `_fx~2~_` must not be zero. These are fixnum-specific versions of the generic `div0`, `mod0`, and `div0-and-mod0`.
 
-`(fxdiv0 17 3) ⇒ 6
+[source,scheme,subs=""]
+----
+(fxdiv0 17 3) ⇒ 6
 (fxmod0 17 3) ⇒ -1
 (fxdiv0 -17 3) ⇒ -6
 (fxmod0 -17 3) ⇒ 1
@@ -2366,13 +2559,12 @@ libraries:: `(rnrs arithmetic fixnums)`, `(rnrs)`
 (fxmod0 -17 -3) ⇒ 1
 
 (fxdiv0-and-mod0 17 3) ⇒ 6
-                        -1`
+                          -1
+----
 
 [horizontal]
 procedure:: `(fx+/carry _fx~1~_ _fx~2~_ _fx~3~_)`
-[horizontal]
 procedure:: `(fx-/carry _fx~1~_ _fx~2~_ _fx~3~_)`
-[horizontal]
 procedure:: `(fx*/carry _fx~1~_ _fx~2~_ _fx~3~_)`
 returns:: see below
 libraries:: `(rnrs arithmetic fixnums)`, `(rnrs)`
@@ -2381,45 +2573,54 @@ When an ordinary fixnum addition, subtraction, or multiplication operation overf
 
 These procedures return the two fixnum values of the following computations. For `fx+/carry`:
 
-`(let* ([s (+ _fx~1~_ _fx~2~_ _fx~3~_)]
+[source,scheme,subs="quotes"]
+----
+(let* ([s (+ _fx~1~_ _fx~2~_ _fx~3~_)]
        [s0 (mod0 s (expt 2 (fixnum-width)))]
        [s1 (div0 s (expt 2 (fixnum-width)))])
-  (values s0 s1))`
+  (values s0 s1))
+----
 
 for `fx-/carry`:
 
-`(let* ([d (- _fx~1~_ _fx~2~_ _fx~3~_)]
+[source,scheme,subs="quotes"]
+----
+(let* ([d (- _fx~1~_ _fx~2~_ _fx~3~_)]
        [d0 (mod0 d (expt 2 (fixnum-width)))]
        [d1 (div0 d (expt 2 (fixnum-width)))])
-  (values d0 d1))`
+  (values d0 d1))
+----
 
 and for `fx*/carry`:
 
-`(let* ([s (+ (* _fx~1~_ _fx~2~_) _fx~3~_)]
+[source,scheme,subs="quotes"]
+----
+(let* ([s (+ (* _fx~1~_ _fx~2~_) _fx~3~_)]
        [s0 (mod0 s (expt 2 (fixnum-width)))]
        [s1 (div0 s (expt 2 (fixnum-width)))])
-  (values s0 s1))`
+  (values s0 s1))
+----
 
 [horizontal]
 procedure:: `(fxnot _fx_)`
 returns:: the bitwise not of `_fx_`
-[horizontal]
 procedure:: `(fxand _fx_ \...)`
 returns:: the bitwise and of `_fx_ \...`
-[horizontal]
 procedure:: `(fxior _fx_ \...)`
 returns:: the bitwise inclusive or of `_fx_ \...`
-[horizontal]
 procedure:: `(fxxor _fx_ \...)`
 returns:: the bitwise exclusive or of `_fx_ \...`
 libraries:: `(rnrs arithmetic fixnums)`, `(rnrs)`
 
-` (fxnot 0) ⇒ -1
+[source,scheme,subs=""]
+----
+(fxnot 0) ⇒ -1
 (fxnot 3) ⇒ -4
 
 (fxand #b01101 #b00111) ⇒ #b00101
 (fxior #b01101 #b00111) ⇒ #b01111
-(fxxor #b01101 #b00111) ⇒ #b01010`
+(fxxor #b01101 #b00111) ⇒ #b01010
+----
 
 [horizontal]
 procedure:: `(fxif _fx~1~_ _fx~2~_ _fx~3~_)`
@@ -2428,14 +2629,20 @@ libraries:: `(rnrs arithmetic fixnums)`, `(rnrs)`
 
 For each bit set in `_fx~1~_`, the corresponding bit of the result is taken from `_fx~2~_`, and for each bit not set in `_fx~1~_`, the corresponding bit of the result is taken from `_x~3~_`.
 
-`(fxif #b101010 #b111000 #b001100) ⇒ #b101100`
+[source,scheme,subs=""]
+----
+(fxif #b101010 #b111000 #b001100) ⇒ #b101100
+----
 
 `fxif` might be defined as follows:
 
-`(define fxif
+[source,scheme,subs=""]
+----
+(define fxif
   (lambda (fx1 fx2 fx3)
     (fxior (fxand fx1 fx2)
-           (fxand (fxnot fx1) fx3))))`
+           (fxand (fxnot fx1) fx3))))
+----
 
 [horizontal]
 procedure:: `(fxbit-count _fx_)`
@@ -2444,14 +2651,17 @@ libraries:: `(rnrs arithmetic fixnums)`, `(rnrs)`
 
 For nonnegative inputs, `fxbit-count` returns the number of bits set in the two's complement representation of `_fx_`. For negative inputs, it returns a negative number whose magnitude is one greater than the number of bits not set in `_fx_`, which is equivalent to `(fxnot (fxbit-count (fxnot _fx_)))`.
 
-`(fxbit-count #b00000) ⇒ 0
+[source,scheme,subs=""]
+----
+(fxbit-count #b00000) ⇒ 0
 (fxbit-count #b00001) ⇒ 1
 (fxbit-count #b00100) ⇒ 1
 (fxbit-count #b10101) ⇒ 3
 
 (fxbit-count -1) ⇒ -1
 (fxbit-count -2) ⇒ -2
-(fxbit-count -4) ⇒ -3`
+(fxbit-count -4) ⇒ -3
+----
 
 [horizontal]
 procedure:: `(fxlength _fx_)`
@@ -2460,14 +2670,17 @@ libraries:: `(rnrs arithmetic fixnums)`, `(rnrs)`
 
 This procedure returns the number of bits of the smallest two's complement representation of `_fx_`, not including the sign bit for negative numbers. For 0 `fxlength` returns 0.
 
-`(fxlength #b00000) ⇒ 0
+[source,scheme,subs=""]
+----
+(fxlength #b00000) ⇒ 0
 (fxlength #b00001) ⇒ 1
 (fxlength #b00100) ⇒ 3
 (fxlength #b00110) ⇒ 3
 
 (fxlength -1) ⇒ 0
 (fxlength -6) ⇒ 3
-(fxlength -9) ⇒ 4`
+(fxlength -9) ⇒ 4
+----
 
 [horizontal]
 procedure:: `(fxfirst-bit-set _fx_)`
@@ -2476,13 +2689,16 @@ libraries:: `(rnrs arithmetic fixnums)`, `(rnrs)`
 
 If `_fx_` is 0, `fxfirst-bit-set` returns -1.
 
-`(fxfirst-bit-set #b00000) ⇒ -1
+[source,scheme,subs=""]
+----
+(fxfirst-bit-set #b00000) ⇒ -1
 (fxfirst-bit-set #b00001) ⇒ 0
 (fxfirst-bit-set #b01100) ⇒ 2
 
 (fxfirst-bit-set -1) ⇒ 0
 (fxfirst-bit-set -2) ⇒ 1
-(fxfirst-bit-set -3) ⇒ 0`
+(fxfirst-bit-set -3) ⇒ 0
+----
 
 [horizontal]
 procedure:: `(fxbit-set? _fx~1~_ _fx~2~_)`
@@ -2491,14 +2707,17 @@ libraries:: `(rnrs arithmetic fixnums)`, `(rnrs)`
 
 `_fx~2~_` must be nonnegative. It is taken as a zero-based index for the bits in the two's complement representation of `_fx~1~_`, with the sign bit virtually replicated an infinite number of positions to the left.
 
-`(fxbit-set? #b01011 0) ⇒ #t
+[source,scheme,subs=""]
+----
+(fxbit-set? #b01011 0) ⇒ #t
 (fxbit-set? #b01011 2) ⇒ #f
 
 (fxbit-set? -1 0) ⇒ #t
 (fxbit-set? -1 20) ⇒ #t
 (fxbit-set? -3 1) ⇒ #f
 (fxbit-set? 0 (- (fixnum-width) 1)) ⇒ #f
-(fxbit-set? -1 (- (fixnum-width) 1)) ⇒ #t`
+(fxbit-set? -1 (- (fixnum-width) 1)) ⇒ #t
+----
 
 [horizontal]
 procedure:: `(fxcopy-bit _fx~1~_ _fx~2~_ _fx~3~_)`
@@ -2507,8 +2726,11 @@ libraries:: `(rnrs arithmetic fixnums)`, `(rnrs)`
 
 `_fx~2~_` must be nonnegative and less than the value of `(- (fixnum-width) 1)`. `_fx~3~_` must be 0 or 1. This procedure effectively clears or sets the specified bit depending on the value of `_fx~3~_`.
 
-`(fxcopy-bit #b01110 0 1) ⇒ #b01111
-(fxcopy-bit #b01110 2 0) ⇒ #b01010`
+[source,scheme,subs=""]
+----
+(fxcopy-bit #b01110 0 1) ⇒ #b01111
+(fxcopy-bit #b01110 2 0) ⇒ #b01010
+----
 
 [horizontal]
 procedure:: `(fxbit-field _fx~1~_ _fx~2~_ _fx~3~_)`
@@ -2517,10 +2739,13 @@ libraries:: `(rnrs arithmetic fixnums)`, `(rnrs)`
 
 `_fx~2~_` and `_fx~3~_` must be nonnegative and less than the value of `(fixnum-width)`, and `_fx~2~_` must not be greater than `_fx~3~_`. This procedure returns the number represented by extracting from `_fx~1~_` the sequence of bits from `_fx~2~_` (inclusive) to `_fx~3~_` (exclusive).
 
-`(fxbit-field #b10110 0 3) ⇒ #b00110
+[source,scheme,subs=""]
+----
+(fxbit-field #b10110 0 3) ⇒ #b00110
 (fxbit-field #b10110 1 3) ⇒ #b00011
 (fxbit-field #b10110 2 3) ⇒ #b00001
-(fxbit-field #b10110 3 3) ⇒ #b00000`
+(fxbit-field #b10110 3 3) ⇒ #b00000
+----
 
 [horizontal]
 procedure:: `(fxcopy-bit-field _fx~1~_ _fx~2~_ _fx~3~_ _fx~4~_)`
@@ -2529,27 +2754,32 @@ libraries:: `(rnrs arithmetic fixnums)`, `(rnrs)`
 
 `_fx~2~_` and `_fx~3~_` must be nonnegative and less than the value of `(fixnum-width)`, and `_fx~2~_` must not be greater than `_fx~3~_`. This procedure returns `_fx~1~_` with `_n_` bits from `_fx~2~_` (inclusive) to `_fx~3~_` (exclusive) replaced by the low-order `_n_` bits of `_x~4~_`.
 
-`(fxcopy-bit-field #b10000 0 3 #b10101) ⇒ #b10101
+[source,scheme,subs=""]
+----
+(fxcopy-bit-field #b10000 0 3 #b10101) ⇒ #b10101
 (fxcopy-bit-field #b10000 1 3 #b10101) ⇒ #b10010
 (fxcopy-bit-field #b10000 2 3 #b10101) ⇒ #b10100
-(fxcopy-bit-field #b10000 3 3 #b10101) ⇒ #b10000`
+(fxcopy-bit-field #b10000 3 3 #b10101) ⇒ #b10000
+----
 
 [horizontal]
 procedure:: `(fxarithmetic-shift-right _fx~1~_ _fx~2~_)`
 returns:: `_fx~1~_` arithmetically shifted right by `_fx~2~_` bits
-[horizontal]
 procedure:: `(fxarithmetic-shift-left _fx~1~_ _fx~2~_)`
 returns:: `_fx~1~_` shifted left by `_fx~2~_` bits
 libraries:: `(rnrs arithmetic fixnums)`, `(rnrs)`
 
 `_fx~2~_` must be nonnegative and less than the value of `(fixnum-width)`.
 
-`(fxarithmetic-shift-right #b10000 3) ⇒ #b00010
+[source,scheme,subs=""]
+----
+(fxarithmetic-shift-right #b10000 3) ⇒ #b00010
 (fxarithmetic-shift-right -1 1) ⇒ -1
 (fxarithmetic-shift-right -64 3) ⇒ -8
 
 (fxarithmetic-shift-left #b00010 2) ⇒ #b01000
-(fxarithmetic-shift-left -1 2) ⇒ -4`
+(fxarithmetic-shift-left -1 2) ⇒ -4
+----
 
 [horizontal]
 procedure:: `(fxarithmetic-shift _fx~1~_ _fx~2~_)`
@@ -2558,19 +2788,25 @@ libraries:: `(rnrs arithmetic fixnums)`, `(rnrs)`
 
 The absolute value of `_fx~2~_` must be less than the value of `(fixnum-width)`. If `_fx~2~_` is negative, `fxarithmetic-shift` returns the result of arithmetically shifting `_fx~1~_` right by `_fx~2~_` bits. Otherwise, `fxarithmetic-shift` returns the result of shifting `_fx~1~_` left by `_fx~2~_` bits.
 
-`(fxarithmetic-shift #b10000 -3) ⇒ #b00010
+[source,scheme,subs=""]
+----
+(fxarithmetic-shift #b10000 -3) ⇒ #b00010
 (fxarithmetic-shift -1 -1) ⇒ -1
 (fxarithmetic-shift -64 -3) ⇒ -8
 (fxarithmetic-shift #b00010 2) ⇒ #b01000
-(fxarithmetic-shift -1 2) ⇒ -4`
+(fxarithmetic-shift -1 2) ⇒ -4
+----
 
 Thus, `fxarithmetic-shift` behaves as if defined as follows.
 
-`(define fxarithmetic-shift
-  (lambda (fx1 fx2)
-    (if (fx<? fx2 0)
-        (fxarithmetic-shift-right fx1 (fx- fx2))
-        (fxarithmetic-shift-left fx1 fx2))))`
+[source,scheme,subs="quotes"]
+----
+(define fxarithmetic-shift
+  (lambda (_fx~1~_ _fx~2~_)
+    (if (fx&lt;? _fx~2~_ 0)
+        (fxarithmetic-shift-right _fx~1~_ (fx- _fx~2~_))
+        (fxarithmetic-shift-left _fx~1~_ _fx~2~_))))
+----
 
 [horizontal]
 procedure:: `(fxrotate-bit-field _fx~1~_ _fx~2~_ _fx~3~_ _fx~4~_)`
@@ -2581,8 +2817,11 @@ libraries:: `(rnrs arithmetic fixnums)`, `(rnrs)`
 
 This procedure returns the result of shifting the bits of `_fx~1~_` from bit `_fx~2~_` (inclusive) through bit `_fx~3~_` (exclusive) left by `_fx~4~_` bits, with the bits shifted out of the range inserted at the bottom end of the range.
 
-`(fxrotate-bit-field #b00011010 0 5 3) ⇒ #b00010110
-(fxrotate-bit-field #b01101011 2 7 3) ⇒ #b01011011`
+[source,scheme,subs=""]
+----
+(fxrotate-bit-field #b00011010 0 5 3) ⇒ #b00010110
+(fxrotate-bit-field #b01101011 2 7 3) ⇒ #b01011011
+----
 
 [horizontal]
 procedure:: `(fxreverse-bit-field _fx~1~_ _fx~2~_ _fx~3~_)`
@@ -2591,8 +2830,11 @@ libraries:: `(rnrs arithmetic fixnums)`, `(rnrs)`
 
 `_fx~2~_` and `_fx~3~_` must be nonnegative and less than the value of `(fixnum-width)`, and `_fx~2~_` must not be greater than `_fx~3~_`. This procedure returns the result of reversing the bits of `_fx~1~_` from bit `_fx~2~_` (inclusive) through bit `_fx~3~_` (exclusive).
 
-`(fxreverse-bit-field #b00011010 0 5) ⇒ #b00001011
-(fxreverse-bit-field #b01101011 2 7) ⇒ #b00101111`
+[source,scheme,subs=""]
+----
+(fxreverse-bit-field #b00011010 0 5) ⇒ #b00001011
+(fxreverse-bit-field #b01101011 2 7) ⇒ #b00101111
+----
 
 === Section 6.6. Flonums [[section_6.6.]]
 
@@ -2609,49 +2851,49 @@ procedure:: `(flonum? _obj_)`
 returns:: `#t` if `_obj_` is a flonum, otherwise `#f`
 libraries:: `(rnrs arithmetic flonums)`, `(rnrs)`
 
-` (flonum? 0) ⇒ #f
+[source,scheme,subs=""]
+----
+(flonum? 0) ⇒ #f
 (flonum? 3/4) ⇒ #f
 (flonum? 3.5) ⇒ #t
 (flonum? .02) ⇒ #t
 (flonum? 1e10) ⇒ #t
-(flonum? 3.0+0.0i) ⇒ #f`
+(flonum? 3.0+0.0i) ⇒ #f
+----
 
 [horizontal]
 procedure:: `(fl=? _fl~1~_ _fl~2~_ _fl~3~_ \...)`
-[horizontal]
 procedure:: `(fl<? _fl~1~_ _fl~2~_ _fl~3~_ \...)`
-[horizontal]
 procedure:: `(fl>? _fl~1~_ _fl~2~_ _fl~3~_ \...)`
-[horizontal]
-procedure:: `(fl<=? _fl~1~_ _fl~2~_ _fl~3~_ \...)`
-[horizontal]
+procedure:: `(fl\<=? _fl~1~_ _fl~2~_ _fl~3~_ \...)`
 procedure:: `(fl>=? _fl~1~_ _fl~2~_ _fl~3~_ \...)`
 returns:: `#t` if the relation holds, `#f` otherwise
 libraries:: `(rnrs arithmetic flonums)`, `(rnrs)`
 
-The predicate `fl=?` returns `#t` if its arguments are equal. The predicate `fl<?` returns `#t` if its arguments are monotonically increasing, i.e., each argument is greater than the preceding ones, while `fl>?` returns `#t` if its arguments are monotonically decreasing. The predicate `fl<=?` returns `#t` if its arguments are monotonically nondecreasing, i.e., each argument is not less than the preceding ones, while `fl>=?` returns `#t` if its arguments are monotonically nonincreasing. When passed only one argument, each of these predicates returns `#t`.
+The predicate `fl=?` returns `#t` if its arguments are equal. The predicate `fl<?` returns `#t` if its arguments are monotonically increasing, i.e., each argument is greater than the preceding ones, while `fl>?` returns `#t` if its arguments are monotonically decreasing. The predicate `fl\<=?` returns `#t` if its arguments are monotonically nondecreasing, i.e., each argument is not less than the preceding ones, while `fl>=?` returns `#t` if its arguments are monotonically nonincreasing. When passed only one argument, each of these predicates returns `#t`.
 
 Comparisons involving NaNs always return `#f`.
 
-`(fl=? 0.0 0.0) ⇒ #t
-(fl<? -1.0 0.0 1.0) ⇒ #t
+[source,scheme,subs=""]
+----
+(fl=? 0.0 0.0) ⇒ #t
+(fl&lt;? -1.0 0.0 1.0) ⇒ #t
 (fl>? -1.0 0.0 1.0) ⇒ #f
 (fl<=? 0.0 3.0 3.0) ⇒ #t
 (fl>=? 4.0 3.0 3.0) ⇒ #t
-(fl<? 7.0 +inf.0) ⇒ #t
+(fl&lt;? 7.0 +inf.0) ⇒ #t
 (fl=? +nan.0 0.0) ⇒ #f
 (fl=? +nan.0 +nan.0) ⇒ #f
-(fl<? +nan.0 +nan.0) ⇒ #f
+(fl&lt;? +nan.0 +nan.0) ⇒ #f
 (fl<=? +nan.0 +inf.0) ⇒ #f
-(fl>=? +nan.0 +inf.0) ⇒ #f`
+(fl>=? +nan.0 +inf.0) ⇒ #f
+----
 
 [horizontal]
 procedure:: `(flzero? _fl_)`
 returns:: `#t` if `_fl_` is zero, `#f` otherwise
-[horizontal]
 procedure:: `(flpositive? _fl_)`
 returns:: `#t` if `_fl_` is greater than zero, `#f` otherwise
-[horizontal]
 procedure:: `(flnegative? _fl_)`
 returns:: `#t` if `_fl_` is less than zero, `#f` otherwise
 libraries:: `(rnrs arithmetic flonums)`, `(rnrs)`
@@ -2660,7 +2902,9 @@ libraries:: `(rnrs arithmetic flonums)`, `(rnrs)`
 
 Even if the flonum representation distinguishes -0.0 from +0.0, -0.0 is considered both zero and nonnegative.
 
-`(flzero? 0.0) ⇒ #t
+[source,scheme,subs=""]
+----
+(flzero? 0.0) ⇒ #t
 (flzero? 1.0) ⇒ #f
 
 (flpositive? 128.0) ⇒ #t
@@ -2679,30 +2923,34 @@ Even if the flonum representation distinguishes -0.0 from +0.0, -0.0 is consider
 (flpositive? +nan.0) ⇒ #f
 
 (flnegative? +inf.0) ⇒ #f
-(flnegative? -inf.0) ⇒ #t`
+(flnegative? -inf.0) ⇒ #t
+----
 
 [horizontal]
 procedure:: `(flinteger? _fl_)`
 returns:: `#t` if `_fl_` is integer, `#f` otherwise
 libraries:: `(rnrs arithmetic flonums)`, `(rnrs)`
 
-` (flinteger? 0.0) ⇒ #t
+[source,scheme,subs=""]
+----
+(flinteger? 0.0) ⇒ #t
 (flinteger? -17.0) ⇒ #t
 (flinteger? +nan.0) ⇒ #f
-(flinteger? +inf.0) ⇒ #f`
+(flinteger? +inf.0) ⇒ #f
+----
 
 [horizontal]
 procedure:: `(flfinite? _fl_)`
 returns:: `#t` if `_fl_` is finite, `#f` otherwise
-[horizontal]
 procedure:: `(flinfinite? _fl_)`
 returns:: `#t` if `_fl_` is infinite, `#f` otherwise
-[horizontal]
 procedure:: `(flnan? _fl_)`
 returns:: `#t` if `_fl_` is a NaN, `#f` otherwise
 libraries:: `(rnrs arithmetic flonums)`, `(rnrs)`
 
-` (flfinite? 3.1415) ⇒ #t
+[source,scheme,subs=""]
+----
+(flfinite? 3.1415) ⇒ #t
 (flinfinite? 3.1415) ⇒ #f
 (flnan? 3.1415) ⇒ #f
 
@@ -2712,19 +2960,21 @@ libraries:: `(rnrs arithmetic flonums)`, `(rnrs)`
 
 (flfinite? +nan.0) ⇒ #f
 (flinfinite? +nan.0) ⇒ #f
-(flnan? +nan.0) ⇒ #t`
+(flnan? +nan.0) ⇒ #t
+----
 
 [horizontal]
 procedure:: `(fleven? _fl-int_)`
 returns:: `#t` if `_fl-int_` is even, `#f` otherwise
-[horizontal]
 procedure:: `(flodd? _fl-int_)`
 returns:: `#t` if `_fl-int_` is odd, `#f` otherwise
 libraries:: `(rnrs arithmetic flonums)`, `(rnrs)`
 
 `_fl-int_` must be an integer-valued flonum.
 
-`(fleven? 0.0) ⇒ #t
+[source,scheme,subs=""]
+----
+(fleven? 0.0) ⇒ #t
 (fleven? 1.0) ⇒ #f
 (fleven? -1.0) ⇒ #f
 (fleven? -10.0) ⇒ #t
@@ -2732,17 +2982,19 @@ libraries:: `(rnrs arithmetic flonums)`, `(rnrs)`
 (flodd? 0.0) ⇒ #f
 (flodd? 1.0) ⇒ #t
 (flodd? -1.0) ⇒ #t
-(flodd? -10.0) ⇒ #f`
+(flodd? -10.0) ⇒ #f
+----
 
 [horizontal]
 procedure:: `(flmin _fl~1~_ _fl~2~_ \...)`
 returns:: the minimum of `_fl~1~_` `_fl~2~_` \...
-[horizontal]
 procedure:: `(flmax _fl~1~_ _fl~2~_ \...)`
 returns:: the maximum of `_fl~1~_` `_fl~2~_` \...
 libraries:: `(rnrs arithmetic flonums)`, `(rnrs)`
 
-` (flmin 4.2 -7.5 2.0 0.0 -6.4) ⇒ -7.5
+[source,scheme,subs=""]
+----
+(flmin 4.2 -7.5 2.0 0.0 -6.4) ⇒ -7.5
 
 (let ([ls '(7.1 3.5 5.0 2.6 2.6 8.0)])
   (apply flmin ls)) ⇒ 2.6
@@ -2750,7 +3002,8 @@ libraries:: `(rnrs arithmetic flonums)`, `(rnrs)`
 (flmax 4.2 -7.5 2.0 0.0 -6.4) ⇒ 4.2
 
 (let ([ls '(7.1 3.5 5.0 2.6 2.6 8.0)])
-  (apply flmax ls)) ⇒ 8.0`
+  (apply flmax ls)) ⇒ 8.0
+----
 
 [horizontal]
 procedure:: `(fl+ _fl_ \...)`
@@ -2759,37 +3012,51 @@ libraries:: `(rnrs arithmetic flonums)`, `(rnrs)`
 
 When called with no arguments, `fl+` returns `0.0`.
 
-`(fl+) ⇒ 0.0
+[source,scheme,subs=""]
+----
+(fl+) ⇒ 0.0
 (fl+ 1.0 2.5) ⇒ 3.25
 (fl+ 3.0 4.25 5.0) ⇒ 12.25
-(apply fl+ '(1.0 2.0 3.0 4.0 5.0)) ⇒ 15.0`
+(apply fl+ '(1.0 2.0 3.0 4.0 5.0)) ⇒ 15.0
+----
 
 [horizontal]
 procedure:: `(fl- _fl_)`
 returns:: the additive inverse of `_fl_`
-[horizontal]
 procedure:: `(fl- _fl~1~_ _fl~2~_ _fl~3~_ \...)`
 returns:: the difference between `_fl~1~_` and the sum of `_fl~2~_ _fl~3~_ \...`
 libraries:: `(rnrs arithmetic flonums)`, `(rnrs)`
 
 With an IEEE floating-point representation of flonums, the single-argument `fl-` is equivalent to
 
-`(lambda (x) (fl* -1.0 x))`
+[source,scheme,subs=""]
+----
+(lambda (x) (fl* -1.0 x))
+----
 
 or
 
-`(lambda (x) (fl- -0.0 x))`
+[source,scheme,subs=""]
+----
+(lambda (x) (fl- -0.0 x))
+----
 
 but not
 
-`(lambda (x) (fl- 0.0 x))`
+[source,scheme,subs=""]
+----
+(lambda (x) (fl- 0.0 x))
+----
 
 since the latter returns `0.0` rather than `-0.0` for `0.0`.
 
-`(fl- 0.0) ⇒ -0.0
+[source,scheme,subs=""]
+----
+(fl- 0.0) ⇒ -0.0
 (fl- 3.0) ⇒ -3.0
 (fl- 4.0 3.0) ⇒ 1.0
-(fl- 4.0 3.0 2.0 1.0) ⇒ -2.0`
+(fl- 4.0 3.0 2.0 1.0) ⇒ -2.0
+----
 
 [horizontal]
 procedure:: `(fl* _fl_ \...)`
@@ -2798,36 +3065,41 @@ libraries:: `(rnrs arithmetic flonums)`, `(rnrs)`
 
 When called with no arguments, `fl*` returns `1.0`.
 
-`(fl*) ⇒ 1.0
+[source,scheme,subs=""]
+----
+(fl*) ⇒ 1.0
 (fl* 1.5 2.5) ⇒ 3.75
 (fl* 3.0 -4.0 5.0) ⇒ -60.0
-(apply fl* '(1.0 -2.0 3.0 -4.0 5.0)) ⇒ 120.0`
+(apply fl* '(1.0 -2.0 3.0 -4.0 5.0)) ⇒ 120.0
+----
 
 [horizontal]
 procedure:: `(fl/ _fl_)`
 returns:: the multiplicative inverse of `_fl_`
-[horizontal]
 procedure:: `(fl/ _fl~1~_ _fl~2~_ _fl~3~_ \...)`
 returns:: the result of dividing `_fl~1~_` by the product of `_fl~2~_ _fl~3~_ \...`
 libraries:: `(rnrs arithmetic flonums)`, `(rnrs)`
 
-` (fl/ -4.0) ⇒ -0.25
+[source,scheme,subs=""]
+----
+(fl/ -4.0) ⇒ -0.25
 (fl/ 8.0 -2.0) ⇒ -4.0
 (fl/ -9.0 2.0) ⇒ -4.5
-(fl/ 60.0 5.0 3.0 2.0) ⇒ 2.0`
+(fl/ 60.0 5.0 3.0 2.0) ⇒ 2.0
+----
 
 [horizontal]
 procedure:: `(fldiv _fl~1~_ _fl~2~_)`
-[horizontal]
 procedure:: `(flmod _fl~1~_ _fl~2~_)`
-[horizontal]
 procedure:: `(fldiv-and-mod _fl~1~_ _fl~2~_)`
 returns:: see below
 libraries:: `(rnrs arithmetic flonums)`, `(rnrs)`
 
 These are flonum-specific versions of the generic `div`, `mod`, and `div-and-mod`.
 
-`(fldiv 17.0 3.0) ⇒ 5.0
+[source,scheme,subs=""]
+----
+(fldiv 17.0 3.0) ⇒ 5.0
 (flmod 17.0 3.0) ⇒ 2.0
 (fldiv -17.0 3.0) ⇒ -6.0
 (flmod -17.0 3.0) ⇒ 1.0
@@ -2837,20 +3109,21 @@ These are flonum-specific versions of the generic `div`, `mod`, and `div-and-mod
 (flmod -17.0 -3.0) ⇒ 1.0
 
 (fldiv-and-mod 17.5 3.75) ⇒ 4.0
-                           2.5`
+                             2.5
+----
 
 [horizontal]
 procedure:: `(fldiv0 _fl~1~_ _fl~2~_)`
-[horizontal]
 procedure:: `(flmod0 _fl~1~_ _fl~2~_)`
-[horizontal]
 procedure:: `(fldiv0-and-mod0 _fl~1~_ _fl~2~_)`
 returns:: see below
 libraries:: `(rnrs arithmetic flonums)`, `(rnrs)`
 
 These are flonum-specific versions of the generic `div0`, `mod0`, and `div0-and-mod0`.
 
-`(fldiv0 17.0 3.0) ⇒ 6.0
+[source,scheme,subs=""]
+----
+(fldiv0 17.0 3.0) ⇒ 6.0
 (flmod0 17.0 3.0) ⇒ -1.0
 (fldiv0 -17.0 3.0) ⇒ -6.0
 (flmod0 -17.0 3.0) ⇒ 1.0
@@ -2860,25 +3133,25 @@ These are flonum-specific versions of the generic `div0`, `mod0`, and `div0-and-
 (flmod0 -17.0 -3.0) ⇒ 1.0
 
 (fldiv0-and-mod0 17.5 3.75) ⇒ 5.0
-                             -1.25`
+                               -1.25
+----
 
 [horizontal]
 procedure:: `(flround _fl_)`
 returns:: the integer closest to `_fl_`
-[horizontal]
 procedure:: `(fltruncate _fl_)`
 returns:: the integer closest to `_fl_` toward zero
-[horizontal]
 procedure:: `(flfloor _fl_)`
-returns:: the integer closest to `_fl_` toward <graphic>
-[horizontal]
+returns:: the integer closest to `_fl_` toward stem:[-\infty]
 procedure:: `(flceiling _fl_)`
-returns:: the integer closest to `_fl_` toward <graphic>
+returns:: the integer closest to `_fl_` toward stem:[+\infty]
 libraries:: `(rnrs arithmetic flonums)`, `(rnrs)`
 
 If `_fl_` is an integer, NaN, or infinity, each of these procedures returns `_fl_`. If `_fl_` is exactly between two integers, `flround` returns the closest even integer.
 
-`(flround 17.3) ⇒ 17.0
+[source,scheme,subs=""]
+----
+(flround 17.3) ⇒ 17.0
 (flround -17.3) ⇒ -17.0
 (flround 2.5) ⇒ 2.0
 (flround 3.5) ⇒ 4.0
@@ -2890,50 +3163,59 @@ If `_fl_` is an integer, NaN, or infinity, each of these procedures returns `_fl
 (flfloor -17.3) ⇒ -18.0
 
 (flceiling 17.3) ⇒ 18.0
-(flceiling -17.3) ⇒ -17.0`
+(flceiling -17.3) ⇒ -17.0
+----
 
 [horizontal]
 procedure:: `(flnumerator _fl_)`
 returns:: the numerator of `_fl_`
-[horizontal]
 procedure:: `(fldenominator _fl_)`
 returns:: the denominator of `_fl_`
 libraries:: `(rnrs arithmetic flonums)`, `(rnrs)`
 
 If `_fl_` is an integer, including 0.0, or infinity, the numerator is `_fl_` and the denominator is 1.0.
 
-`(flnumerator -9.0) ⇒ -9.0
+[source,scheme,subs=""]
+----
+(flnumerator -9.0) ⇒ -9.0
 (fldenominator -9.0) ⇒ 1.0
 (flnumerator 0.0) ⇒ 0.0
 (fldenominator 0.0) ⇒ 1.0
 (flnumerator -inf.0) ⇒ -inf.0
-(fldenominator -inf.0) ⇒ 1.0`
+(fldenominator -inf.0) ⇒ 1.0
+----
 
 The following hold for IEEE floats, but not necessarily other flonum representations.
 
-`(flnumerator 3.5) ⇒ 7.0
-(fldenominator 3.5) ⇒ 2.0`
+[source,scheme,subs=""]
+----
+(flnumerator 3.5) ⇒ 7.0
+(fldenominator 3.5) ⇒ 2.0
+----
 
 [horizontal]
 procedure:: `(flabs _fl_)`
 returns:: absolute value of `_fl_`
 libraries:: `(rnrs arithmetic flonums)`, `(rnrs)`
 
-` (flabs 3.2) ⇒ 3.2
-(flabs -2e-20) ⇒ 2e-20`
+[source,scheme,subs=""]
+----
+(flabs 3.2) ⇒ 3.2
+(flabs -2e-20) ⇒ 2e-20
+----
 
 [horizontal]
 procedure:: `(flexp _fl_)`
 returns:: _e_ to the `_fl_` power
-[horizontal]
 procedure:: `(fllog _fl_)`
 returns:: the natural logarithm of `_fl_`
-[horizontal]
 procedure:: `(fllog _fl~1~_ _fl~2~_)`
 returns:: the base-`_fl~2~_` logarithm of `_fl~1~_`
 libraries:: `(rnrs arithmetic flonums)`, `(rnrs)`
 
-` (flexp 0.0) ⇒ 1.0
+[source,scheme,subs=""]
+----
+(flexp 0.0) ⇒ 1.0
 (flexp 1.0) ⇒ 2.7182818284590455
 
 (fllog 1.0) ⇒ 0.0
@@ -2941,15 +3223,14 @@ libraries:: `(rnrs arithmetic flonums)`, `(rnrs)`
 (fl/ (fllog 100.0) (fllog 10.0)) ⇒ 2.0
 
 (fllog 100.0 10.0) ⇒ 2.0
-(fllog .125 2.0) ⇒ -3.0`
+(fllog .125 2.0) ⇒ -3.0
+----
 
 [horizontal]
 procedure:: `(flsin _fl_)`
 returns:: the sine of `_fl_`
-[horizontal]
 procedure:: `(flcos _fl_)`
 returns:: the cosine of `_fl_`
-[horizontal]
 procedure:: `(fltan _fl_)`
 returns:: the tangent of `_fl_`
 libraries:: `(rnrs arithmetic flonums)`, `(rnrs)`
@@ -2957,13 +3238,10 @@ libraries:: `(rnrs arithmetic flonums)`, `(rnrs)`
 [horizontal]
 procedure:: `(flasin _fl_)`
 returns:: the arc sine of `_fl_`
-[horizontal]
 procedure:: `(flacos _fl_)`
 returns:: the arc cosine of `_fl_`
-[horizontal]
 procedure:: `(flatan _fl_)`
 returns:: the arc tangent of `_fl_`
-[horizontal]
 procedure:: `(flatan _fl~1~_ _fl~2~_)`
 returns:: the arc tangent of `_fl~1~_`/`_fl~2~_`
 libraries:: `(rnrs arithmetic flonums)`, `(rnrs)`
@@ -2975,9 +3253,12 @@ libraries:: `(rnrs arithmetic flonums)`, `(rnrs)`
 
 Returns the principal square root of `_fl_`. The square root of -0.0 should be -0.0. The result for other negative numbers may be a NaN or some other unspecified flonum.
 
-`(flsqrt 4.0) ⇒ 2.0
+[source,scheme,subs=""]
+----
+(flsqrt 4.0) ⇒ 2.0
 (flsqrt 0.0) ⇒ 0.0
-(flsqrt -0.0) ⇒ -0.0`
+(flsqrt -0.0) ⇒ -0.0
+----
 
 [horizontal]
 procedure:: `(flexpt _fl~1~_ _fl~2~_)`
@@ -2986,24 +3267,29 @@ libraries:: `(rnrs arithmetic flonums)`, `(rnrs)`
 
 If `_fl~1~_` is negative and `_fl~2~_` is not an integer, the result may be a NaN or some other unspecified flonum. If `_fl~1~_` and `_fl~2~_` are both zero, the result is 1.0. If `_fl~1~_` is zero and `_fl~2~_` is positive, the result is zero. In other cases where `_fl~1~_` is zero, the result may be a NaN or some other unspecified flonum.
 
-`(flexpt 3.0 2.0) ⇒ 9.0
-(flexpt 0.0 +inf.0) ⇒ 0.0`
+[source,scheme,subs=""]
+----
+(flexpt 3.0 2.0) ⇒ 9.0
+(flexpt 0.0 +inf.0) ⇒ 0.0
+----
 
 [horizontal]
-procedure:: `(fixnum->flonum _fx_)`
+procedure:: `(fixnum\->flonum _fx_)`
 returns:: the flonum representation closest to `_fx_`
-[horizontal]
-procedure:: `(real->flonum _real_)`
+procedure:: `(real\->flonum _real_)`
 returns:: the flonum representation closest to `_real_`
 libraries:: `(rnrs arithmetic flonums)`, `(rnrs)`
 
-`fixnum->flonum` is a restricted variant of `inexact`. `real->flonum` is a restricted variant of `inexact` when the input is an exact real; when it is an inexact non-flonum real, it coverts the inexact non-flonum real into the closest flonum.
+`fixnum\->flonum` is a restricted variant of `inexact`. `real\->flonum` is a restricted variant of `inexact` when the input is an exact real; when it is an inexact non-flonum real, it coverts the inexact non-flonum real into the closest flonum.
 
-`(fixnum->flonum 0) ⇒ 0.0
+[source,scheme,subs=""]
+----
+(fixnum->flonum 0) ⇒ 0.0
 (fixnum->flonum 13) ⇒ 13.0
 
 (real->flonum -1/2) ⇒ -0.5
-(real->flonum 1s3) ⇒ 1000.0`
+(real->flonum 1s3) ⇒ 1000.0
+----
 
 === Section 6.7. Characters [[section_6.7.]]
 
