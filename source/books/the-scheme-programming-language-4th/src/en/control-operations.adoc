@@ -17,14 +17,14 @@ The order in which the procedure and argument expressions are evaluated is unspe
 
 [source,scheme,subs="quotes,replacements"]
 ----
-(+ 3 4) &#8658; 7
+(+ 3 4) ⇒ 7
 
-((if (odd? 3) + -) 6 2) &#8658; 8
+((if (odd? 3) + -) 6 2) ⇒ 8
 
-((lambda (x) x) 5) &#8658; 5
+((lambda (x) x) 5) ⇒ 5
 
 (let ([f (lambda (x) (+ x x))])
-  (f 8)) &#8658; 16
+  (f 8)) ⇒ 16
 ----
 
 [#desc:apply]
@@ -39,13 +39,13 @@ libraries:: `(rnrs base)`, `(rnrs)`
 
 [source,scheme,subs="quotes,replacements"]
 ----
-(apply + '(4 5)) &#8658; 9
+(apply + '(4 5)) ⇒ 9
 
-(apply min '(6 8 3 2 5)) &#8658; 2
+(apply min '(6 8 3 2 5)) ⇒ 2
 
-(apply min  5 1 3 '(6 8 3 2 5)) &#8658; 1
+(apply min  5 1 3 '(6 8 3 2 5)) ⇒ 1
 
-(apply vector 'a 'b '(c d e)) &#8658; #(a b c d e)
+(apply vector 'a 'b '(c d e)) ⇒ #(a b c d e)
 
 (define first
   (lambda (ls)
@@ -53,12 +53,12 @@ libraries:: `(rnrs base)`, `(rnrs)`
 (define rest
   (lambda (ls)
     (apply (lambda (x . y) y) ls)))
-(first '(a b c d)) &#8658; a
-(rest '(a b c d)) &#8658; (b c d)
+(first '(a b c d)) ⇒ a
+(rest '(a b c d)) ⇒ (b c d)
 
 (apply append
   '(1 2 3)
-  '((a b) (c d e) (f))) &#8658; (1 2 3 a b c d e f)
+  '((a b) (c d e) (f))) ⇒ (1 2 3 a b c d e f)
 ----
 
 === Section 5.2. Sequencing [[section_5.2.]]
@@ -75,7 +75,7 @@ The expressions `_expr~1~_ _expr~2~_ \...` are evaluated in sequence from left t
 (define x 3)
 (begin
   (set! x (+ x 1))
-  (+ x x)) &#8658; 8
+  (+ x x)) ⇒ 8
 ----
 
 A `begin` form may contain zero or more definitions in place of the expressions `_expr~1~_ _expr~2~_ \...`, in which case it is considered to be a definition and may appear only where definitions are valid.
@@ -84,7 +84,7 @@ A `begin` form may contain zero or more definitions in place of the expressions 
 ----
 (let ()
   (begin (define x 3) (define y 4))
-  (+ x y)) &#8658; 7
+  (+ x y)) ⇒ 7
 ----
 
 This form of `begin` is primarily used by syntactic extensions that must expand into multiple definitions. (See <<multi-define-syntax,page 101>>.)
@@ -99,7 +99,7 @@ The bodies of many syntactic forms, including `lambda`, `case-lambda`, `let`, `l
       (set-car! x (cdr x))
       (set-cdr! x temp)
       x)))
-(swap-pair! (cons 'a 'b)) &#8658; (b . a)
+(swap-pair! (cons 'a 'b)) ⇒ (b . a)
 ----
 
 === Section 5.3. Conditionals [[section_5.3.]]
@@ -117,24 +117,24 @@ The `_test_`, `_consequent_`, and `_alternative_` subforms must be expressions. 
 (let ([ls '(a b c)])
   (if (null? ls)
       '()
-      (cdr ls))) &#8658; (b c)
+      (cdr ls))) ⇒ (b c)
 
 (let ([ls '()])
   (if (null? ls)
       '()
-      (cdr ls))) &#8658; ()
+      (cdr ls))) ⇒ ()
 
 (let ([abs
        (lambda (x)
          (if (< x 0)
              (- 0 x)
              x))])
-  (abs -4)) &#8658; 4
+  (abs -4)) ⇒ 4
 
 (let ([x -4])
   (if (< x 0)
       (list 'minus (- 0 x))
-      (list 'plus 4))) &#8658; (minus 4)
+      (list 'plus 4))) ⇒ (minus 4)
 ----
 
 [horizontal]
@@ -146,10 +146,10 @@ libraries:: `(rnrs base)`, `(rnrs)`
 
 [source,scheme,subs="quotes,replacements"]
 ----
-(not #f) &#8658; #t
-(not #t) &#8658; #f
-(not '()) &#8658; #f
-(not (< 4 5)) &#8658; #f
+(not #f) ⇒ #t
+(not #t) ⇒ #f
+(not '()) ⇒ #f
+(not (< 4 5)) ⇒ #f
 ----
 
 [horizontal]
@@ -162,13 +162,13 @@ If no subexpressions are present, the `and` form evaluates to `#t`. Otherwise, `
 [source,scheme,subs="quotes,replacements"]
 ----
 (let ([x 3])
-  (and (> x 2) (< x 4))) &#8658; #t
+  (and (> x 2) (< x 4))) ⇒ #t
 
 (let ([x 5])
-  (and (> x 2) (< x 4))) &#8658; #f
+  (and (> x 2) (< x 4))) ⇒ #f
 
-(and #f '(a b) '(c d)) &#8658; #f
-(and '(a b) '(c d) '(e f)) &#8658; (e f)
+(and #f '(a b) '(c d)) ⇒ #f
+(and '(a b) '(c d) '(e f)) ⇒ (e f)
 ----
 
 [horizontal]
@@ -181,12 +181,12 @@ If no subexpressions are present, the `or` form evaluates to `#f`. Otherwise, `o
 [source,scheme,subs="quotes,replacements"]
 ----
 (let ([x 3])
-  (or (< x 2) (> x 4))) &#8658; #f
+  (or (< x 2) (> x 4))) ⇒ #f
 
 (let ([x 5])
-  (or (< x 2) (> x 4))) &#8658; #t
+  (or (< x 2) (> x 4))) ⇒ #t
 
-(or #f '(a b) '(c d)) &#8658; (a b)
+(or #f '(a b) '(c d)) ⇒ (a b)
 ----
 
 [horizontal]
@@ -228,7 +228,7 @@ See <<defn:cond,page 305>> for a syntax definition of `cond`.
   (cond
     [(< x 0) (list 'minus (abs x))]
     [(> x 0) (list 'plus x)]
-    [else (list 'zero x)])) &#8658; (zero 0)
+    [else (list 'zero x)])) ⇒ (zero 0)
 
 (define select
   (lambda (x)
@@ -237,9 +237,9 @@ See <<defn:cond,page 305>> for a syntax definition of `cond`.
       [(assq x '((a . 1) (b . 2) (c . 3))) => cdr]
       [else 0])))
 
-(select 3) &#8658; #t
-(select 'b) &#8658; 2
-(select 'e) &#8658; 0
+(select 3) ⇒ #t
+(select 'b) ⇒ 2
+(select 'e) ⇒ 0
 ----
 
 [horizontal]
@@ -267,7 +267,7 @@ A `when` or `unless` expression is usually clearer than the corresponding "one-a
   (when (< x 0)
     (set! x (- 0 x))
     (set! sign 'minus))
-  (list sign x)) &#8658; (minus 4)
+  (list sign x)) ⇒ (minus 4)
 
 (define check-pair
   (lambda (x)
@@ -275,7 +275,7 @@ A `when` or `unless` expression is usually clearer than the corresponding "one-a
       (syntax-violation 'check-pair "invalid argument" x))
     x))
 
-(check-pair '(a b c)) &#8658; (a b c)
+(check-pair '(a b c)) ⇒ (a b c)
 ----
 
 `when` may be defined as follows:
@@ -341,7 +341,7 @@ See <<defn:case,page 306>> for a syntax definition of `case`.
   (case (+ x y)
     [(1 3 5 7 9) 'odd]
     [(0 2 4 6 8) 'even]
-    [else 'out-of-range])) &#8658; odd
+    [else 'out-of-range])) ⇒ odd
 ----
 
 === Section 5.4. Recursion and Iteration [[section_5.4.]]
@@ -384,8 +384,8 @@ The procedure `divisors` defined below uses named `let` to compute the nontrivia
         [(integer? (/ n i)) (cons i (f (+ i 1)))]
         [else (f (+ i 1))]))))
 
-(divisors 5) &#8658; ()
-(divisors 32) &#8658; (2 4 8 16)
+(divisors 5) ⇒ ()
+(divisors 32) ⇒ (2 4 8 16)
 ----
 
 The version above is non-tail-recursive when a divisor is found and tail-recursive when a divisor is not found. The version below is fully tail-recursive. It builds up the list in reverse order, but this is easy to remedy, if desired, by reversing the list on exit.
@@ -427,7 +427,7 @@ The definitions of `factorial` and `fibonacci` below are straightforward transla
     (do ([i n (- i 1)] [a 1 (* a i)])
         ((zero? i) a))))
 
-(factorial 10) &#8658; 3628800
+(factorial 10) ⇒ 3628800
 
 (define fibonacci
   (lambda (n)
@@ -436,7 +436,7 @@ The definitions of `factorial` and `fibonacci` below are straightforward transla
         (do ([i n (- i 1)] [a1 1 (+ a1 a2)] [a2 0 a1])
             ((= i 1) a1)))))
 
-(fibonacci 6) &#8658; 8
+(fibonacci 6) ⇒ 8
 ----
 
 The definition of `divisors` below is similar to the tail-recursive definition of `divisors` given with the description of named `let` above.
@@ -466,7 +466,7 @@ The definition of `scale-vector!` below, which scales each element of a vector _
 
 (define vec (vector 1 2 3 4 5))
 (scale-vector! vec 2)
-vec &#8658; #(2 4 6 8 10)
+vec ⇒ #(2 4 6 8 10)
 ----
 
 === Section 5.5. Mapping and Folding [[section_5.5.]]
@@ -482,11 +482,11 @@ libraries:: `(rnrs base)`, `(rnrs)`
 
 [source,scheme,subs="quotes,replacements"]
 ----
-(map abs '(1 -2 3 -4 5 -6)) &#8658; (1 2 3 4 5 6)
+(map abs '(1 -2 3 -4 5 -6)) ⇒ (1 2 3 4 5 6)
 
 (map (lambda (x y) (* x y))
      '(1 2 3 4)
-     '(8 7 6 5)) &#8658; (8 14 18 20)
+     '(8 7 6 5)) ⇒ (8 14 18 20)
 ----
 
 While the order in which the applications themselves occur is not specified, the order of the values in the output list is the same as that of the corresponding values in the input lists.
@@ -535,7 +535,7 @@ libraries:: `(rnrs base)`, `(rnrs)`
         (set! same-count (+ same-count 1))))
     '(1 2 3 4 5 6)
     '(2 3 3 4 7 6))
-  same-count) &#8658; 3
+  same-count) ⇒ 3
 ----
 
 [horizontal]
@@ -547,16 +547,16 @@ The lists `_list~1~_ _list~2~_ \...` must be of the same length. `_procedure_` s
 
 [source,scheme,subs="quotes,replacements"]
 ----
-(exists symbol? '(1.0 #\a "hi" '())) &#8658; #f
+(exists symbol? '(1.0 #\a "hi" '())) ⇒ #f
 
 (exists member
         '(a b c)
-        '((c b) (b a) (a c))) &#8658; (b a)
+        '((c b) (b a) (a c))) ⇒ (b a)
 
 (exists (lambda (x y z) (= (+ x y) z))
         '(1 2 3 4)
         '(1.2 2.3 3.4 4.5)
-        '(2.3 4.4 6.4 8.6)) &#8658; #t
+        '(2.3 4.4 6.4 8.6)) ⇒ #t
 ----
 
 `exists` may be defined (somewhat inefficiently and without error checks) as follows:
@@ -582,16 +582,16 @@ The lists `_list~1~_ _list~2~_ \...` must be of the same length. `_procedure_` s
 
 [source,scheme,subs="quotes,replacements"]
 ----
-(for-all symbol? '(a b c d)) &#8658; #t
+(for-all symbol? '(a b c d)) ⇒ #t
 
 (for-all =
          '(1 2 3 4)
-         '(1.0 2.0 3.0 4.0)) &#8658; #t
+         '(1.0 2.0 3.0 4.0)) ⇒ #t
 
 (for-all (lambda (x y z) (= (+ x y) z))
          '(1 2 3 4)
          '(1.2 2.3 3.4 4.5)
-         '(2.2 4.3 6.5 8.5)) &#8658; #f
+         '(2.2 4.3 6.5 8.5)) ⇒ #f
 ----
 
 `for-all` may be defined (somewhat inefficiently and without error checks) as follows:
@@ -619,18 +619,18 @@ The `_list_` arguments should all have the same length. `_procedure_` should acc
 
 [source,scheme,subs="quotes,replacements"]
 ----
-(fold-left cons '() '(1 2 3 4)) &#8658; ((((() . 1) . 2) . 3) . 4)
+(fold-left cons '() '(1 2 3 4)) ⇒ ((((() . 1) . 2) . 3) . 4)
 
 (fold-left
   (lambda (a x) (+ a (* x x)))
-  0 '(1 2 3 4 5)) &#8658; 55
+  0 '(1 2 3 4 5)) ⇒ 55
 
 (fold-left
   (lambda (a . args) (append args a))
   '(question)
   '(that not to)
   '(is to be)
-  '(the be: or)) &#8658; (to be or not to be: that is the question)
+  '(the be: or)) ⇒ (to be or not to be: that is the question)
 ----
 
 [horizontal]
@@ -644,14 +644,14 @@ The `_list_` arguments should all have the same length. `_procedure_` should acc
 
 [source,scheme,subs="quotes,replacements"]
 ----
-(fold-right cons '() '(1 2 3 4)) &#8658; (1 2 3 4)
+(fold-right cons '() '(1 2 3 4)) ⇒ (1 2 3 4)
 
 (fold-right
   (lambda (x a) (+ a (* x x)))
-  0 '(1 2 3 4 5)) &#8658; 55
+  0 '(1 2 3 4 5)) ⇒ 55
 
 (fold-right
-  (lambda (x y a) (cons* x y a))   &#8658; (parting is such sweet sorrow
+  (lambda (x y a) (cons* x y a))   ⇒ (parting is such sweet sorrow
   '((with apologies))                  gotta go see ya tomorrow
   '(parting such sorrow go ya)         (with apologies))
   '(is sweet gotta see tomorrow))
@@ -666,10 +666,10 @@ libraries:: `(rnrs base)`, `(rnrs)`
 
 [source,scheme,subs="quotes,replacements"]
 ----
-(vector-map abs '\#(1 -2 3 -4 5 -6)) &#8658; #(1 2 3 4 5 6)
+(vector-map abs '\#(1 -2 3 -4 5 -6)) ⇒ #(1 2 3 4 5 6)
 (vector-map (lambda (x y) (* x y))
   '#(1 2 3 4)
-  '#(8 7 6 5)) &#8658; #(8 14 18 20)
+  '#(8 7 6 5)) ⇒ #(8 14 18 20)
 ----
 
 While the order in which the applications themselves occur is not specified, the order of the values in the output vector is the same as that of the corresponding values in the input vectors.
@@ -690,7 +690,7 @@ libraries:: `(rnrs base)`, `(rnrs)`
         (set! same-count (+ same-count 1))))
     '\#(1 2 3 4 5 6)
     '#(2 3 3 4 7 6))
-  same-count) &#8658; 3
+  same-count) ⇒ 3
 ----
 
 [horizontal]
@@ -708,7 +708,7 @@ libraries:: `(rnrs base)`, `(rnrs)`
     "abcd"
     "===="
     "1234")
-  (map list->string (reverse ls))) &#8658; ("a=1" "b=2" "c=3" "d=4")
+  (map list->string (reverse ls))) ⇒ ("a=1" "b=2" "c=3" "d=4")
 ----
 
 === Section 5.6. Continuations [[section_5.6.]]
@@ -742,8 +742,8 @@ The example below illustrates the use of a continuation to perform a nonlocal ex
           (when (equal? x (car ls))
             (break ls)))))))
 
-(member 'd '(a b c)) &#8658; #f
-(member 'b '(a b c)) &#8658; (b c)
+(member 'd '(a b c)) ⇒ #f
+(member 'b '(a b c)) ⇒ (b c)
 ----
 
 Additional examples are given in Sections <<section_3.3.,3.3>> and <<section_12.11.,12.11>>.
@@ -789,7 +789,7 @@ Common Lisp provides a similar facility (`unwind-protect`) for protection from n
      (lambda (k)
        (unwind-protect
          (k (lambda () x))
-         (set! x 'b)))))) &#8658; b
+         (set! x 'b)))))) ⇒ b
 ----
 
 Some Scheme implementations support a controlled form of assignment known as _fluid binding_, in which a variable takes on a temporary value during a given computation and reverts to the old value after the computation has completed. The syntactic form `fluid-let` defined below in terms of `dynamic-wind` permits the fluid binding of a single variable `x` to the value of an expression `e` within a the body `_b~1~_ _b~2~_ \...`.
@@ -813,7 +813,7 @@ If no continuations are invoked within the body of a `fluid-let`, the behavior i
 (let ([x 3])
   (+ (fluid-let ([x 5])
        x)
-     x)) &#8658; 8
+     x)) ⇒ 8
 ----
 
 A fluid-bound variable also reverts to the old value if a continuation created outside of the `fluid-let` is invoked.
@@ -826,7 +826,7 @@ A fluid-bound variable also reverts to the old value if a continuation created o
             (lambda (k)
               (fluid-let ([x 'b])
                 (k (f)))))
-          (f)))) &#8658; (b . a)
+          (f)))) ⇒ (b . a)
 ----
 
 If control has left a `fluid-let` body, either normally or by the invocation of a continuation, and control reenters the body by the invocation of a continuation, the temporary value of the fluid-bound variable is reinstated. Furthermore, any changes to the temporary value are maintained and reflected upon reentry.
@@ -838,11 +838,11 @@ If control has left a `fluid-let` body, either normally or by the invocation of 
 (fluid-let ([x 1])
   (call/cc (lambda (k) (set! reenter k)))
   (set! x (+ x 1))
-  x) &#8658; 2
-x &#8658; 0
-(reenter '*) &#8658; 3
-(reenter '*) &#8658; 4
-x &#8658; 0
+  x) ⇒ 2
+x ⇒ 0
+(reenter '*) ⇒ 3
+(reenter '*) ⇒ 4
+x ⇒ 0
 ----
 
 A library showing how `dynamic-wind` might be implemented were it not already built in is given below. In addition to defining `dynamic-wind`, the code defines a version of `call/cc` that does its part to support `dynamic-wind`.
@@ -933,9 +933,9 @@ The benefit of using `delay` and `force` is that some amount of computation migh
   (let next ([n 1])
     (delay (cons n (next (+ n 1))))))
 
-(stream-car counters) &#8658; 1
+(stream-car counters) ⇒ 1
 
-(stream-car (stream-cdr counters)) &#8658; 2
+(stream-car (stream-cdr counters)) ⇒ 2
 
 (define stream-add
   (lambda (s1 s2)
@@ -946,9 +946,9 @@ The benefit of using `delay` and `force` is that some amount of computation migh
 (define even-counters
   (stream-add counters counters))
 
-(stream-car even-counters) &#8658; 2
+(stream-car even-counters) ⇒ 2
 
-(stream-car (stream-cdr even-counters)) &#8658; 4
+(stream-car (stream-cdr even-counters)) ⇒ 4
 ----
 
 `delay` may be defined by
@@ -1004,10 +1004,10 @@ Whether `delay` and `force` handle multiple return values is unspecified; the im
         (apply values vals)))))
 
 (define p (delay (values 1 2 3)))
-(force p) &#8658; 1
+(force p) ⇒ 1
              2
              3
-(call-with-values (lambda () (force p)) +) &#8658; 6
+(call-with-values (lambda () (force p)) +) ⇒ 6
 ----
 
 Neither implementation is quite right, since `force` must raise an exception with condition type `&assertion` if its argument is not a promise. Since distinguishing procedures created by `make-promise` from other procedures is impossible, `force` cannot do so reliably. The following reimplementation of `make-promise` and `force` represents promises as records of the type `promise` to allow `force` to make the required check.
@@ -1044,11 +1044,11 @@ The procedure `values` accepts any number of arguments and simply passes (return
 
 [source,scheme,subs="quotes,replacements"]
 ----
-(values) &#8658;
+(values) ⇒
 
-(values 1) &#8658; 1
+(values 1) ⇒ 1
 
-(values 1 2 3) &#8658; 1
+(values 1 2 3) ⇒ 1
                   2
                   3
 
@@ -1056,7 +1056,7 @@ The procedure `values` accepts any number of arguments and simply passes (return
   (lambda (ls)
     (values (car ls) (cdr ls))))
 
-(head&tail '(a b c)) &#8658; a
+(head&tail '(a b c)) ⇒ a
                         (b c)
 ----
 
@@ -1071,9 +1071,9 @@ libraries:: `(rnrs base)`, `(rnrs)`
 ----
 (call-with-values
   (lambda () (values 'bond 'james))
-  (lambda (x y) (cons y x))) &#8658; (james . bond)
+  (lambda (x y) (cons y x))) ⇒ (james . bond)
 
-(call-with-values values list) &#8658; '()
+(call-with-values values list) ⇒ '()
 ----
 
 In the second example, `values` itself serves as the producer. It receives no arguments and thus returns no values. `list` is thus applied to no arguments and so returns the empty list.
@@ -1087,7 +1087,7 @@ The procedure `dxdy` defined below computes the change in `_x_` and `_y_` coordi
     (values (- (car p2) (car p1))
             (- (cdr p2) (cdr p1)))))
 
-(dxdy '(0 . 0) '(0 . 5)) &#8658; 0
+(dxdy '(0 . 0) '(0 . 5)) ⇒ 0
                             5
 ----
 
@@ -1107,8 +1107,8 @@ The procedure `dxdy` defined below computes the change in `_x_` and `_y_` coordi
       (lambda () (dxdy p1 p2))
       (lambda (dx dy) (/ dy dx)))))
 
-(segment-length '(1 . 4) '(4 . 8)) &#8658; 5
-(segment-slope '(1 . 4) '(4 . 8)) &#8658; 4/3
+(segment-length '(1 . 4) '(4 . 8)) ⇒ 5
+(segment-slope '(1 . 4) '(4 . 8)) ⇒ 4/3
 ----
 
 We can of course combine these to form one procedure that returns two values.
@@ -1124,8 +1124,8 @@ We can of course combine these to form one procedure that returns two values.
           (sqrt (+ (* dx dx) (* dy dy)))
           (/ dy dx))))))
 
-(describe-segment '(1 . 4) '(4 . 8)) &#8658; 5
-                                     &#8658; 4/3
+(describe-segment '(1 . 4) '(4 . 8)) ⇒ 5
+                                     ⇒ 4/3
 ----
 
 The example below employs multiple values to divide a list nondestructively into two sublists of alternating elements.
@@ -1142,7 +1142,7 @@ The example below employs multiple values to divide a list nondestructively into
             (values (cons (car ls) odds)
                     (cons (cadr ls) evens)))))))
 
-(split '(a b c d e f)) &#8658; (a c e)
+(split '(a b c d e f)) ⇒ (a c e)
                           (b d f)
 ----
 
@@ -1152,20 +1152,20 @@ The continuation of a call to `values` need not be one established by a call to 
 
 [source,scheme,subs="quotes,replacements"]
 ----
-(+ (values 2) 4) &#8658; 6
+(+ (values 2) 4) ⇒ 6
 
-(if (values #t) 1 2) &#8658; 1
+(if (values #t) 1 2) ⇒ 1
 
 (call-with-values
   (lambda () 4)
-  (lambda (x) x)) &#8658; 4
+  (lambda (x) x)) ⇒ 4
 ----
 
 Similarly, `values` may be used to pass any number of values to a continuation that ignores the values, as in the following.
 
 [source,scheme,subs="quotes,replacements"]
 ----
-(begin (values 1 2 3) 4) &#8658; 4
+(begin (values 1 2 3) 4) ⇒ 4
 ----
 
 Because a continuation may accept zero or more than one value, continuations obtained via `call/cc` may accept zero or more than one argument.
@@ -1175,7 +1175,7 @@ Because a continuation may accept zero or more than one value, continuations obt
 (call-with-values
   (lambda ()
     (call/cc (lambda (k) (k 2 3))))
-  (lambda (x y) (list x y))) &#8658; (2 3)
+  (lambda (x y) (list x y))) ⇒ (2 3)
 ----
 
 The behavior is unspecified when a continuation expecting exactly one value receives zero values or more than one value. For example, the behavior of each of the following expressions is unspecified. Some implementations raise an exception, while others silently suppress additional values or supply defaults for missing values.
@@ -1198,7 +1198,7 @@ Programs that wish to force extra values to be ignored in particular contexts ca
        (lambda () expr)
        (lambda (x . y) x))]))
 
-(if (first (values #t #f)) 'a 'b) &#8658; a
+(if (first (values #t #f)) 'a 'b) ⇒ a
 ----
 
 Since implementations are required to raise an exception with condition type `&assertion` if a procedure does not accept the number of arguments passed to it, each of the following raises an exception.
@@ -1223,10 +1223,10 @@ Since `_producer_` is most often a `lambda` expression, it is often convenient t
     [(_ expr consumer)
      (call-with-values (lambda () expr) consumer)]))
 
-(with-values (values 1 2) list) &#8658; (1 2)
+(with-values (values 1 2) list) ⇒ (1 2)
 (with-values (split '(1 2 3 4))
   (lambda (odds evens)
-    evens)) &#8658; (2 4)
+    evens)) ⇒ (2 4)
 ----
 
 If the `_consumer_` is also a `lambda` expression, the multiple-value variants of `let` and `let*` described in <<section_4.5.,Section 4.5>> are usually even more convenient.
@@ -1234,10 +1234,10 @@ If the `_consumer_` is also a `lambda` expression, the multiple-value variants o
 [source,scheme,subs="quotes,replacements"]
 ----
 (let-values ([(odds evens) (split '(1 2 3 4))])
-  evens) &#8658; (2 4)
+  evens) ⇒ (2 4)
 
 (let-values ([ls (values 'a 'b 'c)])
-  ls) &#8658; (a b c)
+  ls) ⇒ (a b c)
 ----
 
 Many standard syntactic forms and procedures pass along multiple values. Most of these are "automatic," in the sense that nothing special must be done by the implementation to make this happen. The usual expansion of `let` into a direct `lambda` call automatically propagates multiple values produced by the body of the `let`. Other operators must be coded specially to pass along multiple values. The `call-with-port` procedure (<<section_7.6.,Section 7.6>>), for example, calls its procedure argument, then closes the port argument before returning the procedure's values, so it must save the values temporarily. This is easily accomplished via `let-values`, `apply`, and `values`:
@@ -1318,12 +1318,12 @@ If `_obj_` does not represent a syntactically valid expression, `eval` raises an
 [source,scheme,subs="quotes,replacements"]
 ----
 (define cons 'not-cons)
-(eval '(let ([x 3]) (cons x 4)) (environment '(rnrs))) &#8658; (3 . 4)
+(eval '(let ([x 3]) (cons x 4)) (environment '(rnrs))) ⇒ (3 . 4)
 
 (define lambda 'not-lambda)
-(eval '(lambda (x) x) (environment '(rnrs))) &#8658; #&lt;procedure&gt;
+(eval '(lambda (x) x) (environment '(rnrs))) ⇒ #&lt;procedure&gt;
 
-(eval '(cons 3 4) (environment)) &#8658; _exception_
+(eval '(cons 3 4) (environment)) ⇒ _exception_
 ----
 
 [horizontal]
@@ -1336,7 +1336,7 @@ libraries:: `(rnrs eval)`
 [source,scheme,subs="quotes,replacements"]
 ----
 (define env (environment '(rnrs) '(prefix `(rnrs lists)` $)))
-(eval '($cons* 3 4 (* 5 8)) env) &#8658; (3 4 . 40)
+(eval '($cons* 3 4 (* 5 8)) env) ⇒ (3 4 . 40)
 ----
 
 [horizontal]

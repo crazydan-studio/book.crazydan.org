@@ -30,6 +30,17 @@ image::images/cover.png[align=center]
 endif::[]
 
 
+// document.querySelectorAll('tt').forEach(function(node) { node.style='font-size: 2em; border-bottom: 1px solid grey;' })
+// document.querySelectorAll('i').forEach(function(node) { node.style='font-size: 2em; border-right: 1px solid red;' })
+
+// document.querySelectorAll('h3').forEach(function(node) { title=node.innerText; anchor='section_'+title.replace(/^Section ([\d.]+) .+/, '$1'); node.outerHTML = '=== ' + title + ' [['+anchor+']]'; })
+// document.querySelectorAll('[src="math/tspl/0.gif"]').forEach(function(node) { node.outerHTML = '&amp;#8658;' })
+// document.querySelectorAll('tt').forEach(function(node) { node.innerHTML = '`'+node.innerHTML+'`' })
+// document.querySelectorAll('i').forEach(function(node) { node.innerHTML = '_'+node.innerHTML+'_' })
+// document.querySelectorAll('li').forEach(function(node) { node.innerHTML = '- '+node.innerHTML })
+// document.querySelectorAll('sub').forEach(function(node) { node.outerHTML = '~'+node.innerText+'~' })
+
+
 [dedication]
 
 {footer-copyright}
