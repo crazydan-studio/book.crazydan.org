@@ -7,19 +7,21 @@ ROOT_DIR="$(cd "${DIR}/.." && pwd -P)"
 repo=github
 branch=site-dist
 
-echo "Clean ..." \
-    && git checkout ${branch} \
-    && git pull ${repo} ${branch} \
-    && git reset --hard ${repo}/${branch} \
-    && git clean -d -f \
-    && git rm -r dist
+pushd "${ROOT_DIR}"
+    echo "Clean for ${branch} ..." \
+        && git checkout ${branch} \
+        && git pull ${repo} ${branch} \
+        && git reset --hard ${repo}/${branch} \
+        && git clean -d -f \
+        && git rm -r "dist"
 
-echo "Build ..." \
-    && bash "${DIR}/asciidoctor.sh" \
-    && echo "Commit ..." \
-    && git add "${ROOT_DIR}/dist" \
-    && git commit -m "Update dist" \
-    && git push ${repo} ${branch}
+    echo "Build for ${branch} ..." \
+        && bash "${DIR}/asciidoctor.sh" \
+        && echo "Commit ..." \
+        && git add "dist" \
+        && git commit -m "Update dist" \
+        && git push ${repo} ${branch}
 
-echo "Back to master ..."
-git checkout master
+    echo "Back to master ..."
+    git checkout master
+popd
