@@ -6,7 +6,7 @@ Illustrations by Jean-Pierre Hébert
 :toc: left
 :toc-title: Table of Contents
 :toclevels: 2
-:favicon: ./images/favicon.png
+:favicon: ./icon.png
 :data-uri:
 :stem: latexmath
 :source-highlighter: highlightjs
