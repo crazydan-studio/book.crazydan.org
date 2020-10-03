@@ -1242,6 +1242,7 @@ If the `_consumer_` is also a `lambda` expression, the multiple-value variants o
 
 Many standard syntactic forms and procedures pass along multiple values. Most of these are "automatic," in the sense that nothing special must be done by the implementation to make this happen. The usual expansion of `let` into a direct `lambda` call automatically propagates multiple values produced by the body of the `let`. Other operators must be coded specially to pass along multiple values. The `call-with-port` procedure (<<section_7.6.,Section 7.6>>), for example, calls its procedure argument, then closes the port argument before returning the procedure's values, so it must save the values temporarily. This is easily accomplished via `let-values`, `apply`, and `values`:
 
+[#defn:call-with-port]
 [source,scheme,subs="quotes,replacements"]
 ----
 (define call-with-port
