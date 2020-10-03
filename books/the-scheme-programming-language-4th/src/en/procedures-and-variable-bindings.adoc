@@ -337,6 +337,7 @@ The outer `let` expression creates the bindings, each assignment evaluates an ex
 
 === Section 4.5. Multiple Values [[section_4.5.]]
 
+[#desc:let-values]
 [horizontal]
 syntax:: `(let-values ((_formals_ _expr_) \...) _body~1~_ _body~2~_ \...)`
 syntax:: `(let*-values ((_formals_ _expr_) \...) _body~1~_ _body~2~_ \...)`
