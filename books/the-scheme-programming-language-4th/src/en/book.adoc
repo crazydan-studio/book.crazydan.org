@@ -43,10 +43,10 @@ endif::[]
 
 // Replacements
 // - ^$\n`\s*\(     \n[source,scheme,subs=""]\n----\n(
+// - \)`\n^$     )\n----\n
 // - \[(\d+)\]   <<ref$1>>
 // - ([^=]) Section ([\d\.]+\d)    $1 <<section_$2.,Section $2>>
 // - ([(])Section ([\d\.]+\d)    $1<<section_$2.,Section $2>>
-// - \)`\n^$     )\n----\n
 
 
 [dedication]
