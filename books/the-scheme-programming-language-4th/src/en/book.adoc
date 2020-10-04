@@ -34,6 +34,7 @@ endif::[]
 // document.querySelectorAll('i').forEach(function(node) { node.style='font-size: 2em; border-right: 1px solid red;' })
 
 // document.querySelectorAll('h3').forEach(function(node) { title=node.innerText; anchor='section_'+title.replace(/^Section ([\d.]+) .+/, '$1'); node.outerHTML = '=== ' + title + ' [['+anchor+']]'; })
+// document.querySelectorAll('h4').forEach(function(node) { title=node.innerText; anchor='exercise_'+title.replace(/^Exercise ([\d.]+)$/, '$1'); node.outerHTML = '==== ' + title + ' [['+anchor+']]<br>'; })
 // document.querySelectorAll('[src="math/tspl/0.gif"]').forEach(function(node) { node.outerHTML = '⇒' })
 // document.querySelectorAll('tt').forEach(function(node) { node.innerHTML = '`'+node.innerHTML+'`' })
 // document.querySelectorAll('i').forEach(function(node) { node.innerHTML = '_'+node.innerHTML+'_' })
@@ -46,6 +47,7 @@ endif::[]
 // - \)`\n^$     )\n----\n
 // - \[(\d+)\]   <<ref$1>>
 // - ([^=]) Section ([\d\.]+\d)    $1 <<section_$2.,Section $2>>
+// - ([^=]) Exercise ([\d\.]+\d)    $1 <<exercise_$2,Exercise $2>>
 // - ([(])Section ([\d\.]+\d)    $1<<section_$2.,Section $2>>
 
 

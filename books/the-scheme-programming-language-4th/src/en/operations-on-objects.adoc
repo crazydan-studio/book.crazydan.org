@@ -1120,7 +1120,7 @@ If a program must distinguish between finding `#f` in the list and finding no el
 (find not '(1 a #f 55)) ⇒ #f
 ----
 
-[#page_assq]
+[#page:assq]
 [horizontal]
 procedure:: `(assq _obj_ _alist_)`
 procedure:: `(assv _obj_ _alist_)`
@@ -1230,7 +1230,7 @@ If both are present, radix and exactness prefixes may appear in either order.
 
 A Scheme implementation may support more than one size of internal representation for inexact quantities. The exponent markers `s` (_short_), `f` (_single_), `d` (_double_), and `l` (_long_) may appear in place of the default exponent marker `e` to override the default size for numbers written in scientific notation. In implementations that support multiple representations, the default size has at least as much precision as _double_.
 
-A precise grammar for Scheme numbers is given on <<grammar_numbers,page 459>>.
+A precise grammar for Scheme numbers is given on <<grammar:numbers,page 459>>.
 
 Any number can be written in a variety of different ways, but the system printer (invoked by `put-datum`, `write`, and `display`) and `number\->string` express numbers in a compact form, using the fewest number of digits necessary to retain the property that, when read, the printed number is identical to the original number.
 
@@ -1648,13 +1648,13 @@ If `_real_` is exactly between two integers, the closest even integer is returne
 (round 3.5) ⇒ 4.0
 ----
 
-[#page_abs]
+[#page:abs]
 [horizontal]
 procedure:: `(abs _real_)`
 returns:: the absolute value of `_real_`
 libraries:: `(rnrs base)`, `(rnrs)`
 
-`abs` is equivalent to `(lambda (x) (if (< x 0) (- x) x))`. `abs` and `magnitude` (see <<page_magnitude,page 183>>) are identical for real inputs.
+`abs` is equivalent to `(lambda (x) (if (< x 0) (- x) x))`. `abs` and `magnitude` (see <<page:magnitude,page 183>>) are identical for real inputs.
 
 [source,scheme,subs=""]
 ----
@@ -1904,13 +1904,13 @@ The range of the result is stem:[-π] (exclusive) to stem:[+π] (inclusive).
 (angle 5.2) ⇒ 0.0
 ----
 
-[#page_magnitude]
+[#page:magnitude]
 [horizontal]
 procedure:: `(magnitude _num_)`
 returns:: the magnitude of `_num_`
 libraries:: `(rnrs base)`, `(rnrs)`
 
-`magnitude` and `abs` (see <<page_abs,page 178>>) are identical for real arguments. The magnitude of a complex number stem:[x + y_i] is stem:[+\sqrt{x^2+y^2}].
+`magnitude` and `abs` (see <<page:abs,page 178>>) are identical for real arguments. The magnitude of a complex number stem:[x + y_i] is stem:[+\sqrt{x^2+y^2}].
 
 [source,scheme,subs=""]
 ----
@@ -3294,7 +3294,7 @@ libraries:: `(rnrs arithmetic flonums)`, `(rnrs)`
 
 === Section 6.7. Characters [[section_6.7.]]
 
-Characters are atomic objects representing letters, digits, special symbols such as `$` or `-`, and certain nongraphic control characters such as space and newline. Characters are written with a `\#\` prefix. For most characters, the prefix is followed by the character itself. The written character representation of the letter `A`, for example, is `#\A`. The characters newline, space, and tab may be written in this manner as well, but they can be written more clearly as `\#\newline`, `#\space`, and `\#\tab`. Other character names are supported as well, as defined by the grammar for character objects on <<grammar_characters,page 457>>. Any Unicode character may be written with the syntax `#\x__n__`, where `_n_` consists of one or more hexadecimal digits and represents a valid Unicode scalar value.
+Characters are atomic objects representing letters, digits, special symbols such as `$` or `-`, and certain nongraphic control characters such as space and newline. Characters are written with a `\#\` prefix. For most characters, the prefix is followed by the character itself. The written character representation of the letter `A`, for example, is `#\A`. The characters newline, space, and tab may be written in this manner as well, but they can be written more clearly as `\#\newline`, `#\space`, and `\#\tab`. Other character names are supported as well, as defined by the grammar for character objects on <<grammar:characters,page 457>>. Any Unicode character may be written with the syntax `#\x__n__`, where `_n_` consists of one or more hexadecimal digits and represents a valid Unicode scalar value.
 
 This section describes the operations that deal primarily with characters. See also the following section on strings and <<chp_input_and_output,Chapter 7>> on input and output for other operations relating to characters.
 
@@ -3495,7 +3495,7 @@ libraries:: `(rnrs base)`, `(rnrs)`
 
 Strings are sequences of characters and are often used as messages, character buffers, or containers for blocks of text. Scheme provides operations for creating strings, extracting characters from strings, obtaining substrings, concatenating strings, and altering the contents of strings.
 
-A string is written as a sequence of characters enclosed in double quotes, e.g., `"hi there"`. A double quote may be introduced into a string by preceding it by a backward slash, e.g., `"two \"quotes\" within"`. A backward slash may also be included by preceding it with a backward slash, e.g., `"a \\slash"`. Various special characters can be inserted with other two-character sequences, e.g., `\n` for newline, `\r` for carriage return, and `\t` for tab. Any Unicode character may be inserted with the syntax `#\x__n__;`, where `_n_` consists of one or more hexadecimal digits and represents a valid Unicode scalar value. A grammar defining the precise syntax of strings is given on <<grammar_strings,page 458>>.
+A string is written as a sequence of characters enclosed in double quotes, e.g., `"hi there"`. A double quote may be introduced into a string by preceding it by a backward slash, e.g., `"two \"quotes\" within"`. A backward slash may also be included by preceding it with a backward slash, e.g., `"a \\slash"`. Various special characters can be inserted with other two-character sequences, e.g., `\n` for newline, `\r` for carriage return, and `\t` for tab. Any Unicode character may be inserted with the syntax `#\x__n__;`, where `_n_` consists of one or more hexadecimal digits and represents a valid Unicode scalar value. A grammar defining the precise syntax of strings is given on <<grammar:strings,page 458>>.
 
 Strings are indexed by exact nonnegative integers, and the index of the first element of any string is 0. The highest valid index for a given string is one less than its length.
 
@@ -4651,7 +4651,7 @@ The property that two symbols may be compared quickly for equivalence makes them
 
 Symbols are written without double quotes or other bracketing characters. Parentheses, double quotes, spaces, and most other characters with a special meaning to the Scheme reader are not allowed within the printed representation of a symbol. These and any other Unicode character may appear anywhere within the printed representation of a symbol with the syntax `#\x__n__;`, where `_n_` consists of one or more hexadecimal digits and represents a valid Unicode scalar value.
 
-The grammar for symbols on <<grammar_symbols,page 458>> gives a precise definition of the syntax of symbols.
+The grammar for symbols on <<grammar:symbols,page 458>> gives a precise definition of the syntax of symbols.
 
 [horizontal]
 procedure:: `(symbol=? _symbol~1~_ _symbol~2~_)`
@@ -4723,7 +4723,7 @@ The boolean values `#t` and `#f` may also be compared with `eq?`, which is typic
 
 === Section 6.13. Hashtables [[section_6.13.]]
 
-Hashtables represent sets of associations between arbitrary Scheme values. They serve essentially the same purpose as association lists (see <<page_assq,page 165>>) but are typically much faster when large numbers of associations are involved.
+Hashtables represent sets of associations between arbitrary Scheme values. They serve essentially the same purpose as association lists (see <<page:assq,page 165>>) but are typically much faster when large numbers of associations are involved.
 
 [horizontal]
 procedure:: `(make-eq-hashtable)`
