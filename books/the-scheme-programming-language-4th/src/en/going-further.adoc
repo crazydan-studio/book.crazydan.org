@@ -17,25 +17,27 @@ The exact set of syntactic forms making up the core of the language is thus subj
 
 The core syntactic forms include top-level `define` forms, constants, variables, procedure applications, `quote` expressions, `lambda` expressions, `if` expressions, and `set!` expressions. The grammar below describes the core syntax of Scheme in terms of these definitions and expressions. In the grammar, vertical bars ( `|` ) separate alternatives, and a form followed by an asterisk ( * ) represents zero or more occurrences of the form. <variable> is any Scheme identifier. <datum> is any Scheme object, such as a number, list, symbol, or vector. <boolean> is either `#t` or `#f`, <number> is any number, <character> is any character, and <string> is any string. We have already seen examples of numbers, strings, lists, symbols, and booleans. See <<chp_operations_on_objects,Chapter 6>> or the formal syntax description starting on <<formal_syntax,page 455>> for more on the object-level syntax of these and other objects.
 
-[source,scheme,subs="quotes,replacements"]
-----
-&lt;program&gt;             ---> &lt;form&gt;*
-&lt;form&gt;                ---> &lt;definition&gt; | &lt;expression&gt;
-&lt;definition&gt;          ---> &lt;variable definition&gt; | (begin &lt;definition&gt;*)
-&lt;variable definition&gt; ---> (define &lt;variable&gt; &lt;expression&gt;)
-&lt;expression&gt;          ---> &lt;constant&gt;
-                       |   &lt;variable&gt;
-                       |   (quote &lt;datum&gt;)
-                       |   (lambda &lt;formals&gt; &lt;expression&gt; &lt;expression&gt;*)
-                       |   (if &lt;expression&gt; &lt;expression&gt; &lt;expression&gt;)
-                       |   (set! &lt;variable&gt; &lt;expression&gt;)
-                       |   &lt;application&gt;
-&lt;constant&gt;            ---> &lt;boolean&gt; | &lt;number&gt; | &lt;character&gt; | &lt;string&gt;
-&lt;formals&gt;             ---> &lt;variable&gt;
-                       |   (&lt;variable&gt;*)
-                       |   (&lt;variable&gt; &lt;variable&gt;* . &lt;variable&gt;)
-&lt;application&gt;         ---> (&lt;expression&gt; &lt;expression&gt;*)
-----
+[%autowidth,grid=none,frame=none]
+|===
+
+|<program>             |-> |<form>*
+|<form>                |-> |<definition> \| <expression>
+|<definition>          |-> |<variable definition> \| `(begin` <definition>* `)`
+|<variable definition> |-> |`(define` <variable> <expression> `)`
+|<expression>          |-> |<constant>
+|                      |\| |<variable>
+|                      |\| |`(quote` <datum> `)`
+|                      |\| |`(lambda` <formals> <expression> <expression>* `)`
+|                      |\| |`(if` <expression> <expression> <expression> `)`
+|                      |\| |`(set!` <variable> <expression> `)`
+|                      |\| |<application>
+|<constant>            |-> |<boolean> \| <number> \| <character> \| <string>
+|<formals>             |-> |<variable>
+|                      |\| |`(`<variable>* `)`
+|                      |\| |`(`<variable> <variable>* `.` <variable> `)`
+|<application>         |-> |`(`<expression> <expression>* `)`
+
+|===
 
 The grammar is ambiguous in that the syntax for procedure applications conflicts with the syntaxes for `quote`, `lambda`, `if`, and `set!` expressions. In order to qualify as a procedure application, the first <expression> must not be one of these keywords, unless the keyword has been redefined or locally bound.
 
