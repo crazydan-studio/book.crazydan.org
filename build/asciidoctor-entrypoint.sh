@@ -6,15 +6,6 @@ book_dist="$2"
 
 rm -rf "${book_dist}"
 
-echo "  Create index ..."
-asciidoctor \
-    --trace \
-    --backend html5 \
-    --attribute nofooter \
-    --source-dir "${book_dir}/src" \
-    --destination-dir "${book_dist}" \
-    "${book_dir}/src/index.adoc"
-
 langs=( $(cd "${book_dir}/src" && find . -maxdepth 1 -type d | sed '/^\.$/d; s|^\./||g') )
 for lang in "${langs[@]}"; do
     echo "  Create html for ${lang} ..."
