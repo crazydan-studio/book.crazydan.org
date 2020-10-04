@@ -13,7 +13,7 @@ pushd "${ROOT_DIR}"
         && git pull ${repo} ${branch} \
         && git reset --hard ${repo}/${branch} \
         && git clean -d -f \
-        && git merge origin master \
+        && git merge origin/master -m "merge from origin/master" \
         && git rm -r "dist"
 
     echo "Build for ${branch} ..." \
