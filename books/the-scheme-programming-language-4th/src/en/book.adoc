@@ -30,25 +30,6 @@ image::images/cover.png[align=center]
 endif::[]
 
 
-// document.querySelectorAll('tt').forEach(function(node) { node.style='font-size: 2em; border-bottom: 1px solid grey;' })
-// document.querySelectorAll('i').forEach(function(node) { node.style='font-size: 2em; border-right: 1px solid red;' })
-
-// document.querySelectorAll('h3').forEach(function(node) { title=node.innerText; anchor='section_'+title.replace(/^Section ([\d.]+) .+/, '$1'); node.outerHTML = '=== ' + title + ' [['+anchor+']]'; })
-// document.querySelectorAll('[src="math/tspl/0.gif"]').forEach(function(node) { node.outerHTML = '⇒' })
-// document.querySelectorAll('tt').forEach(function(node) { node.innerHTML = '`'+node.innerHTML+'`' })
-// document.querySelectorAll('i').forEach(function(node) { node.innerHTML = '_'+node.innerHTML+'_' })
-// document.querySelectorAll('li').forEach(function(node) { node.innerHTML = '- '+node.innerHTML })
-// document.querySelectorAll('sub').forEach(function(node) { node.outerHTML = '~'+node.innerText+'~' })
-// document.querySelectorAll('sup').forEach(function(node) { node.outerHTML = '^'+node.innerText+'^' })
-
-// Replacements
-// - ^$\n`\s*\(     \n[source,scheme,subs=""]\n----\n(
-// - \)`\n^$     )\n----\n
-// - \[(\d+)\]   <<ref$1>>
-// - ([^=]) Section ([\d\.]+\d)    $1 <<section_$2.,Section $2>>
-// - ([(])Section ([\d\.]+\d)    $1<<section_$2.,Section $2>>
-
-
 [dedication]
 
 {footer-copyright}
@@ -109,3 +90,80 @@ include::summary-of-forms.adoc[]
 
 // Index
 include::index.adoc[]
+
+
+[appendix]
+== Book Converting Tools
+
+- link:https://asciidoctor.org/docs/user-manual/[Asciidoctor User Manual]
+- link:https://asciidoctor.org/docs/asciidoc-syntax-quick-reference/[AsciiDoc Syntax Quick Reference]
+- link:https://math.meta.stackexchange.com/questions/5020/mathjax-basic-tutorial-and-quick-reference[MathJax basic tutorial and quick reference]
+- link:https://www.whatsmyip.org/html-characters/[HTML Entities & Special Characters]
+
+[appendix]
+== Format Javascript and Replacement Regex for The Original Book
+
+- Format Javascript +
++
+[source,javascript,subs=""]
+----
+// Format the content with AsciiDoc syntax
+document.querySelectorAll('h3')
+        .forEach(function(node) {
+            var title=node.innerText;
+            var anchor='section_'+title.replace(/^Section ([\d.]+) .+/, '$1');
+            node.outerHTML = '=== ' + title + ' [['+anchor+']]';
+        })
+document.querySelectorAll('h4')
+        .forEach(function(node) {
+            var title=node.innerText;
+            var anchor='exercise_'+title.replace(/^Exercise ([\d.]+)$/, '$1');
+            node.outerHTML = '==== ' + title + ' [['+anchor+']]&lt;br&gt;';
+        })
+document.querySelectorAll('[src="math/tspl/0.gif"]')
+        .forEach(function(node) { node.outerHTML = '⇒' })
+document.querySelectorAll('tt')
+        .forEach(function(node) { node.innerHTML = '`'+node.innerHTML+'`' })
+document.querySelectorAll('i')
+        .forEach(function(node) { node.innerHTML = '_'+node.innerHTML+'_' })
+document.querySelectorAll('li')
+        .forEach(function(node) { node.innerHTML = '- '+node.innerHTML })
+document.querySelectorAll('sub')
+        .forEach(function(node) { node.outerHTML = '~'+node.innerText+'~' })
+document.querySelectorAll('sup')
+        .forEach(function(node) { node.outerHTML = '^'+node.innerText+'^' })
+
+// Highlight the code blocks and italic text
+document.querySelectorAll('tt')
+        .forEach(function(node) {
+            node.style='font-size: 2em; border-bottom: 1px solid grey;'
+        })
+document.querySelectorAll('i')
+        .forEach(function(node) {
+            node.style='font-size: 2em; border-right: 1px solid red;'
+        })
+----
+
+- Replacement Regex +
++
+|===
+|Regex |Replacement
+
+|^$\n\s*`\s*\(
+|`\n[source,scheme,subs=""]\n----\n(`
+
+|\)`\n^$
+|`)\n----\n`
+
+|`\[(\d+)\]`
+|++<<ref$1>>++
+
+|`([^=]) Section ([\d\.]+\d)`
+|++$1 <<section_$2.,Section $2>>++
+
+|`([(])Section ([\d\.]+\d)`
+|++$1<<section_$2.,Section $2>>++
+
+|`([^=]) Exercise ([\d\.]+\d)`
+|++$1 <<exercise_$2,Exercise $2>>++
+|===

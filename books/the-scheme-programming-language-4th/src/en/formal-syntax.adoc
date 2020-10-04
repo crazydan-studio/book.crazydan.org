@@ -40,7 +40,7 @@ Booleans.  Boolean false is written #f. While all other values count as true, th
 
 Case is not significant in the syntax of booleans, so these may also be written as #T and #F.
 
-[[grammar_characters]]
+[#grammar:characters]
 Characters.  A character object is written as the prefix #\ followed by a single character, a character name, or a sequence of characters specifying a Unicode scalar value.
 
 <character>	<graphic>	#\ <any character> | #\ <character name> | #\x <hex scalar value>
@@ -56,7 +56,7 @@ A #\ prefix followed by a character name is always interpreted as a named charac
 
 Case is significant in the syntax of character objects, except within a hex scalar value.
 
-[[grammar_strings]]
+[#grammar:strings]
 Strings.  A string is written as a sequence of string elements enclosed in string quotes (double quotes). Any character other than a string quote or backslash can appear as a string element. A string element can also consist of a backslash followed by a single character, a backslash followed by sequence of characters specifying a Unicode scalar value, or a backslash followed by sequence of intraline whitespace characters that includes a single line ending.
 
 <string>	<graphic>	" <string character>* "
@@ -69,7 +69,7 @@ A string element consisting of a single character represents that character, exc
 
 Case is significant in the syntax of strings, except within a hex scalar value.
 
-[[grammar_symbols]]
+[#grammar:symbols]
 Symbols.  A symbol is written either as an "initial" character followed by a sequence of "subsequent" characters or as a "peculiar symbol." Initial characters are letters, certain special characters, an additional set of Unicode characters, or arbitrary characters specified by Unicode scalar values. Subsequent characters are initial characters, digits, certain additional special characters, and a set of additional Unicode characters. The peculiar symbols are +, -, ..., and any sequence of subsequent characters prefixed by ->.
 
 <symbol>	<graphic>	<initial> <subsequent>*
@@ -83,7 +83,8 @@ Symbols.  A symbol is written either as an "initial" character followed by a seq
 
 Case is significant in symbols.
 
-[[grammar_numbers]] Numbers.  Numbers can appear in one of four radices: 2, 8, 10, and 16, with 10 the default. Several of the productions below are parameterized by the radix, r, and each represents four productions, one for each of the four possible radices. Numbers that contain radix points or exponents are constrained to appear in radix 10, so <decimal r> is valid only when r is 10.
+[#grammar:numbers]
+Numbers.  Numbers can appear in one of four radices: 2, 8, 10, and 16, with 10 the default. Several of the productions below are parameterized by the radix, r, and each represents four productions, one for each of the four possible radices. Numbers that contain radix points or exponents are constrained to appear in radix 10, so <decimal r> is valid only when r is 10.
 
 <number>	<graphic>	<num 2> | <num 8> | <num 10> | <num 16>
 <num r>	<graphic>	<prefix r> <complex r>
