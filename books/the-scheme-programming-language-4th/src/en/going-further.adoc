@@ -176,6 +176,7 @@ The reason is more subtle, however, and is the subject of <<exercise_3.2.6,Exerc
 
 ==== Exercise 3.1.1 [[exercise_3.1.1]]
 
+[[further:s25]]
 Write out the expansion steps necessary to expand
 
 [source,scheme,subs="quotes,replacements"]
@@ -568,6 +569,7 @@ A nontail call to `f` is shown indented relative to its caller, since the caller
 
 ==== Exercise 3.2.1 [[exercise_3.2.1]]
 
+[[further:s52]]
 Which of the recursive procedures defined in <<section_3.2.,Section 3.2>> are tail-recursive, and which are not?
 
 ==== Exercise 3.2.2 [[exercise_3.2.2]]
@@ -597,6 +599,7 @@ Rewrite both definitions of `fibonacci` given in this section to count the numbe
 
 ==== Exercise 3.2.5 [[exercise_3.2.5]]
 
+[[further:s57]]
 Augment the definition of `let` given in <<section_3.1.,Section 3.1>> to handle named `let` as well as unnamed `let`, using two rules.
 
 ==== Exercise 3.2.6 [[exercise_3.2.6]]
@@ -780,6 +783,7 @@ See <<section_12.11.,Section 12.11>> for an implementation of _engines_, which s
 
 ==== Exercise 3.3.1 [[exercise_3.3.1]]
 
+[[further:s66]]
 Use `call/cc` to write a program that loops indefinitely, printing a sequence of numbers beginning at zero. Do not use any recursive procedures, and do not use any assignments.
 
 ==== Exercise 3.3.2 [[exercise_3.3.2]]
@@ -898,6 +902,7 @@ Rewrite the `reciprocal` example first given in <<section_2.1.,Section 2.1>> to 
 
 ==== Exercise 3.4.2 [[exercise_3.4.2]]
 
+[[further:s77]]
 Rewrite the `retry` example from <<defn:product-call/cc,page 75>> to use CPS.
 
 ==== Exercise 3.4.3 [[exercise_3.4.3]]
@@ -1100,6 +1105,7 @@ Redefine `complain` in the `calc` example as an equivalent syntactic extension.
 
 ==== Exercise 3.5.2 [[exercise_3.5.2]]
 
+[[further:s87]]
 In the `calc` example, the error continuation `ek` is passed along on each call to `apply-op`, `complain`, and `do-calc`. Move the definitions of `apply-op`, `complain`, and `do-calc` inward as far as necessary to eliminate the `ek` argument from the definitions and applications of these procedures.
 
 ==== Exercise 3.5.3 [[exercise_3.5.3]]
@@ -1206,6 +1212,7 @@ Modify `gpa` to handle "`x`" grades, which do not count in the grade-point avera
 
 ==== Exercise 3.6.2 [[exercise_3.6.2]]
 
+[[further:s91]]
 Export from `(grades)` a new syntactic form, `distribution`, that takes a set of grades, like `gpa`, but returns a list of the form `((_n_ _g_) \...)`, where `_n_` is the number of times `_g_` appears in the set, with one entry for each `_g_`. Have `distribution` call an unexported procedure to do the actual work.
 
 [source,scheme,subs="quotes,replacements"]

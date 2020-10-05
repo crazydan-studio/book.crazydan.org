@@ -277,6 +277,7 @@ Convert the following arithmetic expressions into Scheme expressions and evaluat
 
 ==== Exercise 2.2.2 [[exercise_2.2.2]]
 
+[[start:s35]]
 Experiment with the procedures `+`, `-`, `*`, and `/` to determine Scheme's rules for the type of value returned by each when given different types of numeric arguments.
 
 ==== Exercise 2.2.3 [[exercise_2.2.3]]
@@ -305,6 +306,7 @@ Determine the values of the following expressions. Use your Scheme system to ver
 
 ==== Exercise 2.2.5 [[exercise_2.2.5]]
 
+[[start:s38]]
 Write a Scheme expression that evaluates to the following internal list structure.
 
 image::images/2.gif[]
@@ -324,6 +326,7 @@ The behavior of `(car (car (car '((a b) (c d)))))` is undefined because `(car '(
 
 ==== Exercise 2.2.8 [[exercise_2.2.8]]
 
+[[start:s41]]
 Try to explain how Scheme expressions are evaluated. Does your explanation cover the last example in <<exercise_2.2.3,Exercise 2.2.3>>?
 
 === Section 2.3. Evaluating Scheme Expressions [[section_2.3.]]
@@ -466,6 +469,7 @@ Although choosing different names can sometimes prevent confusion, shadowing can
 
 ==== Exercise 2.4.1 [[exercise_2.4.1]]
 
+[[start:s57]]
 Rewrite the following expressions, using `let` to remove common subexpressions and to improve the structure of the code. Do not perform any algebraic simplifications.
 
 .. `(+ (- (* 3 a) b) (+ (* 3 a) b))`
@@ -485,6 +489,7 @@ Determine the value of the following expression. Explain how you derived this va
 
 ==== Exercise 2.4.3 [[exercise_2.4.3]]
 
+[[start:s59]]
 Rewrite the following expressions to give unique names to each different ``let``-bound variable so that none of the variables is shadowed. Verify that the value of your expression is the same as that of the original expression.
 
 .. {blank}
@@ -692,6 +697,7 @@ Determine the values of the expressions below.
 
 ==== Exercise 2.5.2 [[exercise_2.5.2]]
 
+[[start:s73]]
 How might the primitive procedure `list` be defined?
 
 ==== Exercise 2.5.3 [[exercise_2.5.3]]
@@ -783,6 +789,7 @@ As suggested above, top-level definitions may be shadowed by `let` or `lambda` b
 
 Variables with top-level definitions act almost as if they were bound by a `let` expression enclosing all of the expressions you type.
 
+[[defn:list]]
 Given only the simple tools you have read about up to this point, it is already possible to define some of the primitive procedures provided by Scheme and described later in this book. If you completed the exercises from the last section, you should already know how to define `list`.
 
 [source,scheme,subs="replacements"]
@@ -945,6 +952,7 @@ A more elegant (though possibly less efficient) way to define `cadr` and `cddr` 
 
 ==== Exercise 2.6.3 [[exercise_2.6.3]]
 
+[[start:s96]]
 Scheme also provides `caar`, `cdar`, `caaar`, `caadr`, and so on, with any combination of up to four ``a``'s (representing `car`) and ``d``'s (representing `cdr`) between the `c` and the `r` (see <<section_6.3.,Section 6.3>>). Define each of these with the `compose` procedure of the preceding exercise.
 
 === Section 2.7. Conditional Expressions [[section_2.7.]]
@@ -1230,6 +1238,7 @@ Define the predicate `atom?`, which returns true if its argument is not a pair a
 
 ==== Exercise 2.7.2 [[exercise_2.7.2]]
 
+[[start:s128]]
 The procedure `length` returns the length of its argument, which must be a list. For example, `(length '(a b c))` is 3. Using `length`, define the procedure `shorter`, which returns the shorter of two list arguments. Have it return the first list if they have the same length.
 
 [source,scheme,subs="replacements"]
@@ -1440,6 +1449,7 @@ All we have done is to replace the call to `abs` in `abs-all` with a call to the
 
 ==== Exercise 2.8.1 [[exercise_2.8.1]]
 
+[[start:s149]]
 Describe what would happen if you switched the order of the arguments to `cons` in the definition of `tree-copy`.
 
 ==== Exercise 2.8.2 [[exercise_2.8.2]]
@@ -1473,6 +1483,7 @@ Define both procedures.
 
 ==== Exercise 2.8.5 [[exercise_2.8.5]]
 
+[[start:s155]]
 <<exercise_2.7.2,Exercise 2.7.2>> had you use `length` in the definition of `shorter`, which returns the shorter of its two list arguments, or the first if the two have the same length. Write `shorter` without using `length`. [_Hint_: Define a recursive helper, `shorter?`, and use it in place of the length comparison.]
 
 ==== Exercise 2.8.6 [[exercise_2.8.6]]
@@ -1785,10 +1796,12 @@ All are simple operations except for `putq!`, which modifies the end pair to con
 
 ==== Exercise 2.9.1 [[exercise_2.9.1]]
 
+[[start:s186]]
 Modify `make-counter` to take two arguments: an initial value for the counter to use in place of 0 and an amount to increment the counter by each time.
 
 ==== Exercise 2.9.2 [[exercise_2.9.2]]
 
+[[start:s188]]
 Look up the description of `case` in <<section_5.3.,Section 5.3>>. Replace the `cond` expression in `make-stack` with an equivalent `case` expression. Add `mt?` as a second name for the `empty?` message.
 
 ==== Exercise 2.9.3 [[exercise_2.9.3]]
@@ -1826,10 +1839,12 @@ Look up the basic vector operations in <<section_6.9.,Section 6.9>> and reimplem
 
 ==== Exercise 2.9.5 [[exercise_2.9.5]]
 
+[[start:s194]]
 Define a predicate, `emptyq?`, for determining if a queue is empty. Modify `getq` and `delq!` to raise an exception when an empty queue is found, using `assertion-violation`.
 
 ==== Exercise 2.9.6 [[exercise_2.9.6]]
 
+[[start:s195]]
 In the queue implementation, the last pair in the encapsulated list is a placeholder, i.e., it never holds anything useful. Recode the queue operators to avoid this wasted pair. Make sure that the series of queue operations given earlier works with the new implementation. Which implementation do you prefer?
 
 ==== Exercise 2.9.7 [[exercise_2.9.7]]

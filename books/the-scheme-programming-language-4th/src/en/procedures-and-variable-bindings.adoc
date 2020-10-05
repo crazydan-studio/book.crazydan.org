@@ -234,6 +234,7 @@ libraries:: `(rnrs base)`, `(rnrs)`
 
 Any `let*` expression may be converted to a set of nested `let` expressions. The following definition of `let*` demonstrates the typical transformation.
 
+[#defn:let*]
 [source,scheme,subs="quotes,replacements"]
 ----
 (define-syntax `let*`

@@ -863,6 +863,7 @@ libraries:: `(rnrs base)`, `(rnrs)`
 
 `_n_` must be an exact nonnegative integer less than the length of `_list_`. `list-ref` may be defined without error checks as follows.
 
+[#defn:list-ref]
 [source,scheme,subs=""]
 ----
 (define list-ref
@@ -1696,6 +1697,7 @@ libraries:: `(rnrs base)`, `(rnrs)`
   (apply min ls)) ⇒ 2
 ----
 
+[#page:gcd]
 [horizontal]
 procedure:: `(gcd _int_ \...)`
 returns:: the greatest common divisor of its arguments `_int_ \...`
