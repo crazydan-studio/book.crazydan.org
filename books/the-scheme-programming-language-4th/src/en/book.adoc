@@ -132,6 +132,13 @@ document.querySelectorAll('sub')
         .forEach(function(node) { node.outerHTML = '~'+node.innerText+'~' })
 document.querySelectorAll('sup')
         .forEach(function(node) { node.outerHTML = '^'+node.innerText+'^' })
+document.querySelectorAll('a')
+        .forEach(function(node) {
+            var name=node.name;
+            if (name && name.match(/^\.\/(.+)$/)) {
+                node.outerHTML='[#'+(name.replace(/^\.\/(.+)$/, '$1'))+']<br>';
+            }
+        })
 
 // Highlight the code blocks and italic text
 document.querySelectorAll('tt')

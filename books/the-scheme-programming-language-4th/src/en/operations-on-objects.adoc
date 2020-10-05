@@ -7,6 +7,7 @@ This chapter describes the operations on objects, including lists, numbers, char
 
 === Section 6.1. Constants and Quotation [[section_6.1.]]
 
+[#objects:s1]
 [horizontal]
 syntax:: `_constant_`
 returns:: `_constant_`
@@ -22,6 +23,7 @@ returns:: `_constant_`
 #vu8(3 4 5) ⇒ #vu8(3 4 5)
 ----
 
+[#objects:s2]
 [horizontal]
 syntax:: `(quote _obj_)`
 syntax:: `'_obj_`
@@ -45,6 +47,7 @@ Quoted and self-evaluating constants are immutable. That is, programs should not
 '7 ⇒ 7
 ----
 
+[#objects:s5]
 [horizontal]
 syntax:: `(quasiquote _obj_ \...)`
 syntax:: ``_obj_`
@@ -101,6 +104,7 @@ libraries:: `(rnrs base)`, `(rnrs)`
 
 This section describes the basic Scheme predicates (procedures returning one of the boolean values `#t` or `#f`) for determining the type of an object or the equivalence of two objects. The equivalence predicates `eq?`, `eqv?`, and `equal?` are discussed first, followed by the type predicates.
 
+[#objects:s10]
 [horizontal]
 procedure:: `(eq? _obj~1~_ _obj~2~_)`
 returns:: `#t` if `_obj~1~_` and `_obj~2~_` are identical, `#f` otherwise
@@ -202,6 +206,7 @@ Since constant objects are immutable, i.e., programs should not modify them via 
   (eq? (f 0) (f 0))) ⇒ #f
 ----
 
+[#objects:s12]
 [horizontal]
 procedure:: `(eqv? _obj~1~_ _obj~2~_)`
 returns:: `#t` if `_obj~1~_` and `_obj~2~_` are equivalent, `#f` otherwise
@@ -310,6 +315,7 @@ The boolean value returned by `eqv?` is not specified when the arguments are NaN
   (eqv? (f 0) (f 0))) ⇒ #f
 ----
 
+[#objects:s13]
 [horizontal]
 procedure:: `(equal? _obj~1~_ _obj~2~_)`
 returns:: `#t` if `_obj~1~_` and `_obj~2~_` have the same structure and contents, `#f` otherwise
@@ -409,6 +415,7 @@ Implementing `equal?` efficiently is tricky <<ref1>>, and even with a good imple
     (cons x x))) ⇒ #t
 ----
 
+[#objects:s14]
 [horizontal]
 procedure:: `(boolean? _obj_)`
 returns:: `#t` if `_obj_` is either `#t` or `#f`, `#f` otherwise
@@ -423,6 +430,7 @@ libraries:: `(rnrs base)`, `(rnrs)`
 (or (boolean? 't) (boolean? '())) ⇒ #f
 ----
 
+[#objects:s15]
 [horizontal]
 procedure:: `(null? _obj_)`
 returns:: `#t` if `_obj_` is the empty list, `#f` otherwise
@@ -439,6 +447,7 @@ libraries:: `(rnrs base)`, `(rnrs)`
 (null? #f) ⇒ #f
 ----
 
+[#objects:s16]
 [horizontal]
 procedure:: `(pair? _obj_)`
 returns:: `#t` if `_obj_` is a pair, `#f` otherwise
@@ -453,6 +462,7 @@ libraries:: `(rnrs base)`, `(rnrs)`
 (pair? 3) ⇒ #f
 ----
 
+[#objects:s17]
 [horizontal]
 procedure:: `(number? _obj_)`
 returns:: `#t` if `_obj_` is a number object, `#f` otherwise
@@ -521,6 +531,7 @@ The `real?`, `rational?`, and `integer?` predicates do not recognize as real, ra
 (number? #\a) ⇒ #f
 ----
 
+[#objects:s18]
 [horizontal]
 procedure:: `(real-valued? _obj_)`
 returns:: `#t` if `_obj_` is a real number, `#f` otherwise
@@ -572,6 +583,7 @@ As with `real?`, `rational?`, and `integer?`, these predicates return `#f` for a
 (real-valued? "3") ⇒ #f
 ----
 
+[#objects:s19]
 [horizontal]
 procedure:: `(char? _obj_)`
 returns:: `#t` if `_obj_` is a character, `#f` otherwise
@@ -586,6 +598,7 @@ libraries:: `(rnrs base)`, `(rnrs)`
 (char? (string-ref (make-string 1) 0)) ⇒ #t
 ----
 
+[#objects:s20]
 [horizontal]
 procedure:: `(string? _obj_)`
 returns:: `#t` if `_obj_` is a string, `#f` otherwise
@@ -598,6 +611,7 @@ libraries:: `(rnrs base)`, `(rnrs)`
 (string? #\h) ⇒ #f
 ----
 
+[#objects:s21]
 [horizontal]
 procedure:: `(vector? _obj_)`
 returns:: `#t` if `_obj_` is a vector, `#f` otherwise
@@ -613,6 +627,7 @@ libraries:: `(rnrs base)`, `(rnrs)`
 (vector? "abc") ⇒ #f
 ----
 
+[#objects:s22]
 [horizontal]
 procedure:: `(symbol? _obj_)`
 returns:: `#t` if `_obj_` is a symbol, `#f` otherwise
@@ -628,6 +643,7 @@ libraries:: `(rnrs base)`, `(rnrs)`
 (symbol? #t) ⇒ #f
 ----
 
+[#objects:s23]
 [horizontal]
 procedure:: `(procedure? _obj_)`
 returns:: `#t` if `_obj_` is a procedure, `#f` otherwise
@@ -642,6 +658,7 @@ libraries:: `(rnrs base)`, `(rnrs)`
 (call/cc procedure?) ⇒ #t
 ----
 
+[#objects:s24]
 [horizontal]
 procedure:: `(bytevector? _obj_)`
 returns:: `#t` if `_obj_` is a bytevector, `#f` otherwise
@@ -654,6 +671,7 @@ libraries:: `(rnrs bytevectors)`, `(rnrs)`
 (bytevector? "abc") ⇒ #f
 ----
 
+[#objects:s25]
 [horizontal]
 procedure:: `(hashtable? _obj_)`
 returns:: `#t` if `_obj_` is a hashtable, `#f` otherwise
@@ -679,6 +697,7 @@ It is possible to create a circular list or a cyclic graph by destructively alte
 
 Procedures that accept a `_list_` argument are required to detect that the list is improper only to the extent that they actually traverse the list far enough either (a) to attempt to operate on a non-list tail or (b) to loop indefinitely due to a circularity. For example, `member` need not detect that a list is improper if it actually finds the element being sought, and `list-ref` need never detect circularities, because its recursion is bounded by the index argument.
 
+[#objects:s37]
 [horizontal]
 procedure:: `(cons _obj~1~_ _obj~2~_)`
 returns:: a new pair whose car and cdr are `_obj~1~_` and `_obj~2~_`
@@ -693,6 +712,7 @@ libraries:: `(rnrs base)`, `(rnrs)`
 (cons 3 4) ⇒ (3 . 4)
 ----
 
+[#objects:s38]
 [horizontal]
 procedure:: `(car _pair_)`
 returns:: the car of `_pair_`
@@ -707,6 +727,7 @@ The empty list is not a pair, so the argument must not be the empty list.
 (car (cons 3 4)) ⇒ 3
 ----
 
+[#objects:s39]
 [horizontal]
 procedure:: `(cdr _pair_)`
 returns:: the cdr of `_pair_`
@@ -721,6 +742,7 @@ The empty list is not a pair, so the argument must not be the empty list.
 (cdr (cons 3 4)) ⇒ 4
 ----
 
+[#objects:s40]
 [horizontal]
 procedure:: `(set-car! _pair_ _obj_)`
 returns:: unspecified
@@ -735,6 +757,7 @@ libraries:: `(rnrs mutable-pairs)`
   x) ⇒ (1 b c)
 ----
 
+[#objects:s41]
 [horizontal]
 procedure:: `(set-cdr! _pair_ _obj_)`
 returns:: unspecified
@@ -749,6 +772,7 @@ libraries:: `(rnrs mutable-pairs)`
   x) ⇒ (a . 1)
 ----
 
+[#objects:s42]
 [horizontal]
 procedure:: `(caar _pair_)`
 procedure:: `(cadr _pair_)` <graphic>
@@ -766,6 +790,7 @@ These procedures are defined as the composition of up to four `car`s and `cdr`s.
 (cadadr '(a (b c))) ⇒ c
 ----
 
+[#objects:s43]
 [horizontal]
 procedure:: `(list _obj_ \...)`
 returns:: a list of `_obj_ \...`
@@ -780,6 +805,7 @@ libraries:: `(rnrs base)`, `(rnrs)`
 (list 3 2 1) ⇒ (3 2 1)
 ----
 
+[#objects:s44]
 [horizontal]
 procedure:: `(cons* _obj_ \... _final-obj_)`
 returns:: a list of `_obj_ \...` terminated by `_final-obj_`
@@ -795,6 +821,7 @@ If the objects `_obj_ \...` are omitted, the result is simply `_final-obj_`. Oth
 (cons* 'a 'b '(c d)) ⇒ (a b c d)
 ----
 
+[#objects:s45]
 [horizontal]
 procedure:: `(list? _obj_)`
 returns:: `#t` if `_obj_` is a proper list, `#f` otherwise
@@ -814,6 +841,7 @@ libraries:: `(rnrs base)`, `(rnrs)`
   (list? x)) ⇒ #f
 ----
 
+[#objects:s46]
 [horizontal]
 procedure:: `(length _list_)`
 returns:: the number of elements in `_list_`
@@ -856,6 +884,7 @@ libraries:: `(rnrs base)`, `(rnrs)`
     ls))
 ----
 
+[#objects:s47]
 [horizontal]
 procedure:: `(list-ref _list_ _n_)`
 returns:: the ``_n_``th element (zero-based) of `_list_`
@@ -877,6 +906,7 @@ libraries:: `(rnrs base)`, `(rnrs)`
 (list-ref '(a b c) 2) ⇒ c
 ----
 
+[#objects:s48]
 [horizontal]
 procedure:: `(list-tail _list_ _n_)`
 returns:: the ``_n_``th tail (zero-based) of `_list_`
@@ -904,6 +934,7 @@ libraries:: `(rnrs base)`, `(rnrs)`
        (cddr x))) ⇒ #t
 ----
 
+[#objects:s49]
 [horizontal]
 procedure:: `(append)`
 procedure:: `(append _list_ \... _obj_)`
@@ -932,6 +963,7 @@ libraries:: `(rnrs base)`, `(rnrs)`
   (eq? x (cdr (append '(a) x)))) ⇒ #t
 ----
 
+[#objects:s50]
 [horizontal]
 procedure:: `(reverse _list_)`
 returns:: a new list containing the elements of `_list_` in reverse order
@@ -952,6 +984,7 @@ libraries:: `(rnrs base)`, `(rnrs)`
 (reverse '(a b c)) ⇒ (c b a)
 ----
 
+[#objects:s51]
 [horizontal]
 procedure:: `(memq _obj_ _list_)`
 procedure:: `(memv _obj_ _list_)`
@@ -1008,6 +1041,7 @@ These procedures are most often used as predicates, but their names do not end w
 (count-occurrences 'a '(a b c d a)) ⇒ 2
 ----
 
+[#objects:s52]
 [horizontal]
 procedure:: `(memp _procedure_ _list_)`
 returns:: the first tail of `_list_` for whose car `_procedure_` returns true, or `#f`
@@ -1026,6 +1060,7 @@ libraries:: `(rnrs lists)`, `(rnrs)`
 (memp odd? '(2 4 6 8)) ⇒ #f
 ----
 
+[#objects:s53]
 [horizontal]
 procedure:: `(remq _obj_ _list_)`
 procedure:: `(remv _obj_ _list_)`
@@ -1047,6 +1082,7 @@ The equivalence test for `remq` is `eq?`, for `remv` is `eqv?`, and for `remove`
 (remove '(b) '((a) (b) (c))) ⇒ ((a) (c))
 ----
 
+[#objects:s54]
 [horizontal]
 procedure:: `(remp _procedure_ _list_)`
 returns:: a list of the elements of `_list_` for which `_procedure_` returns `#f`
@@ -1064,6 +1100,7 @@ libraries:: `(rnrs lists)`, `(rnrs)`
   '(-5 15 3 14 -20 6 0 -9)) ⇒ (-5 15 14 -20 0 -9)
 ----
 
+[#objects:s55]
 [horizontal]
 procedure:: `(filter _procedure_ _list_)`
 returns:: a list of the elements of `_list_` for which `_procedure_` returns true
@@ -1081,6 +1118,7 @@ libraries:: `(rnrs lists)`, `(rnrs)`
   '(-5 15 3 14 -20 6 0 -9)) ⇒ (3 6)
 ----
 
+[#objects:s56]
 [horizontal]
 procedure:: `(partition _procedure_ _list_)`
 returns:: see below
@@ -1102,6 +1140,7 @@ libraries:: `(rnrs lists)`, `(rnrs)`
 
 The values returned by `partition` can be obtained by calling `filter` and `remp` separately, but this would require two calls to `_procedure_` for each element of `_list_`.
 
+[#objects:s57]
 [horizontal]
 procedure:: `(find _procedure_ _list_)`
 returns:: the first element of `_list_` for which `_procedure_` returns true, or `#f`
@@ -1121,6 +1160,7 @@ If a program must distinguish between finding `#f` in the list and finding no el
 (find not '(1 a #f 55)) ⇒ #f
 ----
 
+[#objects:s58]
 [#page:assq]
 [horizontal]
 procedure:: `(assq _obj_ _alist_)`
@@ -1166,11 +1206,13 @@ The equivalence test for `assq` is `eq?`, for `assv` is `eqv?`, and for `assoc` 
 
 The interpreter given in <<section_12.7.,Section 12.7>> represents environments as association lists and uses `assq` for both variable lookup and assignment.
 
+[#objects:s60]
 [horizontal]
 procedure:: `(assp _procedure_ _alist_)`
 returns:: first element of `_alist_` for whose car `_procedure_` returns true, or `#f`
 libraries:: `(rnrs lists)`, `(rnrs)`
 
+[#objects:s61]
 `_alist_` must be an _association list_. An association list is a proper list whose elements are key-value pairs of the form `(key . value)`. `_procedure_` should accept one argument and return a single value. It should not modify `_list_`.
 
 [source,scheme,subs=""]
@@ -1184,6 +1226,7 @@ libraries:: `(rnrs lists)`, `(rnrs)`
 (assp odd? '((2 . b))) ⇒ #f
 ----
 
+[#objects:s62]
 [horizontal]
 procedure:: `(list-sort _predicate_ _list_)`
 returns:: a list containing the elements of `_list_` sorted according to `_predicate_`
@@ -1239,6 +1282,7 @@ The remainder of this section describes "generic arithmetic" procedures that ope
 
 The types of numeric arguments accepted by the procedures in this section are implied by the names given to the arguments: `_num_` for complex numbers (that is, all numbers), `_real_` for real numbers, `_rat_` for rational numbers, and `_int_` for integers. If a `_real_`, `_rat_`, or `_int_` is required, the argument must be considered real, rational, or integral by `real?`, `rational?`, or `integer?`, i.e., the imaginary part of the number must be exactly zero. Where exact integers are required, the name `_exint_` is used. In each case, a suffix may appear on the name, e.g., `_int~2~_`.
 
+[#objects:s86]
 [horizontal]
 procedure:: `(exact? _num_)`
 returns:: `#t` if `_num_` is exact, `#f` otherwise
@@ -1254,6 +1298,7 @@ libraries:: `(rnrs base)`, `(rnrs)`
 (exact? 1.0-2i) ⇒ #f
 ----
 
+[#objects:s87]
 [horizontal]
 procedure:: `(inexact? _num_)`
 returns:: `#t` if `_num_` is inexact, `#f` otherwise
@@ -1267,6 +1312,7 @@ libraries:: `(rnrs base)`, `(rnrs)`
 (inexact? +i) ⇒ #f
 ----
 
+[#objects:s88]
 [horizontal]
 procedure:: `(= _num~1~_ _num~2~_ _num~3~_ \...)`
 procedure:: `(< _real~1~_ _real~2~_ _real~3~_ \...)`
@@ -1317,6 +1363,7 @@ As implied by the names of the arguments, `=` is defined for complex arguments w
 (> +nan.0 0.0) ⇒ #f
 ----
 
+[#objects:s89]
 [horizontal]
 procedure:: `(+ _num_ \...)`
 returns:: the sum of the arguments `_num_ \...`
@@ -1335,6 +1382,7 @@ When called with no arguments, `+` returns 0.
 (apply + '(1 2 3 4 5)) ⇒ 15
 ----
 
+[#objects:s90]
 [horizontal]
 procedure:: `(- _num_)`
 returns:: the additive inverse of `_num_`
@@ -1351,6 +1399,7 @@ libraries:: `(rnrs base)`, `(rnrs)`
 (- 4 3 2 1) ⇒ -2
 ----
 
+[#objects:s91]
 [horizontal]
 procedure:: `(* _num_ \...)`
 returns:: the product of the arguments `_num_ \...`
@@ -1368,6 +1417,7 @@ When called with no arguments, `*` returns 1.
 (apply * '(1 2 3 4 5)) ⇒ 120
 ----
 
+[#objects:s92]
 [horizontal]
 procedure:: `(/ _num_)`
 returns:: the multiplicative inverse of `_num_`
@@ -1386,6 +1436,7 @@ libraries:: `(rnrs base)`, `(rnrs)`
 (/ 60 5 4 3 2) ⇒ 1/2
 ----
 
+[#objects:s93]
 [horizontal]
 procedure:: `(zero? _num_)`
 returns:: `#t` if `_num_` is zero, `#f` otherwise
@@ -1403,6 +1454,7 @@ libraries:: `(rnrs base)`, `(rnrs)`
 (zero? 0.0-0.0i) ⇒ #t
 ----
 
+[#objects:s94]
 [horizontal]
 procedure:: `(positive? _real_)`
 returns:: `#t` if `_real_` is greater than zero, `#f` otherwise
@@ -1419,6 +1471,7 @@ libraries:: `(rnrs base)`, `(rnrs)`
 (positive? .001-0.0i) ⇒ _exception: not a real number_
 ----
 
+[#objects:s95]
 [horizontal]
 procedure:: `(negative? _real_)`
 returns:: `#t` if `_real_` is less than zero, `#f` otherwise
@@ -1435,6 +1488,7 @@ libraries:: `(rnrs base)`, `(rnrs)`
 (negative? -7.0+0.0i) ⇒ _exception: not a real number_
 ----
 
+[#objects:s96]
 [horizontal]
 procedure:: `(even? _int_)`
 returns:: `#t` if `_int_` is even, `#f` otherwise
@@ -1457,6 +1511,7 @@ libraries:: `(rnrs base)`, `(rnrs)`
 (odd? 2.0+0.0i) ⇒ _exception: not an integer_
 ----
 
+[#objects:s97]
 [horizontal]
 procedure:: `(finite? _real_)`
 returns:: `#t` if `_real_` is finite, `#f` otherwise
@@ -1485,6 +1540,7 @@ libraries:: `(rnrs base)`, `(rnrs)`
 (nan? +nan.0) ⇒ #t
 ----
 
+[#objects:s98]
 [horizontal]
 procedure:: `(quotient _int~1~_ _int~2~_)`
 returns:: the integer quotient of `_int~1~_` and `_int~2~_`
@@ -1515,6 +1571,7 @@ The result of `remainder` has the same sign as `_int~1~_`, while the result of `
 (modulo -17 -9) ⇒ -8
 ----
 
+[#objects:s99]
 [horizontal]
 procedure:: `(div _x~1~_ _x~2~_)`
 procedure:: `(mod _x~1~_ _x~2~_)`
@@ -1550,6 +1607,7 @@ That is, unless it raises an exception in the circumstance described above, it r
                         2.5
 ----
 
+[#objects:s100]
 [horizontal]
 procedure:: `(div0 _x~1~_ _x~2~_)`
 procedure:: `(mod0 _x~1~_ _x~2~_)`
@@ -1583,6 +1641,7 @@ That is, unless it raises an exception in the circumstance described above, it r
                           -0.5
 ----
 
+[#objects:s101]
 [horizontal]
 procedure:: `(truncate _real_)`
 returns:: the integer closest to `_real_` toward zero
@@ -1599,6 +1658,7 @@ If `_real_` is an infinity or NaN, `truncate` returns `_real_`.
 (truncate -17/2) ⇒ -8
 ----
 
+[#objects:s102]
 [horizontal]
 procedure:: `(floor _real_)`
 returns:: the integer closest to `_real_` toward <graphic>
@@ -1615,6 +1675,7 @@ If `_real_` is an infinity or NaN, `floor` returns `_real_`.
 (floor -17/2) ⇒ -9
 ----
 
+[#objects:s103]
 [horizontal]
 procedure:: `(ceiling _real_)`
 returns:: the integer closest to `_real_` toward <graphic>
@@ -1631,6 +1692,7 @@ If `_real_` is an infinity or NaN, `ceiling` returns `_real_`.
 (ceiling -17/2) ⇒ -8
 ----
 
+[#objects:s104]
 [horizontal]
 procedure:: `(round _real_)`
 returns:: the integer closest to `_real_`
@@ -1649,6 +1711,7 @@ If `_real_` is exactly between two integers, the closest even integer is returne
 (round 3.5) ⇒ 4.0
 ----
 
+[#objects:s105]
 [#page:abs]
 [horizontal]
 procedure:: `(abs _real_)`
@@ -1665,6 +1728,7 @@ libraries:: `(rnrs base)`, `(rnrs)`
 (abs -0.093) ⇒ 0.093
 ----
 
+[#objects:s107]
 [horizontal]
 procedure:: `(max _real~1~_ _real~2~_ \...)`
 returns:: the maximum of `_real~1~_ _real~2~_ \...`
@@ -1681,6 +1745,7 @@ libraries:: `(rnrs base)`, `(rnrs)`
   (apply max ls)) ⇒ 9
 ----
 
+[#objects:s108]
 [horizontal]
 procedure:: `(min _real~1~_ _real~2~_ \...)`
 returns:: the minimum of `_real~1~_ _real~2~_ \...`
@@ -1697,6 +1762,7 @@ libraries:: `(rnrs base)`, `(rnrs)`
   (apply min ls)) ⇒ 2
 ----
 
+[#objects:s109]
 [#page:gcd]
 [horizontal]
 procedure:: `(gcd _int_ \...)`
@@ -1713,6 +1779,7 @@ The result is always nonnegative, i.e., factors of -1 are ignored. When called w
 (gcd 70 -42 28) ⇒ 14
 ----
 
+[#objects:s110]
 [horizontal]
 procedure:: `(lcm _int_ \...)`
 returns:: the least common multiple of its arguments `_int_ \...`
@@ -1729,6 +1796,7 @@ The result is always nonnegative, i.e., common multiples of -1 are ignored. Alth
 (lcm 17.0 0) ⇒ 0.0
 ----
 
+[#objects:s111]
 [horizontal]
 procedure:: `(expt _num~1~_ _num~2~_)`
 returns:: `_num~1~_` raised to the `_num~2~_` power
@@ -1746,11 +1814,13 @@ If both arguments are 0, `expt` returns 1.
 (expt +i 2) ⇒ -1
 ----
 
+[#objects:s112]
 [horizontal]
 procedure:: `(inexact _num_)`
 returns:: an inexact representation of `_num_`
 libraries:: `(rnrs base)`, `(rnrs)`
 
+[#objects:s113]
 If `_num_` is already inexact, it is returned unchanged. If no inexact representation for `_num_` is supported by the implementation, an exception with condition type `&implementation-violation` may be raised. `inexact` may also return `+inf.0` or `-inf.0` for inputs whose magnitude exceeds the range of the implementation's inexact number representations.
 
 [source,scheme,subs=""]
@@ -1762,11 +1832,13 @@ If `_num_` is already inexact, it is returned unchanged. If no inexact represent
 (inexact (expt 10 20)) ⇒ 1e20
 ----
 
+[#objects:s114]
 [horizontal]
 procedure:: `(exact _num_)`
 returns:: an exact representation of `_num_`
 libraries:: `(rnrs base)`, `(rnrs)`
 
+[#objects:s115]
 If `_num_` is already exact, it is returned unchanged. If no exact representation for `_num_` is supported by the implementation, an exception with condition type `&implementation-violation` may be raised.
 
 [source,scheme,subs=""]
@@ -1778,6 +1850,7 @@ If `_num_` is already exact, it is returned unchanged. If no exact representatio
 (exact 1e20) ⇒ 100000000000000000000
 ----
 
+[#objects:s116]
 [horizontal]
 procedure:: `(exact\->inexact _num_)`
 returns:: an inexact representation of `_num_`
@@ -1787,6 +1860,7 @@ libraries:: `(rnrs r5rs)`
 
 These are alternative names for `inexact` and `exact`, supported for compatibility with the Revised5 Report.
 
+[#objects:s117]
 [horizontal]
 procedure:: `(rationalize _real~1~_ _real~2~_)`
 returns:: see below
@@ -1801,6 +1875,7 @@ libraries:: `(rnrs base)`, `(rnrs)`
 (eqv? (rationalize .3 1/10) #i1/3) ⇒ #t
 ----
 
+[#objects:s118]
 [horizontal]
 procedure:: `(numerator _rat_)`
 returns:: the numerator of `_rat_`
@@ -1818,6 +1893,7 @@ If `_rat_` is an integer, the numerator is `_rat_`.
 (numerator -2.25) ⇒ -9.0
 ----
 
+[#objects:s119]
 [horizontal]
 procedure:: `(denominator _rat_)`
 returns:: the denominator of `_rat_`
@@ -1836,6 +1912,7 @@ If `_rat_` is an integer, including zero, the denominator is one.
 (denominator -2.25) ⇒ 4.0
 ----
 
+[#objects:s120]
 [horizontal]
 procedure:: `(real-part _num_)`
 returns:: the real component of `_num_`
@@ -1852,6 +1929,7 @@ If `_num_` is real, `real-part` returns `_num_`.
 (real-part -17/100) ⇒ -17/100
 ----
 
+[#objects:s121]
 [horizontal]
 procedure:: `(imag-part _num_)`
 returns:: the imaginary component of `_num_`
@@ -1868,6 +1946,7 @@ If `_num_` is real, `imag-part` returns exact zero.
 (imag-part -17/100) ⇒ 0
 ----
 
+[#objects:s122]
 [horizontal]
 procedure:: `(make-rectangular _real~1~_ _real~2~_)`
 returns:: a complex number with real component `_real~1~_` and imaginary component `_real~2~_`
@@ -1880,6 +1959,7 @@ libraries:: `(rnrs base)`, `(rnrs)`
 (make-rectangular 3.2 5.3) ⇒ 3.2+5.3i
 ----
 
+[#objects:s123]
 [horizontal]
 procedure:: `(make-polar _real~1~_ _real~2~_)`
 returns:: a complex number with magnitude `_real~1~_` and angle `_real~2~_`
@@ -1893,6 +1973,7 @@ libraries:: `(rnrs base)`, `(rnrs)`
 (eqv? (make-polar 7.2 -0.588) 7.2@-0.588) ⇒ #t
 ----
 
+[#objects:s124]
 [horizontal]
 procedure:: `(angle _num_)`
 returns:: the angle part of the polar representation of `_num_`
@@ -1906,6 +1987,7 @@ The range of the result is stem:[-π] (exclusive) to stem:[+π] (inclusive).
 (angle 5.2) ⇒ 0.0
 ----
 
+[#objects:s125]
 [#page:magnitude]
 [horizontal]
 procedure:: `(magnitude _num_)`
@@ -1924,6 +2006,7 @@ libraries:: `(rnrs base)`, `(rnrs)`
 (magnitude 7.25@1.5708) ⇒ 7.25
 ----
 
+[#objects:s127]
 [horizontal]
 procedure:: `(sqrt _num_)`
 returns:: the principal square root of `_num_`
@@ -1941,6 +2024,7 @@ Implementations are encouraged, but not required, to return exact results for ex
 (sqrt -3.0-4.0i) ⇒ 1.0-2.0i
 ----
 
+[#objects:s128]
 [horizontal]
 procedure:: `(exact-integer-sqrt _n_)`
 returns:: see below
@@ -1958,6 +2042,7 @@ This procedure returns two nonnegative exact integers _s_ and _r_ where stem:[n 
                         ⇒ 3
 ----
 
+[#objects:s129]
 [horizontal]
 procedure:: `(exp _num_)`
 returns:: _e_ to the `_num_` power
@@ -1970,6 +2055,7 @@ libraries:: `(rnrs base)`, `(rnrs)`
 (exp -.5) ⇒ 0.6065306597126334
 ----
 
+[#objects:s130]
 [horizontal]
 procedure:: `(log _num_)`
 returns:: the natural logarithm of `_num_`
@@ -1988,6 +2074,7 @@ libraries:: `(rnrs base)`, `(rnrs)`
 (log .125 2.0) ⇒ -3.0
 ----
 
+[#objects:s131]
 [horizontal]
 procedure:: `(sin _num_)`
 procedure:: `(cos _num_)`
@@ -2004,6 +2091,7 @@ The argument is specified in radians.
 (tan 0.0) ⇒ 0.0
 ----
 
+[#objects:s132]
 [horizontal]
 procedure:: `(asin _num_)`
 procedure:: `(acos _num_)`
@@ -2028,6 +2116,7 @@ The result is in radians. The arc sine and arc cosine of a complex number _z_ ar
 (= (* (acos 0) 2) pi) ⇒ #t
 ----
 
+[#objects:s133]
 [horizontal]
 procedure:: `(atan _num_)`
 procedure:: `(atan _real~1~_ _real~2~_)`
@@ -2049,6 +2138,7 @@ When passed two real arguments (the second form), `atan` is equivalent to `(lamb
 (= (* (atan 1.0 0.0) 2) pi) ⇒ #t
 ----
 
+[#objects:s134]
 [horizontal]
 procedure:: `(bitwise-not _exint_)`
 returns:: the bitwise not of `_exint_`
@@ -2072,6 +2162,7 @@ The inputs are treated as if represented in two's complement, even if they are n
 (bitwise-xor #b01101 #b00111) ⇒ #b01010
 ----
 
+[#objects:s135]
 [horizontal]
 procedure:: `(bitwise-if _exint~1~_ _exint~2~_ _exint~3~_)`
 returns:: the bitwise "if" of its arguments
@@ -2097,6 +2188,7 @@ For each bit set in `_exint~1~_`, the corresponding bit of the result is taken f
       (bitwise-and (bitwise-not exint1) exint3))))
 ----
 
+[#objects:s136]
 [horizontal]
 procedure:: `(bitwise-bit-count _exint_)`
 returns:: see below
@@ -2116,6 +2208,7 @@ For nonnegative inputs, `bitwise-bit-count` returns the number of bits set in th
 (bitwise-bit-count -4) ⇒ -3
 ----
 
+[#objects:s137]
 [horizontal]
 procedure:: `(bitwise-length _exint_)`
 returns:: see below
@@ -2135,6 +2228,7 @@ This procedure returns the number of bits of the smallest two's complement repre
 (bitwise-length -9) ⇒ 4
 ----
 
+[#objects:s138]
 [horizontal]
 procedure:: `(bitwise-first-bit-set _exint_)`
 returns:: the index of the least significant bit set in `_exint_`
@@ -2155,6 +2249,7 @@ If `_exint_` is 0, `bitwise-first-bit-set` returns -1.
 (bitwise-first-bit-set -3) ⇒ 0
 ----
 
+[#objects:s139]
 [horizontal]
 procedure:: `(bitwise-bit-set? _exint~1~_ _exint~2~_)`
 returns:: `#t` if bit `_exint~2~_` of `_exint~1~_` is set, `#f` otherwise
@@ -2175,6 +2270,7 @@ libraries:: `(rnrs arithmetic bitwise)`, `(rnrs)`
 (bitwise-bit-set? -1 5000) ⇒ #t
 ----
 
+[#objects:s140]
 [horizontal]
 procedure:: `(bitwise-copy-bit _exint~1~_ _exint~2~_ _exint~3~_)`
 returns:: `_exint~1~_` with bit `_exint~2~_` replaced by `_exint~3~_`
@@ -2188,6 +2284,7 @@ libraries:: `(rnrs arithmetic bitwise)`, `(rnrs)`
 (bitwise-copy-bit #b01110 2 0) ⇒ #b01010
 ----
 
+[#objects:s141]
 [horizontal]
 procedure:: `(bitwise-bit-field _exint~1~_ _exint~2~_ _exint~3~_)`
 returns:: see below
@@ -2203,6 +2300,7 @@ libraries:: `(rnrs arithmetic bitwise)`, `(rnrs)`
 (bitwise-bit-field #b10110 3 3) ⇒ #b00000
 ----
 
+[#objects:s142]
 [horizontal]
 procedure:: `(bitwise-copy-bit-field _exint~1~_ _exint~2~_ _exint~3~_ _exint~4~_)`
 returns:: see below
@@ -2218,6 +2316,7 @@ libraries:: `(rnrs arithmetic bitwise)`, `(rnrs)`
 (bitwise-copy-bit-field #b10000 3 3 #b10101) ⇒ #b10000
 ----
 
+[#objects:s143]
 [horizontal]
 procedure:: `(bitwise-arithmetic-shift-right _exint~1~_ _exint~2~_)`
 returns:: `_exint~1~_` arithmetically shifted right by `_exint~2~_` bits
@@ -2237,6 +2336,7 @@ libraries:: `(rnrs arithmetic bitwise)`, `(rnrs)`
 (bitwise-arithmetic-shift-left -1 2) ⇒ -4
 ----
 
+[#objects:s144]
 [horizontal]
 procedure:: `(bitwise-arithmetic-shift _exint~1~_ _exint~2~_)`
 returns:: see below
@@ -2264,6 +2364,7 @@ Thus, `bitwise-arithmetic-shift` behaves as if defined as follows.
         (bitwise-arithmetic-shift-left exint1 exint2))))
 ----
 
+[#objects:s145]
 [horizontal]
 procedure:: `(bitwise-rotate-bit-field _exint~1~_ _exint~2~_ _exint~3~_ _exint~4~_)`
 returns:: see below
@@ -2277,6 +2378,7 @@ libraries:: `(rnrs arithmetic bitwise)`, `(rnrs)`
 (bitwise-rotate-bit-field #b01101011 2 7 3) ⇒ #b01011011
 ----
 
+[#objects:s146]
 [horizontal]
 procedure:: `(bitwise-reverse-bit-field _exint~1~_ _exint~2~_ _exint~3~_)`
 returns:: see below
@@ -2290,6 +2392,7 @@ libraries:: `(rnrs arithmetic bitwise)`, `(rnrs)`
 (bitwise-reverse-bit-field #b01101011 2 7) ⇒ #b00101111
 ----
 
+[#objects:s147]
 [horizontal]
 procedure:: `(string\->number _string_)`
 procedure:: `(string\->number _string_ _radix_)`
@@ -2308,6 +2411,7 @@ If `_string_` is a valid representation of a number, that number is returned, ot
 (string->number "10" 16) ⇒ 16
 ----
 
+[#objects:s148]
 [horizontal]
 procedure:: `(number\->string _num_)`
 procedure:: `(number\->string _num_ _radix_)`
@@ -2354,6 +2458,7 @@ Unless otherwise specified, the numeric values of fixnum-specific procedures are
 
 Bit and shift operations on fixnums assume that fixnums are represented in two's complement, even if they are not represented that way internally.
 
+[#objects:s150]
 [horizontal]
 procedure:: `(fixnum? _obj_)`
 returns:: `#t` if `_obj_` is a fixnum, `#f` otherwise
@@ -2367,6 +2472,7 @@ libraries:: `(rnrs arithmetic fixnums)`, `(rnrs)`
 (fixnum? (- (expt 2 23) 1)) ⇒ #t
 ----
 
+[#objects:s151]
 [horizontal]
 procedure:: `(least-fixnum)`
 returns:: the least (most negative) fixnum supported by the implementation
@@ -2382,6 +2488,7 @@ libraries:: `(rnrs arithmetic fixnums)`, `(rnrs)`
 (fixnum? (+ (greatest-fixnum) 1)) ⇒ #f
 ----
 
+[#objects:s152]
 [horizontal]
 procedure:: `(fixnum-width)`
 returns:: the implementation-dependent _fixnum width_
@@ -2397,6 +2504,7 @@ As described in the lead-in to this section, the fixnum width determines the siz
 (>= w 24) ⇒ #t
 ----
 
+[#objects:s153]
 [horizontal]
 procedure:: `(fx=? _fx~1~_ _fx~2~_ _fx~3~_ \...)`
 procedure:: `(fx<? _fx~1~_ _fx~2~_ _fx~3~_ \...)`
@@ -2419,6 +2527,7 @@ The predicate `fx=?` returns `#t` if its arguments are equal. The predicate `fx<
 (fx>=? 0 0 (least-fixnum)) ⇒ #t
 ----
 
+[#objects:s154]
 [horizontal]
 procedure:: `(fxzero? _fx_)`
 returns:: `#t` if `_fx_` is zero, `#f` otherwise
@@ -2444,6 +2553,7 @@ libraries:: `(rnrs arithmetic fixnums)`, `(rnrs)`
 (fxnegative? 1) ⇒ #f
 ----
 
+[#objects:s155]
 [horizontal]
 procedure:: `(fxeven? _fx_)`
 returns:: `#t` if `_fx_` is even, `#f` otherwise
@@ -2464,6 +2574,7 @@ libraries:: `(rnrs arithmetic fixnums)`, `(rnrs)`
 (fxodd? -10) ⇒ #f
 ----
 
+[#objects:s156]
 [horizontal]
 procedure:: `(fxmin _fx~1~_ _fx~2~_ \...)`
 returns:: the minimum of `_fx~1~_` `_fx~2~_` \...
@@ -2484,6 +2595,7 @@ libraries:: `(rnrs arithmetic fixnums)`, `(rnrs)`
   (apply fxmax ls)) ⇒ 9
 ----
 
+[#objects:s157]
 [horizontal]
 procedure:: `(fx+ _fx~1~_ _fx~2~_)`
 returns:: the sum of `_fx~1~_` and `_fx~2~_`
@@ -2494,6 +2606,7 @@ libraries:: `(rnrs arithmetic fixnums)`, `(rnrs)`
 (fx+ -3 4) ⇒ 1
 ----
 
+[#objects:s158]
 [horizontal]
 procedure:: `(fx- _fx_)`
 returns:: the additive inverse of `_fx_`
@@ -2507,6 +2620,7 @@ libraries:: `(rnrs arithmetic fixnums)`, `(rnrs)`
 (fx- -3 4) ⇒ -7
 ----
 
+[#objects:s159]
 [horizontal]
 procedure:: `(fx* _fx~1~_ _fx~2~_)`
 returns:: the product of `_fx~1~_` and `_fx~2~_`
@@ -2517,6 +2631,7 @@ libraries:: `(rnrs arithmetic fixnums)`, `(rnrs)`
 (fx* -3 4) ⇒ -12
 ----
 
+[#objects:s160]
 [horizontal]
 procedure:: `(fxdiv _fx~1~_ _fx~2~_)`
 procedure:: `(fxmod _fx~1~_ _fx~2~_)`
@@ -2541,6 +2656,7 @@ libraries:: `(rnrs arithmetic fixnums)`, `(rnrs)`
                         2
 ----
 
+[#objects:s161]
 [horizontal]
 procedure:: `(fxdiv0 _fx~1~_ _fx~2~_)`
 procedure:: `(fxmod0 _fx~1~_ _fx~2~_)`
@@ -2565,6 +2681,7 @@ libraries:: `(rnrs arithmetic fixnums)`, `(rnrs)`
                           -1
 ----
 
+[#objects:s162]
 [horizontal]
 procedure:: `(fx+/carry _fx~1~_ _fx~2~_ _fx~3~_)`
 procedure:: `(fx-/carry _fx~1~_ _fx~2~_ _fx~3~_)`
@@ -2604,6 +2721,7 @@ and for `fx*/carry`:
   (values s0 s1))
 ----
 
+[#objects:s163]
 [horizontal]
 procedure:: `(fxnot _fx_)`
 returns:: the bitwise not of `_fx_`
@@ -2625,6 +2743,7 @@ libraries:: `(rnrs arithmetic fixnums)`, `(rnrs)`
 (fxxor #b01101 #b00111) ⇒ #b01010
 ----
 
+[#objects:s164]
 [horizontal]
 procedure:: `(fxif _fx~1~_ _fx~2~_ _fx~3~_)`
 returns:: the bitwise "if" of its arguments
@@ -2647,6 +2766,7 @@ For each bit set in `_fx~1~_`, the corresponding bit of the result is taken from
            (fxand (fxnot fx1) fx3))))
 ----
 
+[#objects:s165]
 [horizontal]
 procedure:: `(fxbit-count _fx_)`
 returns:: see below
@@ -2666,6 +2786,7 @@ For nonnegative inputs, `fxbit-count` returns the number of bits set in the two'
 (fxbit-count -4) ⇒ -3
 ----
 
+[#objects:s166]
 [horizontal]
 procedure:: `(fxlength _fx_)`
 returns:: see below
@@ -2685,6 +2806,7 @@ This procedure returns the number of bits of the smallest two's complement repre
 (fxlength -9) ⇒ 4
 ----
 
+[#objects:s167]
 [horizontal]
 procedure:: `(fxfirst-bit-set _fx_)`
 returns:: the index of the least significant bit set in `_fx_`
@@ -2703,6 +2825,7 @@ If `_fx_` is 0, `fxfirst-bit-set` returns -1.
 (fxfirst-bit-set -3) ⇒ 0
 ----
 
+[#objects:s168]
 [horizontal]
 procedure:: `(fxbit-set? _fx~1~_ _fx~2~_)`
 returns:: `#t` if bit `_fx~2~_` of `_fx~1~_` is set, `#f` otherwise
@@ -2722,6 +2845,7 @@ libraries:: `(rnrs arithmetic fixnums)`, `(rnrs)`
 (fxbit-set? -1 (- (fixnum-width) 1)) ⇒ #t
 ----
 
+[#objects:s169]
 [horizontal]
 procedure:: `(fxcopy-bit _fx~1~_ _fx~2~_ _fx~3~_)`
 returns:: `_fx~1~_` with bit `_fx~2~_` replaced by `_fx~3~_`
@@ -2735,6 +2859,7 @@ libraries:: `(rnrs arithmetic fixnums)`, `(rnrs)`
 (fxcopy-bit #b01110 2 0) ⇒ #b01010
 ----
 
+[#objects:s170]
 [horizontal]
 procedure:: `(fxbit-field _fx~1~_ _fx~2~_ _fx~3~_)`
 returns:: see below
@@ -2750,6 +2875,7 @@ libraries:: `(rnrs arithmetic fixnums)`, `(rnrs)`
 (fxbit-field #b10110 3 3) ⇒ #b00000
 ----
 
+[#objects:s171]
 [horizontal]
 procedure:: `(fxcopy-bit-field _fx~1~_ _fx~2~_ _fx~3~_ _fx~4~_)`
 returns:: see below
@@ -2765,6 +2891,7 @@ libraries:: `(rnrs arithmetic fixnums)`, `(rnrs)`
 (fxcopy-bit-field #b10000 3 3 #b10101) ⇒ #b10000
 ----
 
+[#objects:s172]
 [horizontal]
 procedure:: `(fxarithmetic-shift-right _fx~1~_ _fx~2~_)`
 returns:: `_fx~1~_` arithmetically shifted right by `_fx~2~_` bits
@@ -2784,6 +2911,7 @@ libraries:: `(rnrs arithmetic fixnums)`, `(rnrs)`
 (fxarithmetic-shift-left -1 2) ⇒ -4
 ----
 
+[#objects:s173]
 [horizontal]
 procedure:: `(fxarithmetic-shift _fx~1~_ _fx~2~_)`
 returns:: see below
@@ -2811,6 +2939,7 @@ Thus, `fxarithmetic-shift` behaves as if defined as follows.
         (fxarithmetic-shift-left _fx~1~_ _fx~2~_))))
 ----
 
+[#objects:s174]
 [horizontal]
 procedure:: `(fxrotate-bit-field _fx~1~_ _fx~2~_ _fx~3~_ _fx~4~_)`
 returns:: see below
@@ -2826,6 +2955,7 @@ This procedure returns the result of shifting the bits of `_fx~1~_` from bit `_f
 (fxrotate-bit-field #b01101011 2 7 3) ⇒ #b01011011
 ----
 
+[#objects:s175]
 [horizontal]
 procedure:: `(fxreverse-bit-field _fx~1~_ _fx~2~_ _fx~3~_)`
 returns:: see below
@@ -2841,6 +2971,7 @@ libraries:: `(rnrs arithmetic fixnums)`, `(rnrs)`
 
 === Section 6.6. Flonums [[section_6.6.]]
 
+[#objects:s176]
 _Flonums_ represent inexact real numbers. Implementations are required to represent as a flonum any inexact real number whose lexical syntax contains no vertical bar and no exponent marker other than `e`, but are not required to represent any other inexact real number as a flonum.
 
 Implementations typically use the IEEE double-precision floating-point representation for flonums, but implementations are not required to do so or even to use a floating-point representation of any sort, despite the name "flonum."
@@ -2849,6 +2980,7 @@ This section describes operations on flonums. Flonum-specific procedure names be
 
 Procedure arguments required to be flonums are named `_fl_`, possibly with suffix, e.g., `_fl~2~_`. Unless otherwise specified, the numeric values of flonum-specific procedures are flonums.
 
+[#objects:s177]
 [horizontal]
 procedure:: `(flonum? _obj_)`
 returns:: `#t` if `_obj_` is a flonum, otherwise `#f`
@@ -2864,6 +2996,7 @@ libraries:: `(rnrs arithmetic flonums)`, `(rnrs)`
 (flonum? 3.0+0.0i) ⇒ #f
 ----
 
+[#objects:s178]
 [horizontal]
 procedure:: `(fl=? _fl~1~_ _fl~2~_ _fl~3~_ \...)`
 procedure:: `(fl<? _fl~1~_ _fl~2~_ _fl~3~_ \...)`
@@ -2892,6 +3025,7 @@ Comparisons involving NaNs always return `#f`.
 (fl>=? +nan.0 +inf.0) ⇒ #f
 ----
 
+[#objects:s179]
 [horizontal]
 procedure:: `(flzero? _fl_)`
 returns:: `#t` if `_fl_` is zero, `#f` otherwise
@@ -2929,6 +3063,7 @@ Even if the flonum representation distinguishes -0.0 from +0.0, -0.0 is consider
 (flnegative? -inf.0) ⇒ #t
 ----
 
+[#objects:s180]
 [horizontal]
 procedure:: `(flinteger? _fl_)`
 returns:: `#t` if `_fl_` is integer, `#f` otherwise
@@ -2942,6 +3077,7 @@ libraries:: `(rnrs arithmetic flonums)`, `(rnrs)`
 (flinteger? +inf.0) ⇒ #f
 ----
 
+[#objects:s181]
 [horizontal]
 procedure:: `(flfinite? _fl_)`
 returns:: `#t` if `_fl_` is finite, `#f` otherwise
@@ -2966,6 +3102,7 @@ libraries:: `(rnrs arithmetic flonums)`, `(rnrs)`
 (flnan? +nan.0) ⇒ #t
 ----
 
+[#objects:s182]
 [horizontal]
 procedure:: `(fleven? _fl-int_)`
 returns:: `#t` if `_fl-int_` is even, `#f` otherwise
@@ -2988,6 +3125,7 @@ libraries:: `(rnrs arithmetic flonums)`, `(rnrs)`
 (flodd? -10.0) ⇒ #f
 ----
 
+[#objects:s183]
 [horizontal]
 procedure:: `(flmin _fl~1~_ _fl~2~_ \...)`
 returns:: the minimum of `_fl~1~_` `_fl~2~_` \...
@@ -3008,6 +3146,7 @@ libraries:: `(rnrs arithmetic flonums)`, `(rnrs)`
   (apply flmax ls)) ⇒ 8.0
 ----
 
+[#objects:s184]
 [horizontal]
 procedure:: `(fl+ _fl_ \...)`
 returns:: the sum of the arguments `_fl_ \...`
@@ -3023,6 +3162,7 @@ When called with no arguments, `fl+` returns `0.0`.
 (apply fl+ '(1.0 2.0 3.0 4.0 5.0)) ⇒ 15.0
 ----
 
+[#objects:s185]
 [horizontal]
 procedure:: `(fl- _fl_)`
 returns:: the additive inverse of `_fl_`
@@ -3061,6 +3201,7 @@ since the latter returns `0.0` rather than `-0.0` for `0.0`.
 (fl- 4.0 3.0 2.0 1.0) ⇒ -2.0
 ----
 
+[#objects:s186]
 [horizontal]
 procedure:: `(fl* _fl_ \...)`
 returns:: the product of the arguments `_fl_ \...`
@@ -3076,6 +3217,7 @@ When called with no arguments, `fl*` returns `1.0`.
 (apply fl* '(1.0 -2.0 3.0 -4.0 5.0)) ⇒ 120.0
 ----
 
+[#objects:s187]
 [horizontal]
 procedure:: `(fl/ _fl_)`
 returns:: the multiplicative inverse of `_fl_`
@@ -3091,6 +3233,7 @@ libraries:: `(rnrs arithmetic flonums)`, `(rnrs)`
 (fl/ 60.0 5.0 3.0 2.0) ⇒ 2.0
 ----
 
+[#objects:s188]
 [horizontal]
 procedure:: `(fldiv _fl~1~_ _fl~2~_)`
 procedure:: `(flmod _fl~1~_ _fl~2~_)`
@@ -3115,6 +3258,7 @@ These are flonum-specific versions of the generic `div`, `mod`, and `div-and-mod
                              2.5
 ----
 
+[#objects:s189]
 [horizontal]
 procedure:: `(fldiv0 _fl~1~_ _fl~2~_)`
 procedure:: `(flmod0 _fl~1~_ _fl~2~_)`
@@ -3139,6 +3283,7 @@ These are flonum-specific versions of the generic `div0`, `mod0`, and `div0-and-
                                -1.25
 ----
 
+[#objects:s190]
 [horizontal]
 procedure:: `(flround _fl_)`
 returns:: the integer closest to `_fl_`
@@ -3169,6 +3314,7 @@ If `_fl_` is an integer, NaN, or infinity, each of these procedures returns `_fl
 (flceiling -17.3) ⇒ -17.0
 ----
 
+[#objects:s191]
 [horizontal]
 procedure:: `(flnumerator _fl_)`
 returns:: the numerator of `_fl_`
@@ -3196,6 +3342,7 @@ The following hold for IEEE floats, but not necessarily other flonum representat
 (fldenominator 3.5) ⇒ 2.0
 ----
 
+[#objects:s192]
 [horizontal]
 procedure:: `(flabs _fl_)`
 returns:: absolute value of `_fl_`
@@ -3207,6 +3354,7 @@ libraries:: `(rnrs arithmetic flonums)`, `(rnrs)`
 (flabs -2e-20) ⇒ 2e-20
 ----
 
+[#objects:s193]
 [horizontal]
 procedure:: `(flexp _fl_)`
 returns:: _e_ to the `_fl_` power
@@ -3229,6 +3377,7 @@ libraries:: `(rnrs arithmetic flonums)`, `(rnrs)`
 (fllog .125 2.0) ⇒ -3.0
 ----
 
+[#objects:s194]
 [horizontal]
 procedure:: `(flsin _fl_)`
 returns:: the sine of `_fl_`
@@ -3238,6 +3387,7 @@ procedure:: `(fltan _fl_)`
 returns:: the tangent of `_fl_`
 libraries:: `(rnrs arithmetic flonums)`, `(rnrs)`
 
+[#objects:s195]
 [horizontal]
 procedure:: `(flasin _fl_)`
 returns:: the arc sine of `_fl_`
@@ -3249,6 +3399,7 @@ procedure:: `(flatan _fl~1~_ _fl~2~_)`
 returns:: the arc tangent of `_fl~1~_`/`_fl~2~_`
 libraries:: `(rnrs arithmetic flonums)`, `(rnrs)`
 
+[#objects:s196]
 [horizontal]
 procedure:: `(flsqrt _fl_)`
 returns:: the principal square root of `_fl_`
@@ -3263,6 +3414,7 @@ Returns the principal square root of `_fl_`. The square root of -0.0 should be -
 (flsqrt -0.0) ⇒ -0.0
 ----
 
+[#objects:s197]
 [horizontal]
 procedure:: `(flexpt _fl~1~_ _fl~2~_)`
 returns:: `_fl~1~_` raised to the `_fl~2~_` power
@@ -3276,6 +3428,7 @@ If `_fl~1~_` is negative and `_fl~2~_` is not an integer, the result may be a Na
 (flexpt 0.0 +inf.0) ⇒ 0.0
 ----
 
+[#objects:s198]
 [horizontal]
 procedure:: `(fixnum\->flonum _fx_)`
 returns:: the flonum representation closest to `_fx_`
@@ -3296,10 +3449,12 @@ libraries:: `(rnrs arithmetic flonums)`, `(rnrs)`
 
 === Section 6.7. Characters [[section_6.7.]]
 
+[#objects:s199]
 Characters are atomic objects representing letters, digits, special symbols such as `$` or `-`, and certain nongraphic control characters such as space and newline. Characters are written with a `\#\` prefix. For most characters, the prefix is followed by the character itself. The written character representation of the letter `A`, for example, is `#\A`. The characters newline, space, and tab may be written in this manner as well, but they can be written more clearly as `\#\newline`, `#\space`, and `\#\tab`. Other character names are supported as well, as defined by the grammar for character objects on <<grammar:characters,page 457>>. Any Unicode character may be written with the syntax `#\x__n__`, where `_n_` consists of one or more hexadecimal digits and represents a valid Unicode scalar value.
 
 This section describes the operations that deal primarily with characters. See also the following section on strings and <<chp_input_and_output,Chapter 7>> on input and output for other operations relating to characters.
 
+[#objects:s201]
 [horizontal]
 procedure:: `(char=? _char~1~_ _char~2~_ _char~3~_ \...)`
 procedure:: `(char<? _char~1~_ _char~2~_ _char~3~_ \...)`
@@ -3322,6 +3477,7 @@ These predicates behave in a similar manner to the numeric predicates `=`, `<`, 
 (char=? #\+ #\+) ⇒ #t
 ----
 
+[#objects:s202]
 [horizontal]
 procedure:: `(char-ci=? _char~1~_ _char~2~_ _char~3~_ \...)`
 procedure:: `(char-ci<? _char~1~_ _char~2~_ _char~3~_ \...)`
@@ -3343,6 +3499,7 @@ These predicates are identical to the predicates `char=?`, `char<?`, `char>?`, `
         (char-ci<=? #\a c #\z))) ⇒ (#f #t)
 ----
 
+[#objects:s203]
 [horizontal]
 procedure:: `(char-alphabetic? _char_)`
 returns:: `#t` if `_char_` is a letter, `#f` otherwise
@@ -3371,6 +3528,7 @@ A character is alphabetic if it has the Unicode "Alphabetic" property, numeric i
 (char-whitespace? #\Z) ⇒ #f
 ----
 
+[#objects:s204]
 [horizontal]
 procedure:: `(char-lower-case? _char_)`
 returns:: `#t` if `_char_` is lower case, `#f` otherwise
@@ -3394,6 +3552,7 @@ A character is upper-case if it has the Unicode "Uppercase" property, lower-case
 (char-title-case? #\x01C5) ⇒ #t
 ----
 
+[#objects:s205]
 [horizontal]
 procedure:: `(char-general-category _char_)`
 returns:: a symbol representing the Unicode general category of `_char_`
@@ -3408,6 +3567,7 @@ The return value is one of the symbols `Lu`, `Ll`, `Lt`, `Lm`, `Lo`, `Mn`, `Mc`,
 (char-general-category #\x10FFFF) ⇒ Cn
 ----
 
+[#objects:s206]
 [horizontal]
 procedure:: `(char-upcase _char_)`
 returns:: the upper-case character counterpart of `_char_`
@@ -3423,6 +3583,7 @@ If `_char_` is a lower- or title-case character and has a single upper-case coun
 (char-upcase #\&sigmaf;) ⇒ #\&Sigma;
 ----
 
+[#objects:s207]
 [horizontal]
 procedure:: `(char-downcase _char_)`
 returns:: the lower-case character equivalent of `_char_`
@@ -3438,6 +3599,7 @@ If `_char_` is an upper- or title-case character and has a single lower-case cou
 (char-downcase #\&sigmaf;) ⇒ #\&sigmaf;
 ----
 
+[#objects:s208]
 [horizontal]
 procedure:: `(char-titlecase _char_)`
 returns:: the title-case character equivalent of `_char_`
@@ -3453,6 +3615,7 @@ If `_char_` is an upper- or lower-case character and has a single title-case cou
 (char-titlecase #\&sigmaf;) ⇒ #\&Sigma;
 ----
 
+[#objects:s209]
 [horizontal]
 procedure:: `(char-foldcase _char_)`
 returns:: the case-folded character equivalent of `_char_`
@@ -3468,6 +3631,7 @@ If `_char_` has a case-folded counterpart, `char-foldcase` returns the case-fold
 (char-foldcase #\&sigmaf;) ⇒ #\&sigma;
 ----
 
+[#objects:s210]
 [horizontal]
 procedure:: `(char\->integer _char_)`
 returns:: the Unicode scalar value of `_char_` as an exact integer
@@ -3480,8 +3644,9 @@ libraries:: `(rnrs base)`, `(rnrs)`
 (- (char->integer #\Z) (char->integer #\A)) ⇒ 25
 ----
 
+[#objects:s211]
 [horizontal]
-procedure:: `(integer->char _n_)`
+procedure:: `(integer\->char _n_)`
 returns:: the character corresponding to the Unicode scalar value `_n_`
 libraries:: `(rnrs base)`, `(rnrs)`
 
@@ -3495,21 +3660,19 @@ libraries:: `(rnrs base)`, `(rnrs)`
 
 === Section 6.8. Strings [[section_6.8.]]
 
+[#objects:s212]
 Strings are sequences of characters and are often used as messages, character buffers, or containers for blocks of text. Scheme provides operations for creating strings, extracting characters from strings, obtaining substrings, concatenating strings, and altering the contents of strings.
 
 A string is written as a sequence of characters enclosed in double quotes, e.g., `"hi there"`. A double quote may be introduced into a string by preceding it by a backward slash, e.g., `"two \"quotes\" within"`. A backward slash may also be included by preceding it with a backward slash, e.g., `"a \\slash"`. Various special characters can be inserted with other two-character sequences, e.g., `\n` for newline, `\r` for carriage return, and `\t` for tab. Any Unicode character may be inserted with the syntax `#\x__n__;`, where `_n_` consists of one or more hexadecimal digits and represents a valid Unicode scalar value. A grammar defining the precise syntax of strings is given on <<grammar:strings,page 458>>.
 
 Strings are indexed by exact nonnegative integers, and the index of the first element of any string is 0. The highest valid index for a given string is one less than its length.
 
+[#objects:s215]
 [horizontal]
 procedure:: `(string=? _string~1~_ _string~2~_ _string~3~_ \...)`
-[horizontal]
 procedure:: `(string<? _string~1~_ _string~2~_ _string~3~_ \...)`
-[horizontal]
 procedure:: `(string>? _string~1~_ _string~2~_ _string~3~_ \...)`
-[horizontal]
 procedure:: `(string\<=? _string~1~_ _string~2~_ _string~3~_ \...)`
-[horizontal]
 procedure:: `(string>=? _string~1~_ _string~2~_ _string~3~_ \...)`
 returns:: `#t` if the relation holds, `#f` otherwise
 libraries:: `(rnrs base)`, `(rnrs)`
@@ -3559,6 +3722,7 @@ These definitions may be extended straightforwardly to support three or more arg
 (string&lt;? "a" "b" "c") ⇒ #t
 ----
 
+[#objects:s216]
 [horizontal]
 procedure:: `(string-ci=? _string~1~_ _string~2~_ _string~3~_ \...)`
 procedure:: `(string-ci<? _string~1~_ _string~2~_ _string~3~_ \...)`
@@ -3578,6 +3742,7 @@ These predicates are identical to `string=?`, `string<?`, `string>?`, `string\<=
 (string-ci=? "Straße" "Strasse") ⇒ #t
 ----
 
+[#objects:s217]
 [horizontal]
 procedure:: `(string _char_ \...)`
 returns:: a string containing the characters `_char_ \...`
@@ -3590,6 +3755,7 @@ libraries:: `(rnrs base)`, `(rnrs)`
 (string #\H #\E #\Y #\!) ⇒ "HEY!"
 ----
 
+[#objects:s218]
 [horizontal]
 procedure:: `(make-string _n_)`
 procedure:: `(make-string _n_ _char_)`
@@ -3605,6 +3771,7 @@ libraries:: `(rnrs base)`, `(rnrs)`
 (make-string 5 #\x) ⇒ "xxxxx"
 ----
 
+[#objects:s219]
 [horizontal]
 procedure:: `(string-length _string_)`
 returns:: the number of characters in `_string_`
@@ -3620,6 +3787,7 @@ The length of a string is always an exact nonnegative integer.
 (string-length (make-string 1000000)) ⇒ 1000000
 ----
 
+[#objects:s220]
 [horizontal]
 procedure:: `(string-ref _string_ _n_)`
 returns:: the ``_n_``th character (zero-based) of `_string_`
@@ -3633,6 +3801,7 @@ libraries:: `(rnrs base)`, `(rnrs)`
 (string-ref "hi there" 5) ⇒ #\e
 ----
 
+[#objects:s221]
 [horizontal]
 procedure:: `(string-set! _string_ _n_ _char_)`
 returns:: unspecified
@@ -3648,6 +3817,7 @@ libraries:: `(rnrs mutable-strings)`
   str) ⇒ "hi there"
 ----
 
+[#objects:s222]
 [horizontal]
 procedure:: `(string-copy _string_)`
 returns:: a new copy of `_string_`
@@ -3663,6 +3833,7 @@ This procedure creates a new string with the same length and contents as `_strin
   (eq? str (string-copy str))) ⇒ #f
 ----
 
+[#objects:s223]
 [horizontal]
 procedure:: `(string-append _string_ \...)`
 returns:: a new string formed by concatenating the strings `_string_ \...`
@@ -3692,6 +3863,7 @@ The following implementation of `string-append` recurs down the list of strings 
               (string-set! s2 j (string-ref s1 i))))))))
 ----
 
+[#objects:s224]
 [horizontal]
 procedure:: `(substring _string_ _start_ _end_)`
 returns:: a copy of `_string_` from `_start_` (inclusive) to `_end_` (exclusive)
@@ -3717,6 +3889,7 @@ libraries:: `(rnrs base)`, `(rnrs)`
     (substring str 0 end))) ⇒ "hi there"
 ----
 
+[#objects:s225]
 [horizontal]
 procedure:: `(string-fill! _string_ _char_)`
 returns:: unspecified
@@ -3745,6 +3918,7 @@ libraries:: `(rnrs mutable-strings)`
 
 An alternative definition is given on <<backdoor-string-fill,page 276>>.
 
+[#objects:s226]
 [horizontal]
 procedure:: `(string-upcase _string_)`
 returns:: the upper-case equivalent of `_string_`
@@ -3779,6 +3953,7 @@ These procedures implement Unicode's locale-independent case mappings from scala
 (string-titlecase "R6RS") ⇒ "R6rs"
 ----
 
+[#objects:s227]
 [horizontal]
 procedure:: `(string-normalize-nfd _string_)`
 returns:: the Unicode normalized form D of `_string_`
@@ -3800,6 +3975,7 @@ If the result string is the same as `_string_` (by `string=?`), `_string_` or a 
 (string-normalize-nfc "\x65;\x301;") ⇒ "\xE9;"
 ----
 
+[#objects:s228]
 [horizontal]
 procedure:: `(string\->list _string_)`
 returns:: a list of the characters in `_string_`
@@ -3821,6 +3997,7 @@ libraries:: `(rnrs base)`, `(rnrs)`
 (map char-upcase (string->list "abc")) ⇒ (#\A #\B #\C)
 ----
 
+[#objects:s229]
 [horizontal]
 procedure:: `(list\->string _list_)`
 returns:: a string of the characters in `_list_`
@@ -3850,12 +4027,14 @@ libraries:: `(rnrs base)`, `(rnrs)`
 
 === Section 6.9. Vectors [[section_6.9.]]
 
+[#objects:s230]
 Vectors are more convenient and efficient than lists for some applications. Whereas accessing an arbitrary element in a list requires a linear traversal of the list up to the selected element, arbitrary vector elements are accessed in constant time. The _length_ of a vector is the number of elements it contains. Vectors are indexed by exact nonnegative integers, and the index of the first element of any vector is 0. The highest valid index for a given vector is one less than its length.
 
 As with lists, the elements of a vector can be of any type, and a single vector can hold more than one type of object.
 
 A vector is written as a sequence of objects separated by whitespace, preceded by the prefix `\#(` and followed by `)`. For example, a vector consisting of the elements `a`, `b`, and `c` would be written `#(a b c)`.
 
+[#objects:s231]
 [horizontal]
 procedure:: `(vector _obj_ \...)`
 returns:: a vector of the objects `_obj_ \...`
@@ -3867,6 +4046,7 @@ libraries:: `(rnrs base)`, `(rnrs)`
 (vector 'a 'b 'c) ⇒ #(a b c)
 ----
 
+[#objects:s232]
 [horizontal]
 procedure:: `(make-vector _n_)`
 procedure:: `(make-vector _n_ _obj_)`
@@ -3882,6 +4062,7 @@ libraries:: `(rnrs base)`, `(rnrs)`
 (make-vector 5 '#(a)) ⇒ #(#(a) #(a) #(a) #(a) #(a))
 ----
 
+[#objects:s233]
 [horizontal]
 procedure:: `(vector-length _vector_)`
 returns:: the number of elements in `_vector_`
@@ -3897,6 +4078,7 @@ The length of a vector is always an exact nonnegative integer.
 (vector-length (make-vector 300)) ⇒ 300
 ----
 
+[#objects:s234]
 [horizontal]
 procedure:: `(vector-ref _vector_ _n_)`
 returns:: the ``_n_``th element (zero-based) of `_vector_`
@@ -3911,6 +4093,7 @@ libraries:: `(rnrs base)`, `(rnrs)`
 (vector-ref '#(x y z w) 3) ⇒ w
 ----
 
+[#objects:s235]
 [horizontal]
 procedure:: `(vector-set! _vector_ _n_ _obj_)`
 returns:: unspecified
@@ -3925,6 +4108,7 @@ libraries:: `(rnrs base)`, `(rnrs)`
   v) ⇒ #(a b x d e)
 ----
 
+[#objects:s236]
 [horizontal]
 procedure:: `(vector-fill! _vector_ _obj_)`
 returns:: unspecified
@@ -3946,6 +4130,7 @@ libraries:: `(rnrs base)`, `(rnrs)`
   v) ⇒ #(0 0 0)
 ----
 
+[#objects:s237]
 [horizontal]
 procedure:: `(vector\->list _vector_)`
 returns:: a list of the elements of `_vector_`
@@ -3968,6 +4153,7 @@ libraries:: `(rnrs base)`, `(rnrs)`
   (apply * (vector->list v))) ⇒ 120
 ----
 
+[#objects:s238]
 [horizontal]
 procedure:: `(list\->vector _list_)`
 returns:: a vector of the elements of `_list_`
@@ -3994,6 +4180,7 @@ libraries:: `(rnrs base)`, `(rnrs)`
     (list->vector (map * ls ls)))) ⇒ #(1 4 9 16 25)
 ----
 
+[#objects:s239]
 [horizontal]
 procedure:: `(vector-sort _predicate_ _vector_)`
 returns:: a vector containing the elements of `_vector_`, sorted according to `_predicate_`
@@ -4033,6 +4220,7 @@ Bytevectors are written with the `\#vu8(` prefix in place of the `#(` prefix for
 #vu8(#x3f #x7f #xbf #xff) ⇒ #vu8(63 127 191 255)
 ----
 
+[#objects:s240]
 [horizontal]
 syntax:: `(endianness _symbol_)`
 returns:: `_symbol_`
@@ -4047,6 +4235,7 @@ libraries:: `(rnrs bytevectors)`, `(rnrs)`
 (endianness "spam") ⇒ _exception_
 ----
 
+[#objects:s241]
 [horizontal]
 procedure:: `(native-endianness)`
 returns:: a symbol naming the implementation's native endianness
@@ -4059,6 +4248,7 @@ The return value is the symbol `little`, the symbol `big`, or some other endiann
 (symbol? (native-endianness)) ⇒ #t
 ----
 
+[#objects:s242]
 [horizontal]
 procedure:: `(make-bytevector _n_)`
 procedure:: `(make-bytevector _n_ _fill_)`
@@ -4075,6 +4265,7 @@ If `_fill_` is supplied, each element of the bytevector is initialized to `_fill
 (make-bytevector 5 -7) ⇒ #vu8(249 249 249 249 249)
 ----
 
+[#objects:s243]
 [horizontal]
 procedure:: `(bytevector-length _bytevector_)`
 returns:: the length of `_bytevector_` in 8-bit bytes
@@ -4087,6 +4278,7 @@ libraries:: `(rnrs bytevectors)`, `(rnrs)`
 (bytevector-length (make-bytevector 300)) ⇒ 300
 ----
 
+[#objects:s244]
 [horizontal]
 procedure:: `(bytevector=? _bytevector~1~_ _bytevector~2~_)`
 returns:: `#t` if the relation holds, `#f` otherwise
@@ -4102,6 +4294,7 @@ Two bytevectors are equal by `bytevector=?` if and only if they have the same le
 (bytevector=? #vu8(1 127 128 255) #vu8(255 128 127 1)) ⇒ #f
 ----
 
+[#objects:s245]
 [horizontal]
 procedure:: `(bytevector-fill! _bytevector_ _fill_)`
 returns:: unspecified
@@ -4122,6 +4315,7 @@ The `_fill_` value must be a signed or unsigned 8-bit value, i.e., a value in th
   v) ⇒ #vu8(128 128 128 128 128 128)
 ----
 
+[#objects:s246]
 [horizontal]
 procedure:: `(bytevector-copy _bytevector_)`
 returns:: a new bytevector that is a copy of `_bytevector_`
@@ -4137,6 +4331,7 @@ libraries:: `(rnrs bytevectors)`, `(rnrs)`
   (eq? v (bytevector-copy v))) ⇒ #f
 ----
 
+[#objects:s247]
 [horizontal]
 procedure:: `(bytevector-copy! _src_ _src-start_ _dst_ _dst-start_ _n_)`
 returns:: unspecified
@@ -4164,6 +4359,7 @@ v2 ⇒ #vu8(159 191 0 0 191 223 0 191 223 255)
 v2 ⇒ #vu8(159 159 191 0 0 191 223 0 191 223)
 ----
 
+[#objects:s248]
 [horizontal]
 procedure:: `(bytevector-u8-ref _bytevector_ _n_)`
 returns:: the 8-bit unsigned byte at index `_n_` (zero-based) of `_bytevector_`
@@ -4180,6 +4376,7 @@ The value is returned as an exact 8-bit unsigned integer, i.e., a value in the r
 (bytevector-u8-ref #vu8(1 127 128 255) 3) ⇒ 255
 ----
 
+[#objects:s249]
 [horizontal]
 procedure:: `(bytevector-s8-ref _bytevector_ _n_)`
 returns:: the 8-bit signed byte at index `_n_` (zero-based) of `_bytevector_`
@@ -4197,6 +4394,7 @@ The value returned is an exact 8-bit signed integer, i.e., a value in the range 
 (bytevector-s8-ref #vu8(1 127 128 255) 3) ⇒ -1
 ----
 
+[#objects:s250]
 [horizontal]
 procedure:: `(bytevector-u8-set! _bytevector_ _n_ _u8_)`
 returns:: unspecified
@@ -4213,6 +4411,7 @@ libraries:: `(rnrs bytevectors)`, `(rnrs)`
   v) ⇒ #vu8(255 255 128 255 255)
 ----
 
+[#objects:s251]
 [horizontal]
 procedure:: `(bytevector-s8-set! _bytevector_ _n_ _s8_)`
 returns:: unspecified
@@ -4230,6 +4429,7 @@ libraries:: `(rnrs bytevectors)`, `(rnrs)`
   v) ⇒ #vu8(0 100 156 0)
 ----
 
+[#objects:s252]
 [horizontal]
 procedure:: `(bytevector\->u8-list _bytevector_)`
 returns:: a list of the 8-bit unsigned elements of `_bytevector_`
@@ -4244,6 +4444,7 @@ libraries:: `(rnrs bytevectors)`, `(rnrs)`
   (apply * (bytevector->u8-list v))) ⇒ 1530
 ----
 
+[#objects:s253]
 [horizontal]
 procedure:: `(u8-list\->bytevector _list_)`
 returns:: a new bytevector of the elements of `_list_`
@@ -4261,6 +4462,7 @@ libraries:: `(rnrs bytevectors)`, `(rnrs)`
     (u8-list->bytevector (map * ls ls)))) ⇒ #vu8(1 4 9 16 25)
 ----
 
+[#objects:s254]
 [horizontal]
 procedure:: `(bytevector-u16-native-ref _bytevector_ _n_)`
 returns:: the 16-bit unsigned integer at index `_n_` (zero-based) of `_bytevector_`
@@ -4317,6 +4519,7 @@ If native endianness is little:
 (bytevector-s64-native-ref v 0) ⇒ #x-67874523a901cbee
 ----
 
+[#objects:s255]
 [horizontal]
 procedure:: `(bytevector-u16-native-set! _bytevector_ _n_ _u16_)`
 procedure:: `(bytevector-s16-native-set! _bytevector_ _n_ _s16_)`
@@ -4403,6 +4606,7 @@ v ⇒ #vu8(#x98 #x78 #xba #xdc #x56 #xfe #x34 #x12
           #x12 #x34 #xfe #x56 #xdc #xba #x78 #x98)
 ----
 
+[#objects:s256]
 [horizontal]
 procedure:: `(bytevector-u16-ref _bytevector_ _n_ _eness_)`
 returns:: the 16-bit unsigned integer at index `_n_` (zero-based) of `_bytevector_`
@@ -4448,6 +4652,7 @@ The return value is an exact integer in the appropriate range for the number of 
 (bytevector-s64-ref v 1 'little) ⇒ #x-6567874523a901cc
 ----
 
+[#objects:s257]
 [horizontal]
 procedure:: `(bytevector-u16-set! _bytevector_ _n_ _u16_ _eness_)`
 procedure:: `(bytevector-s16-set! _bytevector_ _n_ _s16_ _eness_)`
@@ -4487,6 +4692,7 @@ v ⇒ #vu8(#x98 #x78 #xba #xdc #x56 #xfe #x34 #x12 #x0 #x0
           #x98 #x78 #xba #xdc #x56 #xfe #x34 #x12 #x0)
 ----
 
+[#objects:s258]
 [horizontal]
 procedure:: `(bytevector-uint-ref _bytevector_ _n_ _eness_ _size_)`
 returns:: the `_size_`-byte unsigned integer at index `_n_` (zero-based) of `_bytevector_`
@@ -4514,6 +4720,7 @@ The return value is an exact integer in the appropriate range for the number of 
 (bytevector-sint-ref (make-bytevector 1000 -1) 0 'big 1000) ⇒ -1
 ----
 
+[#objects:s259]
 [horizontal]
 procedure:: `(bytevector-uint-set! _bytevector_ _n_ _uint_ _eness_ _size_)`
 procedure:: `(bytevector-sint-set! _bytevector_ _n_ _sint_ _eness_ _size_)`
@@ -4535,6 +4742,7 @@ v ⇒ #vu8(0 #x12 #x34 #x56 0)
 v ⇒ #vu8(#xff 0 0 0 0 #x80 #xff)
 ----
 
+[#objects:s260]
 [horizontal]
 procedure:: `(bytevector\->uint-list _bytevector_ _eness_ _size_)`
 returns:: a new list of the `_size_`-byte unsigned elements of `_bytevector_`
@@ -4555,6 +4763,7 @@ libraries:: `(rnrs bytevectors)`, `(rnrs)`
   (bytevector->sint-list v 'big 20)) ⇒ (-1 -1 -1 -1)
 ----
 
+[#objects:s261]
 [horizontal]
 procedure:: `(uint-list\->bytevector _list_ _eness_ _size_)`
 procedure:: `(sint-list\->bytevector _list_ _eness_ _size_)`
@@ -4576,6 +4785,7 @@ libraries:: `(rnrs bytevectors)`, `(rnrs)`
               #xff #xff #xff #xff #xff #x7f)
 ----
 
+[#objects:s262]
 [horizontal]
 procedure:: `(bytevector-ieee-single-native-ref _bytevector_ _n_)`
 returns:: the single floating-point value at index `_n_` (zero-based) of `_bytevector_`
@@ -4587,6 +4797,7 @@ libraries:: `(rnrs bytevectors)`, `(rnrs)`
 
 The return value is an inexact real number. Examples appear after the mutation operators below.
 
+[#objects:s263]
 [horizontal]
 procedure:: `(bytevector-ieee-single-native-set! _bytevector_ _n_ _x_)`
 procedure:: `(bytevector-ieee-double-native-set! _bytevector_ _n_ _x_)`
@@ -4610,6 +4821,7 @@ These procedures store the given value as an IEEE-754 single or double floating-
 (bytevector-ieee-double-native-ref v 0) ⇒ 1e23
 ----
 
+[#objects:s264]
 [horizontal]
 procedure:: `(bytevector-ieee-single-ref _bytevector_ _n_ _eness_)`
 returns:: the single floating-point value at index `_n_` (zero-based) of `_bytevector_`
@@ -4621,6 +4833,7 @@ libraries:: `(rnrs bytevectors)`, `(rnrs)`
 
 The return value is an inexact real number. Examples appear after the mutation operators below.
 
+[#objects:s265]
 [horizontal]
 procedure:: `(bytevector-ieee-single-set! _bytevector_ _n_ _x_ _eness_)`
 procedure:: `(bytevector-ieee-double-set! _bytevector_ _n_ _x_ _eness_)`
@@ -4647,6 +4860,7 @@ v ⇒ #vu8(#xc7 #x0 #x0 #x0 #x3e #xc7 #xbf #xc0 #x0 #x0)
 
 === Section 6.11. Symbols [[section_6.11.]]
 
+[#objects:s266]
 Symbols are used for a variety of purposes as symbolic names in Scheme programs. Strings could be used for most of the same purposes, but an important characteristic of symbols makes comparisons between symbols much more efficient. This characteristic is that two symbols with the same name are identical in the sense of `eq?`. The reason is that the Scheme reader (invoked by `get-datum` and `read`) and the procedure `string\->symbol` catalog symbols in an internal symbol table and always return the same symbol whenever the same name is encountered. Thus, no character-by-character comparison is needed, as would be needed to compare two strings.
 
 The property that two symbols may be compared quickly for equivalence makes them ideally suited for use as identifiers in the representation of programs, allowing fast comparison of identifiers. This property also makes symbols useful for a variety of other purposes. For example, symbols might be used as messages passed between procedures, labels for list-structured records, or names for objects stored in an association list (see `assq` in <<section_6.3.,Section 6.3>>).
@@ -4655,6 +4869,7 @@ Symbols are written without double quotes or other bracketing characters. Parent
 
 The grammar for symbols on <<grammar:symbols,page 458>> gives a precise definition of the syntax of symbols.
 
+[#objects:s268]
 [horizontal]
 procedure:: `(symbol=? _symbol~1~_ _symbol~2~_)`
 returns:: `#t` if the two symbols are the same, `#f` otherwise
@@ -4669,6 +4884,7 @@ Symbols can also be compared with `eq?`, which is typically more efficient than 
 (symbol=? 'a 'b) ⇒ #f
 ----
 
+[#objects:s269]
 [horizontal]
 procedure:: `(string\->symbol _string_)`
 returns:: a symbol whose name is `_string_`
@@ -4691,8 +4907,9 @@ The effect of modifying a string after it is used as an argument to `string\->sy
 (string->symbol "()") ⇒ \x28;\x29;
 ----
 
+[#objects:s270]
 [horizontal]
-procedure:: `(symbol->string _symbol_)`
+procedure:: `(symbol\->string _symbol_)`
 returns:: a string, the name of `_symbol_`
 libraries:: `(rnrs base)`, `(rnrs)`
 
@@ -4709,6 +4926,7 @@ The string returned by `symbol\->string` should be treated as immutable. Unpredi
 
 While every Scheme object has a truth value when used in a conditional context, with every object but `#f` counting as true, Scheme provides the dedicated true value `#t` for use when a value of an expression should convey nothing more than that it is true.
 
+[#objects:s271]
 [horizontal]
 procedure:: `(boolean=? _boolean~1~_ _boolean~2~_)`
 returns:: `#t` if the two booleans are the same, `#f` otherwise
@@ -4725,8 +4943,11 @@ The boolean values `#t` and `#f` may also be compared with `eq?`, which is typic
 
 === Section 6.13. Hashtables [[section_6.13.]]
 
+[#objects:s272]
+[#objects:s273]
 Hashtables represent sets of associations between arbitrary Scheme values. They serve essentially the same purpose as association lists (see <<page:assq,page 165>>) but are typically much faster when large numbers of associations are involved.
 
+[#objects:s274]
 [horizontal]
 procedure:: `(make-eq-hashtable)`
 procedure:: `(make-eq-hashtable _size_)`
@@ -4743,6 +4964,7 @@ An eq hashtable compares keys using the `eq?` (pointer equality) procedure and t
 (define ht2 (make-eq-hashtable 32))
 ----
 
+[#objects:s275]
 [horizontal]
 procedure:: `(make-eqv-hashtable)`
 procedure:: `(make-eqv-hashtable _size_)`
@@ -4753,6 +4975,7 @@ If `_size_` is provided, it must be a nonnegative exact integer indicating appro
 
 An eqv hashtable compares keys using the `eqv?` procedure and typically employs a hash function based on object addresses for objects that are identifiable with `eq?`. Its hash and equivalence functions are suitable for any Scheme object.
 
+[#objects:s276]
 [horizontal]
 procedure:: `(make-hashtable _hash_ _equiv?_)`
 procedure:: `(make-hashtable _hash_ _equiv?_ _size_)`
@@ -4768,6 +4991,7 @@ The new hashtable computes hash values using `_hash_` and compares keys using `_
 (define ht (make-hashtable string-hash string=?))
 ----
 
+[#objects:s277]
 [horizontal]
 procedure:: `(hashtable-mutable? _hashtable_)`
 returns:: `#t` if `_hashtable_` is mutable, `#f` otherwise
@@ -4781,6 +5005,7 @@ Hashtables returned by one of the hashtable creation procedures above are mutabl
 (hashtable-mutable? (hashtable-copy (make-eq-hashtable))) ⇒ #f
 ----
 
+[#objects:s278]
 [horizontal]
 procedure:: `(hashtable-hash-function _hashtable_)`
 returns:: the hash function associated with `_hashtable_`
@@ -4801,6 +5026,7 @@ libraries:: `(rnrs hashtables)`, `(rnrs)`
 (eq? (hashtable-equivalence-function ht) string=?) ⇒ #t
 ----
 
+[#objects:s279]
 [horizontal]
 procedure:: `(equal-hash _obj_)`
 procedure:: `(string-hash _string_)`
@@ -4811,6 +5037,7 @@ libraries:: `(rnrs hashtables)`, `(rnrs)`
 
 These procedures are hash functions suitable for use with the appropriate Scheme predicate: `equal?` for `equal-hash`, `string=?` for `string-hash`, `string-ci=?` for `string-ci-hash`, and `symbol=?` (or eq?) for `symbol-hash`. The hash values returned by `equal-hash`, `string-hash`, and `string-ci-hash` are typically dependent on the current structure and contents of the input values and are thus unsuitable if keys are modified while they have associations in a hashtable.
 
+[#objects:s280]
 [horizontal]
 procedure:: `(hashtable-set! _hashtable_ _key_ _obj_)`
 returns:: unspecified
@@ -4826,6 +5053,7 @@ libraries:: `(rnrs hashtables)`, `(rnrs)`
 (hashtable-set! ht 'a 73)
 ----
 
+[#objects:s281]
 [horizontal]
 procedure:: `(hashtable-ref _hashtable_ _key_ _default_)`
 returns:: see below
@@ -4851,6 +5079,7 @@ libraries:: `(rnrs hashtables)`, `(rnrs)`
 (hashtable-ref equalht p2 55) ⇒ 73
 ----
 
+[#objects:s282]
 [horizontal]
 procedure:: `(hashtable-contains? _hashtable_ _key_)`
 returns:: `#t` if an association for `_key_` exists in `_hashtable_`, `#f` otherwise
@@ -4868,6 +5097,7 @@ libraries:: `(rnrs hashtables)`, `(rnrs)`
 (hashtable-contains? ht p2) ⇒ #f
 ----
 
+[#objects:s283]
 [horizontal]
 procedure:: `(hashtable-update! _hashtable_ _key_ _procedure_ _default_)`
 returns:: unspecified
@@ -4902,6 +5132,7 @@ An implementation may, however, be able to implement `hashtable-update!` more ef
 (hashtable-ref ht 'a 0) ⇒ 220
 ----
 
+[#objects:s284]
 [horizontal]
 procedure:: `(hashtable-delete! _hashtable_ _key_)`
 returns:: unspecified
@@ -4924,6 +5155,7 @@ libraries:: `(rnrs hashtables)`, `(rnrs)`
 (hashtable-delete! ht p2)
 ----
 
+[#objects:s285]
 [horizontal]
 procedure:: `(hashtable-size _hashtable_)`
 returns:: number of entries in `_hashtable_`
@@ -4941,6 +5173,7 @@ libraries:: `(rnrs hashtables)`, `(rnrs)`
 (hashtable-size ht) ⇒ 0
 ----
 
+[#objects:s286]
 [horizontal]
 procedure:: `(hashtable-copy _hashtable_)`
 procedure:: `(hashtable-copy _hashtable_ _mutable?_)`
@@ -4962,6 +5195,7 @@ If `_mutable?_` is present and not false, the copy is mutable; otherwise, the co
 (hashtable-ref ht-copy p1 #f) ⇒ "c"
 ----
 
+[#objects:s287]
 [horizontal]
 procedure:: `(hashtable-clear! _hashtable_)`
 procedure:: `(hashtable-clear! _hashtable_ _size_)`
@@ -4985,6 +5219,7 @@ libraries:: `(rnrs hashtables)`, `(rnrs)`
 (hashtable-ref ht p1 #f) ⇒ #f
 ----
 
+[#objects:s288]
 [horizontal]
 procedure:: `(hashtable-keys _hashtable_)`
 returns:: a vector containing the keys in `_hashtable_`
@@ -5003,6 +5238,7 @@ The keys may appear in any order in the returned vector.
 (hashtable-keys ht) ⇒ #((a . b) q (a . b))
 ----
 
+[#objects:s289]
 [horizontal]
 procedure:: `(hashtable-entries _hashtable_)`
 returns:: two vectors: one of keys and a second of values
@@ -5026,6 +5262,7 @@ libraries:: `(rnrs hashtables)`, `(rnrs)`
 
 Enumerations are ordered sets of symbols, typically used to name and manipulate options, as with the buffer modes and file options that may be specified when files are created.
 
+[#objects:s290]
 [horizontal]
 syntax:: `(define-enumeration _name_ (_symbol_ \...) _constructor_)`
 libraries:: `(rnrs enums)`, `(rnrs)`
@@ -5048,6 +5285,7 @@ The `define-enumeration` syntax creates a new enumeration set with the specified
 (enum-set->list (weather rainy cold rainy)) ⇒ (cold rainy)
 ----
 
+[#objects:s291]
 [horizontal]
 procedure:: `(make-enumeration _symbol-list_)`
 returns:: an enumeration set
@@ -5061,6 +5299,7 @@ This procedure creates a new enumeration type whose universe comprises the eleme
 (enum-set->list positions) ⇒ (top bottom above beside)
 ----
 
+[#objects:s292]
 [horizontal]
 procedure:: `(enum-set-constructor _enum-set_)`
 returns:: an enumeration-set construction procedure
@@ -5079,6 +5318,7 @@ This procedure returns a procedure `_p_` that may be used to create subsets of t
 (enum-set->list e3) ⇒ (one two four)
 ----
 
+[#objects:s293]
 [horizontal]
 procedure:: `(enum-set-universe _enum-set_)`
 returns:: the universe of `_enum-set_`, as an enumeration set
@@ -5092,6 +5332,7 @@ libraries:: `(rnrs enums)`, `(rnrs)`
 (enum-set->list (enum-set-universe e2)) ⇒ (a b c d)
 ----
 
+[#objects:s294]
 [horizontal]
 procedure:: `(enum-set\->list _enum-set_)`
 returns:: a list of the elements of `_enum-set_`
@@ -5107,6 +5348,7 @@ The symbols in the resulting list appear in the order given to them when the enu
 (enum-set->list e2) ⇒ (a b c d)
 ----
 
+[#objects:s295]
 [horizontal]
 procedure:: `(enum-set-subset? _enum-set~1~_ _enum-set~2~_)`
 returns:: `#t` if `_enum-set~1~_` is a subset of `_enum-set~2~_`, `#f` otherwise
@@ -5125,6 +5367,7 @@ An enumeration set `_enum-set~1~_` is a subset of an enumeration set `_enum-set~
 (enum-set-subset? e3 e2) ⇒ #t
 ----
 
+[#objects:s296]
 [horizontal]
 procedure:: `(enum-set=? _enum-set~1~_ _enum-set~2~_)`
 returns:: `#t` if `_enum-set~1~_` and `_enum-set~2~_` are equivalent, `#f` otherwise
@@ -5152,6 +5395,7 @@ Two enumeration sets `_enum-set~1~_` and `_enum-set~2~_` are equivalent if each 
     (and (enum-set-subset? e1 e2) (enum-set-subset? e2 e1))))
 ----
 
+[#objects:s297]
 [horizontal]
 procedure:: `(enum-set-member? _symbol_ _enum-set_)`
 returns:: `#t` if symbol is an element of `_enum-set_`, `#f` otherwise
@@ -5165,6 +5409,7 @@ libraries:: `(rnrs enums)`, `(rnrs)`
 (enum-set-member? 'c e2) ⇒ #f
 ----
 
+[#objects:s298]
 [horizontal]
 procedure:: `(enum-set-union _enum-set~1~_ _enum-set~2~_)`
 returns:: the union of `_enum-set~1~_` and `_enum-set~2~_`
@@ -5189,6 +5434,7 @@ libraries:: `(rnrs enums)`, `(rnrs)`
 (enum-set-union e1 e4) ⇒ _exception: different enumeration types_
 ----
 
+[#objects:s299]
 [horizontal]
 procedure:: `(enum-set-complement _enum-set_)`
 returns:: the complement of `_enum-set_` relative to its universe
@@ -5202,6 +5448,7 @@ libraries:: `(rnrs enums)`, `(rnrs)`
 (enum-set->list (enum-set-complement e2)) ⇒ (b d)
 ----
 
+[#objects:s300]
 [horizontal]
 procedure:: `(enum-set-projection _enum-set~1~_ _enum-set~2~_)`
 returns:: the projection of `_enum-set~1~_` into the universe of `_enum-set~2~_`
@@ -5221,6 +5468,7 @@ Any elements of `_enum-set~1~_` not in the universe of `_enum-set~2~_` are dropp
     (enum-set-projection e4 e3))) ⇒ (a c d)
 ----
 
+[#objects:s301]
 [horizontal]
 procedure:: `(enum-set-indexer _enum-set_)`
 returns:: a procedure that returns the index of a symbol in the universe of `_enum-set_`
