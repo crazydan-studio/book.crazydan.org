@@ -513,6 +513,7 @@ While the order in which the applications themselves occur is not specified, the
 
 No error checking is done by this version of `map`; `f` is assumed to be a procedure and the other arguments are assumed to be proper lists of the same length. An interesting feature of this definition is that `map` uses itself to pull out the cars and cdrs of the list of input lists; this works because of the special treatment of the single-list case.
 
+[#desc:for-each]
 [horizontal]
 procedure:: `(for-each _procedure_ _list~1~_ _list~2~_ \...)`
 returns:: unspecified
