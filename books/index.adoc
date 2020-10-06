@@ -1,4 +1,7 @@
 = Crazydan Studio Books
+:stylesheet: asciidoctor.css
+:stylesdir: theme/default
+:linkcss:
 
 == The Scheme Programming Language, Fourth Edition
 
