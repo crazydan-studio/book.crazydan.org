@@ -136,14 +136,14 @@ document.querySelectorAll('a')
         .forEach(function(node) {
             var name=node.name;
             if (name && name.match(/^\.\/(.+)$/)) {
-                node.outerHTML='[#'+(name.replace(/^\.\/(.+)$/, '$1'))+']<br>';
+                node.outerHTML='[#'+(name.replace(/^\.\/(.+)$/, '$1'))+']&lt;br&gt;';
             }
         })
 document.querySelectorAll('a')
         .forEach(function(node) {
             var name=node.name;
             if (name && name.match(/^[^#.\/]+$/)) {
-                node.outerHTML='[#'+name+']<br>';
+                node.outerHTML='[#'+name+']&lt;br&gt;';
             }
         })
 
