@@ -6,11 +6,17 @@ Illustrations by Jean-Pierre Hébert
 :toc: left
 :toc-title: Table of Contents
 :toclevels: 2
-:favicon: ./icon.png
-:data-uri:
+:favicon: images/icon.png
+//:data-uri:
+:nofooter:
 :stem: latexmath
+:stylesheet: asciidoctor.css
+:stylesdir: ../../theme/default
+:linkcss:
 :source-highlighter: highlightjs
-:highlightjs-languages: scheme, bash
+:highlightjs-languages: scheme, bash, javascript
+:highlightjsdir: ../../theme/js/highlight
+:mathjaxdir: ../../theme/js/mathjax
 ifdef::backend-pdf[]
 :title-logo-image: image::images/cover.png[align=center]
 endif::[]
@@ -136,14 +142,14 @@ document.querySelectorAll('a')
         .forEach(function(node) {
             var name=node.name;
             if (name && name.match(/^\.\/(.+)$/)) {
-                node.outerHTML='[#'+(name.replace(/^\.\/(.+)$/, '$1'))+']<br>';
+                node.outerHTML='[#'+(name.replace(/^\.\/(.+)$/, '$1'))+']&lt;br&gt;';
             }
         })
 document.querySelectorAll('a')
         .forEach(function(node) {
             var name=node.name;
             if (name && name.match(/^[^#.\/]+$/)) {
-                node.outerHTML='[#'+name+']<br>';
+                node.outerHTML='[#'+name+']&lt;br&gt;';
             }
         })
 
