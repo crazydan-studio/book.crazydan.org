@@ -35,6 +35,7 @@ The remainder of this chapter covers operations on transcoders, file ports, stan
 
 As described above, transcoders encapsulate three values: a codec, an eol style, and an error-handling mode. This section describes the procedures that create or operate on transcoders and the values that transcoders encapsulate.
 
+[#io:s19]
 [horizontal]
 procedure:: `(make-transcoder _codec_)`
 procedure:: `(make-transcoder _codec_ _eol-style_)`
@@ -44,6 +45,7 @@ libraries:: `(rnrs io ports)`, `(rnrs)`
 
 `_eol-style_` must be a valid eol-style symbol (`lf`, `cr`, `nel`, `ls`, `crlf`, `crnel`, or `none`); it defaults to the native eol-style for the platform. `_error-handling-mode_` must be a valid error-handling-mode symbol (`ignore`, `raise`, or `replace`) and defaults to `replace`.
 
+[#io:s20]
 [horizontal]
 procedure:: `(transcoder-codec _transcoder_)`
 returns:: the codec encapsulated in `_transcoder_`
@@ -53,6 +55,7 @@ procedure:: `(transcoder-error-handling-mode _transcoder_)`
 returns:: the error-handling-mode symbol encapsulated in `_transcoder_`
 libraries:: `(rnrs io ports)`, `(rnrs)`
 
+[#io:s21]
 [horizontal]
 procedure:: `(native-transcoder)`
 returns:: the native transcoder
@@ -60,6 +63,7 @@ libraries:: `(rnrs io ports)`, `(rnrs)`
 
 The native transcoder is implementation-dependent and may vary by platform or locale.
 
+[#io:s22]
 [horizontal]
 procedure:: `(latin-1-codec)`
 returns:: a codec for ISO 8859-1 (Latin 1) character encodings
@@ -69,6 +73,7 @@ procedure:: `(utf-16-codec)`
 returns:: a codec for Unicode UTF-16 character encodings
 libraries:: `(rnrs io ports)`, `(rnrs)`
 
+[#io:s23]
 [horizontal]
 syntax:: `(eol-style _symbol_)`
 returns:: `_symbol_`
@@ -82,6 +87,7 @@ libraries:: `(rnrs io ports)`, `(rnrs)`
 (eol-style lfcr) ⇒ _syntax violation_
 ----
 
+[#io:s24]
 [horizontal]
 procedure:: `(native-eol-style)`
 returns:: the native eol style
@@ -89,6 +95,7 @@ libraries:: `(rnrs io ports)`, `(rnrs)`
 
 The native eol style is implementation-dependent and may vary by platform or locale.
 
+[#io:s25]
 [horizontal]
 syntax:: `(error-handling-mode _symbol_)`
 returns:: `_symbol_`
@@ -112,6 +119,7 @@ Some of the file-open procedures accept optional `_options_`, `_b-mode_`, and `_
 
 Binary ports created by the procedures in this section support the `port-position` and `set-port-position!` operations. Whether textual ports created by the procedures in this section support these operations is implementation-dependent.
 
+[#io:s26]
 [horizontal]
 syntax:: `(file-options _symbol_ ...)`
 returns:: a file-options enumeration set
@@ -125,6 +133,7 @@ It is perhaps easier to imagine that the default file options are the imaginary 
 
 Implementations may support additional file option symbols. Chez Scheme, for example, supports options that control whether the file is or should be compressed, whether it is locked for exclusive access, and what permissions are given to the file if it is created <<ref9>>.
 
+[#io:s27]
 [horizontal]
 syntax:: `(buffer-mode _symbol_)`
 returns:: `_symbol_`
@@ -138,6 +147,7 @@ libraries:: `(rnrs io ports)`, `(rnrs)`
 (buffer-mode cushion) ⇒ _syntax violation_
 ----
 
+[#io:s28]
 [horizontal]
 syntax:: `(buffer-mode? _obj_)`
 returns:: `#t` if `_obj_` is a valid buffer mode, `#f` otherwise
@@ -151,6 +161,7 @@ libraries:: `(rnrs io ports)`, `(rnrs)`
 (buffer-mode? 'something-else) ⇒ #f
 ----
 
+[#io:s29]
 [horizontal]
 procedure:: `(open-file-input-port _path_)`
 procedure:: `(open-file-input-port _path_ _options_)`
@@ -161,6 +172,7 @@ libraries:: `(rnrs io ports)`, `(rnrs)`
 
 If `_?transcoder_` is present and not `#f`, it must be a transcoder, and this procedure returns a textual input port whose transcoder is `_?transcoder_`. Otherwise, this procedure returns a binary input port. See the lead-in to this section for a description of the constraints on and effects of the other arguments.
 
+[#io:s30]
 [horizontal]
 procedure:: `(open-file-output-port _path_)`
 procedure:: `(open-file-output-port _path_ _options_)`
@@ -171,6 +183,7 @@ libraries:: `(rnrs io ports)`, `(rnrs)`
 
 If `_?transcoder_` is present and not `#f`, it must be a transcoder, and this procedure returns a textual output port whose transcoder is `_?transcoder_`. Otherwise, this procedure returns a binary output port. See the lead-in to this section for a description of the constraints on and effects of the other arguments.
 
+[#io:s31]
 [horizontal]
 procedure:: `(open-file-input/output-port _path_)`
 procedure:: `(open-file-input/output-port _path_ _options_)`
@@ -185,6 +198,7 @@ If `_?transcoder_` is present and not `#f`, it must be a transcoder, and this pr
 
 The procedures described in this section return ports that are attached to a process's standard input, standard output, and standard error streams. The first set returns "ready-made" textual ports with implementation-dependent transcoders (if any) and buffer modes. The second set creates fresh binary ports and can be used either for binary input/output or, with the help of `transcoded-port`, for textual input/output with program-supplied transcoders and buffer modes.
 
+[#io:s32]
 [horizontal]
 procedure:: `(current-input-port)`
 returns:: the current input port
@@ -198,6 +212,7 @@ The current-input, current-output, and current-error ports return pre-built text
 
 The values returned by `current-input-port` and `current-output-port` can be altered temporarily by the convenience I/O procedures `with-input-from-file` and `with-output-to-file` (<<section_7.9.,Section 7.9>>).
 
+[#io:s33]
 [horizontal]
 procedure:: `(standard-input-port)`
 returns:: a fresh binary input port connected to the standard input stream
@@ -215,6 +230,7 @@ The procedures in this section allow bytevectors and strings to be used as input
 
 Binary ports created by the procedures in this section support the `port-position` and `set-port-position!` operations. Whether textual ports created by the procedures in this section support these operations is implementation-dependent.
 
+[#io:s34]
 [horizontal]
 procedure:: `(open-bytevector-input-port _bytevector_)`
 procedure:: `(open-bytevector-input-port _bytevector_ _?transcoder_)`
@@ -234,6 +250,7 @@ The effect of modifying `_bytevector_` after this procedure is called is unspeci
 
 There is no need to close a bytevector port; it's storage will be reclaimed automatically when it is no longer needed, as with any other object, and an open bytevector port does not tie up any operating system resources.
 
+[#io:s35]
 [horizontal]
 procedure:: `(open-string-input-port _string_)`
 returns:: a new textual input port that draws input from `_string_`
@@ -248,6 +265,7 @@ The effect of modifying `_string_` after this procedure is called is unspecified
 
 There is no need to close a string port; it's storage will be reclaimed automatically when it is no longer needed, as with any other object, and an open string port does not tie up any operating system resources.
 
+[#io:s36]
 [horizontal]
 procedure:: `(open-bytevector-output-port)`
 procedure:: `(open-bytevector-output-port _?transcoder_)`
@@ -272,6 +290,7 @@ The extraction procedure is a procedure that, when called without arguments, cre
 
 There is no need to close a bytevector port; it's storage will be reclaimed automatically when it is no longer needed, as with any other object, and an open bytevector port does not tie up any operating system resources.
 
+[#io:s37]
 [horizontal]
 procedure:: `(open-string-output-port)`
 returns:: two values, a new textual output port and an extraction procedure
@@ -290,6 +309,7 @@ The extraction procedure is a procedure that, when called without arguments, cre
 
 There is no need to close a string port; it's storage will be reclaimed automatically when it is no longer needed, as with any other object, and an open string port does not tie up any operating system resources.
 
+[#io:s38]
 [horizontal]
 procedure:: `(call-with-bytevector-output-port _procedure_)`
 procedure:: `(call-with-bytevector-output-port _procedure_ _?transcoder_)`
@@ -307,6 +327,7 @@ If `_?transcoder_` is present and not `#f`, it must be a transcoder, and `_proce
     tx)) ⇒ #vu8(97 98 99)
 ----
 
+[#io:s39]
 [horizontal]
 procedure:: `(call-with-string-output-port _procedure_)`
 returns:: a string containing the accumulated characters
@@ -314,6 +335,7 @@ libraries:: `(rnrs io ports)`, `(rnrs)`
 
 `_procedure_` is called with one argument, a string output port. If `_procedure_` returns, a string containing the characters accumulated in the port is created, the accumulated characters are cleared from the port, the port's position is reset to zero, and the string is returned from `call-with-string-output-port`. These actions occur each time `_procedure_` returns, if it returns multiple times due to the invocation of a continuation created while `_procedure_` is active.
 
+[#io:s40]
 `call-with-string-output-port` can be used along with `put-datum` to define a procedure, `object\->string`, that returns a string containing the printed representation of an object.
 
 [source,scheme,subs=""]
@@ -327,6 +349,7 @@ libraries:: `(rnrs io ports)`, `(rnrs)`
 
 === Section 7.5. Opening Custom Ports [[section_7.5.]]
 
+[#io:s41]
 [horizontal]
 procedure:: `(make-custom-binary-input-port _id_ _r!_ _gp_ _sp!_ _close_)`
 returns:: a new custom binary input port
@@ -350,6 +373,7 @@ These procedures allow programs to create ports from arbitrary byte streams. `_i
 
 If the new port is an input/output port and does not provide either a `_gp_` or `_sp!_` procedure, it may not be possible for the implementation to position the port properly if an output operation occurs after an input operation, due to input buffering that must be done to support `lookahead-u8` and is often done anyway for efficiency. For the same reason, a call to `port-position` after an input operation may not return an accurate position if the `_sp!_` procedure is not provided. Thus, programs that create custom binary input/output ports should generally provide both `_gp_` and `_sp!_` procedures.
 
+[#io:s42]
 [horizontal]
 procedure:: `(make-custom-textual-input-port _id_ _r!_ _gp_ _sp!_ _close_)`
 returns:: a new custom textual input port
@@ -379,11 +403,13 @@ It should, however, be possible to perform output reliably after reading if the 
 
 This section describes a variety of operations on ports that do not directly involve either reading from or writing to a port. The input and output operations are described in subsequent sections.
 
+[#io:s43]
 [horizontal]
 procedure:: `(port? _obj_)`
 returns:: `#t` if `_obj_` is a port, `#f` otherwise
 libraries:: `(rnrs io ports)`, `(rnrs)`
 
+[#io:s44]
 [horizontal]
 procedure:: `(input-port? _obj_)`
 returns:: `#t` if `_obj_` is an input or input/output port, `#f` otherwise
@@ -391,6 +417,7 @@ procedure:: `(output-port? _obj_)`
 returns:: `#t` if `_obj_` is an output or input/output port, `#f` otherwise
 libraries:: `(rnrs io ports)`, `(rnrs io simple)`, `(rnrs)`
 
+[#io:s45]
 [horizontal]
 procedure:: `(binary-port? _obj_)`
 returns:: `#t` if `_obj_` is a binary port, `#f` otherwise
@@ -398,6 +425,7 @@ procedure:: `(textual-port? _obj_)`
 returns:: `#t` if `_obj_` is a textual port, `#f` otherwise
 libraries:: `(rnrs io ports)`, `(rnrs)`
 
+[#io:s46]
 [horizontal]
 procedure:: `(close-port _port_)`
 returns:: unspecified
@@ -405,6 +433,7 @@ libraries:: `(rnrs io ports)`, `(rnrs)`
 
 If `_port_` is not already closed, `close-port` closes it, first flushing any buffered bytes or characters to the underlying stream if the port is an output port. Once a port has been closed, no more input or output operations may be performed on the port. Because the operating system may place limits on the number of file ports open at one time or restrict access to an open file, it is good practice to close any file port that will no longer be used for input or output. If the port is an output port, closing the port explicitly also ensures that buffered data is written to the underlying stream. Some Scheme implementations close file ports automatically after they become inaccessible to the program or when the Scheme program exits, but it is best to close file ports explicitly whenever possible. Closing a port that has already been closed has no effect.
 
+[#io:s47]
 [horizontal]
 procedure:: `(transcoded-port _binary-port_ _transcoder_)`
 returns:: a new textual port with the same byte stream as `_binary-port_`
@@ -414,6 +443,7 @@ This procedure returns a new textual port with transcoder `_transcoder_` and the
 
 As a side effect of creating the textual port, `_binary-port_` is closed to prevent read or write operations on `_binary-port_` from interfering with read and write operations on the new textual port. The underlying byte stream remains open, however, until the textual port is closed.
 
+[#io:s48]
 [horizontal]
 procedure:: `(port-transcoder _port_)`
 returns:: the transcoder associated with `_port_` if any, `#f` otherwise
@@ -421,6 +451,7 @@ libraries:: `(rnrs io ports)`, `(rnrs)`
 
 This procedure always returns `#f` for binary ports and may return `#f` for some textual ports.
 
+[#io:s49]
 [horizontal]
 procedure:: `(port-position _port_)`
 returns:: the port's current position
@@ -430,6 +461,7 @@ libraries:: `(rnrs io ports)`, `(rnrs)`
 
 A port may allow queries to determine its current position in the underlying stream of bytes or characters. If so, the procedure `port-has-port-position?` returns `#t` and `port-position` returns the current position. For binary ports, the position is always an exact nonnegative integer byte displacement from the start of the byte stream. For textual ports, the representation of a position is unspecified; it may not be an exact nonnegative integer and, even if it is, it may not represent either a byte or character displacement in the underlying stream. The position may be used at some later time to reset the position if the port supports `set-port-position!`. If `port-position` is called on a port that does not support it, an exception with condition type `&assertion` is raised.
 
+[#io:s50]
 [horizontal]
 procedure:: `(set-port-position! _port_ _pos_)`
 returns:: unspecified
@@ -441,8 +473,9 @@ A port may allow its current position to be moved directly to a different positi
 
 If `_port_` is a binary output port and the position is set beyond the current end of the data in the underlying stream, the stream is not extended until new data is written at that position. If new data is written at that position, the contents of each intervening position is unspecified. Binary ports created with `open-file-output-port` and `open-file-input/output-port` can always be extended in this manner within the limits of the underlying operating system. In other cases, attempts to set the port beyond the current end of data in the underlying object may result in an exception with condition type `&i/o-invalid-position`.
 
+[#desc:call-with-port]
 [horizontal]
-procedure:: `(call-with-port _port_ _procedure_)`
+procedure:: `(call-with-port _port_ _procedure_)` [[io:s51]]
 returns:: the values returned by `_procedure_`
 libraries:: `(rnrs io ports)`, `(rnrs)`
 
@@ -469,6 +502,7 @@ The example below copies the contents of infile to outfile, overwriting outfile 
 
 A definition of `call-with-port` is given on <<defn:call-with-port,page 135>>.
 
+[#io:s52]
 [horizontal]
 procedure:: `(output-port-buffer-mode _port_)`
 returns:: the symbol representing the buffer mode of `_port_`
@@ -478,6 +512,7 @@ libraries:: `(rnrs io ports)`, `(rnrs)`
 
 Procedures whose primary purpose is to read data from an input port are described in this section, along with related procedures for recognizing or creating end-of-file (eof) objects.
 
+[#io:s53]
 [horizontal]
 procedure:: `(eof-object? _obj_)`
 returns:: `#t` if `_obj_` is an eof object, `#f` otherwise
@@ -485,6 +520,7 @@ libraries:: `(rnrs io ports)`, `(rnrs io simple)`, `(rnrs)`
 
 The end-of-file object is returned by input operations, e.g., `get-datum`, when an input port has reached the end of input.
 
+[#io:s54]
 [horizontal]
 procedure:: `(eof-object)`
 returns:: the eof object
@@ -495,6 +531,7 @@ libraries:: `(rnrs io ports)`, `(rnrs io simple)`, `(rnrs)`
 (eof-object? (eof-object)) ⇒ #t
 ----
 
+[#io:s55]
 [horizontal]
 procedure:: `(get-u8 _binary-input-port_)`
 returns:: the next byte from `_binary-input-port_`, or the eof object
@@ -502,6 +539,7 @@ libraries:: `(rnrs io ports)`, `(rnrs)`
 
 If `_binary-input-port_` is at end of file, the eof object is returned. Otherwise, the next available byte is returned as an unsigned 8-bit quantity, i.e., an exact unsigned integer less than or equal to 255, and the port's position is advanced one byte.
 
+[#io:s56]
 [horizontal]
 procedure:: `(lookahead-u8 _binary-input-port_)`
 returns:: the next byte from `_binary-input-port_`, or the eof object
@@ -509,6 +547,7 @@ libraries:: `(rnrs io ports)`, `(rnrs)`
 
 If `_binary-input-port_` is at end of file, the eof object is returned. Otherwise, the next available byte is returned as an unsigned 8-bit quantity, i.e., an exact unsigned integer less than or equal to 255. In contrast to `get-u8`, `lookahead-u8` does not consume the byte it reads from the port, so if the next operation on the port is a call to `lookahead-u8` or `get-u8`, the same byte is returned.
 
+[#io:s57]
 [horizontal]
 procedure:: `(get-bytevector-n _binary-input-port_ _n_)`
 returns:: a nonempty bytevector containing up to `_n_` bytes, or the eof object
@@ -516,6 +555,7 @@ libraries:: `(rnrs io ports)`, `(rnrs)`
 
 `_n_` must be an exact nonnegative integer. If `_binary-input-port_` is at end of file, the eof object is returned. Otherwise, `get-bytevector-n` reads (as if with `get-u8`) as many bytes, up to `_n_`, as are available before the port is at end of file, and returns a new (nonempty) bytevector containing these bytes. The port's position is advanced past the bytes read.
 
+[#io:s58]
 [horizontal]
 procedure:: `(get-bytevector-n! _binary-input-port_ _bytevector_ _start_ _n_)`
 returns:: the count of bytes read or the eof object
@@ -525,6 +565,7 @@ libraries:: `(rnrs io ports)`, `(rnrs)`
 
 If `_binary-input-port_` is at end of file, the eof object is returned. Otherwise, `get-bytevector-n!` reads (as if with `get-u8`) as many bytes, up to `_n_`, as are available before the port is at end of file, stores the bytes in consecutive locations of `_bytevector_` starting at `_start_`, and returns the count of bytes read as an exact positive integer. The port's position is advanced past the bytes read.
 
+[#io:s59]
 [horizontal]
 procedure:: `(get-bytevector-some _binary-input-port_)`
 returns:: a nonempty bytevector or the eof object
@@ -532,6 +573,7 @@ libraries:: `(rnrs io ports)`, `(rnrs)`
 
 If `_binary-input-port_` is at end of file, the eof object is returned. Otherwise, `get-bytevector-some` reads (as if with `get-u8`) at least one byte and possibly more, and returns a bytevector containing these bytes. The port's position is advanced past the bytes read. The maximum number of bytes read by this operation is implementation-dependent.
 
+[#io:s60]
 [horizontal]
 procedure:: `(get-bytevector-all _binary-input-port_)`
 returns:: a nonempty bytevector or the eof object
@@ -539,6 +581,7 @@ libraries:: `(rnrs io ports)`, `(rnrs)`
 
 If `_binary-input-port_` is at end of file, the eof object is returned. Otherwise, `get-bytevector-all` reads (as if with `get-u8`) all of the bytes available before the port is at end of file and returns a bytevector containing these bytes. The port's position is advanced past the bytes read.
 
+[#io:s61]
 [horizontal]
 procedure:: `(get-char _textual-input-port_)`
 returns:: the next character from `_textual-input-port_`, or the eof object
@@ -546,6 +589,7 @@ libraries:: `(rnrs io ports)`, `(rnrs)`
 
 If `_textual-input-port_` is at end of file, the eof object is returned. Otherwise, the next available character is returned and the port's position is advanced one character. If `_textual-input-port_` is a transcoded port, the position in the underlying byte stream may advance by more than one byte.
 
+[#io:s62]
 [horizontal]
 procedure:: `(lookahead-char _textual-input-port_)`
 returns:: the next character from `_textual-input-port_`, or the eof object
@@ -568,6 +612,7 @@ If `_textual-input-port_` is at end of file, the eof object is returned. Otherwi
             [else '()]))))))
 ----
 
+[#io:s63]
 [horizontal]
 procedure:: `(get-string-n _textual-input-port_ _n_)`
 returns:: a nonempty string containing up to `_n_` characters, or the eof object
@@ -575,6 +620,7 @@ libraries:: `(rnrs io ports)`, `(rnrs)`
 
 `_n_` must be an exact nonnegative integer. If `_textual-input-port_` is at end of file, the eof object is returned. Otherwise, `get-string-n` reads (as if with `get-char`) as many characters, up to `_n_`, as are available before the port is at end of file, and returns a new (nonempty) string containing these characters. The port's position is advanced past the characters read.
 
+[#io:s64]
 [horizontal]
 procedure:: `(get-string-n! _textual-input-port_ _string_ _start_ _n_)`
 returns:: the count of characters read or the eof object
@@ -586,6 +632,7 @@ If `_textual-input-port_` is at end of file, the eof object is returned. Otherwi
 
 `get-string-n!` may be used to implement `string-set!` and `string-fill!`, as illustrated below, although this is not its primary purpose.
 
+[#backdoor-string-fill]
 [source,scheme,subs=""]
 ----
 (define string-set!
@@ -610,6 +657,7 @@ If `_textual-input-port_` is at end of file, the eof object is returned. Otherwi
   x) ⇒ ";-)"
 ----
 
+[#io:s65]
 [horizontal]
 procedure:: `(get-string-all _textual-input-port_)`
 returns:: a nonempty string or the eof object
@@ -617,6 +665,7 @@ libraries:: `(rnrs io ports)`, `(rnrs)`
 
 If `_textual-input-port_` is at end of file, the eof object is returned. Otherwise, `get-string-all` reads (as if with `get-char`) all of the characters available before the port is at end of file and returns a string containing these characters. The port's position is advanced past the characters read.
 
+[#io:s66]
 [horizontal]
 procedure:: `(get-line _textual-input-port_)`
 returns:: a string or the eof object
@@ -635,6 +684,7 @@ If `_textual-input-port_` is at end of file, the eof object is returned. Otherwi
     (list s1 s2 (port-eof? sip)))) ⇒ ("one" "two" #t)
 ----
 
+[#io:s67]
 [horizontal]
 procedure:: `(get-datum _textual-input-port_)`
 returns:: a Scheme datum object or the eof object
@@ -653,6 +703,7 @@ Otherwise, `get-datum` reads as many characters as necessary, and no more, to pa
     (list x1 c1 x2 (port-eof? sip)))) ⇒ (one #\space (two) #f)
 ----
 
+[#io:s68]
 [horizontal]
 procedure:: `(port-eof? _input-port_)`
 returns:: `#t` if `_input-port_` is at end-of-file, `#f` otherwise
@@ -664,6 +715,7 @@ This procedure is similar to `lookahead-u8` on a binary input port or `lookahead
 
 Procedures whose primary purpose is to send data to an output port are described in this section.
 
+[#io:s69]
 [horizontal]
 procedure:: `(put-u8 _binary-output-port_ _octet_)`
 returns:: unspecified
@@ -671,6 +723,7 @@ libraries:: `(rnrs io ports)`, `(rnrs)`
 
 `_octet_` must be an exact nonnegative integer less than or equal to 255. This procedure writes `_octet_` to `_binary-output-port_`, advancing the port's position by one byte.
 
+[#io:s70]
 [horizontal]
 procedure:: `(put-bytevector _binary-output-port_ _bytevector_)`
 procedure:: `(put-bytevector _binary-output-port_ _bytevector_ _start_)`
@@ -682,6 +735,7 @@ libraries:: `(rnrs io ports)`, `(rnrs)`
 
 This procedure writes the `_n_` bytes of `_bytevector_` starting at `_start_` to the port and advances the its position past the end of the bytes written.
 
+[#io:s71]
 [horizontal]
 procedure:: `(put-char _textual-output-port_ _char_)`
 returns:: unspecified
@@ -689,6 +743,7 @@ libraries:: `(rnrs io ports)`, `(rnrs)`
 
 This procedure writes `_char_` to `_textual-output-port_`, advancing the port's position by one character. If `_textual-output-port_` is a transcoded port, the position in the underlying byte stream may advance by more than one byte.
 
+[#io:s72]
 [horizontal]
 procedure:: `(put-string _textual-output-port_ _string_)`
 procedure:: `(put-string _textual-output-port_ _string_ _start_)`
@@ -700,6 +755,7 @@ libraries:: `(rnrs io ports)`, `(rnrs)`
 
 This procedure writes the `_n_` characters of `_string_` starting at `_start_` to the port and advances the its position past the end of the characters written.
 
+[#io:s73]
 [horizontal]
 procedure:: `(put-datum _textual-output-port_ _obj_)`
 returns:: unspecified
@@ -707,6 +763,7 @@ libraries:: `(rnrs io ports)`, `(rnrs)`
 
 This procedure writes an external representation of `_obj_` to `_textual-output-port_`. If `_obj_` does not have an external representation as a datum, the behavior is unspecified. The precise external representation is implementation-dependent, but when `_obj_` does have an external representation as a datum, `put-datum` should produce a sequence of characters that can later be read by `get-datum` as an object equivalent (in the sense of `equal?`) to `_obj_`. See <<section_12.5.,Section 12.5>> for an implementation of `put-datum`, `write`, and `display`.
 
+[#io:s74]
 [horizontal]
 procedure:: `(flush-output-port _output-port_)`
 returns:: unspecified
@@ -720,6 +777,7 @@ The procedures in this section are referred to as "convenience" I/O operators be
 
 The convenience input/output procedures may be called with or without an explicit port argument. If called without an explicit port argument, the current input or output port is used, as appropriate. For example, `(read-char)` and `(read-char (current-input-port))` both return the next character from the current input port.
 
+[#io:s75]
 [horizontal]
 procedure:: `(open-input-file _path_)`
 returns:: a new input port
@@ -740,6 +798,7 @@ The following shows the use of `open-input-file`, `read`, and `close-port` in an
         (cons x (f (read p))))))
 ----
 
+[#io:s76]
 [horizontal]
 procedure:: `(open-output-file _path_)`
 returns:: a new output port
@@ -761,6 +820,7 @@ The following shows the use of `open-output-file` to write a list of objects (th
   (close-port p))
 ----
 
+[#io:s77]
 [horizontal]
 procedure:: `(call-with-input-file _path_ _procedure_)`
 returns:: the values returned by `_procedure_`
@@ -796,6 +856,7 @@ The following example shows the use of `call-with-input-file` in an expression t
         (apply values v*)))))
 ----
 
+[#io:s78]
 [horizontal]
 procedure:: `(call-with-output-file _path_ _procedure_)`
 returns:: the values returned by `_procedure_`
@@ -832,6 +893,7 @@ The following shows the use of `call-with-output-file` to write a list of object
         (apply values v*)))))
 ----
 
+[#io:s79]
 [horizontal]
 procedure:: `(with-input-from-file _path_ _thunk_)`
 returns:: the values returned by `_thunk_`
@@ -843,6 +905,7 @@ libraries:: `(rnrs io simple)`, `(rnrs)`
 
 The behavior of `with-input-from-file` is unspecified if a continuation created outside of `_thunk_` is invoked before `_thunk_` returns. An implementation may close the port and restore the current input port to its old value---but it may not.
 
+[#io:s80]
 [horizontal]
 procedure:: `(with-output-to-file _path_ _thunk_)`
 returns:: the values returned by `_thunk_`
@@ -854,6 +917,7 @@ libraries:: `(rnrs io simple)`, `(rnrs)`
 
 The behavior of `with-output-to-file` is unspecified if a continuation created outside of `_thunk_` is invoked before `_thunk_` returns. An implementation may close the port and restore the current output port to its old value---but it may not.
 
+[#io:s81]
 [horizontal]
 procedure:: `(read)`
 procedure:: `(read _textual-input-port_)`
@@ -862,6 +926,7 @@ libraries:: `(rnrs io simple)`, `(rnrs)`
 
 If `_textual-input-port_` is not supplied, it defaults to the current input port. This procedure is otherwise equivalent to `get-datum`.
 
+[#io:s82]
 [horizontal]
 procedure:: `(read-char)`
 procedure:: `(read-char _textual-input-port_)`
@@ -870,6 +935,7 @@ libraries:: `(rnrs io simple)`, `(rnrs)`
 
 If `_textual-input-port_` is not supplied, it defaults to the current input port. This procedure is otherwise equivalent to `get-char`.
 
+[#io:s83]
 [horizontal]
 procedure:: `(peek-char)`
 procedure:: `(peek-char _textual-input-port_)`
@@ -878,6 +944,7 @@ libraries:: `(rnrs io simple)`, `(rnrs)`
 
 If `_textual-input-port_` is not supplied, it defaults to the current input port. This procedure is otherwise equivalent to `lookahead-char`.
 
+[#io:s84]
 [horizontal]
 procedure:: `(write _obj_)`
 procedure:: `(write _obj_ _textual-output-port_)`
@@ -886,6 +953,7 @@ libraries:: `(rnrs io simple)`, `(rnrs)`
 
 If `_textual-output-port_` is not supplied, it defaults to the current output port. This procedure is otherwise equivalent to `put-datum`, with the arguments reversed. See <<section_12.5.,Section 12.5>> for an implementation of `put-datum`, `write`, and `display`.
 
+[#io:s85]
 [horizontal]
 procedure:: `(display _obj_)`
 procedure:: `(display _obj_ _textual-output-port_)`
@@ -896,6 +964,7 @@ If `_textual-output-port_` is not supplied, it defaults to the current output po
 
 `display` is similar to `write` or `put-datum` but prints strings and characters found within `_obj_` directly. Strings are printed without quotation marks or escapes for special characters, as if by `put-string`, and characters are printed without the `#\` notation, as if by `put-char`. With `display`, the three-element list `(a b c)` and the two-element list `("a b" c)` both print as `(a b c)`. Because of this, `display` should not be used to print objects that are intended to be read with `read`. `display` is useful primarily for printing messages, with `_obj_` most often being a string. See <<section_12.5.,Section 12.5>> for an implementation of `put-datum`, `write`, and `display`.
 
+[#io:s86]
 [horizontal]
 procedure:: `(write-char _char_)`
 procedure:: `(write-char _char_ _textual-output-port_)`
@@ -904,6 +973,7 @@ libraries:: `(rnrs io simple)`, `(rnrs)`
 
 If `_textual-output-port_` is not supplied, it defaults to the current output port. This procedure is otherwise equivalent to `put-char`, with the arguments reversed.
 
+[#io:s87]
 [horizontal]
 procedure:: `(newline)`
 procedure:: `(newline _textual-output-port_)`
@@ -912,6 +982,7 @@ libraries:: `(rnrs io simple)`, `(rnrs)`
 
 If `_textual-output-port_` is not supplied, it defaults to the current output port. `newline` sends a line-feed character to the port.
 
+[#io:s88]
 [horizontal]
 procedure:: `(close-input-port _input-port_)`
 procedure:: `(close-output-port _output-port_)`
@@ -924,6 +995,7 @@ libraries:: `(rnrs io simple)`, `(rnrs)`
 
 Scheme has two standard operations, beyond file input/output, for interacting with the filesystem: `file-exists?` and `delete-file`. Most implementations support additional operations.
 
+[#io:s89]
 [horizontal]
 procedure:: `(file-exists? _path_)`
 returns:: `#t` if the file named by `_path_` exists, `#f` otherwise
@@ -931,6 +1003,7 @@ libraries:: `(rnrs files)`, `(rnrs)`
 
 `_path_` must be a string or some other implementation-dependent value that names a file. Whether `file-exists?` follows symbolic links is unspecified.
 
+[#io:s90]
 [horizontal]
 procedure:: `(delete-file _path_)`
 returns:: unspecified
@@ -944,6 +1017,7 @@ The procedures described in this section encode or decode character sequences, c
 
 The first two procedures, `bytevector\->string` and `string\->bytevector`, take an explicit transcoder argument that determines the character encodings, eol styles, and error-handling modes. The others perform specific Unicode conversions with an implicit eol-style of `none` and error-handling mode of `replace`.
 
+[#io:s91]
 [horizontal]
 procedure:: `(bytevector\->string _bytevector_ _transcoder_)`
 returns:: a string containing the characters encoded in `_bytevector_`
@@ -958,6 +1032,7 @@ This operation, at least in effect, creates a bytevector input port with the spe
   (bytevector->string #vu8(97 98 99) tx)) ⇒ "abc"
 ----
 
+[#io:s92]
 [horizontal]
 procedure:: `(string\->bytevector _string_ _transcoder_)`
 returns:: a bytevector containing the encodings of the characters in `_string_`
@@ -972,11 +1047,13 @@ This operation, at least in effect, creates a bytevector output port with the sp
   (string->bytevector "abc" tx)) ⇒ #vu8(97 98 99)
 ----
 
+[#io:s93]
 [horizontal]
 procedure:: `(string\->utf8 _string_)`
 returns:: a bytevector containing the UTF-8 encoding of `_string_`
 libraries:: `(rnrs bytevectors)`, `(rnrs)`
 
+[#io:s94]
 [horizontal]
 procedure:: `(string\->utf16 _string_)`
 procedure:: `(string\->utf16 _string_ _endianness_)`
@@ -987,11 +1064,13 @@ libraries:: `(rnrs bytevectors)`, `(rnrs)`
 
 `_endianness_` must be one of the symbols `big` or `little`. If `_endianness_` is not provided or is the symbol `big`, `string\->utf16` returns the UTF-16BE encoding of `_string_` and `string\->utf32` returns the UTF-32BE encoding of `_string_`. If `_endianness_` is the symbol `little`, `string\->utf16` returns the UTF-16LE encoding of `_string_` and `string\->utf32` returns the UTF-32LE encoding of `_string_`. No byte-order mark is included in the encoding.
 
+[#io:s95]
 [horizontal]
 procedure:: `(utf8\->string _bytevector_)`
 returns:: a string containing the UTF-8 decoding of `_bytevector_`
 libraries:: `(rnrs bytevectors)`, `(rnrs)`
 
+[#io:s96]
 [horizontal]
 procedure:: `(utf16\->string _bytevector_ _endianness_)`
 procedure:: `(utf16\->string _bytevector_ _endianness_ _endianness-mandatory?_)`

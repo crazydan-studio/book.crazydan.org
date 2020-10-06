@@ -106,7 +106,8 @@ Record types created in this manner are still distinct from record types created
 (g (f)) ⇒ #f
 ----
 
-[[page:record_uid]] Even this can be overridden by including a uid (unique id) in the `nongenerative` clause:
+[#page:record-uid]
+Even this can be overridden by including a uid (unique id) in the `nongenerative` clause: [[records:s6]]
 
 [source,scheme,subs=""]
 ----
@@ -123,7 +124,8 @@ Record types created in this manner are still distinct from record types created
 
 The uid may be any identifier, but programmers are encouraged to select uids from the RFC 4122 UUID namespace <<ref20>>, possibly with the record-type name as a prefix.
 
-[[page:parent_type]] A record type may be defined as a subtype of an existing "parent" type with a `parent` clause that declares the name of the existing record type. If a parent is specified, the new "child" record type inherits the parent record's fields, and each instance of the child type is considered to be an instance of the parent type, so that accessors and mutators for the parent type may be used on instances of the child type.
+[#page:parent-type]
+A record type may be defined as a subtype of an existing "parent" type with a `parent` clause that declares the name of the existing record type. If a parent is specified, the new "child" record type inherits the parent record's fields, and each instance of the child type is considered to be an instance of the parent type, so that accessors and mutators for the parent type may be used on instances of the child type.
 
 [source,scheme,subs=""]
 ----
@@ -156,7 +158,8 @@ Only one new accessor is created for `cpoint`, the one for the new field `color`
 (cpoint-color cp) ⇒ red
 ----
 
-[[page:protocols]] As the examples given so far illustrate, the default constructor defined by `define-record-type` accepts as many arguments as the record has fields, including parent fields, and parent's parent fields, and so on. The programmer may override the default and specify the arguments to the constructor for the new type and how it determines the initial values of the constructed record's fields, via the `protocol` clause. The following definition creates a `point` record with three fields: `x`, `y`, and `d`, where `d` represents the displacement from the origin. The constructor still takes only two arguments, the `x` and `y` values, and initializes `d` to the square root of the sum of the squares of `x` and `y`.
+[#page:protocols]
+As the examples given so far illustrate, the default constructor defined by `define-record-type` accepts as many arguments as the record has fields, including parent fields, and parent's parent fields, and so on. The programmer may override the default and specify the arguments to the constructor for the new type and how it determines the initial values of the constructed record's fields, via the `protocol` clause. The following definition creates a `point` record with three fields: `x`, `y`, and `d`, where `d` represents the displacement from the origin. The constructor still takes only two arguments, the `x` and `y` values, and initializes `d` to the square root of the sum of the squares of `x` and `y`.
 
 [source,scheme,subs=""]
 ----
@@ -196,6 +199,7 @@ If a parent record is specified, the construction protocol becomes more involved
 
 Because a parent clause is present, the procedure value of the expression within the `protocol` clause receives a procedure `_pargs_\->__new__` that, when applied to parent arguments, returns a `_new_` procedure. The `_new_` procedure, when passed the values of the child fields, returns the result of applying the parent protocol to an appropriate `_new_` procedure of its own. In this case, `_pargs_\->__new__` is passed the values of the child constructor's second and third arguments (the `_x_` and `_y_` values) and the resulting `_new_` procedure is passed the value of the child constructor's first argument (the color). Thus, the protocol supplied in this example effectively reverses the normal order of arguments in which the parent arguments come before the child arguments, while arranging to pass along the arguments needed by the parent protocol.
 
+[#records:s12]
 The default protocol is equivalent to
 
 [source,scheme,subs=""]
@@ -218,6 +222,7 @@ Use of the `protocol` clause insulates the child record definition from some cha
 
 Additional details and options for `define-record-type` are given in its formal description below.
 
+[#records:s13]
 [horizontal]
 syntax:: `(define-record-type _record-name_ _clause_ \...)`
 syntax:: `(define-record-type (_record-name_ _constructor_ _pred_) _clause_ \...)`
@@ -295,6 +300,7 @@ If `_uid_` is not the uid of an existing record type, or if no `nongenerative` c
 
 The `define-record-type` form is designed in such a way that it is normally possible for a compiler to determine the shapes of the record types it defines, including the offsets for all fields. This guarantee does not hold, however, when the `parent-rtd` clause is used, since the parent rtd might not be determinable until run time. Thus, the `parent` clause is preferred over the `parent-rtd` clause whenever the `parent` clause suffices.
 
+[#records:s16]
 [horizontal]
 syntax:: `fields`
 syntax:: `mutable`
@@ -313,6 +319,7 @@ These identifiers are auxiliary keywords for `define-record-type`. It is a synta
 
 The procedural (`make-record-type-descriptor`) interface may also be used to create new record types. The procedural interface is more flexible than the syntactic interface, but this flexibility can lead to less readable and efficient programs, so programmers should use the syntactic interface whenever it suffices.
 
+[#records:s20]
 [horizontal]
 procedure:: `(make-record-type-descriptor _name_ _parent_ _uid_ _s?_ _o?_ _fields_)`
 returns:: a record-type descriptor (rtd) for a new or existing record type
@@ -320,9 +327,9 @@ libraries:: `(rnrs records procedural)`, `(rnrs)`
 
 `_name_` must be a symbol, `_parent_` must be `#f` or the rtd of a non-sealed record type, `_uid_` must be `#f` or a symbol, and `_fields_` must be a vector, each element of which is a two-element list of the form `(mutable _field-name_)` or `(immutable _field-name_)`. The field names `_field-name_ \...` must be symbols and need not be distinct from each other.
 
-If `_uid_` is `#f` or is not the uid of an existing record type, this procedure creates a new record type and returns a record-type descriptor (rtd) for the new type. The type has the parent type (<<page:parent_type,page 325>>) described by `_parent_`, if nonfalse; the uid specified by `_uid_`, if nonfalse; and the fields specified by `_fields_`. It is sealed (<<page:sealed,page 330>>) if `_s?_` is nonfalse. It is opaque (<<page:sealed,page 330>>) if `_opaque_` is nonfalse or the parent (if specified) is opaque. The name of the new record type is `_name_` and the names of the fields are `_field-name_ \...`.
+If `_uid_` is `#f` or is not the uid of an existing record type, this procedure creates a new record type and returns a record-type descriptor (rtd) for the new type. The type has the parent type (<<page:parent-type,page 325>>) described by `_parent_`, if nonfalse; the uid specified by `_uid_`, if nonfalse; and the fields specified by `_fields_`. It is sealed (<<page:sealed,page 330>>) if `_s?_` is nonfalse. It is opaque (<<page:sealed,page 330>>) if `_opaque_` is nonfalse or the parent (if specified) is opaque. The name of the new record type is `_name_` and the names of the fields are `_field-name_ \...`.
 
-If `_uid_` is nonfalse and is the uid (<<page:parent_type,page 325>>) of an existing record type, the `_parent_`, `_fields_`, `_s?_`, and `_o?_` arguments must match the corresponding characteristics of the existing record type. That is, `_parent_` must be the same (by `eqv?`); the number of fields must be the same; the fields must have the same names, be in the same order, and have the same mutability; `_s?_` must be false if and only if the existing record type is sealed; and, if a parent is not specified or is not opaque, `_o?_` must be false if and only if the existing record type is opaque. If this is the case, `make-record-type-descriptor` returns the rtd for the existing record type. Otherwise, an exception with condition type `&assertion` is raised.
+If `_uid_` is nonfalse and is the uid (<<page:parent-type,page 325>>) of an existing record type, the `_parent_`, `_fields_`, `_s?_`, and `_o?_` arguments must match the corresponding characteristics of the existing record type. That is, `_parent_` must be the same (by `eqv?`); the number of fields must be the same; the fields must have the same names, be in the same order, and have the same mutability; `_s?_` must be false if and only if the existing record type is sealed; and, if a parent is not specified or is not opaque, `_o?_` must be false if and only if the existing record type is opaque. If this is the case, `make-record-type-descriptor` returns the rtd for the existing record type. Otherwise, an exception with condition type `&assertion` is raised.
 
 Using the rtd returned by `make-record-type-descriptor`, programs can generate constructors, type predicates, field accessors, and field mutators dynamically. The following code demonstrates how the procedural interface might be used to create a `point` record type and associated definitions similar to those of the second `point` record definition in <<section_9.1.,Section 9.1>>, with a mutable `x` field and an immutable `y` field.
 
@@ -341,6 +348,7 @@ Using the rtd returned by `make-record-type-descriptor`, programs can generate c
 
 See the additional examples given at the end of this section.
 
+[#records:s23]
 [horizontal]
 procedure:: `(record-type-descriptor? _obj_)`
 returns:: `#f` if `_obj_` is a record-type descriptor, otherwise `#f`
@@ -348,6 +356,7 @@ libraries:: `(rnrs records procedural)`, `(rnrs)`
 
 See the examples given at the end of this section.
 
+[#records:s24]
 [horizontal]
 procedure:: `(make-record-constructor-descriptor _rtd_ _parent-rcd_ _protocol_)`
 returns:: a record-constructor descriptor (rcd)
@@ -361,6 +370,7 @@ The `_protocol_` argument must be a procedure or `#f`. If it is `#f`, a default 
 
 See the examples given at the end of this section.
 
+[#records:s28]
 [horizontal]
 syntax:: `(record-type-descriptor _record-name_)`
 returns:: the rtd for the record type identified by `record-name`
@@ -370,6 +380,7 @@ libraries:: `(rnrs records syntactic)`, `(rnrs)`
 
 Each record definition creates, behind the scenes, an rtd and rcd for the defined record type. These procedures allow the rtd and rcd to be obtained and used like any other rtd or rcd. `_record-name_` must be the name of a record previously defined via `define-record-type`.
 
+[#records:s29]
 [horizontal]
 procedure:: `(record-constructor _rcd_)`
 returns:: a record constructor for the record type encapsulated within `_rcd_`
@@ -379,6 +390,7 @@ The behavior of the record constructor is determined by the protocol and parent 
 
 See the examples given at the end of this section.
 
+[#records:s30]
 [horizontal]
 procedure:: `(record-predicate _rtd_)`
 returns:: a predicate for `_rtd_`
@@ -388,6 +400,7 @@ This procedure returns a predicate that accepts one argument and returns `#t` if
 
 See the examples given at the end of this section.
 
+[#records:s31]
 [horizontal]
 procedure:: `(record-accessor _rtd_ _idx_)`
 returns:: an accessor for the field of `_rtd_` specified by `_idx_`
@@ -399,6 +412,7 @@ A child rtd cannot be used directly to create accessors for parent fields. To cr
 
 See the examples given at the end of this section.
 
+[#records:s32]
 [horizontal]
 procedure:: `(record-mutator _rtd_ _idx_)`
 returns:: a mutator for the field of `_rtd_` specified by `_idx_`
@@ -469,8 +483,10 @@ The following example illustrates the creation of parent and child record types,
 
 This section describes various procedures for asking questions about or extracting information from record-type descriptors (rtds). It also describes the `record-rtd` procedure, with which the rtd of a non-opaque record instance may be extracted, allowing the record type of the instance to be inspected and, via record accessors and mutators generated from the rtd, the record itself to be inspected or modified. This is a powerful feature that permits the coding of portable record printers and inspectors.
 
+[#records:s33]
 The record-type descriptor cannot be extracted from an instance of an opaque record type; this is the feature that distinguishes opaque from non-opaque record types.
 
+[#records:s34]
 [horizontal]
 procedure:: `(record-type-name _rtd_)`
 returns:: the name associated with `_rtd_`
@@ -489,6 +505,7 @@ libraries:: `(rnrs records inspection)`, `(rnrs)`
 (record->name (make-dim 10 15 6)) ⇒ #f
 ----
 
+[#records:s35]
 [horizontal]
 procedure:: `(record-type-parent _rtd_)`
 returns:: the parent of `_rtd_`, or `#f` if it has no parent
@@ -502,6 +519,7 @@ libraries:: `(rnrs records inspection)`, `(rnrs)`
 (record-type-parent (record-type-descriptor cpoint)) ⇒ #&lt;rtd&gt;
 ----
 
+[#records:s36]
 [horizontal]
 procedure:: `(record-type-uid _rtd_)`
 returns:: the uid of `_rtd_`, or `#f` if it has no uid
@@ -521,6 +539,7 @@ Whether a record type created without a programmer-supplied uid actually has one
                              e40cc926-8cf4-4559-a47c-cac636630314
 ----
 
+[#records:s37]
 [horizontal]
 procedure:: `(record-type-generative? _rtd_)`
 returns:: `#t` if the record type described by `_rtd_` is generative, `#f` otherwise
@@ -550,6 +569,7 @@ libraries:: `(rnrs records inspection)`, `(rnrs)`
 (record-type-opaque? rtd) ⇒ #t
 ----
 
+[#records:s38]
 [horizontal]
 procedure:: `(record-type-field-names _rtd_)`
 returns:: a vector containing the names of the fields of the type described by `_rtd_`
@@ -567,6 +587,7 @@ The vector returned by this procedure is immutable: the effect on `_rtd_` of mod
   (record-type-descriptor cpoint)) ⇒ #(color)
 ----
 
+[#records:s39]
 [horizontal]
 procedure:: `(record-field-mutable? _rtd_ _idx_)`
 returns:: `#t if the specified field of _rtd_` is mutable, `#f` otherwise
@@ -583,6 +604,7 @@ libraries:: `(rnrs records inspection)`, `(rnrs)`
 (record-field-mutable? (record-type-descriptor cpoint) 0) ⇒ #f
 ----
 
+[#records:s40]
 [horizontal]
 procedure:: `(record? _obj_)`
 returns:: `#t` if `_obj_` is a non-opaque record instance, `#f` otherwise
@@ -603,6 +625,7 @@ When passed an instance of an opaque record type, `record?` returns `#f`. While 
 (record? q) ⇒ #f
 ----
 
+[#records:s41]
 [horizontal]
 procedure:: `(record-rtd _record_)`
 returns:: the record-type descriptor (rtd) of `_record_`

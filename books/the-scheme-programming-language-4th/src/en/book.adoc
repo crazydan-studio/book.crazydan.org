@@ -139,6 +139,13 @@ document.querySelectorAll('a')
                 node.outerHTML='[#'+(name.replace(/^\.\/(.+)$/, '$1'))+']<br>';
             }
         })
+document.querySelectorAll('a')
+        .forEach(function(node) {
+            var name=node.name;
+            if (name && name.match(/^[^#.\/]+$/)) {
+                node.outerHTML='[#'+name+']<br>';
+            }
+        })
 
 // Highlight the code blocks and italic text
 document.querySelectorAll('tt')
@@ -174,3 +181,20 @@ document.querySelectorAll('i')
 |`([^=]) Exercise ([\d\.]+\d)`
 |++$1 <<exercise_$2,Exercise $2>>++
 |===
+
+- Check the lost links +
++
+[source,javascript,subs=""]
+----
+var lostAnchors=[];
+document.querySelector('#content')
+        .querySelectorAll('a[href^="#"]')
+        .forEach(function(node) {
+            var anchor = node.getAttribute('href');
+
+            if (!document.querySelector('[id="' + anchor.replace(/^#/, '') + '"]')) {
+                lostAnchors.push(anchor);
+            }
+        });
+console.log(lostAnchors.join('\n'));
+----

@@ -7,12 +7,14 @@ This chapter introduces the syntactic forms and procedures that serve as control
 
 === Section 5.1. Procedure Application [[section_5.1.]]
 
+[#control:s1]
 [horizontal]
 syntax:: `(_expr~0~_ _expr~1~_ \...)`
 returns:: values of applying the value of `_expr~0~_` to the values of `_expr~1~_ \...`
 
 Procedure application is the most basic Scheme control structure. Any structured form without a syntax keyword in the first position is a procedure application. The expressions `_expr~0~_` and `_expr~1~_ \...` are evaluated; each should evaluate to a single value. After each of these expressions has been evaluated, the value of `_expr~0~_` is applied to the values of `_expr~1~_ \...`. If `_expr~0~_` does not evaluate to a procedure, or if the procedure does not accept the number of arguments provided, an exception with condition type `&assertion` is raised.
 
+[#control:s2]
 The order in which the procedure and argument expressions are evaluated is unspecified. It may be left to right, right to left, or any other order. The evaluation is guaranteed to be sequential, however: whatever order is chosen, each expression is fully evaluated before evaluation of the next is started.
 
 [source,scheme,subs="quotes,replacements"]
@@ -29,7 +31,7 @@ The order in which the procedure and argument expressions are evaluated is unspe
 
 [#desc:apply]
 [horizontal]
-procedure:: `(apply _procedure_ _obj_ \... _list_)`
+procedure:: `(apply _procedure_ _obj_ \... _list_)` [[control:s3]]
 returns:: the values of applying `_procedure_` to `_obj_ \...` and the elements of `_list_`
 libraries:: `(rnrs base)`, `(rnrs)`
 
@@ -63,6 +65,7 @@ libraries:: `(rnrs base)`, `(rnrs)`
 
 === Section 5.2. Sequencing [[section_5.2.]]
 
+[#control:s4]
 [horizontal]
 syntax:: `(begin _expr~1~_ _expr~2~_ \...)`
 returns:: the values of the last subexpression
@@ -104,12 +107,14 @@ The bodies of many syntactic forms, including `lambda`, `case-lambda`, `let`, `l
 
 === Section 5.3. Conditionals [[section_5.3.]]
 
+[#control:s8]
 [horizontal]
 syntax:: `(if _test_ _consequent_ _alternative_)`
 syntax:: `(if _test_ _consequent_)`
 returns:: the values of `_consequent_` or `_alternative_` depending on the value of `_test_`
 libraries:: `(rnrs base)`, `(rnrs)`
 
+[#control:s9]
 The `_test_`, `_consequent_`, and `_alternative_` subforms must be expressions. If `_test_` evaluates to a true value (anything other than `#f`), `consequent` is evaluated and its values are returned. Otherwise, `alternative` is evaluated and its values are returned. With the second, "one-armed," form, which has no `_alternative_`, the result is unspecified if `_test_` evaluates to false.
 
 [source,scheme,subs="quotes,replacements"]
@@ -137,6 +142,7 @@ The `_test_`, `_consequent_`, and `_alternative_` subforms must be expressions. 
       (list 'plus 4))) ⇒ (minus 4)
 ----
 
+[#control:s10]
 [horizontal]
 procedure:: `(not _obj_)`
 returns:: `#t` if `_obj_` is false, `#f` otherwise
@@ -152,6 +158,7 @@ libraries:: `(rnrs base)`, `(rnrs)`
 (not (< 4 5)) ⇒ #f
 ----
 
+[#control:s11]
 [horizontal]
 syntax:: `(and _expr_ \...)`
 returns:: see below
@@ -171,6 +178,7 @@ If no subexpressions are present, the `and` form evaluates to `#t`. Otherwise, `
 (and '(a b) '(c d) '(e f)) ⇒ (e f)
 ----
 
+[#control:s12]
 [horizontal]
 syntax:: `(or _expr_ \...)`
 returns:: see below
@@ -189,6 +197,7 @@ If no subexpressions are present, the `or` form evaluates to `#f`. Otherwise, `o
 (or #f '(a b) '(c d)) ⇒ (a b)
 ----
 
+[#control:s13]
 [horizontal]
 syntax:: `(cond _clause~1~_ _clause~2~_ \...)`
 returns:: see below
@@ -242,6 +251,7 @@ See <<defn:cond,page 305>> for a syntax definition of `cond`.
 (select 'e) ⇒ 0
 ----
 
+[#control:s16]
 [horizontal]
 syntax:: `else`
 syntax:: `\=>`
@@ -249,6 +259,7 @@ libraries:: `(rnrs base)`, `(rnrs exceptions)`, `(rnrs)`
 
 These identifiers are auxiliary keywords for `cond`. Both also serve as auxiliary keywords for `guard`, and `else` also serves as an auxiliary keyword for `case`. It is a syntax violation to reference these identifiers except in contexts where they are recognized as auxiliary keywords.
 
+[#control:s17]
 [horizontal]
 syntax:: `(when _test-expr_ _expr~1~_ _expr~2~_ \...)`
 syntax:: `(unless _test-expr_ _expr~1~_ _expr~2~_ \...)`
@@ -308,6 +319,7 @@ or in terms of `when` as follows:
      (when (not _e~0~_) _e~1~_ _e~2~_ \...)]))
 ----
 
+[#control:s18]
 [horizontal]
 syntax:: `(case _expr~0~_ _clause~1~_ _clause~2~_ \...)`
 returns:: see below
@@ -346,6 +358,7 @@ See <<defn:case,page 306>> for a syntax definition of `case`.
 
 === Section 5.4. Recursion and Iteration [[section_5.4.]]
 
+[#control:s20]
 [horizontal]
 syntax:: `(let _name_ ((_var_ _expr_) \...) _body~1~_ _body~2~_ \...)`
 returns:: values of the final body expression
@@ -401,6 +414,7 @@ The version above is non-tail-recursive when a divisor is found and tail-recursi
         [else (f (+ i 1) ls)]))))
 ----
 
+[#control:s25]
 [horizontal]
 syntax:: `(do ((_var_ _init_ _update_) \...) (_test_ _result_ \...) _expr_ \...)`
 returns:: the values of the last `_result_` expression
@@ -473,6 +487,7 @@ vec ⇒ #(2 4 6 8 10)
 
 When a program must recur or iterate over the elements of a list, a mapping or folding operator is often more convenient. These operators abstract away from null checks and explicit recursion by applying a procedure to the elements of the list one by one. A few mapping operators are also available for vectors and strings.
 
+[#control:s30]
 [horizontal]
 procedure:: `(map _procedure_ _list~1~_ _list~2~_ \...)`
 returns:: list of results
@@ -515,7 +530,7 @@ No error checking is done by this version of `map`; `f` is assumed to be a proce
 
 [#desc:for-each]
 [horizontal]
-procedure:: `(for-each _procedure_ _list~1~_ _list~2~_ \...)`
+procedure:: `(for-each _procedure_ _list~1~_ _list~2~_ \...)` [[control:s33]]
 returns:: unspecified
 libraries:: `(rnrs base)`, `(rnrs)`
 
@@ -539,6 +554,7 @@ libraries:: `(rnrs base)`, `(rnrs)`
   same-count) ⇒ 3
 ----
 
+[#control:s36]
 [horizontal]
 procedure:: `(exists _procedure_ _list~1~_ _list~2~_ \...)`
 returns:: see below
@@ -574,6 +590,7 @@ The lists `_list~1~_ _list~2~_ \...` must be of the same length. `_procedure_` s
                 (exists (car ls) (cdr ls) (map cdr more))))))))
 ----
 
+[#control:s37]
 [horizontal]
 procedure:: `(for-all _procedure_ _list~1~_ _list~2~_ \...)`
 returns:: see below
@@ -609,6 +626,7 @@ The lists `_list~1~_ _list~2~_ \...` must be of the same length. `_procedure_` s
                  (for-all (car ls) (cdr ls) (map cdr more))))))))
 ----
 
+[#control:s38]
 [horizontal]
 procedure:: `(fold-left _procedure_ _obj_ _list~1~_ _list~2~_ \...)`
 returns:: see below
@@ -634,6 +652,7 @@ The `_list_` arguments should all have the same length. `_procedure_` should acc
   '(the be: or)) ⇒ (to be or not to be: that is the question)
 ----
 
+[#control:s41]
 [horizontal]
 procedure:: `(fold-right _procedure_ _obj_ _list~1~_ _list~2~_ \...)`
 returns:: see below
@@ -658,6 +677,7 @@ The `_list_` arguments should all have the same length. `_procedure_` should acc
   '(is sweet gotta see tomorrow))
 ----
 
+[#control:s44]
 [horizontal]
 procedure:: `(vector-map _procedure_ _vector~1~_ _vector~1~_ \...)`
 returns:: vector of results
@@ -675,6 +695,7 @@ libraries:: `(rnrs base)`, `(rnrs)`
 
 While the order in which the applications themselves occur is not specified, the order of the values in the output vector is the same as that of the corresponding values in the input vectors.
 
+[#control:s47]
 [horizontal]
 procedure:: `(vector-for-each _procedure_ _vector~1~_ _vector~2~_ \...)`
 returns:: unspecified
@@ -694,6 +715,7 @@ libraries:: `(rnrs base)`, `(rnrs)`
   same-count) ⇒ 3
 ----
 
+[#control:s50]
 [horizontal]
 procedure:: `(string-for-each _procedure_ _string~1~_ _string~2~_ \...)`
 returns:: unspecified
@@ -716,6 +738,7 @@ libraries:: `(rnrs base)`, `(rnrs)`
 
 Continuations in Scheme are procedures that represent the remainder of a computation from a given point in the computation. They may be obtained with `call-with-current-continuation`, which can be abbreviated to `call/cc`.
 
+[#control:s54]
 [horizontal]
 procedure:: `(call/cc _procedure_)`
 procedure:: `(call-with-current-continuation _procedure_)`
@@ -751,11 +774,13 @@ Additional examples are given in Sections <<section_3.3.,3.3>> and <<section_12.
 
 The current continuation is typically represented internally as a stack of procedure activation records, and obtaining the continuation involves encapsulating the stack within a procedural object. Since an encapsulated stack has indefinite extent, some mechanism must be used to preserve the stack contents indefinitely. This can be done with surprising ease and efficiency and with no impact on programs that do not use continuations <<ref17>>.
 
+[#control:s56]
 [horizontal]
 procedure:: `(dynamic-wind _in_ _body_ _out_)`
 returns:: values resulting from the application of `_body_`
 libraries:: `(rnrs base)`, `(rnrs)`
 
+[#control:s57]
 `dynamic-wind` offers "protection" from continuation invocation. It is useful for performing tasks that must be performed whenever control enters or leaves `_body_`, either normally or by continuation application.
 
 The three arguments `_in_`, `_body_`, and `_out_` must be procedures and should accept zero arguments, i.e., they should be `_thunks_`. Before applying `_body_`, and each time `_body_` is entered subsequently by the application of a continuation created within `_body_`, the `_in_` thunk is applied. Upon normal exit from `_body_` and each time `_body_` is exited by the application of a continuation created outside `_body_`, the `_out_` thunk is applied.
@@ -773,6 +798,7 @@ The following example demonstrates the use of `dynamic-wind` to be sure that an 
     (lambda () (close-port p))))
 ----
 
+[#control:s59]
 Common Lisp provides a similar facility (`unwind-protect`) for protection from nonlocal exits. This is often sufficient. `unwind-protect` provides only the equivalent to `_out_`, however, since Common Lisp does not support fully general continuations. Here is how `unwind-protect` might be specified with `dynamic-wind`.
 
 [source,scheme,subs="quotes,replacements"]
@@ -907,6 +933,7 @@ The test `(not (eq? save winders))` performed in `call/cc` is not strictly neces
 
 The syntactic form `delay` and the procedure `force` may be used in combination to implement _lazy evaluation_. An expression subject to lazy evaluation is not evaluated until its value is required and, once evaluated, is never reevaluated.
 
+[#control:s65]
 [horizontal]
 syntax:: `(delay _expr_)`
 returns:: a promise
@@ -1036,6 +1063,7 @@ Neither implementation is quite right, since `force` must raise an exception wit
 
 While all Scheme primitives and most user-defined procedures return exactly one value, some programming problems are best solved by returning zero values, more than one value, or even a variable number of values. For example, a procedure that partitions a list of values into two sublists needs to return two values. While it is possible for the producer of multiple values to package them into a data structure and for the consumer to extract them, it is often cleaner to use the built-in multiple-values interface. This interface consists of two procedures: `values` and `call-with-values`. The former produces multiple values and the latter links procedures that produce multiple-value values with procedures that consume them.
 
+[#control:s70]
 [horizontal]
 procedure:: `(values _obj_ \...)`
 returns:: `_obj_ \...`
@@ -1061,6 +1089,7 @@ The procedure `values` accepts any number of arguments and simply passes (return
                         (b c)
 ----
 
+[#control:s71]
 [horizontal]
 procedure:: `(call-with-values _producer_ _consumer_)`
 returns:: see below
@@ -1310,6 +1339,7 @@ Multiple values can be implemented more efficiently <<ref2>>, but this code serv
 
 Scheme's `eval` procedure allows programmers to write programs that construct and evaluate other programs. This ability to do run-time _meta programming_ should not be overused but is handy when needed.
 
+[#control:s80]
 [horizontal]
 procedure:: `(eval _obj_ _environment_)`
 returns:: values of the Scheme expression represented by `_obj_` in `_environment_`
@@ -1328,6 +1358,7 @@ If `_obj_` does not represent a syntactically valid expression, `eval` raises an
 (eval '(cons 3 4) (environment)) ⇒ _exception_
 ----
 
+[#control:s81]
 [horizontal]
 procedure:: `(environment _import-spec_ \...)`
 returns:: an environment
@@ -1341,6 +1372,7 @@ libraries:: `(rnrs eval)`
 (eval '($cons* 3 4 (* 5 8)) env) ⇒ (3 4 . 40)
 ----
 
+[#control:s82]
 [horizontal]
 procedure:: `(null-environment _version_)`
 procedure:: `(scheme-report-environment _version_)`

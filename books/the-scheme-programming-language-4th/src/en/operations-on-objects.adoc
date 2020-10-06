@@ -1160,10 +1160,9 @@ If a program must distinguish between finding `#f` in the list and finding no el
 (find not '(1 a #f 55)) ⇒ #f
 ----
 
-[#objects:s58]
 [#page:assq]
 [horizontal]
-procedure:: `(assq _obj_ _alist_)`
+procedure:: `(assq _obj_ _alist_)` [[objects:s58]]
 procedure:: `(assv _obj_ _alist_)`
 procedure:: `(assoc _obj_ _alist_)`
 returns:: first element of `_alist_` whose car is equivalent to `_obj_`, or `#f`
@@ -1711,10 +1710,9 @@ If `_real_` is exactly between two integers, the closest even integer is returne
 (round 3.5) ⇒ 4.0
 ----
 
-[#objects:s105]
 [#page:abs]
 [horizontal]
-procedure:: `(abs _real_)`
+procedure:: `(abs _real_)` [[objects:s105]]
 returns:: the absolute value of `_real_`
 libraries:: `(rnrs base)`, `(rnrs)`
 
@@ -1762,10 +1760,9 @@ libraries:: `(rnrs base)`, `(rnrs)`
   (apply min ls)) ⇒ 2
 ----
 
-[#objects:s109]
 [#page:gcd]
 [horizontal]
-procedure:: `(gcd _int_ \...)`
+procedure:: `(gcd _int_ \...)` [[objects:s109]]
 returns:: the greatest common divisor of its arguments `_int_ \...`
 libraries:: `(rnrs base)`, `(rnrs)`
 
@@ -1987,10 +1984,9 @@ The range of the result is stem:[-π] (exclusive) to stem:[+π] (inclusive).
 (angle 5.2) ⇒ 0.0
 ----
 
-[#objects:s125]
 [#page:magnitude]
 [horizontal]
-procedure:: `(magnitude _num_)`
+procedure:: `(magnitude _num_)` [[objects:s125]]
 returns:: the magnitude of `_num_`
 libraries:: `(rnrs base)`, `(rnrs)`
 
@@ -4943,8 +4939,6 @@ The boolean values `#t` and `#f` may also be compared with `eq?`, which is typic
 
 === Section 6.13. Hashtables [[section_6.13.]]
 
-[#objects:s272]
-[#objects:s273]
 Hashtables represent sets of associations between arbitrary Scheme values. They serve essentially the same purpose as association lists (see <<page:assq,page 165>>) but are typically much faster when large numbers of associations are involved.
 
 [#objects:s274]
