@@ -875,7 +875,7 @@ Expressions written in CPS are more complicated, of course, but this style of pr
 
 The procedure `quotient`, employed by `integer-divide`, returns the quotient of its two arguments, truncated toward zero.
 
-Explicit success and failure continuations can sometimes help to avoid the extra communication necessary to separate successful execution of a procedure from unsuccessful execution. Furthermore, it is possible to have multiple success or failure continuations for different flavors of success or failure, each possibly taking different numbers and types of arguments. See Sections <<section_12.10,12.10>> and <<section_12.11,12.11>> for extended examples that employ continuation-passing style.
+Explicit success and failure continuations can sometimes help to avoid the extra communication necessary to separate successful execution of a procedure from unsuccessful execution. Furthermore, it is possible to have multiple success or failure continuations for different flavors of success or failure, each possibly taking different numbers and types of arguments. See Sections <<section_12.10.,12.10>> and <<section_12.11.,12.11>> for extended examples that employ continuation-passing style.
 
 At this point you might be wondering about the relationship between CPS and the continuations captured via `call/cc`. It turns out that any program that uses `call/cc` can be rewritten in CPS without `call/cc`, but a total rewrite of the program (sometimes including even system-defined primitives) might be necessary. Try to convert the `product` example on <<defn:product-call/cc,page 75>> into CPS before looking at the version below.
 

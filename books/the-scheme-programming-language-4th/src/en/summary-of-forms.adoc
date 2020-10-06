@@ -1,6 +1,6 @@
 == Summary of Forms
 
-The table that follows summarizes the Scheme syntactic forms and procedures described in Chapters <<chp4,4>> through <<chp11,11>>. It shows the category of the form and the page number where it is defined. The category states whether the form describes a syntactic form or a procedure.
+The table that follows summarizes the Scheme syntactic forms and procedures described in Chapters <<chp_procedures_and_variable_bindings,4>> through <<chp_exceptions_and_conditions,11>>. It shows the category of the form and the page number where it is defined. The category states whether the form describes a syntactic form or a procedure.
 
 All page numbers appearing here refer to the printed version of this book and also serve as hypertext links to the corresponding locations in the electronic version of this book.
 

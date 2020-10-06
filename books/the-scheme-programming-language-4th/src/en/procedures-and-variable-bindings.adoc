@@ -9,6 +9,7 @@ Various other forms that bind or assign variables for which the binding or assig
 
 === Section 4.1. Variable References [[section_4.1.]]
 
+[#binding:s2]
 [horizontal]
 syntax:: `_variable_`
 returns:: the value of `_variable_`
@@ -49,6 +50,7 @@ is okay, but the reference to `g` in the definition of `q` below is not.
 
 === Section 4.2. Lambda [[section_4.2.]]
 
+[#binding:s3]
 [horizontal]
 syntax:: `(lambda _formals_ _body~1~_ _body~2~_ \...)`
 returns:: a procedure
@@ -58,6 +60,7 @@ The `lambda` syntactic form is used to create procedures. Any operation that cre
 
 The variables in `_formals_` are the formal parameters of the procedure, and the sequence of subforms `_body~1~_ _body~2~_ \...` is its body.
 
+[#binding:s6]
 The body may begin with a sequence of definitions, in which case the bindings created by the definitions are local to the body. If definitions are present, the keyword bindings are used and discarded while expanding the body, and the body is expanded into a `letrec*` expression formed from the variable definitions and the remaining expressions, as described on <<body-expansion,page 292>>. The remainder of this description of `lambda` assumes that this transformation has taken place, if necessary, so that the body is a sequence of expressions without definitions.
 
 When the procedure is created, the bindings of all variables occurring free within the body, excluding the formal parameters, are retained with the procedure. Subsequently, whenever the procedure is applied to a sequence of actual parameters, the formal parameters are bound to the actual parameters, the retained bindings are restored, and the body is evaluated.
@@ -118,6 +121,7 @@ accepts `_n_` or more arguments.
 
 The `case-lambda` syntactic form directly supports procedures with optional arguments as well as procedures with fixed or indefinite numbers of arguments. `case-lambda` is based on the `lambda*` syntactic form introduced in the article "A New Approach to Procedures with Variable Arity" <<ref11>>.
 
+[#binding:s13]
 [horizontal]
 syntax:: `(case-lambda _clause_ \...)`
 returns:: a procedure
@@ -180,6 +184,7 @@ It is even possible to require that both or neither of the `_start_` and `_end_`
 
 === Section 4.4. Local Binding [[section_4.4.]]
 
+[#binding:s16]
 [horizontal]
 syntax:: `(let ((_var_ _expr_) \...) _body~1~_ _body~2~_ \...)`
 returns:: the values of the final body expression
@@ -214,6 +219,7 @@ The following definition of `let` shows the typical derivation of `let` from `la
 
 Another form of `let`, _named_ `let`, is described in <<section_5.4.,Section 5.4>>, and a definition of the full `let` can be found on <<defn:let,page 312>>.
 
+[#binding:s18]
 [horizontal]
 syntax:: `(let* ((_var_ _expr_) \...) _body~1~_ _body~2~_ \...)`
 returns:: the values of the final body expression
@@ -246,6 +252,7 @@ Any `let*` expression may be converted to a set of nested `let` expressions. The
        (let* ((_x~2~_ _v~2~_) \...) _e~1~_ _e~2~_ \...))]))
 ----
 
+[#binding:s20]
 [horizontal]
 syntax:: `(letrec ((_var_ _expr_) \...) _body~1~_ _body~2~_ \...)`
 returns:: the values of the final body expression
@@ -291,8 +298,9 @@ A definition of `letrec` that uses this transformation is shown on <<defn:letrec
 
 This transformation does not enforce the restriction that the `_expr_` expressions must not evaluate any references of or assignments to the variables. More elaborate transformations that enforce this restriction and actually produce more efficient code are possible <<ref31>>.
 
+[#desc:letrec*]
 [horizontal]
-syntax:: `(letrec* ((_var_ _expr_) \...) _body~1~_ _body~2~_ \...)`
+syntax:: `(letrec* ((_var_ _expr_) \...) _body~1~_ _body~2~_ \...)` [[binding:s22]]
 returns:: the values of the final body expression
 libraries:: `(rnrs base)`, `(rnrs)`
 
@@ -340,7 +348,7 @@ The outer `let` expression creates the bindings, each assignment evaluates an ex
 
 [#desc:let-values]
 [horizontal]
-syntax:: `(let-values ((_formals_ _expr_) \...) _body~1~_ _body~2~_ \...)`
+syntax:: `(let-values ((_formals_ _expr_) \...) _body~1~_ _body~2~_ \...)` [[binding:s23]]
 syntax:: `(let*-values ((_formals_ _expr_) \...) _body~1~_ _body~2~_ \...)`
 returns:: the values of the final body expression
 libraries:: `(rnrs base)`, `(rnrs)`
@@ -358,6 +366,7 @@ libraries:: `(rnrs base)`, `(rnrs)`
 
 === Section 4.6. Variable Definitions [[section_4.6.]]
 
+[#binding:s24]
 [horizontal]
 syntax:: `(define _var_ _expr_)`
 syntax:: `(define var)`
@@ -430,6 +439,7 @@ A set of definitions may be grouped by enclosing them in a `begin` form. Definit
   (plus 7 8)) ⇒ 15
 ----
 
+[#binding:s27]
 Many implementations support an interactive "top level" in which variable and other definitions may be entered interactively or loaded from files. The behavior of these top-level definitions is outside the scope of the Revised6 Report, but as long as top-level variables are defined before any references or assignments to them are evaluated, the behavior is consistent across most implementations. So, for example, the reference to `g` in the top-level definition of `f` below is okay if `_g_` is not already defined, and `g` is assumed to name a variable to be defined at some later point.
 
 [source,scheme,subs="quotes,replacements"]
@@ -453,11 +463,13 @@ If `g` were defined instead as the keyword for a syntactic extension, the assump
 
 === Section 4.7. Assignment [[section_4.7.]]
 
+[#binding:s28]
 [horizontal]
 syntax:: `(set! _var_ _expr_)`
 returns:: unspecified
 libraries:: `(rnrs base)`, `(rnrs)`
 
+[#binding:s29]
 `set!` does not establish a new binding for `_var_` but rather alters the value of an existing binding. It first evaluates `_expr_`, then assigns `_var_` to the value of `_expr_`. Any subsequent reference to `_var_` within the scope of the altered binding evaluates to the new value.
 
 Assignments are not employed as frequently in Scheme as in most other languages, but they are useful for implementing state changes.
