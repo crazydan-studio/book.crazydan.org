@@ -124,7 +124,7 @@ document.querySelectorAll('h4')
         .forEach(function(node) {
             var title=node.innerText;
             var anchor='exercise_'+title.replace(/^Exercise ([\d.]+)$/, '$1');
-            node.outerHTML = '==== ' + title + ' [['+anchor+']]&lt;br&gt;';
+            node.outerHTML = '==== ' + title + ' [['+anchor+']]&lt;br&gt;&lt;br&gt;';
         })
 document.querySelectorAll('[src="math/tspl/0.gif"]')
         .forEach(function(node) { node.outerHTML = '⇒' })
