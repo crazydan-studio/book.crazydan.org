@@ -264,7 +264,7 @@ ISBN 978-0-262-51298-5 / LOC QA76.73.S34D93<br>
 <div class="paragraph">
 <p>Scheme is a call-by-value language, but for at least mutable objects (objects that can be modified), the values are pointers to the actual storage. These pointers remain behind the scenes, however, and programmers need not be conscious of them except to understand that the storage for an object is not copied when an object is passed to or returned from a procedure.</p>
 </div>
-<div class="paragraph">
+<div id="intro:s6" class="paragraph">
 <p>At the heart of the Scheme language is a small core of syntactic forms from which all other forms are built. These core forms, a set of extended syntactic forms derived from them, and a set of primitive procedures make up the full Scheme language. An interpreter or compiler for Scheme can be quite small and potentially fast and highly reliable. The extended syntactic forms and many primitive procedures can be defined in Scheme itself, simplifying the implementation and increasing reliability.</p>
 </div>
 <div class="paragraph">
@@ -285,13 +285,13 @@ ISBN 978-0-262-51298-5 / LOC QA76.73.S34D93<br>
 <div class="paragraph">
 <p>Scheme supports the definition of arbitrary control structures with <em>continuations</em>. A continuation is a procedure that embodies the remainder of a program at a given point in the program. A continuation may be obtained at any time during the execution of a program. As with other procedures, a continuation is a first-class object and may be invoked at any time after its creation. Whenever it is invoked, the program immediately continues from the point where the continuation was obtained. Continuations allow the implementation of complex control mechanisms including explicit backtracking, multithreading, and coroutines.</p>
 </div>
-<div class="paragraph">
+<div id="intro:s25" class="paragraph">
 <p>Scheme also allows programmers to define new syntactic forms, or <em>syntactic extensions</em>, by writing transformation procedures that determine how each new syntactic form maps to existing syntactic forms. These transformation procedures are themselves expressed in Scheme with the help of a convenient high-level pattern language that automates syntax checking, input deconstruction, and output reconstruction. By default, lexical scoping is maintained through the transformation process, but the programmer can exercise control over the scope of all identifiers appearing in the output of a transformer. Syntactic extensions are useful for defining new language constructs, for emulating language constructs found in other languages, for achieving the effects of in-line code expansion, and even for emulating entire languages in Scheme. Most large Scheme programs are built from a mix of syntactic extensions and procedure definitions.</p>
 </div>
 <div class="paragraph">
 <p>Scheme evolved from the Lisp language and is considered to be a dialect of Lisp. Scheme inherited from Lisp the treatment of values as first-class objects, several important data types, including symbols and lists, and the representation of programs as objects, among other things. Lexical scoping and block structure are features taken from Algol 60 <a href="#ref21">[21]</a>. Scheme was the first Lisp dialect to adopt lexical scoping and block structure, first-class procedures, the treatment of tail calls as jumps, continuations, and lexically scoped syntactic extensions.</p>
 </div>
-<div class="paragraph">
+<div id="intro:s28" class="paragraph">
 <p>Common Lisp <a href="#ref27">[27]</a> and Scheme are both contemporary Lisp languages, and the development of each has been influenced by the other. Like Scheme but unlike earlier Lisp languages, Common Lisp adopted lexical scoping and first-class procedures, although Common Lisp&#8217;s syntactic extension facility does not respect lexical scoping. Common Lisp&#8217;s evaluation rules for procedures are different from the evaluation rules for other objects, however, and it maintains a separate namespace for procedure variables, thereby inhibiting the use of procedures as first-class objects. Also, Common Lisp does not support continuations or require proper treatment of tail calls, but it does support several less general control structures not found in Scheme. While the two languages are similar, Common Lisp includes more specialized constructs, while Scheme includes more general-purpose building blocks out of which such constructs (and others) may be built.</p>
 </div>
 <div class="paragraph">
@@ -347,7 +347,7 @@ ISBN 978-0-262-51298-5 / LOC QA76.73.S34D93<br>
 <p>The names of most character, string, and vector procedures start with the prefix <code>char-</code>, <code>string-</code>, and <code>vector-</code>, e.g., <code>string-append</code>. (The names of some list procedures start with <code>list-</code>, but most do not.)</p>
 </li>
 <li>
-<p>The names of procedures that convert an object of one type into an object of another type are written as <code><em>type1</em>-&gt;<em>type2</em></code>, e.g., <code>vector-&gt;list</code>.</p>
+<p>The names of procedures that convert an object of one type into an object of another type are written as <code><em>type<sub>1</sub></em>-&gt;<em>type<sub>2</sub></em></code>, e.g., <code>vector-&gt;list</code>.</p>
 </li>
 <li>
 <p>The names of procedures and syntactic forms that cause side effects end with an exclamation point ( <code>!</code> ). These include <code>set!</code> and <code>vector-set!</code>. Procedures that perform input or output technically cause side effects, but their names are exceptions to this rule.</p>
@@ -363,13 +363,13 @@ ISBN 978-0-262-51298-5 / LOC QA76.73.S34D93<br>
 <div class="paragraph">
 <p>A standard procedure or syntactic form whose sole purpose is to perform some side effect is said to return <em>unspecified</em>. This means that an implementation is free to return any number of values, each of which can be any Scheme object, as the value of the procedure or syntactic form. Do not count on these values being the same across implementations, the same across versions of the same implementation, or even the same across two uses of the procedure or syntactic form. Some Scheme systems routinely use a special object to represent unspecified values. Printing of this object is often suppressed by interactive Scheme systems, so that the values of expressions returning unspecified values are not printed.</p>
 </div>
-<div class="paragraph">
+<div id="intro:s54" class="paragraph">
 <p>While most standard procedures return a single value, the language supports procedures that return zero, one, more than one, or even a variable number of values via the mechanisms described in <a href="#section_5.8.">Section 5.8</a>. Some standard expressions can evaluate to multiple values if one of their subexpressions evaluates to multiple values, e.g., by calling a procedure that returns multiple values. When this situation can occur, an expression is said to return "the values" rather than simply "the value" of its subexpression. Similarly, a standard procedure that returns the values resulting from a call to a procedure argument is said to return the values returned by the procedure argument.</p>
 </div>
-<div class="paragraph">
+<div id="intro:s55" class="paragraph">
 <p>This book uses the words "must" and "should" to describe program requirements, such as the requirement to provide an index that is less than the length of the vector in a call to <code>vector-ref</code>. If the word "must" is used, it means that the requirement is enforced by the implementation, i.e., an exception is raised, usually with condition type <code>&amp;assertion</code>. If the word "should" is used, an exception may or may not be raised, and if not, the behavior of the program is undefined.</p>
 </div>
-<div class="paragraph">
+<div id="intro:s56" class="paragraph">
 <p>The phrase "syntax violation" is used to describe a situation in which a program is malformed. Syntax violations are detected prior to program execution. When a syntax violation is detected, an exception of type <code>&amp;syntax</code> is raised and the program is not executed.</p>
 </div>
 <div class="paragraph">
@@ -381,8 +381,10 @@ ISBN 978-0-262-51298-5 / LOC QA76.73.S34D93<br>
 <div class="paragraph">
 <p>A syntax violation occurs if the structure of a syntactic form does not match its prototype. Similarly, an exception with condition type <code>&amp;assertion</code> is raised if the number of arguments passed to a standard procedure does not match what it is specified to receive. An exception with condition type <code>&amp;assertion</code> is also raised if a standard procedure receives an argument whose type is not the type implied by its name or does not meet other criteria given in the description of the procedure. For example, the prototype for <code>vector-set!</code> is</p>
 </div>
-<div class="paragraph">
-<p><code>(vector-set! <em>vector</em> <em>n</em> <em>obj</em>)</code></p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="scheme" class="language-scheme hljs">(vector-set! <em>vector</em> <em>n</em> <em>obj</em>)</code></pre>
+</div>
 </div>
 <div class="paragraph">
 <p>and the description says that <code><em>n</em></code> must be an exact nonnegative integer strictly less than the length of <code><em>vector</em></code>. Thus, <code>vector-set!</code> must receive three arguments, the first of which must be a vector, the second of which must be an exact nonnegative integer less than the length of the vector, and the third of which may be any Scheme value. Otherwise, an exception with condition type <code>&amp;assertion</code> is raised.</p>
@@ -419,7 +421,7 @@ ISBN 978-0-262-51298-5 / LOC QA76.73.S34D93<br>
 <p>While Scheme provides various input and output procedures, the REPL takes care of reading expressions and printing their values. This frees you to concentrate on writing your program without worrying about how its results will be displayed.</p>
 </div>
 <div class="paragraph">
-<p>The examples in this chapter and in the rest of the book follow a regular format. An expression you might type from your keyboard is given first, possibly spanning several lines. The value of the expression is given after the &#8658;, to be read as "evaluates to." The &#8658; is omitted for definitions and when the value of an expression is unspecified.</p>
+<p>The examples in this chapter and in the rest of the book follow a regular format. An expression you might type from your keyboard is given first, possibly spanning several lines. The value of the expression is given after the ⇒, to be read as "evaluates to." The ⇒ is omitted for definitions and when the value of an expression is unspecified.</p>
 </div>
 <div class="paragraph">
 <p>The example programs are formatted in a style that "looks nice" and conveys the structure of the program. The code is easy to read because the relationship between each expression and its subexpressions is clearly shown. Scheme ignores indentation and line breaks, however, so there is no need to follow a particular style. The important thing is to establish one style and keep to it. Scheme sees each program as if it were on a single line, with its subexpressions ordered from left to right.</p>
@@ -429,7 +431,7 @@ ISBN 978-0-262-51298-5 / LOC QA76.73.S34D93<br>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="scheme" class="language-scheme hljs">"Hi Mom!" &#8658; "Hi Mom!"</code></pre>
+<pre class="highlightjs highlight"><code data-lang="scheme" class="language-scheme hljs">"Hi Mom!" ⇒ "Hi Mom!"</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -437,14 +439,14 @@ ISBN 978-0-262-51298-5 / LOC QA76.73.S34D93<br>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="scheme" class="language-scheme hljs">"hello" &#8658; "hello"
-42 &#8658; 42
-22/7 &#8658; 22/7
-3.141592653 &#8658; 3.141592653
-+ &#8658; #&lt;procedure&gt;
-(+ 76 31) &#8658; 107
-(* -12 10) &#8658; -120
-'(a b c d) &#8658; (a b c d)</code></pre>
+<pre class="highlightjs highlight"><code data-lang="scheme" class="language-scheme hljs">"hello" ⇒ "hello"
+42 ⇒ 42
+22/7 ⇒ 22/7
+3.141592653 ⇒ 3.141592653
++ ⇒ #&lt;procedure&gt;
+(+ 76 31) ⇒ 107
+(* -12 10) ⇒ -120
+'(a b c d) ⇒ (a b c d)</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -455,11 +457,11 @@ ISBN 978-0-262-51298-5 / LOC QA76.73.S34D93<br>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="scheme" class="language-scheme hljs">(car '(a b c)) &#8658; a
-(cdr '(a b c)) &#8658; (b c)
-(cons 'a '(b c)) &#8658; (a b c)
+<pre class="highlightjs highlight"><code data-lang="scheme" class="language-scheme hljs">(car '(a b c)) ⇒ a
+(cdr '(a b c)) ⇒ (b c)
+(cons 'a '(b c)) ⇒ (a b c)
 (cons (car '(a b c))
-      (cdr '(d e f))) &#8658; (a e f)</code></pre>
+      (cdr '(d e f))) ⇒ (a e f)</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -483,10 +485,10 @@ ISBN 978-0-262-51298-5 / LOC QA76.73.S34D93<br>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="scheme" class="language-scheme hljs">(square 5) &#8658; 25
-(square -200) &#8658; 40000
-(square 0.5) &#8658; 0.25
-(square -1/2) &#8658; 1/4</code></pre>
+<pre class="highlightjs highlight"><code data-lang="scheme" class="language-scheme hljs">(square 5) ⇒ 25
+(square -200) ⇒ 40000
+(square 0.5) ⇒ 0.25
+(square -1/2) ⇒ 1/4</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -514,10 +516,10 @@ ISBN 978-0-262-51298-5 / LOC QA76.73.S34D93<br>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="scheme" class="language-scheme hljs">(reciprocal 10) &#8658; 1/10
-(reciprocal 1/10) &#8658; 10
-(reciprocal 0) &#8658; "oops!"
-(reciprocal (reciprocal 1/10)) &#8658; 1/10</code></pre>
+<pre class="highlightjs highlight"><code data-lang="scheme" class="language-scheme hljs">(reciprocal 10) ⇒ 1/10
+(reciprocal 1/10) ⇒ 10
+(reciprocal 0) ⇒ "oops!"
+(reciprocal (reciprocal 1/10)) ⇒ 1/10</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -534,10 +536,10 @@ ISBN 978-0-262-51298-5 / LOC QA76.73.S34D93<br>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="scheme" class="language-scheme hljs">123456789987654321 &#8658; 123456789987654321
-3/4 &#8658; 3/4
-2.718281828 &#8658; 2.718281828
-2.2+1.1i &#8658; 2.2+1.1i</code></pre>
+<pre class="highlightjs highlight"><code data-lang="scheme" class="language-scheme hljs">123456789987654321 ⇒ 123456789987654321
+3/4 ⇒ 3/4
+2.718281828 ⇒ 2.718281828
+2.2+1.1i ⇒ 2.2+1.1i</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -548,11 +550,11 @@ ISBN 978-0-262-51298-5 / LOC QA76.73.S34D93<br>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="scheme" class="language-scheme hljs">(+ 1/2 1/2) &#8658; 1
-(- 1.5 1/2) &#8658; 1.0
+<pre class="highlightjs highlight"><code data-lang="scheme" class="language-scheme hljs">(+ 1/2 1/2) ⇒ 1
+(- 1.5 1/2) ⇒ 1.0
 
-(* 3 1/2) &#8658; 3/2
-(/ 1.5 3/4) &#8658; 2.0</code></pre>
+(* 3 1/2) ⇒ 3/2
+(/ 1.5 3/4) ⇒ 2.0</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -563,29 +565,29 @@ ISBN 978-0-262-51298-5 / LOC QA76.73.S34D93<br>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="scheme" class="language-scheme hljs">(+ (+ 2 2) (+ 2 2)) &#8658; 8
-(- 2 (* 4 1/3)) &#8658; 2/3
-(* 2 (* 2 (* 2 (* 2 2)))) &#8658; 32
-(/ (* 6/7 7/2) (- 4.5 1.5)) &#8658; 1.0</code></pre>
+<pre class="highlightjs highlight"><code data-lang="scheme" class="language-scheme hljs">(+ (+ 2 2) (+ 2 2)) ⇒ 8
+(- 2 (* 4 1/3)) ⇒ 2/3
+(* 2 (* 2 (* 2 (* 2 2)))) ⇒ 32
+(/ (* 6/7 7/2) (- 4.5 1.5)) ⇒ 1.0</code></pre>
 </div>
 </div>
 <div class="paragraph">
 <p>These examples demonstrate everything you need to use Scheme as a four-function desk calculator. While we will not discuss them in this chapter, Scheme supports many other arithmetic procedures. Now might be a good time to turn to <a href="#section_6.4.">Section 6.4</a> and experiment with some of them.</p>
 </div>
-<div class="paragraph">
+<div id="start:s13" class="paragraph">
 <p>Simple numeric objects are sufficient for many tasks, but sometimes aggregate data structures containing two or more values are needed. In many languages, the basic aggregate data structure is the array. In Scheme, it is the <em>list</em>. Lists are written as sequences of objects surrounded by parentheses. For instance, <code>(1 2 3 4 5)</code> is a list of numbers, and <code>("this" "is" "a" "list")</code> is a list of strings. Lists need not contain only one type of object, so <code>(4.2 "hi")</code> is a valid list containing a number and a string. Lists may be nested (may contain other lists), so <code>1 2) (3 4</code> is a valid list with two elements, each of which is a list of two elements.</p>
 </div>
 <div class="paragraph">
-<p>You might notice that lists look just like procedure applications and wonder how Scheme tells them apart. That is, how does Scheme distinguish between a list of objects, <code>(<em>obj1</em> <em>obj2</em> ...)</code>, and a procedure application, <code>(<em>procedure</em> <em>arg</em> ...)</code>?</p>
+<p>You might notice that lists look just like procedure applications and wonder how Scheme tells them apart. That is, how does Scheme distinguish between a list of objects, <code>(<em>obj<sub>1</sub></em> <em>obj<sub>2</sub></em> ...)</code>, and a procedure application, <code>(<em>procedure</em> <em>arg</em> ...)</code>?</p>
 </div>
 <div class="paragraph">
 <p>In some cases, the distinction might seem obvious. The list of numbers <code>(1 2 3 4 5)</code> could hardly be confused with a procedure application, since 1 is a number, not a procedure. So, the answer might be that Scheme looks at the first element of the list or procedure application and makes its decision based on whether that first element is a procedure or not. This answer is not good enough, since we might even want to treat a valid procedure application such as <code>(+ 3 4)</code> as a list. The answer is that we must tell Scheme explicitly to treat a list as data rather than as a procedure application. We do this with <code>quote</code>.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="scheme" class="language-scheme hljs">(quote (1 2 3 4 5)) &#8658; (1 2 3 4 5)
-(quote ("this" "is" "a" "list")) &#8658; ("this" "is" "a" "list")
-(quote (+ 3 4)) &#8658; (+ 3 4)</code></pre>
+<pre class="highlightjs highlight"><code data-lang="scheme" class="language-scheme hljs">(quote (1 2 3 4 5)) ⇒ (1 2 3 4 5)
+(quote ("this" "is" "a" "list")) ⇒ ("this" "is" "a" "list")
+(quote (+ 3 4)) ⇒ (+ 3 4)</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -596,9 +598,9 @@ ISBN 978-0-262-51298-5 / LOC QA76.73.S34D93<br>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="scheme" class="language-scheme hljs">'(1 2 3 4) &#8658; (1 2 3 4)
-'((1 2) (3 4)) &#8658; ((1 2) (3 4))
-'(/ (* 2 -1) 3) &#8658; (/ (* 2 -1) 3)</code></pre>
+<pre class="highlightjs highlight"><code data-lang="scheme" class="language-scheme hljs">'(1 2 3 4) ⇒ (1 2 3 4)
+'((1 2) (3 4)) ⇒ ((1 2) (3 4))
+'(/ (* 2 -1) 3) ⇒ (/ (* 2 -1) 3)</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -612,7 +614,7 @@ ISBN 978-0-262-51298-5 / LOC QA76.73.S34D93<br>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="scheme" class="language-scheme hljs">(quote hello) &#8658; hello</code></pre>
+<pre class="highlightjs highlight"><code data-lang="scheme" class="language-scheme hljs">(quote hello) ⇒ hello</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -626,9 +628,9 @@ ISBN 978-0-262-51298-5 / LOC QA76.73.S34D93<br>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="scheme" class="language-scheme hljs">'2 &#8658; 2
-'2/3 &#8658; 2/3
-(quote "Hi Mom!") &#8658; "Hi Mom!"</code></pre>
+<pre class="highlightjs highlight"><code data-lang="scheme" class="language-scheme hljs">'2 ⇒ 2
+'2/3 ⇒ 2/3
+(quote "Hi Mom!") ⇒ "Hi Mom!"</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -639,15 +641,15 @@ ISBN 978-0-262-51298-5 / LOC QA76.73.S34D93<br>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="scheme" class="language-scheme hljs">(car '(a b c)) &#8658; a
-(cdr '(a b c)) &#8658; (b c)
-(cdr '(a)) &#8658; ()
+<pre class="highlightjs highlight"><code data-lang="scheme" class="language-scheme hljs">(car '(a b c)) ⇒ a
+(cdr '(a b c)) ⇒ (b c)
+(cdr '(a)) ⇒ ()
 
-(car (cdr '(a b c))) &#8658; b
-(cdr (cdr '(a b c))) &#8658; (c)
+(car (cdr '(a b c))) ⇒ b
+(cdr (cdr '(a b c))) ⇒ (c)
 
-(car '((a b) (c d))) &#8658; (a b)
-(cdr '((a b) (c d))) &#8658; ((c d))</code></pre>
+(car '((a b) (c d))) ⇒ (a b)
+(cdr '((a b) (c d))) ⇒ ((c d))</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -658,17 +660,17 @@ ISBN 978-0-262-51298-5 / LOC QA76.73.S34D93<br>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="scheme" class="language-scheme hljs">(cons 'a '()) &#8658; (a)
-(cons 'a '(b c)) &#8658; (a b c)
-(cons 'a (cons 'b (cons 'c '()))) &#8658; (a b c)
-(cons '(a b) '(c d)) &#8658; ((a b) c d)
+<pre class="highlightjs highlight"><code data-lang="scheme" class="language-scheme hljs">(cons 'a '()) ⇒ (a)
+(cons 'a '(b c)) ⇒ (a b c)
+(cons 'a (cons 'b (cons 'c '()))) ⇒ (a b c)
+(cons '(a b) '(c d)) ⇒ ((a b) c d)
 
-(car (cons 'a '(b c))) &#8658; a
-(cdr (cons 'a '(b c))) &#8658; (b c)
+(car (cons 'a '(b c))) ⇒ a
+(cdr (cons 'a '(b c))) ⇒ (b c)
 (cons (car '(a b c))
-      (cdr '(d e f))) &#8658; (a e f)
+      (cdr '(d e f))) ⇒ (a e f)
 (cons (car '(a b c))
-      (cdr '(a b c))) &#8658; (a b c)</code></pre>
+      (cdr '(a b c))) ⇒ (a b c)</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -690,9 +692,9 @@ ISBN 978-0-262-51298-5 / LOC QA76.73.S34D93<br>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="scheme" class="language-scheme hljs">(cons 'a 'b) &#8658; (a . b)
-(cdr '(a . b)) &#8658; b
-(cons 'a '(b . c)) &#8658; (a b . c)</code></pre>
+<pre class="highlightjs highlight"><code data-lang="scheme" class="language-scheme hljs">(cons 'a 'b) ⇒ (a . b)
+(cdr '(a . b)) ⇒ b
+(cons 'a '(b . c)) ⇒ (a b . c)</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -700,7 +702,7 @@ ISBN 978-0-262-51298-5 / LOC QA76.73.S34D93<br>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="scheme" class="language-scheme hljs">'(a . (b . (c . ()))) &#8658; (a b c)</code></pre>
+<pre class="highlightjs highlight"><code data-lang="scheme" class="language-scheme hljs">'(a . (b . (c . ()))) ⇒ (a b c)</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -708,9 +710,9 @@ ISBN 978-0-262-51298-5 / LOC QA76.73.S34D93<br>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="scheme" class="language-scheme hljs">(list 'a 'b 'c) &#8658; (a b c)
-(list 'a) &#8658; (a)
-(list) &#8658; ()</code></pre>
+<pre class="highlightjs highlight"><code data-lang="scheme" class="language-scheme hljs">(list 'a 'b 'c) ⇒ (a b c)
+(list 'a) ⇒ (a)
+(list) ⇒ ()</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -752,49 +754,124 @@ ISBN 978-0-262-51298-5 / LOC QA76.73.S34D93<br>
 <div class="olist loweralpha">
 <ol class="loweralpha" type="a">
 <li>
-<p><code>(cons 'car 'cdr)</code></p>
+<p></p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="scheme" class="language-scheme hljs">(cons 'car 'cdr)</code></pre>
+</div>
+</div>
 </li>
 <li>
-<p><code>(list 'this '(is silly))</code></p>
+<p></p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="scheme" class="language-scheme hljs">(list 'this '(is silly))</code></pre>
+</div>
+</div>
 </li>
 <li>
-<p><code>(cons 'is '(this silly?))</code></p>
+<p></p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="scheme" class="language-scheme hljs">(cons 'is '(this silly?))</code></pre>
+</div>
+</div>
 </li>
 <li>
-<p><code>(quote (+ 2 3))</code></p>
+<p></p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="scheme" class="language-scheme hljs">(quote (+ 2 3))</code></pre>
+</div>
+</div>
 </li>
 <li>
-<p><code>(cons '+ '(2 3))</code></p>
+<p></p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="scheme" class="language-scheme hljs">(cons '+ '(2 3))</code></pre>
+</div>
+</div>
 </li>
 <li>
-<p><code>(car '(+ 2 3))</code></p>
+<p></p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="scheme" class="language-scheme hljs">(car '(+ 2 3))</code></pre>
+</div>
+</div>
 </li>
 <li>
-<p><code>(cdr '(+ 2 3))</code></p>
+<p></p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="scheme" class="language-scheme hljs">(cdr '(+ 2 3))</code></pre>
+</div>
+</div>
 </li>
 <li>
-<p><code>cons</code></p>
+<p></p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="scheme" class="language-scheme hljs">cons</code></pre>
+</div>
+</div>
 </li>
 <li>
-<p><code>(quote cons)</code></p>
+<p></p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="scheme" class="language-scheme hljs">(quote cons)</code></pre>
+</div>
+</div>
 </li>
 <li>
-<p><code>(quote (quote cons))</code></p>
+<p></p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="scheme" class="language-scheme hljs">(quote (quote cons))</code></pre>
+</div>
+</div>
 </li>
 <li>
-<p><code>car (quote (quote cons)))</code></p>
+<p></p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="scheme" class="language-scheme hljs">car (quote (quote cons)))</code></pre>
+</div>
+</div>
 </li>
 <li>
-<p><code>(+ 2 3)</code></p>
+<p></p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="scheme" class="language-scheme hljs">(+ 2 3)</code></pre>
+</div>
+</div>
 </li>
 <li>
-<p><code>(+ '2 '3)</code></p>
+<p></p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="scheme" class="language-scheme hljs">(+ '2 '3)</code></pre>
+</div>
+</div>
 </li>
 <li>
-<p><code>(+ (car '(2 3)) (car (cdr '(2 3))))</code></p>
+<p></p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="scheme" class="language-scheme hljs">(+ (car '(2 3)) (car (cdr '(2 3))))</code></pre>
+</div>
+</div>
 </li>
 <li>
-<p><code>car (list + - * / 2 3)</code></p>
+<p></p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="scheme" class="language-scheme hljs">((car (list + - * /)) 2 3)</code></pre>
+</div>
+</div>
 </li>
 </ol>
 </div>
@@ -843,7 +920,7 @@ ISBN 978-0-262-51298-5 / LOC QA76.73.S34D93<br>
 <div class="sect2">
 <h3 id="section_2.3.">Section 2.3. Evaluating Scheme Expressions</h3>
 <div class="paragraph">
-<p>Let&#8217;s turn to a discussion of how Scheme evaluates the expressions you type. We have already established the rules for constant objects such as strings and numbers: the object itself is the value. You have probably also worked out in your mind a rule for evaluating procedure applications of the form <code>(<em>procedure</em> <em>arg1</em> ... <em>argn</em>)</code>. Here, <code><em>procedure</em></code> is an expression representing a Scheme procedure, and <code><em>arg1</em> ... <em>argn</em></code> are expressions representing its arguments. One possibility is the following.</p>
+<p>Let&#8217;s turn to a discussion of how Scheme evaluates the expressions you type. We have already established the rules for constant objects such as strings and numbers: the object itself is the value. You have probably also worked out in your mind a rule for evaluating procedure applications of the form <code>(<em>procedure</em> <em>arg<sub>1</sub></em> ... <em>arg<sub>n</sub></em>)</code>. Here, <code><em>procedure</em></code> is an expression representing a Scheme procedure, and <code><em>arg<sub>1</sub></em> ... <em>arg<sub>n</sub></em></code> are expressions representing its arguments. One possibility is the following.</p>
 </div>
 <div class="ulist">
 <ul>
@@ -851,14 +928,14 @@ ISBN 978-0-262-51298-5 / LOC QA76.73.S34D93<br>
 <p>Find the value of <code><em>procedure</em></code>.</p>
 </li>
 <li>
-<p>Find the value of <code><em>arg1</em></code>.<br>
+<p>Find the value of <code><em>arg<sub>1</sub></em></code>.<br>
 &#8230;&#8203;</p>
 </li>
 <li>
-<p>Find the value of <code><em>argn</em></code>.</p>
+<p>Find the value of <code><em>arg<sub>n</sub></em></code>.</p>
 </li>
 <li>
-<p>Apply the value of <code><em>procedure</em></code> to the values of <code><em>arg1</em> ... <em>argn</em></code>.</p>
+<p>Apply the value of <code><em>procedure</em></code> to the values of <code><em>arg<sub>1</sub></em> ... <em>arg<sub>n</sub></em></code>.</p>
 </li>
 </ul>
 </div>
@@ -875,10 +952,10 @@ ISBN 978-0-262-51298-5 / LOC QA76.73.S34D93<br>
 <p>Constant objects, procedure applications, and <code>quote</code> expressions are only three of the many syntactic forms provided by Scheme. Fortunately, only a few of the other syntactic forms need to be understood directly by a Scheme programmer; these are referred to as <em>core</em> syntactic forms. The remaining syntactic forms are <em>syntactic extensions</em> defined, ultimately, in terms of the core syntactic forms. We will discuss the remaining core syntactic forms and a few syntactic extensions in the remaining sections of this chapter. <a href="#section_3.1.">Section 3.1</a> summarizes the core syntactic forms and introduces the syntactic extension mechanism.</p>
 </div>
 <div class="paragraph">
-<p>Before we go on to more syntactic forms and procedures, two points related to the evaluation of procedure applications are worthy of note. First, the process given above is overspecified, in that it requires the subexpressions to be evaluated from left to right. That is, <code><em>procedure</em></code> is evaluated before <code><em>arg1</em></code>, <code><em>arg1</em></code> is evaluated before <code><em>arg2</em></code>, and so on. This need not be the case. A Scheme evaluator is free to evaluate the expressions in any order---left to right, right to left, or any other sequential order. In fact, the subexpressions may be evaluated in different orders for different applications, even in the same implementation.</p>
+<p>Before we go on to more syntactic forms and procedures, two points related to the evaluation of procedure applications are worthy of note. First, the process given above is overspecified, in that it requires the subexpressions to be evaluated from left to right. That is, <code><em>procedure</em></code> is evaluated before <code><em>arg<sub>1</sub></em></code>, <code><em>arg<sub>1</sub></em></code> is evaluated before <code><em>arg<sub>2</sub></em></code>, and so on. This need not be the case. A Scheme evaluator is free to evaluate the expressions in any order---left to right, right to left, or any other sequential order. In fact, the subexpressions may be evaluated in different orders for different applications, even in the same implementation.</p>
 </div>
 <div class="paragraph">
-<p>The second point is that <code><em>procedure</em></code> is evaluated in the same way as <code><em>arg1</em> ... <em>argn</em></code>. While <code><em>procedure</em></code> is often a variable that names a particular procedure, this need not be the case. <a href="#exercise_2.2.3">Exercise 2.2.3</a> had you determine the value of the expression <code>car (list + - * / 2 3)</code>. Here, <code><em>procedure</em></code> is <code>(car (list + - * /))</code>. The value of <code>(car (list + - * /))</code> is the addition procedure, just as if <code><em>procedure</em></code> were simply the variable <code>+</code>.</p>
+<p>The second point is that <code><em>procedure</em></code> is evaluated in the same way as <code><em>arg<sub>1</sub></em> ... <em>arg<sub>n</sub></em></code>. While <code><em>procedure</em></code> is often a variable that names a particular procedure, this need not be the case. <a href="#exercise_2.2.3">Exercise 2.2.3</a> had you determine the value of the expression <code>car (list + - * / 2 3)</code>. Here, <code><em>procedure</em></code> is <code>(car (list + - * /))</code>. The value of <code>(car (list + - * /))</code> is the addition procedure, just as if <code><em>procedure</em></code> were simply the variable <code>+</code>.</p>
 </div>
 <div class="sect3">
 <h4 id="exercise_2.3.1">Exercise 2.3.1</h4>
@@ -900,13 +977,13 @@ ISBN 978-0-262-51298-5 / LOC QA76.73.S34D93<br>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code data-lang="scheme" class="language-scheme hljs">(let ((x 2))
-  (+ x 3)) &#8658; 5
+  (+ x 3)) ⇒ 5
 
 (let ((y 3))
-  (+ 2 y)) &#8658; 5
+  (+ 2 y)) ⇒ 5
 
 (let ((x 2) (y 3))
-  (+ x y)) &#8658; 5</code></pre>
+  (+ x y)) ⇒ 5</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -925,9 +1002,9 @@ ISBN 978-0-262-51298-5 / LOC QA76.73.S34D93<br>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="scheme" class="language-scheme hljs">(+ (* 4 4) (* 4 4)) &#8658; 32
+<pre class="highlightjs highlight"><code data-lang="scheme" class="language-scheme hljs">(+ (* 4 4) (* 4 4)) ⇒ 32
 
-(let ((a (* 4 4))) (+ a a)) &#8658; 32</code></pre>
+(let ((a (* 4 4))) (+ a a)) ⇒ 32</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -939,7 +1016,7 @@ ISBN 978-0-262-51298-5 / LOC QA76.73.S34D93<br>
   (cons (cons (car list1)
               (car list2))
         (cons (car (cdr list1))
-              (car (cdr list2))))) &#8658; ((a . d) b . e)</code></pre>
+              (car (cdr list2))))) ⇒ ((a . d) b . e)</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -951,13 +1028,13 @@ ISBN 978-0-262-51298-5 / LOC QA76.73.S34D93<br>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code data-lang="scheme" class="language-scheme hljs">(let ([f +])
-  (f 2 3)) &#8658; 5
+  (f 2 3)) ⇒ 5
 
 (let ([f +] [x 2])
-  (f x 3)) &#8658; 5
+  (f x 3)) ⇒ 5
 
 (let ([f +] [x 2] [y 3])
-  (f x y)) &#8658; 5</code></pre>
+  (f x y)) ⇒ 5</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -966,9 +1043,9 @@ ISBN 978-0-262-51298-5 / LOC QA76.73.S34D93<br>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code data-lang="scheme" class="language-scheme hljs">(let ([+ *])
-  (+ 2 3)) &#8658; 6
+  (+ 2 3)) ⇒ 6
 
-(+ 2 3) &#8658; 5</code></pre>
+(+ 2 3) ⇒ 5</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -982,7 +1059,7 @@ ISBN 978-0-262-51298-5 / LOC QA76.73.S34D93<br>
 <pre class="highlightjs highlight"><code data-lang="scheme" class="language-scheme hljs">(let ([a 4] [b -3])
   (let ([a-squared (* a a)]
         [b-squared (* b b)])
-    (+ a-squared b-squared))) &#8658; 25</code></pre>
+    (+ a-squared b-squared))) ⇒ 25</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -992,7 +1069,7 @@ ISBN 978-0-262-51298-5 / LOC QA76.73.S34D93<br>
 <div class="content">
 <pre class="highlightjs highlight"><code data-lang="scheme" class="language-scheme hljs">(let ([x 1])
   (let ([x (+ x 1)])
-    (+ x x))) &#8658; 4</code></pre>
+    (+ x x))) ⇒ 4</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1008,7 +1085,7 @@ ISBN 978-0-262-51298-5 / LOC QA76.73.S34D93<br>
 <div class="content">
 <pre class="highlightjs highlight"><code data-lang="scheme" class="language-scheme hljs">(let ([x 1])
   (let ([new-x (+ x 1)])
-    (+ new-x new-x))) &#8658; 4</code></pre>
+    (+ new-x new-x))) ⇒ 4</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1022,10 +1099,20 @@ ISBN 978-0-262-51298-5 / LOC QA76.73.S34D93<br>
 <div class="olist loweralpha">
 <ol class="loweralpha" type="a">
 <li>
-<p><code>(+ (- (* 3 a) b) (+ (* 3 a) b))</code></p>
+<p></p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="scheme" class="language-scheme hljs">(+ (- (* 3 a) b) (+ (* 3 a) b))</code></pre>
+</div>
+</div>
 </li>
 <li>
-<p><code>(cons (car (list a b c)) (cdr (list a b c)))</code></p>
+<p></p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="scheme" class="language-scheme hljs">(cons (car (list a b c)) (cdr (list a b c)))</code></pre>
+</div>
+</div>
 </li>
 </ol>
 </div>
@@ -1091,7 +1178,7 @@ ISBN 978-0-262-51298-5 / LOC QA76.73.S34D93<br>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="scheme" class="language-scheme hljs">(lambda (x) (+ x x)) &#8658; #&lt;procedure&gt;</code></pre>
+<pre class="highlightjs highlight"><code data-lang="scheme" class="language-scheme hljs">(lambda (x) (+ x x)) ⇒ #&lt;procedure&gt;</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1113,7 +1200,7 @@ ISBN 978-0-262-51298-5 / LOC QA76.73.S34D93<br>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="scheme" class="language-scheme hljs">((lambda (x) (+ x x)) (* 3 4)) &#8658; 24</code></pre>
+<pre class="highlightjs highlight"><code data-lang="scheme" class="language-scheme hljs">((lambda (x) (+ x x)) (* 3 4)) ⇒ 24</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1127,7 +1214,7 @@ ISBN 978-0-262-51298-5 / LOC QA76.73.S34D93<br>
 <pre class="highlightjs highlight"><code data-lang="scheme" class="language-scheme hljs">(let ([double (lambda (x) (+ x x))])
   (list (double (* 3 4))
         (double (/ 99 11))
-        (double (- 2 7)))) &#8658; (24 18 -10)</code></pre>
+        (double (- 2 7)))) ⇒ (24 18 -10)</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1139,7 +1226,7 @@ ISBN 978-0-262-51298-5 / LOC QA76.73.S34D93<br>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code data-lang="scheme" class="language-scheme hljs">(let ([double-cons (lambda (x) (cons x x))])
-  (double-cons 'a)) &#8658; (a . a)</code></pre>
+  (double-cons 'a)) ⇒ (a . a)</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1149,7 +1236,7 @@ ISBN 978-0-262-51298-5 / LOC QA76.73.S34D93<br>
 <div class="content">
 <pre class="highlightjs highlight"><code data-lang="scheme" class="language-scheme hljs">(let ([double-any (lambda (f x) (f x x))])
   (list (double-any + 13)
-        (double-any cons 'a))) &#8658; (26 (a . a))</code></pre>
+        (double-any cons 'a))) ⇒ (26 (a . a))</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1162,7 +1249,7 @@ ISBN 978-0-262-51298-5 / LOC QA76.73.S34D93<br>
 <div class="content">
 <pre class="highlightjs highlight"><code data-lang="scheme" class="language-scheme hljs">(let ([x 'a])
   (let ([f (lambda (y) (list x y))])
-    (f 'b))) &#8658; (a b)</code></pre>
+    (f 'b))) ⇒ (a b)</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1175,7 +1262,7 @@ ISBN 978-0-262-51298-5 / LOC QA76.73.S34D93<br>
 <div class="content">
 <pre class="highlightjs highlight"><code data-lang="scheme" class="language-scheme hljs">(let ([f (let ([x 'sam])
            (lambda (y z) (list x y z)))])
-  (f 'i 'am)) &#8658; (sam i am)</code></pre>
+  (f 'i 'am)) ⇒ (sam i am)</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1186,7 +1273,7 @@ ISBN 978-0-262-51298-5 / LOC QA76.73.S34D93<br>
 <pre class="highlightjs highlight"><code data-lang="scheme" class="language-scheme hljs">(let ([f (let ([x 'sam])
            (lambda (y z) (list x y z)))])
   (let ([x 'not-sam])
-    (f 'i 'am))) &#8658; (sam i am)</code></pre>
+    (f 'i 'am))) ⇒ (sam i am)</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1221,7 +1308,7 @@ ISBN 978-0-262-51298-5 / LOC QA76.73.S34D93<br>
 <p>See <a href="#section_3.1.">Section 3.1</a> for more about core forms and syntactic extensions.</p>
 </div>
 <div class="paragraph">
-<p>As mentioned above, the general form of <code>lambda</code> is a bit more complicated than the form we saw earlier, in that the formal parameter specification, <code>(<em>var</em> ...)</code>, need not be a proper list, or indeed even a list at all. The formal parameter specification can be in any of the following three forms:</p>
+<p>As mentioned above, the general form of <code>lambda</code> is a bit more complicated than the form we saw earlier, in that the formal parameter specification, <code>(<em>var</em> &#8230;&#8203;)</code>, need not be a proper list, or indeed even a list at all. The formal parameter specification can be in any of the following three forms:</p>
 </div>
 <div class="ulist">
 <ul>
@@ -1245,16 +1332,16 @@ ISBN 978-0-262-51298-5 / LOC QA76.73.S34D93<br>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code data-lang="scheme" class="language-scheme hljs">(let ([f (lambda x x)])
-  (f 1 2 3 4)) &#8658; (1 2 3 4)
+  (f 1 2 3 4)) ⇒ (1 2 3 4)
 
 (let ([f (lambda x x)])
-  (f)) &#8658; ()
+  (f)) ⇒ ()
 
 (let ([g (lambda (x . y) (list x y))])
-  (g 1 2 3 4)) &#8658; (1 (2 3 4))
+  (g 1 2 3 4)) ⇒ (1 (2 3 4))
 
 (let ([h (lambda (x y . z) (list x y z))])
-  (h 'a 'b 'c 'd)) &#8658; (a b (c d))</code></pre>
+  (h 'a 'b 'c 'd)) ⇒ (a b (c d))</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1396,8 +1483,8 @@ ISBN 978-0-262-51298-5 / LOC QA76.73.S34D93<br>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="scheme" class="language-scheme hljs">(double-any + 10) &#8658; 20
-(double-any cons 'a) &#8658; (a . a)</code></pre>
+<pre class="highlightjs highlight"><code data-lang="scheme" class="language-scheme hljs">(double-any + 10) ⇒ 20
+(double-any cons 'a) ⇒ (a . a)</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1407,7 +1494,7 @@ ISBN 978-0-262-51298-5 / LOC QA76.73.S34D93<br>
 <div class="content">
 <pre class="highlightjs highlight"><code data-lang="scheme" class="language-scheme hljs">(define sandwich "peanut-butter-and-jelly")
 
-sandwich &#8658; "peanut-butter-and-jelly"</code></pre>
+sandwich ⇒ "peanut-butter-and-jelly"</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1420,7 +1507,7 @@ sandwich &#8658; "peanut-butter-and-jelly"</code></pre>
 <div class="content">
 <pre class="highlightjs highlight"><code data-lang="scheme" class="language-scheme hljs">(define xyz '(x y z))
 (let ([xyz '(z y x)])
-  xyz) &#8658; (z y x)</code></pre>
+  xyz) ⇒ (z y x)</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1447,8 +1534,8 @@ sandwich &#8658; "peanut-butter-and-jelly"</code></pre>
   (lambda (x)
     (cdr (cdr x))))
 
-(cadr '(a b c)) &#8658; b
-(cddr '(a b c)) &#8658; (c)</code></pre>
+(cadr '(a b c)) ⇒ b
+(cddr '(a b c)) ⇒ (c)</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1538,10 +1625,10 @@ sandwich &#8658; "peanut-butter-and-jelly"</code></pre>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code data-lang="scheme" class="language-scheme hljs">(define double (doubler +))
-(double 13/2) &#8658; 13
+(double 13/2) ⇒ 13
 
 (define double-cons (doubler cons))
-(double-cons 'a) &#8658; (a . a)</code></pre>
+(double-cons 'a) ⇒ (a . a)</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1584,7 +1671,7 @@ sandwich &#8658; "peanut-butter-and-jelly"</code></pre>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code data-lang="scheme" class="language-scheme hljs">(define proc2 cons)
-(proc1 'a 'b) &#8658; (b . a)</code></pre>
+(proc1 'a 'b) ⇒ (b . a)</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1630,8 +1717,8 @@ sandwich &#8658; "peanut-butter-and-jelly"</code></pre>
         (- 0 n)
         n)))
 
-(abs 77) &#8658; 77
-(abs -77) &#8658; 77</code></pre>
+(abs 77) ⇒ 77
+(abs -77) ⇒ 77</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1701,8 +1788,8 @@ sandwich &#8658; "peanut-butter-and-jelly"</code></pre>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="scheme" class="language-scheme hljs">(< -1 0) &#8658; #t
-(> -1 0) &#8658; #f</code></pre>
+<pre class="highlightjs highlight"><code data-lang="scheme" class="language-scheme hljs">(< -1 0) ⇒ #t
+(> -1 0) ⇒ #f</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1710,20 +1797,20 @@ sandwich &#8658; "peanut-butter-and-jelly"</code></pre>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="scheme" class="language-scheme hljs">(if #t 'true 'false) &#8658; true
-(if #f 'true 'false) &#8658; false
-(if '() 'true 'false) &#8658; true
-(if 1 'true 'false) &#8658; true
-(if '(a b c) 'true 'false) &#8658; true
+<pre class="highlightjs highlight"><code data-lang="scheme" class="language-scheme hljs">(if #t 'true 'false) ⇒ true
+(if #f 'true 'false) ⇒ false
+(if '() 'true 'false) ⇒ true
+(if 1 'true 'false) ⇒ true
+(if '(a b c) 'true 'false) ⇒ true
 
-(not #t) &#8658; #f
-(not "false") &#8658; #f
-(not #f) &#8658; #t
+(not #t) ⇒ #f
+(not "false") ⇒ #f
+(not #f) ⇒ #t
 
-(or) &#8658; #f
-(or #f) &#8658; #f
-(or #f #t) &#8658; #t
-(or #f 'a #f) &#8658; a</code></pre>
+(or) ⇒ #f
+(or #f) ⇒ #f
+(or #f #t) ⇒ #t
+(or #f 'a #f) ⇒ a</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1739,9 +1826,9 @@ sandwich &#8658; "peanut-butter-and-jelly"</code></pre>
     (and (not (= n 0))
          (/ 1 n))))
 
-(reciprocal 3) &#8658; 1/3
-(reciprocal 0.5) &#8658; 2.0
-(reciprocal 0) &#8658; #f</code></pre>
+(reciprocal 3) ⇒ 1/3
+(reciprocal 0.5) ⇒ 2.0
+(reciprocal 0) ⇒ #f</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1752,10 +1839,10 @@ sandwich &#8658; "peanut-butter-and-jelly"</code></pre>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="scheme" class="language-scheme hljs">(null? '()) &#8658; #t
-(null? 'abc) &#8658; #f
-(null? '(x y z)) &#8658; #f
-(null? (cdddr '(x y z))) &#8658; #t</code></pre>
+<pre class="highlightjs highlight"><code data-lang="scheme" class="language-scheme hljs">(null? '()) ⇒ #t
+(null? 'abc) ⇒ #f
+(null? '(x y z)) ⇒ #f
+(null? (cdddr '(x y z))) ⇒ #t</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1769,9 +1856,9 @@ sandwich &#8658; "peanut-butter-and-jelly"</code></pre>
         '()
         (cdr x))))
 
-(lisp-cdr '(a b c)) &#8658; (b c)
-(lisp-cdr '(c)) &#8658; ()
-(lisp-cdr '()) &#8658; ()</code></pre>
+(lisp-cdr '(a b c)) ⇒ (b c)
+(lisp-cdr '(c)) ⇒ ()
+(lisp-cdr '()) ⇒ ()</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1779,18 +1866,18 @@ sandwich &#8658; "peanut-butter-and-jelly"</code></pre>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="scheme" class="language-scheme hljs">(eqv? 'a 'a) &#8658; #t
-(eqv? 'a 'b) &#8658; #f
-(eqv? #f #f) &#8658; #t
-(eqv? #t #t) &#8658; #t
-(eqv? #f #t) &#8658; #f
-(eqv? 3 3) &#8658; #t
-(eqv? 3 2) &#8658; #f
+<pre class="highlightjs highlight"><code data-lang="scheme" class="language-scheme hljs">(eqv? 'a 'a) ⇒ #t
+(eqv? 'a 'b) ⇒ #f
+(eqv? #f #f) ⇒ #t
+(eqv? #t #t) ⇒ #t
+(eqv? #f #t) ⇒ #f
+(eqv? 3 3) ⇒ #t
+(eqv? 3 2) ⇒ #f
 (let ([x "Hi Mom!"])
-  (eqv? x x)) &#8658; #t
+  (eqv? x x)) ⇒ #t
 (let ([x (cons 'a 'b)])
-  (eqv? x x)) &#8658; #t
-(eqv? (cons 'a 'b) (cons 'a 'b)) &#8658; #f</code></pre>
+  (eqv? x x)) ⇒ #t
+(eqv? (cons 'a 'b) (cons 'a 'b)) ⇒ #f</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1801,12 +1888,12 @@ sandwich &#8658; "peanut-butter-and-jelly"</code></pre>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="scheme" class="language-scheme hljs">(pair? '(a . c)) &#8658; #t
-(pair? '(a b c)) &#8658; #t
-(pair? '()) &#8658; #f
-(pair? 'abc) &#8658; #f
-(pair? "Hi Mom!") &#8658; #f
-(pair? 1234567890) &#8658; #f</code></pre>
+<pre class="highlightjs highlight"><code data-lang="scheme" class="language-scheme hljs">(pair? '(a . c)) ⇒ #t
+(pair? '(a b c)) ⇒ #t
+(pair? '()) ⇒ #f
+(pair? 'abc) ⇒ #f
+(pair? "Hi Mom!") ⇒ #f
+(pair? 1234567890) ⇒ #f</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1820,8 +1907,8 @@ sandwich &#8658; "peanut-butter-and-jelly"</code></pre>
         (/ 1 n)
         "oops!")))
 
-(reciprocal 2/3) &#8658; 3/2
-(reciprocal 'a) &#8658; "oops!"</code></pre>
+(reciprocal 2/3) ⇒ 3/2
+(reciprocal 'a) ⇒ "oops!"</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1837,9 +1924,9 @@ sandwich &#8658; "peanut-butter-and-jelly"</code></pre>
           "improper argument"
           n))))
 
-(reciprocal .25) &#8658; 4.0
-(reciprocal 0) &#8658; <em>exception in reciprocal: improper argument 0</em>
-(reciprocal 'a) &#8658; <em>exception in reciprocal: improper argument a</em></code></pre>
+(reciprocal .25) ⇒ 4.0
+(reciprocal 0) ⇒ <em>exception in reciprocal: improper argument 0</em>
+(reciprocal 'a) ⇒ <em>exception in reciprocal: improper argument a</em></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1858,10 +1945,10 @@ sandwich &#8658; "peanut-butter-and-jelly"</code></pre>
             +1
             0))))
 
-(sign -88.3) &#8658; -1
-(sign 0) &#8658; 0
-(sign 333333333333) &#8658; 1
-(* (sign -88.3) (abs -88.3)) &#8658; -88.3</code></pre>
+(sign -88.3) ⇒ -1
+(sign 0) ⇒ 0
+(sign 333333333333) ⇒ 1
+(* (sign -88.3) (abs -88.3)) ⇒ -88.3</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1911,10 +1998,10 @@ sandwich &#8658; "peanut-butter-and-jelly"</code></pre>
       [(<= income 30000) (+ (* (- income 20000) .13) 1300.00)]
       [else (+ (* (- income 30000) .21) 2600.00)])))
 
-(income-tax 5000) &#8658; 250.0
-(income-tax 15000) &#8658; 900.0
-(income-tax 25000) &#8658; 1950.0
-(income-tax 50000) &#8658; 6800.0</code></pre>
+(income-tax 5000) ⇒ 250.0
+(income-tax 15000) ⇒ 900.0
+(income-tax 25000) ⇒ 1950.0
+(income-tax 50000) ⇒ 6800.0</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1933,9 +2020,9 @@ sandwich &#8658; "peanut-butter-and-jelly"</code></pre>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="scheme" class="language-scheme hljs">(shorter '(a b) '(c d e)) &#8658; (a b)
-(shorter '(a b) '(c d)) &#8658; (a b)
-(shorter '(a b) '(c)) &#8658; (c)</code></pre>
+<pre class="highlightjs highlight"><code data-lang="scheme" class="language-scheme hljs">(shorter '(a b) '(c d e)) ⇒ (a b)
+(shorter '(a b) '(c d)) ⇒ (a b)
+(shorter '(a b) '(c)) ⇒ (c)</code></pre>
 </div>
 </div>
 </div>
@@ -1954,11 +2041,11 @@ sandwich &#8658; "peanut-butter-and-jelly"</code></pre>
   (lambda ()
     (goodbye)))
 
-(goodbye) &#8658;</code></pre>
+(goodbye) ⇒</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>This procedure takes no arguments and simply applies itself immediately. There is no value after the &#8658; because <code>goodbye</code> never returns.</p>
+<p>This procedure takes no arguments and simply applies itself immediately. There is no value after the ⇒ because <code>goodbye</code> never returns.</p>
 </div>
 <div class="paragraph">
 <p>Obviously, to make practical use out of a recursive procedure, we must have some way to terminate the recursion. Most recursive procedures should have at least two basic elements, a <em>base case</em> and a <em>recursion step</em>. The base case terminates the recursion, giving the value of the procedure for some base argument. The recursion step gives the value in terms of the value of the procedure applied to a different argument. In order for the recursion to terminate, the different argument must be closer to the base argument in some way.</p>
@@ -1974,9 +2061,9 @@ sandwich &#8658; "peanut-butter-and-jelly"</code></pre>
         0
         (+ (length (cdr ls)) 1))))
 
-(length '()) &#8658; 0
-(length '(a)) &#8658; 1
-(length '(a b)) &#8658; 2</code></pre>
+(length '()) ⇒ 0
+(length '(a)) ⇒ 1
+(length '(a b)) ⇒ 2</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -2007,8 +2094,8 @@ sandwich &#8658; "peanut-butter-and-jelly"</code></pre>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="scheme" class="language-scheme hljs">(list-copy '()) &#8658; ()
-(list-copy '(a b c)) &#8658; (a b c)</code></pre>
+<pre class="highlightjs highlight"><code data-lang="scheme" class="language-scheme hljs">(list-copy '()) ⇒ ()
+(list-copy '(a b c)) ⇒ (a b c)</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -2039,13 +2126,13 @@ sandwich &#8658; "peanut-butter-and-jelly"</code></pre>
       [(eqv? (car ls) x) ls]
       [else (memv x (cdr ls))])))
 
-(memv 'a '(a b b d)) &#8658; (a b b d)
-(memv 'b '(a b b d)) &#8658; (b b d)
-(memv 'c '(a b b d)) &#8658; #f
-(memv 'd '(a b b d)) &#8658; (d)
+(memv 'a '(a b b d)) ⇒ (a b b d)
+(memv 'b '(a b b d)) ⇒ (b b d)
+(memv 'c '(a b b d)) ⇒ #f
+(memv 'd '(a b b d)) ⇒ (d)
 (if (memv 'b '(a b b d))
     "yes"
-    "no") &#8658; "yes"</code></pre>
+    "no") ⇒ "yes"</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -2063,10 +2150,10 @@ sandwich &#8658; "peanut-butter-and-jelly"</code></pre>
       [(eqv? (car ls) x) (remv x (cdr ls))]
       [else (cons (car ls) (remv x (cdr ls)))])))
 
-(remv 'a '(a b b d)) &#8658; (b b d)
-(remv 'b '(a b b d)) &#8658; (a d)
-(remv 'c '(a b b d)) &#8658; (a b b d)
-(remv 'd '(a b b d)) &#8658; (a b b)</code></pre>
+(remv 'a '(a b b d)) ⇒ (b b d)
+(remv 'b '(a b b d)) ⇒ (a d)
+(remv 'c '(a b b d)) ⇒ (a b b d)
+(remv 'd '(a b b d)) ⇒ (a b b)</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -2084,7 +2171,7 @@ sandwich &#8658; "peanut-butter-and-jelly"</code></pre>
         (cons (tree-copy (car tr))
               (tree-copy (cdr tr))))))
 
-(tree-copy '((a . b) . c)) &#8658; ((a . b) . c)</code></pre>
+(tree-copy '((a . b) . c)) ⇒ ((a . b) . c)</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -2105,7 +2192,7 @@ sandwich &#8658; "peanut-butter-and-jelly"</code></pre>
         (cons (abs (car ls))
               (abs-all (cdr ls))))))
 
-(abs-all '(1 -2 3 -4 5 -6)) &#8658; (1 2 3 4 5 6)</code></pre>
+(abs-all '(1 -2 3 -4 5 -6)) ⇒ (1 2 3 4 5 6)</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -2123,7 +2210,7 @@ sandwich &#8658; "peanut-butter-and-jelly"</code></pre>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="scheme" class="language-scheme hljs">(map abs '(1 -2 3 -4 5 -6)) &#8658; (1 2 3 4 5 6)</code></pre>
+<pre class="highlightjs highlight"><code data-lang="scheme" class="language-scheme hljs">(map abs '(1 -2 3 -4 5 -6)) ⇒ (1 2 3 4 5 6)</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -2132,7 +2219,7 @@ sandwich &#8658; "peanut-butter-and-jelly"</code></pre>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code data-lang="scheme" class="language-scheme hljs">(map (lambda (x) (* x x))
-     '(1 -3 -5 7)) &#8658; (1 9 25 49)</code></pre>
+     '(1 -3 -5 7)) ⇒ (1 9 25 49)</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -2140,7 +2227,7 @@ sandwich &#8658; "peanut-butter-and-jelly"</code></pre>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="scheme" class="language-scheme hljs">(map cons '(a b c) '(1 2 3)) &#8658; ((a . 1) (b . 2) (c . 3))</code></pre>
+<pre class="highlightjs highlight"><code data-lang="scheme" class="language-scheme hljs">(map cons '(a b c) '(1 2 3)) ⇒ ((a . 1) (b . 2) (c . 3))</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -2149,7 +2236,7 @@ sandwich &#8658; "peanut-butter-and-jelly"</code></pre>
 <div class="paragraph">
 <p>Looking at the first definition of <code>abs-all</code> above, you should be able to derive, before studying it, the following definition of <code>map1</code>, a restricted version of <code>map</code> that maps a one-argument procedure over a single list.</p>
 </div>
-<div id="defn:map1" class="listingblock">
+<div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code data-lang="scheme" class="language-scheme hljs">(define map1
   (lambda (p ls)
@@ -2158,7 +2245,7 @@ sandwich &#8658; "peanut-butter-and-jelly"</code></pre>
         (cons (p (car ls))
               (map1 p (cdr ls))))))
 
-(map1 abs '(1 -2 3 -4 5 -6)) &#8658; (1 2 3 4 5 6)</code></pre>
+(map1 abs '(1 -2 3 -4 5 -6)) ⇒ (1 2 3 4 5 6)</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -2183,7 +2270,7 @@ sandwich &#8658; "peanut-butter-and-jelly"</code></pre>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="scheme" class="language-scheme hljs">(make-list 7 '()) &#8658; (() () () () () () ())</code></pre>
+<pre class="highlightjs highlight"><code data-lang="scheme" class="language-scheme hljs">(make-list 7 '()) ⇒ (() () () () () () ())</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -2197,10 +2284,10 @@ sandwich &#8658; "peanut-butter-and-jelly"</code></pre>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="scheme" class="language-scheme hljs">(list-ref '(1 2 3 4) 0) &#8658; 1
-(list-tail '(1 2 3 4) 0) &#8658; (1 2 3 4)
-(list-ref '(a short (nested) list) 2) &#8658; (nested)
-(list-tail '(a short (nested) list) 2) &#8658; ((nested) list)</code></pre>
+<pre class="highlightjs highlight"><code data-lang="scheme" class="language-scheme hljs">(list-ref '(1 2 3 4) 0) ⇒ 1
+(list-tail '(1 2 3 4) 0) ⇒ (1 2 3 4)
+(list-ref '(a short (nested) list) 2) ⇒ (nested)
+(list-tail '(a short (nested) list) 2) ⇒ ((nested) list)</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -2220,8 +2307,8 @@ sandwich &#8658; "peanut-butter-and-jelly"</code></pre>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="scheme" class="language-scheme hljs">(even? 17) &#8658; #f
-(odd? 17) &#8658; #t</code></pre>
+<pre class="highlightjs highlight"><code data-lang="scheme" class="language-scheme hljs">(even? 17) ⇒ #f
+(odd? 17) ⇒ #t</code></pre>
 </div>
 </div>
 </div>
@@ -2232,7 +2319,7 @@ sandwich &#8658; "peanut-butter-and-jelly"</code></pre>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="scheme" class="language-scheme hljs">(transpose '((a . 1) (b . 2) (c . 3))) &#8658; ((a b c) 1 2 3)</code></pre>
+<pre class="highlightjs highlight"><code data-lang="scheme" class="language-scheme hljs">(transpose '((a . 1) (b . 2) (c . 3))) ⇒ ((a b c) 1 2 3)</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -2248,12 +2335,12 @@ sandwich &#8658; "peanut-butter-and-jelly"</code></pre>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code data-lang="scheme" class="language-scheme hljs">(define abcde '(a b c d e))
-abcde &#8658; (a b c d e)
+abcde ⇒ (a b c d e)
 (set! abcde (cdr abcde))
-abcde &#8658; (b c d e)
+abcde ⇒ (b c d e)
 (let ([abcde '(a b c d e)])
   (set! abcde (reverse abcde))
-  abcde) &#8658; (e d c b a)</code></pre>
+  abcde) ⇒ (e d c b a)</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -2288,7 +2375,7 @@ abcde &#8658; (b c d e)
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="scheme" class="language-scheme hljs">(quadratic-formula 2 -4 -6) &#8658; (3 . -1)</code></pre>
+<pre class="highlightjs highlight"><code data-lang="scheme" class="language-scheme hljs">(quadratic-formula 2 -4 -6) ⇒ (3 . -1)</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -2320,10 +2407,10 @@ abcde &#8658; (b c d e)
     (set! kons-count (+ kons-count 1))
     (cons x y)))
 
-(kons 'a '(b c)) &#8658; (a b c)
-kons-count &#8658; 1
-(kons 'a (kons 'b (kons 'c '()))) &#8658; (a b c)
-kons-count &#8658; 4</code></pre>
+(kons 'a '(b c)) ⇒ (a b c)
+kons-count ⇒ 1
+(kons 'a (kons 'b (kons 'c '()))) ⇒ (a b c)
+kons-count ⇒ 4</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -2338,8 +2425,8 @@ kons-count &#8658; 4</code></pre>
       (set! next (+ next 1))
       v)))
 
-(count) &#8658; 0
-(count) &#8658; 1</code></pre>
+(count) ⇒ 0
+(count) ⇒ 1</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -2377,11 +2464,11 @@ kons-count &#8658; 4</code></pre>
 <pre class="highlightjs highlight"><code data-lang="scheme" class="language-scheme hljs">(define count1 (make-counter))
 (define count2 (make-counter))
 
-(count1) &#8658; 0
-(count2) &#8658; 0
-(count1) &#8658; 1
-(count1) &#8658; 2
-(count2) &#8658; 1</code></pre>
+(count1) ⇒ 0
+(count2) ⇒ 0
+(count1) ⇒ 1
+(count1) ⇒ 2
+(count2) ⇒ 1</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -2400,8 +2487,8 @@ kons-count &#8658; 4</code></pre>
       secret)))
 
 (shhh "sally likes harry")
-(tell) &#8658; "sally likes harry"
-secret &#8658; <em>exception: variable secret is not bound</em></code></pre>
+(tell) ⇒ "sally likes harry"
+secret ⇒ <em>exception: variable secret is not bound</em></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -2467,22 +2554,22 @@ secret &#8658; <em>exception: variable secret is not bound</em></code></pre>
 <div class="content">
 <pre class="highlightjs highlight"><code data-lang="scheme" class="language-scheme hljs">(define stack1 (make-stack))
 (define stack2 (make-stack))
-(list (stack1 'empty?) (stack2 'empty?)) &#8658; (#t #t)
+(list (stack1 'empty?) (stack2 'empty?)) ⇒ (#t #t)
 
 (stack1 'push! 'a)
-(list (stack1 'empty?) (stack2 'empty?)) &#8658; (#f #t)
+(list (stack1 'empty?) (stack2 'empty?)) ⇒ (#f #t)
 
 (stack1 'push! 'b)
 (stack2 'push! 'c)
-(stack1 'top) &#8658; b
-(stack2 'top) &#8658; c
+(stack1 'top) ⇒ b
+(stack2 'top) ⇒ c
 
 (stack1 'pop!)
-(stack1 'top) &#8658; a
-(list (stack1 'empty?) (stack2 'empty?)) &#8658; (#f #f)
+(stack1 'top) ⇒ a
+(list (stack1 'empty?) (stack2 'empty?)) ⇒ (#f #f)
 
 (stack1 'pop!)
-(list (stack1 'empty?) (stack2 'empty?)) &#8658; (#t #f)</code></pre>
+(list (stack1 'empty?) (stack2 'empty?)) ⇒ (#t #f)</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -2495,9 +2582,9 @@ secret &#8658; <em>exception: variable secret is not bound</em></code></pre>
 <div class="content">
 <pre class="highlightjs highlight"><code data-lang="scheme" class="language-scheme hljs">(define p (list 1 2 3))
 (set-car! (cdr p) 'two)
-p &#8658; (1 two 3)
+p ⇒ (1 two 3)
 (set-cdr! p '())
-p &#8658; (1)</code></pre>
+p ⇒ (1)</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -2546,15 +2633,15 @@ p &#8658; (1)</code></pre>
 
 (putq! myq 'a)
 (putq! myq 'b)
-(getq myq) &#8658; a
+(getq myq) ⇒ a
 (delq! myq)
-(getq myq) &#8658; b
+(getq myq) ⇒ b
 (delq! myq)
 (putq! myq 'c)
 (putq! myq 'd)
-(getq myq) &#8658; c
+(getq myq) ⇒ c
 (delq! myq)
-(getq myq) &#8658; d</code></pre>
+(getq myq) ⇒ d</code></pre>
 </div>
 </div>
 <div class="sect3">
@@ -2582,13 +2669,13 @@ p &#8658; (1)</code></pre>
 (stack 'push! 'b)
 (stack 'push! 'c)
 
-(stack 'ref 0) &#8658; c
-(stack 'ref 2) &#8658; a
+(stack 'ref 0) ⇒ c
+(stack 'ref 2) ⇒ a
 (stack 'set! 1 'd)
-(stack 'ref 1) &#8658; d
-(stack 'top) &#8658; c
+(stack 'ref 1) ⇒ d
+(stack 'top) ⇒ c
 (stack 'pop!)
-(stack 'top) &#8658; d</code></pre>
+(stack 'top) ⇒ d</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -2637,7 +2724,7 @@ p &#8658; (1)</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>What happens when you enter the above expression during an interactive Scheme session? What will the implementation of <code>length</code> on page <a href="#defn:simplelength">42</a> do when given a cyclic list? What does the built-in <code>length</code> primitive do?</p>
+<p>What happens when you enter the above expression during an interactive Scheme session? What will the implementation of <code>length</code> on <a href="#defn:simplelength">page 42</a> do when given a cyclic list? What does the built-in <code>length</code> primitive do?</p>
 </div>
 </div>
 <div class="sect3">
@@ -2647,12 +2734,12 @@ p &#8658; (1)</code></pre>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="scheme" class="language-scheme hljs">(list? '()) &#8658; #t
-(list? '(1 2 3)) &#8658; #t
-(list? '(a . b)) &#8658; #f
+<pre class="highlightjs highlight"><code data-lang="scheme" class="language-scheme hljs">(list? '()) ⇒ #t
+(list? '(1 2 3)) ⇒ #t
+(list? '(a . b)) ⇒ #f
 (list? (let ([ls (cons 'a '())])
          (set-cdr! ls ls)
-         ls)) &#8658; #f</code></pre>
+         ls)) ⇒ #f</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -37429,7 +37516,7 @@ document.querySelectorAll('h4')
         .forEach(function(node) {
             var title=node.innerText;
             var anchor='exercise_'+title.replace(/^Exercise ([\d.]+)$/, '$1');
-            node.outerHTML = '==== ' + title + ' [['+anchor+']]&lt;br&gt;';
+            node.outerHTML = '==== ' + title + ' [['+anchor+']]&lt;br&gt;&lt;br&gt;';
         })
 document.querySelectorAll('[src="math/tspl/0.gif"]')
         .forEach(function(node) { node.outerHTML = '⇒' })
