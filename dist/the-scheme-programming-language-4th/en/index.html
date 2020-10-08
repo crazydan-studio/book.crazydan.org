@@ -2775,7 +2775,7 @@ p ⇒ (1)</code></pre>
 <p>The exact set of syntactic forms making up the core of the language is thus subject to debate, although it must be possible to derive all other forms from any set of forms declared to be core forms. The set described here is among the simplest for which this constraint is satisfied.</p>
 </div>
 <div class="paragraph">
-<p>The core syntactic forms include top-level <code>define</code> forms, constants, variables, procedure applications, <code>quote</code> expressions, <code>lambda</code> expressions, <code>if</code> expressions, and <code>set!</code> expressions. The grammar below describes the core syntax of Scheme in terms of these definitions and expressions. In the grammar, vertical bars ( <code>|</code> ) separate alternatives, and a form followed by an asterisk ( * ) represents zero or more occurrences of the form. &lt;variable&gt; is any Scheme identifier. &lt;datum&gt; is any Scheme object, such as a number, list, symbol, or vector. &lt;boolean&gt; is either <code>#t</code> or <code>#f</code>, &lt;number&gt; is any number, &lt;character&gt; is any character, and &lt;string&gt; is any string. We have already seen examples of numbers, strings, lists, symbols, and booleans. See <a href="#chp_operations_on_objects">Chapter 6</a> or the formal syntax description starting on <a href="#formal_syntax">page 455</a> for more on the object-level syntax of these and other objects.</p>
+<p>The core syntactic forms include top-level <code>define</code> forms, constants, variables, procedure applications, <code>quote</code> expressions, <code>lambda</code> expressions, <code>if</code> expressions, and <code>set!</code> expressions. The grammar below describes the core syntax of Scheme in terms of these definitions and expressions. In the grammar, vertical bars ( | ) separate alternatives, and a form followed by an asterisk ( * ) represents zero or more occurrences of the form. &lt;variable&gt; is any Scheme identifier. &lt;datum&gt; is any Scheme object, such as a number, list, symbol, or vector. &lt;boolean&gt; is either <code>#t</code> or <code>#f</code>, &lt;number&gt; is any number, &lt;character&gt; is any character, and &lt;string&gt; is any string. We have already seen examples of numbers, strings, lists, symbols, and booleans. See <a href="#chp_operations_on_objects">Chapter 6</a> or the formal syntax description starting on <a href="#formal_syntax">page 455</a> for more on the object-level syntax of these and other objects.</p>
 </div>
 <table class="tableblock frame-none grid-none fit-content">
 <colgroup>
@@ -2892,7 +2892,7 @@ p ⇒ (1)</code></pre>
 <p>and hence need not be considered core.</p>
 </div>
 <div class="paragraph">
-<p>Now that we have established a set of core syntactic forms, let&#8217;s turn to a discussion of syntactic extensions. Syntactic extensions are so called because they extend the syntax of Scheme beyond the core syntax. All syntactic extensions in a Scheme program must ultimately be derived from the core forms. One syntactic extension, however, may be defined in terms of another syntactic extension, as long as the latter is in some sense "closer" to the core syntax. Syntactic forms may appear anywhere an expression or definition is expected, as long as the extended form expands into a definition <code>or</code> expression as appropriate.</p>
+<p>Now that we have established a set of core syntactic forms, let&#8217;s turn to a discussion of syntactic extensions. Syntactic extensions are so called because they extend the syntax of Scheme beyond the core syntax. All syntactic extensions in a Scheme program must ultimately be derived from the core forms. One syntactic extension, however, may be defined in terms of another syntactic extension, as long as the latter is in some sense "closer" to the core syntax. Syntactic forms may appear anywhere an expression or definition is expected, as long as the extended form expands into a definition or expression as appropriate.</p>
 </div>
 <div class="paragraph">
 <p>Syntactic extensions are defined with <code>define-syntax</code>. <code>define-syntax</code> is similar to <code>define</code>, except that <code>define-syntax</code> associates a syntactic transformation procedure, or <em>transformer</em>, with a keyword (such as <code>let</code>), rather than associating a value with a variable. Here is how we might define <code>let</code> with <code>define-syntax</code>.</p>
@@ -2901,8 +2901,8 @@ p ⇒ (1)</code></pre>
 <div class="content">
 <pre class="highlightjs highlight"><code data-lang="scheme" class="language-scheme hljs">(define-syntax let
   (syntax-rules ()
-    [(_ ((x e) ...) <em>b<sub>1</sub></em> <em>b<sub>2</sub></em> ...)
-     ((lambda (x ...) <em>b<sub>1</sub></em> <em>b<sub>2</sub></em> ...) e ...)]))</code></pre>
+    [(_ ((x e) ...) b1 b2 ...)
+     ((lambda (x ...) b1 b2 ...) e ...)]))</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -2915,23 +2915,23 @@ p ⇒ (1)</code></pre>
 <p>Identifiers other than an underscore or ellipsis appearing within a pattern are <em>pattern variables</em>, unless they are listed as auxiliary keywords. Pattern variables match any substructure and are bound to that substructure within the corresponding template. The notation <code><em>pat</em> ...</code> in the pattern allows for zero or more expressions matching the ellipsis prototype <code><em>pat</em></code> in the input. Similarly, the notation <code><em>expr</em> ...</code> in the template produces zero or more expressions from the ellipsis prototype <code><em>expr</em></code> in the output. The number of <code><em>pat</em></code>s in the input determines the number of <code><em>expr</em></code>s in the output; in order for this to work, any ellipsis prototype in the template must contain at least one pattern variable from an ellipsis prototype in the pattern.</p>
 </div>
 <div class="paragraph">
-<p>The single rule in our definition of <code>let</code> should be fairly self-explanatory, but a few points are worth mentioning. First, the syntax of <code>let</code> requires that the body contain at least one form; hence, we have specified <code><em>b<sub>1</sub></em> <em>b<sub>2</sub></em> ...</code> instead of <code>b ...</code>, which might seem more natural. On the other hand, <code>let</code> does not require that there be at least one variable/value pair, so we were able to use, simply, <code>(x e) ....</code> Second, the pattern variables <code>x</code> and <code>e</code>, though together within the same prototype in the pattern, are separated in the template; any sort of rearrangement or recombination is possible. Finally, the three pattern variables <code>x</code>, <code>e</code>, and <code><em>b<sub>2</sub></em></code> that appear in ellipsis prototypes in the pattern also appear in ellipsis prototypes in the template. This is not a coincidence; it is a requirement. In general, if a pattern variable appears within an ellipsis prototype in the pattern, it cannot appear outside an ellipsis prototype in the template.</p>
+<p>The single rule in our definition of <code>let</code> should be fairly self-explanatory, but a few points are worth mentioning. First, the syntax of <code>let</code> requires that the body contain at least one form; hence, we have specified <code>b1 b2 ...</code> instead of <code>b ...</code>, which might seem more natural. On the other hand, <code>let</code> does not require that there be at least one variable/value pair, so we were able to use, simply, <code>(x e) ...</code>. Second, the pattern variables <code>x</code> and <code>e</code>, though together within the same prototype in the pattern, are separated in the template; any sort of rearrangement or recombination is possible. Finally, the three pattern variables <code>x</code>, <code>e</code>, and <code>b2</code> that appear in ellipsis prototypes in the pattern also appear in ellipsis prototypes in the template. This is not a coincidence; it is a requirement. In general, if a pattern variable appears within an ellipsis prototype in the pattern, it cannot appear outside an ellipsis prototype in the template.</p>
 </div>
 <div class="paragraph">
 <p>The definition of <code>and</code> below is somewhat more complex than the one for <code>let</code>.</p>
 </div>
-<div id="defn:and" class="listingblock">
+<div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code data-lang="scheme" class="language-scheme hljs">(define-syntax and
   (syntax-rules ()
     [(_) #t]
     [(_ e) e]
-    [(_ <em>e<sub>1</sub></em> <em>e<sub>2</sub></em> <em>e<sub>3</sub></em> ...)
-     (if <em>e<sub>1</sub></em> (and <em>e<sub>2</sub></em> <em>e<sub>3</sub></em> ...) #f)]))</code></pre>
+    [(_ e1 e2 e3 ...)
+     (if e1 (and e2 e3 ...) #f)]))</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>This definition is recursive and involves more than one rule. Recall that <code>(and</code>) evaluates to <code>#t</code>; the first rule takes care of this case. The second and third rules specify the base case and recursion steps of the recursion and together translate <code>and</code> expressions with two or more subexpressions into nested <code>if</code> expressions. For example, <code>(and a b c)</code> expands first into</p>
+<p>This definition is recursive and involves more than one rule. Recall that <code>(and)</code> evaluates to <code>#t</code>; the first rule takes care of this case. The second and third rules specify the base case and recursion steps of the recursion and together translate <code>and</code> expressions with two or more subexpressions into nested <code>if</code> expressions. For example, <code>(and a b c)</code> expands first into</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -2965,8 +2965,8 @@ p ⇒ (1)</code></pre>
 <pre class="highlightjs highlight"><code data-lang="scheme" class="language-scheme hljs">(define-syntax and ; incorrect!
   (syntax-rules ()
     [(_) #t]
-    [(_ <em>e<sub>1</sub></em> <em>e<sub>2</sub></em> ...)
-     (if <em>e<sub>1</sub></em> (and <em>e<sub>2</sub></em> ...) #f)]))</code></pre>
+    [(_ e1 e2 ...)
+     (if e1 (and e2 ...) #f)]))</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -2982,8 +2982,8 @@ p ⇒ (1)</code></pre>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="scheme" class="language-scheme hljs">(if (not (= x 0)) (and (/ 1 x)) #f) &#8594;
-  (if (not (= x 0)) (if (/ 1 x) (and) #f) #f) &#8594;
+<pre class="highlightjs highlight"><code data-lang="scheme" class="language-scheme hljs">(if (not (= x 0)) (and (/ 1 x)) #f) →
+  (if (not (= x 0)) (if (/ 1 x) (and) #f) #f) →
   (if (not (= x 0)) (if (/ 1 x) #t #f) #f)</code></pre>
 </div>
 </div>
@@ -2993,19 +2993,19 @@ p ⇒ (1)</code></pre>
 <div class="paragraph">
 <p>The definition of <code>or</code> below is similar to the one for <code>and</code> except that a temporary variable must be introduced for each intermediate value so that we can both test the value and return it if it is a true value. (A temporary variable is not needed for <code>and</code> since there is only one false value, <code>#f</code>.)</p>
 </div>
-<div id="defn:or" class="listingblock">
+<div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code data-lang="scheme" class="language-scheme hljs">(define-syntax or
   (syntax-rules ()
     [(_) #f]
     [(_ e) e]
-    [(_ <em>e<sub>1</sub></em> <em>e<sub>2</sub></em> <em>e<sub>3</sub></em> ...)
-     (let ([t <em>e<sub>1</sub></em>])
-       (if t t (or <em>e<sub>2</sub></em> <em>e<sub>3</sub></em> ...)))]))</code></pre>
+    [(_ e1 e2 e3 ...)
+     (let ([t e1])
+       (if t t (or e2 e3 ...)))]))</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Like variables bound by <code>lambda</code> or <code>let</code>, identifiers introduced by a template are lexically scoped, i.e., visible only within expressions introduced by the template. Thus, even if one of the expressions <code><em>e<sub>2</sub></em> <em>e<sub>3</sub></em> ...</code> contains a reference to <code>t</code>, the introduced binding for <code>t</code> does not "capture" those references. This is typically accomplished via automatic renaming of introduced identifiers.</p>
+<p>Like variables bound by <code>lambda</code> or <code>let</code>, identifiers introduced by a template are lexically scoped, i.e., visible only within expressions introduced by the template. Thus, even if one of the expressions <code>e2 e3 ...</code> contains a reference to <code>t</code>, the introduced binding for <code>t</code> does not "capture" those references. This is typically accomplished via automatic renaming of introduced identifiers.</p>
 </div>
 <div class="paragraph">
 <p>As with the simpler version of <code>and</code> given above, the simpler version of <code>or</code> below is incorrect.</p>
@@ -3015,9 +3015,9 @@ p ⇒ (1)</code></pre>
 <pre class="highlightjs highlight"><code data-lang="scheme" class="language-scheme hljs">(define-syntax or ; incorrect!
   (syntax-rules ()
     [(_) #f]
-    [(_ <em>e<sub>1</sub></em> <em>e<sub>2</sub></em> ...)
-     (let ([t <em>e<sub>1</sub></em>])
-       (if t t (or <em>e<sub>2</sub></em> ...)))]))</code></pre>
+    [(_ e1 e2 ...)
+     (let ([t e1])
+       (if t t (or e2 ...)))]))</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -3154,7 +3154,7 @@ p ⇒ (1)</code></pre>
 <div class="paragraph">
 <p>Using <code>letrec</code>, we can also define mutually recursive procedures, such as the procedures <code>even?</code> and <code>odd?</code> that were the subject of <a href="#exercise_2.8.6">Exercise 2.8.6</a>.</p>
 </div>
-<div id="defn:even?/odd?" class="listingblock">
+<div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code data-lang="scheme" class="language-scheme hljs">(letrec ([even?
           (lambda (x)
@@ -3219,7 +3219,7 @@ p ⇒ (1)</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Named let is similar to unnamed <code>let</code> in that it binds the variables <code><em>var</em> ...</code> to the values of <code><em>expr</em> ...</code> within the body <code><em>body<sub>1</sub></em> <em>body<sub>2</sub></em> ...</code>. As with unnamed <code>let</code>, the variables are visible only within the body and not within <code><em>expr</em> ...</code>. In addition, the variable <code><em>name</em></code> is bound within the body to a procedure that may be called to recur; the arguments to the procedure become the new values for the variables <code><em>var</em> ...</code>.</p>
+<p>Named <code>let</code> is similar to unnamed <code>let</code> in that it binds the variables <code><em>var</em> ...</code> to the values of <code><em>expr</em> ...</code> within the body <code><em>body<sub>1</sub></em> <em>body<sub>2</sub></em> ...</code>. As with unnamed <code>let</code>, the variables are visible only within the body and not within <code><em>expr</em> ...</code>. In addition, the variable <code><em>name</em></code> is bound within the body to a procedure that may be called to recur; the arguments to the procedure become the new values for the variables <code><em>var</em> ...</code>.</p>
 </div>
 <div class="paragraph">
 <p>The definition of <code>list?</code> has been rewritten below to use named <code>let</code>.</p>
@@ -3321,8 +3321,8 @@ p ⇒ (1)</code></pre>
           (fact (- i 1) (* a i))))))</code></pre>
 </div>
 </div>
-<div class="paragraph">
-<p><a id="fibonacci"></a> A similar problem is to compute the <em>n</em>th Fibonacci number for a given <em>n</em>. The <em>Fibonacci numbers</em> are an infinite sequence of integers, 0, 1, 1, 2, 3, 5, 8, etc., in which each number is the sum of the two preceding numbers in the sequence. A procedure to compute the <em>n</em>th Fibonacci number is most naturally defined recursively as follows.</p>
+<div id="fibonacci" class="paragraph">
+<p>A similar problem is to compute the <em>n</em>th Fibonacci number for a given <em>n</em>. The <em>Fibonacci numbers</em> are an infinite sequence of integers, 0, 1, 1, 2, 3, 5, 8, etc., in which each number is the sum of the two preceding numbers in the sequence. A procedure to compute the <em>n</em>th Fibonacci number is most naturally defined recursively as follows.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -3346,7 +3346,7 @@ p ⇒ (1)</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>This solution requires the computation of the two preceding Fibonacci numbers at each step and hence is <em>doubly recursive</em>. For example, to compute <code>(fibonacci 4)</code> requires the computation of both <code>(fib 3)</code> and <code>(fib 2)</code>, to compute <code>(fib 3)</code> requires computing both <code>(fib 2)</code> and <code>(fib 1)</code>, and to compute <code>(fib 2)</code> requires computing both <code>(fib 1)</code> and <code>(fib 0)</code>. This is very inefficient, and it becomes more inefficient as <code>n</code> grows. A more efficient solution is to adapt the accumulator solution of the <code>factorial</code> example above to use two accumulators, <code><em>a<sub>1</sub></em></code> for the current Fibonacci number and <code><em>a<sub>2</sub></em></code> for the preceding one.</p>
+<p>This solution requires the computation of the two preceding Fibonacci numbers at each step and hence is <em>doubly recursive</em>. For example, to compute <code>(fibonacci 4)</code> requires the computation of both <code>(fib 3)</code> and <code>(fib 2)</code>, to compute <code>(fib 3)</code> requires computing both <code>(fib 2)</code> and <code>(fib 1)</code>, and to compute <code>(fib 2)</code> requires computing both <code>(fib 1)</code> and <code>(fib 0)</code>. This is very inefficient, and it becomes more inefficient as <code>n</code> grows. A more efficient solution is to adapt the accumulator solution of the <code>factorial</code> example above to use two accumulators, <code>a1</code> for the current Fibonacci number and <code>a2</code> for the preceding one.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -3354,10 +3354,10 @@ p ⇒ (1)</code></pre>
   (lambda (n)
     (if (= n 0)
         0
-        (let fib ([i n] [<em>a<sub>1</sub></em> 1] [<em>a<sub>2</sub></em> 0])
+        (let fib ([i n] [a1 1] [a2 0])
           (if (= i 1)
-              <em>a<sub>1</sub></em>
-              (fib (- i 1) (+ <em>a<sub>1</sub></em> <em>a<sub>2</sub></em>) <em>a<sub>1</sub></em>))))))</code></pre>
+              a1
+              (fib (- i 1) (+ a1 a2) a1))))))</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -3513,13 +3513,13 @@ p ⇒ (1)</code></pre>
 <pre class="highlightjs highlight"><code data-lang="scheme" class="language-scheme hljs">(define-syntax or ; incorrect!
   (syntax-rules ()
     [(_) #f]
-    [(_ <em>e<sub>1</sub></em> <em>e<sub>2</sub></em> ...)
-     (let ([t <em>e<sub>1</sub></em>])
-       (if t t (or <em>e<sub>2</sub></em> ...)))]))</code></pre>
+    [(_ e1 e2 ...)
+     (let ([t e1])
+       (if t t (or e2 ...)))]))</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Say why it is not correct. [<em>Hint</em>: Think about what would happen if this version of <code>or</code> were used in the <code>even?</code> and <code>odd?</code> example given on <a href="#defn:even?/odd?">page 66</a> for very large inputs.]</p>
+<p>Say why it is not correct. [<em>Hint</em>: Think about what would happen if this version of <code>or</code> were used in the <code>even?</code> and <code>odd?</code> example given on page 66 for very large inputs.]</p>
 </div>
 </div>
 <div class="sect3">
@@ -3601,7 +3601,7 @@ p ⇒ (1)</code></pre>
 <div class="paragraph">
 <p>Here is a less trivial example, showing the use of <code>call/cc</code> to provide a nonlocal exit from a recursion.</p>
 </div>
-<div id="defn:product-call/cc" class="listingblock">
+<div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code data-lang="scheme" class="language-scheme hljs">(define product
   (lambda (ls)
@@ -3948,7 +3948,7 @@ p ⇒ (1)</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>In fact, internal variable definitions and <code>letrec</code> are practically interchangeable. The only difference, other than the obvious difference in syntax, is that variable definitions are guaranteed to be evaluated from left to right, while the bindings of a <code>letrec</code> may be evaluated in any order. So we cannot quite replace a <code>lambda</code>, <code>let</code>, or <code>letrec</code> body containing internal definitions with a <code>letrec</code> expression. We can, however, use <code>letrec*</code>, which, like <code>let*</code>, guarantees left-to-right evaluation order. A body of the form</p>
+<p>In fact, internal variable definitions and <code>letrec</code> are practically interchangeable. The only difference, other than the obvious difference in syntax, is that variable definitions are guaranteed to be evaluated from left to right, while the bindings of a letrec may be evaluated in any order. So we cannot quite replace a <code>lambda</code>, <code>let</code>, or <code>letrec</code> body containing internal definitions with a <code>letrec</code> expression. We can, however, use <code>letrec*</code>, which, like <code>let*</code>, guarantees left-to-right evaluation order. A body of the form</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -4153,16 +4153,16 @@ p ⇒ (1)</code></pre>
 
   (define-syntax range-case
     (syntax-rules (- else)
-      [(_ expr ((x - y) <em>e<sub>1</sub></em> <em>e<sub>2</sub></em> ...) ... [else <em>ee<sub>1</sub></em> <em>ee<sub>2</sub></em> ...])
+      [(_ expr ((x - y) e1 e2 ...) ... [else ee1 ee2 ...])
        (let ([tmp expr])
          (cond
-           [(in-range? x tmp y) <em>e<sub>1</sub></em> <em>e<sub>2</sub></em> ...]
+           [(in-range? x tmp y) e1 e2 ...]
            ...
-           [else <em>ee<sub>1</sub></em> <em>ee<sub>2</sub></em> ...]))]
-      [(_ expr ((x - y) <em>e<sub>1</sub></em> <em>e<sub>2</sub></em> ...) ...)
+           [else ee1 ee2 ...]))]
+      [(_ expr ((x - y) e1 e2 ...) ...)
        (let ([tmp expr])
          (cond
-           [(in-range? x tmp y) <em>e<sub>1</sub></em> <em>e<sub>2</sub></em> ...]
+           [(in-range? x tmp y) e1 e2 ...]
            ...))]))
 
   (define letter->number
@@ -4186,8 +4186,8 @@ p ⇒ (1)</code></pre>
 
   (define-syntax gpa
     (syntax-rules ()
-      [(_ <em>g<sub>1</sub></em> <em>g<sub>2</sub></em> ...)
-       (let ([ls (map letter->number '(<em>g<sub>1</sub></em> <em>g<sub>2</sub></em> ...))])
+      [(_ g1 g2 ...)
+       (let ([ls (map letter->number '(g1 g2 ...))])
          (/ (apply + ls) (length ls)))])))</code></pre>
 </div>
 </div>
