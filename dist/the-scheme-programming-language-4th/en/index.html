@@ -4601,8 +4601,8 @@ libraries
 <div class="content">
 <pre class="highlightjs highlight"><code data-lang="scheme" class="language-scheme hljs">(define-syntax let
   (syntax-rules ()
-    [(_ ((x e) ...) <em>b<sub>1</sub></em> <em>b<sub>2</sub></em> ...)
-     ((lambda (x ...) <em>b<sub>1</sub></em> <em>b<sub>2</sub></em> ...) e ...)]))</code></pre>
+    [(_ ((x e) ...) b1 b2 ...)
+     ((lambda (x ...) b1 b2 ...) e ...)]))</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -4653,15 +4653,15 @@ libraries
 <div class="paragraph">
 <p>Any <code>let*</code> expression may be converted to a set of nested <code>let</code> expressions. The following definition of <code>let*</code> demonstrates the typical transformation.</p>
 </div>
-<div id="defn:let*" class="listingblock">
+<div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="scheme" class="language-scheme hljs">(define-syntax <code>let*</code>
+<pre class="highlightjs highlight"><code data-lang="scheme" class="language-scheme hljs">(define-syntax let*
   (syntax-rules ()
-    [(_ () <em>e<sub>1</sub></em> <em>e<sub>2</sub></em> ...)
-     (let () <em>e<sub>1</sub></em> <em>e<sub>2</sub></em> ...)]
-    [(_ ((<em>x<sub>1</sub></em> <em>v<sub>1</sub></em>) (<em>x<sub>2</sub></em> <em>v<sub>2</sub></em>) ...) <em>e<sub>1</sub></em> <em>e<sub>2</sub></em> ...)
-     (let ((<em>x<sub>1</sub></em> <em>v<sub>1</sub></em>))
-       (let* ((<em>x<sub>2</sub></em> <em>v<sub>2</sub></em>) ...) <em>e<sub>1</sub></em> <em>e<sub>2</sub></em> ...))]))</code></pre>
+    [(_ () e1 e2 ...)
+     (let () e1 e2 ...)]
+    [(_ ((x1 v1) (x2 v2) ...) e1 e2 ...)
+     (let ((x1 v1))
+       (let* ((x2 v2) ...) e1 e2 ...))]))</code></pre>
 </div>
 </div>
 <div id="binding:s20" class="hdlist">
@@ -4973,9 +4973,9 @@ x ⇒ 3
 <div class="content">
 <pre class="highlightjs highlight"><code data-lang="scheme" class="language-scheme hljs">(define-syntax multi-define-syntax
   (syntax-rules ()
-    [(_ (<em>var</em> <em>expr</em>) ...)
+    [(_ (var expr) ...)
      (begin
-       (define-syntax <em>var</em> <em>expr</em>)
+       (define-syntax var expr)
        ...)]))
 (let ()
   (define plus
@@ -4990,7 +4990,7 @@ x ⇒ 3
 </div>
 </div>
 <div id="binding:s27" class="paragraph">
-<p>Many implementations support an interactive "top level" in which variable and other definitions may be entered interactively or loaded from files. The behavior of these top-level definitions is outside the scope of the Revised6 Report, but as long as top-level variables are defined before any references or assignments to them are evaluated, the behavior is consistent across most implementations. So, for example, the reference to <code>g</code> in the top-level definition of <code>f</code> below is okay if <code><em>g</em></code> is not already defined, and <code>g</code> is assumed to name a variable to be defined at some later point.</p>
+<p>Many implementations support an interactive "top level" in which variable and other definitions may be entered interactively or loaded from files. The behavior of these top-level definitions is outside the scope of the Revised<sup>6</sup> Report, but as long as top-level variables are defined before any references or assignments to them are evaluated, the behavior is consistent across most implementations. So, for example, the reference to <code>g</code> in the top-level definition of <code>f</code> below is okay if <code><em>g</em></code> is not already defined, and <code>g</code> is assumed to name a variable to be defined at some later point.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -37584,16 +37584,12 @@ document.querySelectorAll('i')
 <td class="tableblock halign-left valign-top"><p class="tableblock">&lt;&lt;ref$1&gt;&gt;</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>([^=]) Section ([\d\.]+\d)</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">$1 &lt;&lt;section_$2.,Section $2&gt;&gt;</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>([(])Section ([\d\.]+\d)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>(^|\(|[^=] )Section ([\d\.]+\d)</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">$1&lt;&lt;section_$2.,Section $2&gt;&gt;</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>([^=]) Exercise ([\d\.]+\d)</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">$1 &lt;&lt;exercise_$2,Exercise $2&gt;&gt;</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>(^|\(|[^=] )Exercise ([\d\.]+\d)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">$1&lt;&lt;exercise_$2,Exercise $2&gt;&gt;</p></td>
 </tr>
 </tbody>
 </table>
