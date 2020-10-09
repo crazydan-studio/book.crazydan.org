@@ -178,14 +178,11 @@ document.querySelectorAll('i')
 |`\[(\d+)\]`
 |++<<ref$1>>++
 
-|`([^=]) Section ([\d\.]+\d)`
-|++$1 <<section_$2.,Section $2>>++
-
-|`([(])Section ([\d\.]+\d)`
+|`(\^\|\(\|[^=] )Section ([\d\.]+\d)`
 |++$1<<section_$2.,Section $2>>++
 
-|`([^=]) Exercise ([\d\.]+\d)`
-|++$1 <<exercise_$2,Exercise $2>>++
+|`(\^\|\(\|[^=] )Exercise ([\d\.]+\d)`
+|++$1<<exercise_$2,Exercise $2>>++
 |===
 
 - Check the lost links +
