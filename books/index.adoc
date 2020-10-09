@@ -5,5 +5,7 @@
 
 == The Scheme Programming Language, Fourth Edition
 
-. link:the-scheme-programming-language-4th/en/index.html[English] (link:the-scheme-programming-language-4th/pdf/en.pdf[pdf])
-. link:the-scheme-programming-language-4th/zh/index.html[简体中文] (link:the-scheme-programming-language-4th/pdf/zh.pdf[pdf])
+- link:the-scheme-programming-language-4th/en/index.html[English]
+- link:the-scheme-programming-language-4th/zh/index.html[简体中文]
+// - link:the-scheme-programming-language-4th/en/index.html[English] (link:the-scheme-programming-language-4th/pdf/en.pdf[pdf])
+// - link:the-scheme-programming-language-4th/zh/index.html[简体中文] (link:the-scheme-programming-language-4th/pdf/zh.pdf[pdf])
