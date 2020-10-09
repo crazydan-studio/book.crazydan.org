@@ -319,6 +319,7 @@ In this case, an exception is raised indicating that `x` is not defined where it
 
 We can use `letrec` to hide the definitions of "help" procedures so that they do not clutter the top-level namespace. This is demonstrated by the definition of `list?` below, which follows the "hare and tortoise" algorithm outlined in <<exercise_2.9.8,Exercise 2.9.8>>.
 
+[#defn:list?]
 [source,scheme,subs=""]
 ----
 (define list?

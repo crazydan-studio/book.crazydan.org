@@ -17,7 +17,7 @@ Procedure application is the most basic Scheme control structure. Any structured
 [#control:s2]
 The order in which the procedure and argument expressions are evaluated is unspecified. It may be left to right, right to left, or any other order. The evaluation is guaranteed to be sequential, however: whatever order is chosen, each expression is fully evaluated before evaluation of the next is started.
 
-[source,scheme,subs="quotes,replacements"]
+[source,scheme,subs=""]
 ----
 (+ 3 4) ⇒ 7
 
@@ -39,7 +39,7 @@ libraries:: `(rnrs base)`, `(rnrs)`
 
 `apply` is useful when some or all of the arguments to be passed to a procedure are in a list, since it frees the programmer from explicitly destructuring the list.
 
-[source,scheme,subs="quotes,replacements"]
+[source,scheme,subs=""]
 ----
 (apply + '(4 5)) ⇒ 9
 
@@ -73,7 +73,7 @@ libraries:: `(rnrs base)`, `(rnrs)`
 
 The expressions `_expr~1~_ _expr~2~_ \...` are evaluated in sequence from left to right. `begin` is used to sequence assignments, input/output, or other operations that cause side effects.
 
-[source,scheme,subs="quotes,replacements"]
+[source,scheme,subs=""]
 ----
 (define x 3)
 (begin
@@ -83,7 +83,7 @@ The expressions `_expr~1~_ _expr~2~_ \...` are evaluated in sequence from left t
 
 A `begin` form may contain zero or more definitions in place of the expressions `_expr~1~_ _expr~2~_ \...`, in which case it is considered to be a definition and may appear only where definitions are valid.
 
-[source,scheme,subs="quotes,replacements"]
+[source,scheme,subs=""]
 ----
 (let ()
   (begin (define x 3) (define y 4))
@@ -94,7 +94,7 @@ This form of `begin` is primarily used by syntactic extensions that must expand 
 
 The bodies of many syntactic forms, including `lambda`, `case-lambda`, `let`, `let*`, `letrec`, and `letrec*`, as well as the result clauses of `cond`, `case`, and `do`, are treated as if they were inside an implicit `begin`; i.e., the expressions making up the body or result clause are executed in sequence, with the values of the last expression being returned.
 
-[source,scheme,subs="quotes,replacements"]
+[source,scheme,subs=""]
 ----
 (define swap-pair!
   (lambda (x)
@@ -117,7 +117,7 @@ libraries:: `(rnrs base)`, `(rnrs)`
 [#control:s9]
 The `_test_`, `_consequent_`, and `_alternative_` subforms must be expressions. If `_test_` evaluates to a true value (anything other than `#f`), `consequent` is evaluated and its values are returned. Otherwise, `alternative` is evaluated and its values are returned. With the second, "one-armed," form, which has no `_alternative_`, the result is unspecified if `_test_` evaluates to false.
 
-[source,scheme,subs="quotes,replacements"]
+[source,scheme,subs=""]
 ----
 (let ([ls '(a b c)])
   (if (null? ls)
@@ -150,7 +150,7 @@ libraries:: `(rnrs base)`, `(rnrs)`
 
 `not` is equivalent to `(lambda (x) (if x #f #t))`.
 
-[source,scheme,subs="quotes,replacements"]
+[source,scheme,subs=""]
 ----
 (not #f) ⇒ #t
 (not #t) ⇒ #f
@@ -166,7 +166,7 @@ libraries:: `(rnrs base)`, `(rnrs)`
 
 If no subexpressions are present, the `and` form evaluates to `#t`. Otherwise, `and` evaluates each subexpression in sequence from left to right until only one subexpression remains or a subexpression returns `#f`. If one subexpression remains, it is evaluated and its values are returned. If a subexpression returns `#f`, `and` returns `#f` without evaluating the remaining subexpressions. A syntax definition of `and` appears on <<defn:and,page 62>>.
 
-[source,scheme,subs="quotes,replacements"]
+[source,scheme,subs=""]
 ----
 (let ([x 3])
   (and (> x 2) (< x 4))) ⇒ #t
@@ -186,7 +186,7 @@ libraries:: `(rnrs base)`, `(rnrs)`
 
 If no subexpressions are present, the `or` form evaluates to `#f`. Otherwise, `or` evaluates each subexpression in sequence from left to right until only one subexpression remains or a subexpression returns a value other than `#f`. If one subexpression remains, it is evaluated and its values are returned. If a subexpression returns a value other than `#f`, `or` returns that value without evaluating the remaining subexpressions. A syntax definition of `or` appears on <<defn:or,page 63>>.
 
-[source,scheme,subs="quotes,replacements"]
+[source,scheme,subs=""]
 ----
 (let ([x 3])
   (or (< x 2) (> x 4))) ⇒ #f
@@ -205,18 +205,18 @@ libraries:: `(rnrs base)`, `(rnrs)`
 
 Each `_clause_` but the last must take one of the forms below.
 
-[source,scheme,subs="quotes,replacements"]
+[source,scheme,subs="quotes"]
 ----
 (_test_)
-(_test_ _expr~1~_ _expr~2~_ \...)
+(_test_ _expr~1~_ _expr~2~_ ...)
 (_test_ => _expr_)
 ----
 
 The last clause may be in any of the above forms, or it may be an "``else`` clause" of the form
 
-[source,scheme,subs="quotes,replacements"]
+[source,scheme,subs="quotes"]
 ----
-(else _expr~1~_ _expr~2~_ \...)
+(else _expr~1~_ _expr~2~_ ...)
 ----
 
 Each `_test_` is evaluated in order until one evaluates to a true value or until all of the tests have been evaluated. If the first clause whose `_test_` evaluates to a true value is in the first form given above, the value of `_test_` is returned.
@@ -231,7 +231,7 @@ If none of the tests evaluates to a true value and no `else` clause is present, 
 
 See <<defn:cond,page 305>> for a syntax definition of `cond`.
 
-[source,scheme,subs="quotes,replacements"]
+[source,scheme,subs=""]
 ----
 (let ([x 0])
   (cond
@@ -272,7 +272,7 @@ For `unless`, if `_test-expr_` evaluates to false, the expressions `_expr~1~_ _e
 
 A `when` or `unless` expression is usually clearer than the corresponding "one-armed" `if` expression.
 
-[source,scheme,subs="quotes,replacements"]
+[source,scheme,subs=""]
 ----
 (let ([x -4] [sign 'plus])
   (when (< x 0)
@@ -291,32 +291,32 @@ A `when` or `unless` expression is usually clearer than the corresponding "one-a
 
 `when` may be defined as follows:
 
-[source,scheme,subs="quotes,replacements"]
+[source,scheme,subs=""]
 ----
 (define-syntax when
   (syntax-rules ()
-    [(_ _e~0~_ _e~1~_ _e~2~_ \...)
-     (if _e~0~_ (begin _e~1~_ _e~2~_ \...))]))
+    [(_ e0 e1 e2 ...)
+     (if e0 (begin e1 e2 ...))]))
 ----
 
 `unless` may be defined as follows:
 
-[source,scheme,subs="quotes,replacements"]
+[source,scheme,subs=""]
 ----
 (define-syntax unless
   (syntax-rules ()
-    [(_ _e~0~_ _e~1~_ _e~2~_ \...)
-     (if (not _e~0~_) (begin _e~1~_ _e~2~_ \...))]))
+    [(_ e0 e1 e2 ...)
+     (if (not e0) (begin e1 e2 ...))]))
 ----
 
 or in terms of `when` as follows:
 
-[source,scheme,subs="quotes,replacements"]
+[source,scheme,subs=""]
 ----
 (define-syntax unless
   (syntax-rules ()
-    [(_ _e~0~_ _e~1~_ _e~2~_ \...)
-     (when (not _e~0~_) _e~1~_ _e~2~_ \...)]))
+    [(_ e0 e1 e2 ...)
+     (when (not e0) e1 e2 ...)]))
 ----
 
 [#control:s18]
@@ -327,19 +327,19 @@ libraries:: `(rnrs base)`, `(rnrs)`
 
 Each clause but the last must take the form
 
-[source,scheme,subs="quotes,replacements"]
+[source,scheme,subs="quotes"]
 ----
-((_key_ \...) _expr~1~_ _expr~2~_ \...)
+((_key_ ...) _expr~1~_ _expr~2~_ ...)
 ----
 
 where each `_key_` is a datum distinct from the other keys. The last clause may be in the above form or it may be an `else` clause of the form
 
-[source,scheme,subs="quotes,replacements"]
+[source,scheme,subs="quotes"]
 ----
-(else _expr~1~_ _expr~2~_ \...)
+(else _expr~1~_ _expr~2~_ ...)
 ----
 
-_expr~0~_ is evaluated and the result is compared (using `eqv?`) against the keys of each clause in order. If a clause containing a matching key is found, the expressions `_expr~1~_ _expr~2~_ \...` are evaluated in sequence and the values of the last expression are returned.
+`_expr~0~_` is evaluated and the result is compared (using `eqv?`) against the keys of each clause in order. If a clause containing a matching key is found, the expressions `_expr~1~_ _expr~2~_ \...` are evaluated in sequence and the values of the last expression are returned.
 
 If none of the clauses contains a matching key and an `else` clause is present, the expressions `_expr~1~_ _expr~2~_ \...` of the `else` clause are evaluated in sequence and the values of the last expression are returned.
 
@@ -347,7 +347,7 @@ If none of the clauses contains a matching key and no `else` clause is present, 
 
 See <<defn:case,page 306>> for a syntax definition of `case`.
 
-[source,scheme,subs="quotes,replacements"]
+[source,scheme,subs=""]
 ----
 (let ([x 4] [y 5])
   (case (+ x y)
@@ -368,26 +368,26 @@ This form of `let`, called `_named_` `let`, is a general-purpose iteration and r
 
 A named `let` expression of the form
 
-[source,scheme,subs="quotes,replacements"]
+[source,scheme,subs="quotes"]
 ----
-(let _name_ ((_var_ _expr_) \...)
-  _body~1~_ _body~2~_ \...)
+(let _name_ ((_var_ _expr_) ...)
+  _body~1~_ _body~2~_ ...)
 ----
 
 can be rewritten with `letrec` as follows.
 
-[source,scheme,subs="quotes,replacements"]
+[source,scheme,subs="quotes"]
 ----
-((letrec ((_name_ (lambda (_var_ \...) _body~1~_ _body~2~_ \...)))
+((letrec ((_name_ (lambda (_var_ ...) _body~1~_ _body~2~_ ...)))
    _name_)
- _expr_ \...)
+ _expr_ ...)
 ----
 
 A syntax definition of `let` that implements this transformation and handles unnamed `let` as well can be found on <<defn:let,page 312>>.
 
 The procedure `divisors` defined below uses named `let` to compute the nontrivial divisors of a nonnegative integer.
 
-[source,scheme,subs="quotes,replacements"]
+[source,scheme,subs=""]
 ----
 (define divisors
   (lambda (n)
@@ -403,7 +403,7 @@ The procedure `divisors` defined below uses named `let` to compute the nontrivia
 
 The version above is non-tail-recursive when a divisor is found and tail-recursive when a divisor is not found. The version below is fully tail-recursive. It builds up the list in reverse order, but this is easy to remedy, if desired, by reversing the list on exit.
 
-[source,scheme,subs="quotes,replacements"]
+[source,scheme,subs=""]
 ----
 (define divisors
   (lambda (n)
@@ -434,7 +434,7 @@ See <<defn:do,page 313>> for a syntax definition of `do`.
 
 The definitions of `factorial` and `fibonacci` below are straightforward translations of the tail-recursive named-``let`` versions given in <<section_3.2.,Section 3.2>>.
 
-[source,scheme,subs="quotes,replacements"]
+[source,scheme,subs=""]
 ----
 (define factorial
   (lambda (n)
@@ -455,7 +455,7 @@ The definitions of `factorial` and `fibonacci` below are straightforward transla
 
 The definition of `divisors` below is similar to the tail-recursive definition of `divisors` given with the description of named `let` above.
 
-[source,scheme,subs="quotes,replacements"]
+[source,scheme,subs=""]
 ----
 (define divisors
   (lambda (n)
@@ -469,7 +469,7 @@ The definition of `divisors` below is similar to the tail-recursive definition o
 
 The definition of `scale-vector!` below, which scales each element of a vector _v_ by a constant _k_, demonstrates a nonempty `do` body.
 
-[source,scheme,subs="quotes,replacements"]
+[source,scheme,subs=""]
 ----
 (define scale-vector!
   (lambda (v k)
@@ -495,7 +495,7 @@ libraries:: `(rnrs base)`, `(rnrs)`
 
 `map` applies `_procedure_` to corresponding elements of the lists `_list~1~_ _list~2~_ \...` and returns a list of the resulting values. The lists `_list~1~_ _list~2~_ \...` must be of the same length. `_procedure_` should accept as many arguments as there are lists, should return a single value, and should not mutate the `_list_` arguments.
 
-[source,scheme,subs="quotes,replacements"]
+[source,scheme,subs=""]
 ----
 (map abs '(1 -2 3 -4 5 -6)) ⇒ (1 2 3 4 5 6)
 
@@ -508,7 +508,7 @@ While the order in which the applications themselves occur is not specified, the
 
 `map` might be defined as follows.
 
-[source,scheme,subs="quotes,replacements"]
+[source,scheme,subs=""]
 ----
 (define map
   (lambda (f ls . more)
@@ -536,7 +536,7 @@ libraries:: `(rnrs base)`, `(rnrs)`
 
 `for-each` is similar to `map` except that `for-each` does not create and return a list of the resulting values, and `for-each` guarantees to perform the applications in sequence over the elements from left to right. `_procedure_` should accept as many arguments as there are lists and should not mutate the `_list_` arguments. `for-each` may be defined without error checks as follows.
 
-[source,scheme,subs="quotes,replacements"]
+[source,scheme,subs=""]
 ----
 (define for-each
   (lambda (f ls . more)
@@ -562,7 +562,7 @@ libraries:: `(rnrs lists)`, `(rnrs)`
 
 The lists `_list~1~_ _list~2~_ \...` must be of the same length. `_procedure_` should accept as many arguments as there are lists and should not mutate the `_list_` arguments. If the lists are empty, `exists` returns `#f`. Otherwise, `exists` applies `_procedure_` to corresponding elements of the lists `_list~1~_ _list~2~_ \...` in sequence until either the lists each have only one element or `_procedure_` returns a true value `_t_`. In the former case, `exists` tail-calls `_procedure_`, applying it to the remaining element of each list. In the latter case, `exists` returns `_t_`.
 
-[source,scheme,subs="quotes,replacements"]
+[source,scheme,subs=""]
 ----
 (exists symbol? '(1.0 #\a "hi" '())) ⇒ #f
 
@@ -578,7 +578,7 @@ The lists `_list~1~_ _list~2~_ \...` must be of the same length. `_procedure_` s
 
 `exists` may be defined (somewhat inefficiently and without error checks) as follows:
 
-[source,scheme,subs="quotes,replacements"]
+[source,scheme,subs=""]
 ----
 (define exists
   (lambda (f ls . more)
@@ -598,7 +598,7 @@ libraries:: `(rnrs lists)`, `(rnrs)`
 
 The lists `_list~1~_ _list~2~_ \...` must be of the same length. `_procedure_` should accept as many arguments as there are lists and should not mutate the `_list_` arguments. If the lists are empty, `for-all` returns `#t`. Otherwise, `for-all` applies `_procedure_` to corresponding elements of the lists `_list~1~_ _list~2~_ \...` in sequence until either the lists each have only one element left or `_procedure_` returns `#f`. In the former case, `for-all` tail-calls `_procedure_`, applying it to the remaining element of each list. In the latter case, `for-all` returns `#f`.
 
-[source,scheme,subs="quotes,replacements"]
+[source,scheme,subs=""]
 ----
 (for-all symbol? '(a b c d)) ⇒ #t
 
@@ -614,7 +614,7 @@ The lists `_list~1~_ _list~2~_ \...` must be of the same length. `_procedure_` s
 
 `for-all` may be defined (somewhat inefficiently and without error checks) as follows:
 
-[source,scheme,subs="quotes,replacements"]
+[source,scheme,subs=""]
 ----
 (define for-all
   (lambda (f ls . more)
@@ -636,7 +636,7 @@ The `_list_` arguments should all have the same length. `_procedure_` should acc
 
 `fold-left` returns `_obj_` if the `_list_` arguments are empty. If they are not empty, `fold-left` applies `_procedure_` to `_obj_` and the cars of `_list~1~_ _list~2~_ \...`, then recurs with the value returned by `_procedure_` in place of `_obj_` and the cdr of each `_list_` in place of the `_list_`.
 
-[source,scheme,subs="quotes,replacements"]
+[source,scheme,subs=""]
 ----
 (fold-left cons '() '(1 2 3 4)) ⇒ ((((() . 1) . 2) . 3) . 4)
 
@@ -662,7 +662,7 @@ The `_list_` arguments should all have the same length. `_procedure_` should acc
 
 `fold-right` returns `_obj_` if the `_list_` arguments are empty. If they are not empty, `fold-right` recurs with the cdr of each `_list_` replacing the `_list_`, then applies `_procedure_` to the cars of `_list~1~_ _list~2~_ \...` and the result returned by the recursion.
 
-[source,scheme,subs="quotes,replacements"]
+[source,scheme,subs=""]
 ----
 (fold-right cons '() '(1 2 3 4)) ⇒ (1 2 3 4)
 
@@ -685,9 +685,9 @@ libraries:: `(rnrs base)`, `(rnrs)`
 
 `vector-map` applies `_procedure_` to corresponding elements of `_vector~1~_ _vector~2~_ \...` and returns a vector of the resulting values. The vectors `_vector~1~_ _vector~2~_ \...` must be of the same length, and `_procedure_` should accept as many arguments as there are vectors and return a single value.
 
-[source,scheme,subs="quotes,replacements"]
+[source,scheme,subs=""]
 ----
-(vector-map abs '\#(1 -2 3 -4 5 -6)) ⇒ #(1 2 3 4 5 6)
+(vector-map abs '#(1 -2 3 -4 5 -6)) ⇒ #(1 2 3 4 5 6)
 (vector-map (lambda (x y) (* x y))
   '#(1 2 3 4)
   '#(8 7 6 5)) ⇒ #(8 14 18 20)
@@ -703,14 +703,14 @@ libraries:: `(rnrs base)`, `(rnrs)`
 
 `vector-for-each` is similar to `vector-map` except that `vector-for-each` does not create and return a vector of the resulting values, and `vector-for-each` guarantees to perform the applications in sequence over the elements from left to right.
 
-[source,scheme,subs="quotes,replacements"]
+[source,scheme,subs=""]
 ----
 (let ([same-count 0])
   (vector-for-each
     (lambda (x y)
       (when (= x y)
         (set! same-count (+ same-count 1))))
-    '\#(1 2 3 4 5 6)
+    '#(1 2 3 4 5 6)
     '#(2 3 3 4 7 6))
   same-count) ⇒ 3
 ----
@@ -723,7 +723,7 @@ libraries:: `(rnrs base)`, `(rnrs)`
 
 `string-for-each` is similar to `for-each` and `vector-for-each` except that the inputs are strings rather than lists or vectors.
 
-[source,scheme,subs="quotes,replacements"]
+[source,scheme,subs=""]
 ----
 (let ([ls '()])
   (string-for-each
@@ -755,7 +755,7 @@ Continuations allow the implementation of nonlocal exits, backtracking (<<ref14>
 
 The example below illustrates the use of a continuation to perform a nonlocal exit from a loop.
 
-[source,scheme,subs="quotes,replacements"]
+[source,scheme,subs=""]
 ----
 (define member
   (lambda (x ls)
@@ -789,7 +789,7 @@ Thus, it is guaranteed that `_in_` is invoked at least once. In addition, if `_b
 
 The following example demonstrates the use of `dynamic-wind` to be sure that an input port is closed after processing, regardless of whether the processing completes normally.
 
-[source,scheme,subs="quotes,replacements"]
+[source,scheme,subs=""]
 ----
 (let ([p (open-input-file "input-file")])
   (dynamic-wind
@@ -801,15 +801,15 @@ The following example demonstrates the use of `dynamic-wind` to be sure that an 
 [#control:s59]
 Common Lisp provides a similar facility (`unwind-protect`) for protection from nonlocal exits. This is often sufficient. `unwind-protect` provides only the equivalent to `_out_`, however, since Common Lisp does not support fully general continuations. Here is how `unwind-protect` might be specified with `dynamic-wind`.
 
-[source,scheme,subs="quotes,replacements"]
+[source,scheme,subs=""]
 ----
 (define-syntax unwind-protect
   (syntax-rules ()
-    [(_ body cleanup \...)
+    [(_ body cleanup ...)
      (dynamic-wind
        (lambda () #f)
        (lambda () body)
-       (lambda () cleanup \...))]))
+       (lambda () cleanup ...))]))
 
 ((call/cc
    (let ([x 'a])
@@ -819,23 +819,23 @@ Common Lisp provides a similar facility (`unwind-protect`) for protection from n
          (set! x 'b)))))) ⇒ b
 ----
 
-Some Scheme implementations support a controlled form of assignment known as _fluid binding_, in which a variable takes on a temporary value during a given computation and reverts to the old value after the computation has completed. The syntactic form `fluid-let` defined below in terms of `dynamic-wind` permits the fluid binding of a single variable `x` to the value of an expression `e` within a the body `_b~1~_ _b~2~_ \...`.
+Some Scheme implementations support a controlled form of assignment known as _fluid binding_, in which a variable takes on a temporary value during a given computation and reverts to the old value after the computation has completed. The syntactic form `fluid-let` defined below in terms of `dynamic-wind` permits the fluid binding of a single variable `x` to the value of an expression `e` within a the body `b1 b2 \...`.
 
-[source,scheme,subs="quotes,replacements"]
+[source,scheme,subs=""]
 ----
 (define-syntax fluid-let
   (syntax-rules ()
-    [(_ ((x e)) _b~1~_ _b~2~_ \...)
+    [(_ ((x e)) b1 b2 ...)
      (let ([y e])
        (let ([swap (lambda () (let ([t x]) (set! x y) (set! y t)))])
-         (dynamic-wind swap (lambda () _b~1~_ _b~2~_ \...) swap)))]))
+         (dynamic-wind swap (lambda () b1 b2 ...) swap)))]))
 ----
 
 Implementations that support `fluid-let` typically extend it to allow an indefinite number of `(x e)` pairs, as with `let`.
 
 If no continuations are invoked within the body of a `fluid-let`, the behavior is the same as if the variable were simply assigned the new value on entry and assigned the old value on return.
 
-[source,scheme,subs="quotes,replacements"]
+[source,scheme,subs=""]
 ----
 (let ([x 3])
   (+ (fluid-let ([x 5])
@@ -845,7 +845,7 @@ If no continuations are invoked within the body of a `fluid-let`, the behavior i
 
 A fluid-bound variable also reverts to the old value if a continuation created outside of the `fluid-let` is invoked.
 
-[source,scheme,subs="quotes,replacements"]
+[source,scheme,subs=""]
 ----
 (let ([x 'a])
   (let ([f (lambda () x)])
@@ -858,7 +858,7 @@ A fluid-bound variable also reverts to the old value if a continuation created o
 
 If control has left a `fluid-let` body, either normally or by the invocation of a continuation, and control reenters the body by the invocation of a continuation, the temporary value of the fluid-bound variable is reinstated. Furthermore, any changes to the temporary value are maintained and reflected upon reentry.
 
-[source,scheme,subs="quotes,replacements"]
+[source,scheme,subs=""]
 ----
 (define reenter #f)
 (define x 0)
@@ -874,7 +874,7 @@ x ⇒ 0
 
 A library showing how `dynamic-wind` might be implemented were it not already built in is given below. In addition to defining `dynamic-wind`, the code defines a version of `call/cc` that does its part to support `dynamic-wind`.
 
-[source,scheme,subs="quotes,replacements"]
+[source,scheme,subs=""]
 ----
 (library (dynamic-wind)
   (export dynamic-wind call/cc
@@ -947,7 +947,7 @@ The first time a promise created by `delay` is _forced_ (with `force`), it evalu
 
 The benefit of using `delay` and `force` is that some amount of computation might be avoided altogether if it is delayed until absolutely required. Delayed evaluation may be used to construct conceptually infinite lists, or _streams_. The example below shows how a stream abstraction may be built with `delay` and `force`. A stream is a promise that, when forced, returns a pair whose cdr is a stream.
 
-[source,scheme,subs="quotes,replacements"]
+[source,scheme,subs=""]
 ----
 (define stream-car
   (lambda (s)
@@ -981,7 +981,7 @@ The benefit of using `delay` and `force` is that some amount of computation migh
 
 `delay` may be defined by
 
-[source,scheme,subs="quotes,replacements"]
+[source,scheme,subs=""]
 ----
 (define-syntax delay
   (syntax-rules ()
@@ -990,7 +990,7 @@ The benefit of using `delay` and `force` is that some amount of computation migh
 
 where `make-promise` might be defined as follows.
 
-[source,scheme,subs="quotes,replacements"]
+[source,scheme,subs=""]
 ----
 (define make-promise
   (lambda (p)
@@ -1006,7 +1006,7 @@ where `make-promise` might be defined as follows.
 
 With this definition of `delay`, `force` simply invokes the promise to force evaluation or to retrieve the saved value.
 
-[source,scheme,subs="quotes,replacements"]
+[source,scheme,subs=""]
 ----
 (define force
   (lambda (promise)
@@ -1017,7 +1017,7 @@ The second test of the variable `set?` in `make-promise` is necessary in the eve
 
 Whether `delay` and `force` handle multiple return values is unspecified; the implementation given above does not, but the following version does, with the help of `call-with-values` and `apply`.
 
-[source,scheme,subs="quotes,replacements"]
+[source,scheme,subs=""]
 ----
 (define make-promise
   (lambda (p)
@@ -1040,7 +1040,7 @@ Whether `delay` and `force` handle multiple return values is unspecified; the im
 
 Neither implementation is quite right, since `force` must raise an exception with condition type `&assertion` if its argument is not a promise. Since distinguishing procedures created by `make-promise` from other procedures is impossible, `force` cannot do so reliably. The following reimplementation of `make-promise` and `force` represents promises as records of the type `promise` to allow `force` to make the required check.
 
-[source,scheme,subs="quotes,replacements"]
+[source,scheme,subs=""]
 ----
 (define-record-type promise
   (fields (immutable p) (mutable vals) (mutable set?))
@@ -1071,7 +1071,7 @@ libraries:: `(rnrs base)`, `(rnrs)`
 
 The procedure `values` accepts any number of arguments and simply passes (returns) the arguments to its continuation.
 
-[source,scheme,subs="quotes,replacements"]
+[source,scheme,subs=""]
 ----
 (values) ⇒
 
@@ -1097,7 +1097,7 @@ libraries:: `(rnrs base)`, `(rnrs)`
 
 `_producer_` and `_consumer_` must be procedures. `call-with-values` applies `_consumer_` to the values returned by invoking `_producer_` without arguments.
 
-[source,scheme,subs="quotes,replacements"]
+[source,scheme,subs=""]
 ----
 (call-with-values
   (lambda () (values 'bond 'james))
@@ -1110,7 +1110,7 @@ In the second example, `values` itself serves as the producer. It receives no ar
 
 The procedure `dxdy` defined below computes the change in `_x_` and `_y_` coordinates for a pair of points whose coordinates are represented by `(_x_ . _y_)` pairs.
 
-[source,scheme,subs="quotes,replacements"]
+[source,scheme,subs=""]
 ----
 (define dxdy
   (lambda (p1 p2)
@@ -1123,7 +1123,7 @@ The procedure `dxdy` defined below computes the change in `_x_` and `_y_` coordi
 
 `dxdy` can be used to compute the length and slope of a segment represented by two endpoints.
 
-[source,scheme,subs="quotes,replacements"]
+[source,scheme,subs=""]
 ----
 (define segment-length
   (lambda (p1 p2)
@@ -1143,7 +1143,7 @@ The procedure `dxdy` defined below computes the change in `_x_` and `_y_` coordi
 
 We can of course combine these to form one procedure that returns two values.
 
-[source,scheme,subs="quotes,replacements"]
+[source,scheme,subs=""]
 ----
 (define describe-segment
   (lambda (p1 p2)
@@ -1160,7 +1160,7 @@ We can of course combine these to form one procedure that returns two values.
 
 The example below employs multiple values to divide a list nondestructively into two sublists of alternating elements.
 
-[source,scheme,subs="quotes,replacements"]
+[source,scheme,subs=""]
 ----
 (define split
   (lambda (ls)
@@ -1180,7 +1180,7 @@ At each level of recursion, the procedure `split` returns two values: a list of 
 
 The continuation of a call to `values` need not be one established by a call to `call-with-values`, nor must only `values` be used to return to a continuation established by `call-with-values`. In particular, `(values _e_)` and `_e_` are equivalent expressions. For example:
 
-[source,scheme,subs="quotes,replacements"]
+[source,scheme,subs=""]
 ----
 (+ (values 2) 4) ⇒ 6
 
@@ -1193,14 +1193,14 @@ The continuation of a call to `values` need not be one established by a call to 
 
 Similarly, `values` may be used to pass any number of values to a continuation that ignores the values, as in the following.
 
-[source,scheme,subs="quotes,replacements"]
+[source,scheme,subs=""]
 ----
 (begin (values 1 2 3) 4) ⇒ 4
 ----
 
 Because a continuation may accept zero or more than one value, continuations obtained via `call/cc` may accept zero or more than one argument.
 
-[source,scheme,subs="quotes,replacements"]
+[source,scheme,subs=""]
 ----
 (call-with-values
   (lambda ()
@@ -1210,7 +1210,7 @@ Because a continuation may accept zero or more than one value, continuations obt
 
 The behavior is unspecified when a continuation expecting exactly one value receives zero values or more than one value. For example, the behavior of each of the following expressions is unspecified. Some implementations raise an exception, while others silently suppress additional values or supply defaults for missing values.
 
-[source,scheme,subs="quotes,replacements"]
+[source,scheme,subs=""]
 ----
 (if (values 1 2) 'x 'y)
 
@@ -1219,7 +1219,7 @@ The behavior is unspecified when a continuation expecting exactly one value rece
 
 Programs that wish to force extra values to be ignored in particular contexts can do so easily by calling `call-with-values` explicitly. A syntactic form, which we might call `first`, can be defined to abstract the discarding of more than one value when only one is desired.
 
-[source,scheme,subs="quotes,replacements"]
+[source,scheme,subs=""]
 ----
 (define-syntax first
   (syntax-rules ()
@@ -1233,7 +1233,7 @@ Programs that wish to force extra values to be ignored in particular contexts ca
 
 Since implementations are required to raise an exception with condition type `&assertion` if a procedure does not accept the number of arguments passed to it, each of the following raises an exception.
 
-[source,scheme,subs="quotes,replacements"]
+[source,scheme,subs=""]
 ----
 (call-with-values
   (lambda () (values 2 3 4))
@@ -1244,9 +1244,9 @@ Since implementations are required to raise an exception with condition type `&a
   (lambda (x y) x))
 ----
 
-Since `_producer_` is most often a `lambda` expression, it is often convenient to use a syntactic extension that suppresses the `lambda` expression in the interest of readability.
+Since `_producer_` is most often a `lambda` expression, it is often convenient to use a syntactic extension that suppresses the lambda expression in the interest of readability.
 
-[source,scheme,subs="quotes,replacements"]
+[source,scheme,subs=""]
 ----
 (define-syntax with-values
   (syntax-rules ()
@@ -1261,7 +1261,7 @@ Since `_producer_` is most often a `lambda` expression, it is often convenient t
 
 If the `_consumer_` is also a `lambda` expression, the multiple-value variants of `let` and `let*` described in <<section_4.5.,Section 4.5>> are usually even more convenient.
 
-[source,scheme,subs="quotes,replacements"]
+[source,scheme,subs=""]
 ----
 (let-values ([(odds evens) (split '(1 2 3 4))])
   evens) ⇒ (2 4)
@@ -1272,8 +1272,7 @@ If the `_consumer_` is also a `lambda` expression, the multiple-value variants o
 
 Many standard syntactic forms and procedures pass along multiple values. Most of these are "automatic," in the sense that nothing special must be done by the implementation to make this happen. The usual expansion of `let` into a direct `lambda` call automatically propagates multiple values produced by the body of the `let`. Other operators must be coded specially to pass along multiple values. The `call-with-port` procedure (<<section_7.6.,Section 7.6>>), for example, calls its procedure argument, then closes the port argument before returning the procedure's values, so it must save the values temporarily. This is easily accomplished via `let-values`, `apply`, and `values`:
 
-[#defn:call-with-port]
-[source,scheme,subs="quotes,replacements"]
+[source,scheme,subs=""]
 ----
 (define call-with-port
   (lambda (port proc)
@@ -1284,7 +1283,7 @@ Many standard syntactic forms and procedures pass along multiple values. Most of
 
 If this seems like too much overhead when a single value is returned, the code can use `call-with-values` and `case-lambda` to handle the single-value case more efficiently:
 
-[source,scheme,subs="quotes,replacements"]
+[source,scheme,subs=""]
 ----
 (define call-with-port
   (lambda (port proc)
@@ -1296,7 +1295,7 @@ If this seems like too much overhead when a single value is returned, the code c
 
 The definitions of `values` and `call-with-values` (and concomitant redefinition of `call/cc`) in the library below demonstrate that the multiple-return-values interface could be implemented in Scheme if it were not already built in. No error checking can be done, however, for the case in which more than one value is returned to a single-value context, such as the test part of an `if` expression.
 
-[source,scheme,subs="quotes,replacements"]
+[source,scheme,subs=""]
 ----
 (library (mrvs)
   (export call-with-values values call/cc
@@ -1347,7 +1346,7 @@ libraries:: `(rnrs eval)`
 
 If `_obj_` does not represent a syntactically valid expression, `eval` raises an exception with condition type `&syntax`. The environments returned by `environment`, `scheme-report-environment`, and `null-environment` are immutable. Thus, `eval` also raises an exception with condition type `&syntax` if an assignment to any of the variables in the environment appears within the expression.
 
-[source,scheme,subs="quotes,replacements"]
+[source,scheme,subs="quotes"]
 ----
 (define cons 'not-cons)
 (eval '(let ([x 3]) (cons x 4)) (environment '(rnrs))) ⇒ (3 . 4)
@@ -1366,9 +1365,9 @@ libraries:: `(rnrs eval)`
 
 `environment` returns an environment formed from the combined bindings of the given import specifiers. Each `_import-spec_` must be an s-expression representing a valid import specifier (see <<chp_libraries_and_top_level_programs,Chapter 10>>).
 
-[source,scheme,subs="quotes,replacements"]
+[source,scheme,subs=""]
 ----
-(define env (environment '(rnrs) '(prefix `(rnrs lists)` $)))
+(define env (environment '(rnrs) '(prefix (rnrs lists) $)))
 (eval '($cons* 3 4 (* 5 8)) env) ⇒ (3 4 . 40)
 ----
 

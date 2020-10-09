@@ -214,7 +214,7 @@ libraries:: `(rnrs base)`, `(rnrs)`
 
 `eqv?` is similar to `eq?` except `eqv?` is guaranteed to return `#t` for two characters that are considered equal by `char=?` and two numbers that are (a) considered equal by `=` and (b) cannot be distinguished by any other operation besides `eq?` and `eqv?`. A consequence of (b) is that `(eqv? -0.0 +0.0)` is `#f` even though `(= -0.0 +0.0)` is `#t` in systems that distinguish `-0.0` and `+0.0`, such as those based on IEEE floating-point arithmetic. This is because operations such as `/` can expose the difference:
 
-[source,scheme,subs="quotes"]
+[source,scheme,subs=""]
 ----
 (/ 1.0 -0.0) ⇒ -inf.0
 (/ 1.0 +0.0) ⇒ +inf.0
@@ -222,7 +222,7 @@ libraries:: `(rnrs base)`, `(rnrs)`
 
 Similarly, although 3.0 and 3.0+0.0i are considered numerically equal, they are not considered equivalent by `eqv?` if -0.0 and 0.0 have different representations.
 
-[source,scheme,subs="quotes"]
+[source,scheme,subs=""]
 ----
 (= 3.0+0.0i 3.0) ⇒ #t
 (eqv? 3.0+0.0i 3.0) ⇒ #f
@@ -423,7 +423,7 @@ libraries:: `(rnrs base)`, `(rnrs)`
 
 `boolean?` is equivalent to `(lambda (x) (or (eq? x #t) (eq? x #f)))`.
 
-[source,scheme,subs="quotes"]
+[source,scheme,subs=""]
 ----
 (boolean? #t) ⇒ #t
 (boolean? #f) ⇒ #t
@@ -438,7 +438,7 @@ libraries:: `(rnrs base)`, `(rnrs)`
 
 `null?` is equivalent to `(lambda (x) (eq? x '()))`.
 
-[source,scheme,subs="quotes"]
+[source,scheme,subs=""]
 ----
 (null? '()) ⇒ #t
 (null? '(a)) ⇒ #f
@@ -453,9 +453,9 @@ procedure:: `(pair? _obj_)`
 returns:: `#t` if `_obj_` is a pair, `#f` otherwise
 libraries:: `(rnrs base)`, `(rnrs)`
 
-[source,scheme,subs="quotes"]
+[source,scheme,subs=""]
 ----
-(pair? '(a b c)) ⇒ \#t
+(pair? '(a b c)) ⇒ #t
 (pair? '(3 . 4)) ⇒ #t
 (pair? '()) ⇒ #f
 (pair? '#(a b)) ⇒ #f
@@ -480,9 +480,9 @@ These predicates form a hierarchy: any integer is rational, any rational is real
 
 The `real?`, `rational?`, and `integer?` predicates do not recognize as real, rational, or integer complex numbers with inexact zero imaginary parts.
 
-[source,scheme,subs="quotes"]
+[source,scheme,subs=""]
 ----
-(integer? 1901) ⇒ \#t
+(integer? 1901) ⇒ #t
 (rational? 1901) ⇒ #t
 (real? 1901) ⇒ #t
 (complex? 1901) ⇒ #t
@@ -543,7 +543,7 @@ libraries:: `(rnrs base)`, `(rnrs)`
 
 These predicates are similar to `real?`, `rational?`, and `integer?`, but treat as real, rational, or integral complex numbers with inexact zero imaginary parts.
 
-[source,scheme,subs="quotes"]
+[source,scheme,subs=""]
 ----
 (integer-valued? 1901) ⇒ #t
 (rational-valued? 1901) ⇒ #t
@@ -576,7 +576,7 @@ These predicates are similar to `real?`, `rational?`, and `integer?`, but treat 
 
 As with `real?`, `rational?`, and `integer?`, these predicates return `#f` for all non-numeric values.
 
-[source,scheme,subs="quotes"]
+[source,scheme,subs=""]
 ----
 (integer-valued? 'a) ⇒ #f
 (rational-valued? '(a b c)) ⇒ #f
@@ -589,7 +589,7 @@ procedure:: `(char? _obj_)`
 returns:: `#t` if `_obj_` is a character, `#f` otherwise
 libraries:: `(rnrs base)`, `(rnrs)`
 
-[source,scheme,subs="quotes"]
+[source,scheme,subs=""]
 ----
 (char? 'a) ⇒ #f
 (char? 97) ⇒ #f
@@ -604,7 +604,7 @@ procedure:: `(string? _obj_)`
 returns:: `#t` if `_obj_` is a string, `#f` otherwise
 libraries:: `(rnrs base)`, `(rnrs)`
 
-[source,scheme,subs="quotes"]
+[source,scheme,subs=""]
 ----
 (string? "hi") ⇒ #t
 (string? 'hi) ⇒ #f
@@ -617,9 +617,9 @@ procedure:: `(vector? _obj_)`
 returns:: `#t` if `_obj_` is a vector, `#f` otherwise
 libraries:: `(rnrs base)`, `(rnrs)`
 
-[source,scheme,subs="quotes"]
+[source,scheme,subs=""]
 ----
-(vector? '\#()) ⇒ #t
+(vector? '#()) ⇒ #t
 (vector? '#(a b c)) ⇒ #t
 (vector? (vector 'a 'b 'c)) ⇒ #t
 (vector? '()) ⇒ #f
@@ -633,7 +633,7 @@ procedure:: `(symbol? _obj_)`
 returns:: `#t` if `_obj_` is a symbol, `#f` otherwise
 libraries:: `(rnrs base)`, `(rnrs)`
 
-[source,scheme,subs="quotes"]
+[source,scheme,subs=""]
 ----
 (symbol? 't) ⇒ #t
 (symbol? "t") ⇒ #f
@@ -649,7 +649,7 @@ procedure:: `(procedure? _obj_)`
 returns:: `#t` if `_obj_` is a procedure, `#f` otherwise
 libraries:: `(rnrs base)`, `(rnrs)`
 
-[source,scheme,subs="quotes"]
+[source,scheme,subs=""]
 ----
 (procedure? car) ⇒ #t
 (procedure? 'car) ⇒ #f
@@ -664,9 +664,9 @@ procedure:: `(bytevector? _obj_)`
 returns:: `#t` if `_obj_` is a bytevector, `#f` otherwise
 libraries:: `(rnrs bytevectors)`, `(rnrs)`
 
-[source,scheme,subs="quotes"]
+[source,scheme,subs=""]
 ----
-(bytevector? \#vu8()) ⇒ #t
+(bytevector? #vu8()) ⇒ #t
 (bytevector? '#()) ⇒ #f
 (bytevector? "abc") ⇒ #f
 ----
@@ -677,7 +677,7 @@ procedure:: `(hashtable? _obj_)`
 returns:: `#t` if `_obj_` is a hashtable, `#f` otherwise
 libraries:: `(rnrs hashtables)`, `(rnrs)`
 
-[source,scheme,subs="quotes"]
+[source,scheme,subs=""]
 ----
 (hashtable? (make-eq-hashtable)) ⇒ #t
 (hashtable? '(not a hash table)) ⇒ #f
@@ -780,7 +780,7 @@ procedure:: `(cddddr _pair_)`
 returns:: the caar, cadr, \..., or cddddr of `_pair_`
 libraries:: `(rnrs base)`, `(rnrs)`
 
-These procedures are defined as the composition of up to four `car`s and `cdr`s. The `a`'s and `d`'s between the `c` and `r` represent the application of `car` or `cdr` in order from right to left. For example, the procedure `cadr` applied to a pair yields the `car` of the `cdr` of the pair and is equivalent to `(lambda (x) (car (cdr x)))`.
+These procedures are defined as the composition of up to four ``car``s and ``cdr``s. The ``a``'s and ``d``'s between the `c` and `r` represent the application of `car` or `cdr` in order from right to left. For example, the procedure `cadr` applied to a pair yields the `car` of the `cdr` of the pair and is equivalent to `(lambda (x) (car (cdr x)))`.
 
 [source,scheme,subs=""]
 ----
@@ -827,7 +827,7 @@ procedure:: `(list? _obj_)`
 returns:: `#t` if `_obj_` is a proper list, `#f` otherwise
 libraries:: `(rnrs base)`, `(rnrs)`
 
-`list?` must return `#f` for all improper lists, including cyclic lists. A definition of `list?` is shown on page 67.
+`list?` must return `#f` for all improper lists, including cyclic lists. A definition of `list?` is shown on <<defn:list?,page 67>>.
 
 [source,scheme,subs=""]
 ----
@@ -847,7 +847,7 @@ procedure:: `(length _list_)`
 returns:: the number of elements in `_list_`
 libraries:: `(rnrs base)`, `(rnrs)`
 
-`length` may be defined as follows, using an adaptation of the hare and tortoise algorithm used for the definition of `list?` on page 67.
+`length` may be defined as follows, using an adaptation of the hare and tortoise algorithm used for the definition of `list?` on <<defn:list?,page 67>>.
 
 [source,scheme,subs="quotes"]
 ----
@@ -1261,13 +1261,13 @@ A mantissa width `|_w_` may appear as the suffix of a real number or the real co
 
 Exact and inexact real numbers are written as exact or inexact integers or rational numbers; no provision is made in the syntax of Scheme numbers for nonrational real numbers, i.e., irrational numbers.
 
-Complex numbers may be written in either rectangular or polar form. In rectangular form, a complex number is written as `_x_+_y~i~_` or `_x_-_y~i~_`, where `_x_` is an integer, rational, or real number and `_y_` is an unsigned integer, rational, or real number. The real part, _x_, may be omitted, in which case it is assumed to be zero. For example, `3+4i`, `3.2-3/4i`, `+i`, and `-3e-5i` are complex numbers written in rectangular form. In polar form, a complex number is written as `_x_@_y_`, where `_x_` and `_y_` are integer, rational, or real numbers. For example, `1.1@1.764` and `-1@-1/2` are complex numbers written in polar form.
+Complex numbers may be written in either rectangular or polar form. In rectangular form, a complex number is written as `__x__+__y__i` or `__x__-__y__i`, where `_x_` is an integer, rational, or real number and `_y_` is an unsigned integer, rational, or real number. The real part, _x_, may be omitted, in which case it is assumed to be zero. For example, `3+4i`, `3.2-3/4i`, `+i`, and `-3e-5i` are complex numbers written in rectangular form. In polar form, a complex number is written as `_x_@_y_`, where `_x_` and `_y_` are integer, rational, or real numbers. For example, `1.1@1.764` and `-1@-1/2` are complex numbers written in polar form.
 
 The syntaxes `+inf.0` and `-inf.0` represent inexact real numbers that represent positive and negative infinity. The syntaxes `+nan.0` and `-nan.0` represent an inexact "not-a-number" (NaN) value. Infinities may be produced by dividing inexact positive and negative values by inexact zero, and NaNs may also be produced by dividing inexact zero by inexact zero, among other ways.
 
-The exactness of a numeric representation may be overridden by preceding the representation by either `#e` or `#i`. `#e` forces the number to be exact, and `#i` forces it to be inexact. For example, `1`, `#e1`, `1/1`, `#e1/1`, `#e1.0`, and `#e1e0` all represent the exact integer 1, and `#i3/10`, `0.3`, `#i0.3`, and `3e-1` all represent the inexact rational 0.3.
+The exactness of a numeric representation may be overridden by preceding the representation by either `#e` or `#i`. `#e` forces the number to be exact, and `#i` forces it to be inexact. For example, `1`, `#e1`, 1/1, `#e1/1`, `#e1.0`, and `#e1e0` all represent the exact integer 1, and `#i3/10`, `0.3`, `#i0.3`, and `3e-1` all represent the inexact rational 0.3.
 
-Numbers are written by default in base 10, although the special prefixes `#b` (binary), `#o` (octal), `#d` (decimal), and `#x` (hexadecimal) can be used to specify base 2, base 8, base 10, or base 16. For radix 16, the letters `a` through `f` or `A` through `F` serve as the additional numerals required to express digit values 10 through 15. For example, `#b10101` is the binary equivalent of `21~10~`, `#o72` is the octal equivalent of `58~10~`, and `#xC7` is the hexadecimal equivalent of `199~10~`. Numbers written in floating-point and scientific notations are always written in base 10.
+Numbers are written by default in base 10, although the special prefixes `#b` (binary), `#o` (octal), `#d` (decimal), and `#x` (hexadecimal) can be used to specify base 2, base 8, base 10, or base 16. For radix 16, the letters `a` through `f` or `A` through `F` serve as the additional numerals required to express digit values 10 through 15. For example, `#b10101` is the binary equivalent of 21~10~, `#o72` is the octal equivalent of 58~10~, and `#xC7` is the hexadecimal equivalent of 199~10~. Numbers written in floating-point and scientific notations are always written in base 10.
 
 If both are present, radix and exactness prefixes may appear in either order.
 
@@ -1660,7 +1660,7 @@ If `_real_` is an infinity or NaN, `truncate` returns `_real_`.
 [#objects:s102]
 [horizontal]
 procedure:: `(floor _real_)`
-returns:: the integer closest to `_real_` toward <graphic>
+returns:: the integer closest to `_real_` toward stem:[-\infty]
 libraries:: `(rnrs base)`, `(rnrs)`
 
 If `_real_` is an infinity or NaN, `floor` returns `_real_`.
@@ -1677,7 +1677,7 @@ If `_real_` is an infinity or NaN, `floor` returns `_real_`.
 [#objects:s103]
 [horizontal]
 procedure:: `(ceiling _real_)`
-returns:: the integer closest to `_real_` toward <graphic>
+returns:: the integer closest to `_real_` toward stem:[+\infty]
 libraries:: `(rnrs base)`, `(rnrs)`
 
 If `_real_` is an infinity or NaN, `ceiling` returns `_real_`.
@@ -1782,7 +1782,7 @@ procedure:: `(lcm _int_ \...)`
 returns:: the least common multiple of its arguments `_int_ \...`
 libraries:: `(rnrs base)`, `(rnrs)`
 
-The result is always nonnegative, i.e., common multiples of -1 are ignored. Although `lcm` should probably return <graphic> when called with no arguments, it is defined to return 1. If one or more of the arguments is 0, `lcm` returns 0.
+The result is always nonnegative, i.e., common multiples of -1 are ignored. Although `lcm` should probably return stem:[\infty] when called with no arguments, it is defined to return 1. If one or more of the arguments is 0, `lcm` returns 0.
 
 [source,scheme,subs=""]
 ----
@@ -1855,7 +1855,7 @@ procedure:: `(inexact\->exact _num_)`
 returns:: an exact representation of `_num_`
 libraries:: `(rnrs r5rs)`
 
-These are alternative names for `inexact` and `exact`, supported for compatibility with the Revised5 Report.
+These are alternative names for `inexact` and `exact`, supported for compatibility with the Revised^5^ Report.
 
 [#objects:s117]
 [horizontal]
@@ -1863,7 +1863,7 @@ procedure:: `(rationalize _real~1~_ _real~2~_)`
 returns:: see below
 libraries:: `(rnrs base)`, `(rnrs)`
 
-`rationalize` returns the simplest rational number that differs from `_real~1~_` by no more than `_real~2~_`. A rational number stem:[q_1 = n_1/m_1] is simpler than another rational number stem:[q_2 = n_2/m_2] if stem:[|n_1| \leq |n_2|] and stem:[|m_1| \leq |m_2|] and either stem:[|n_1| \lt |n_2|] or stem:[|m_1| \lt |m_2|].
+`rationalize` returns the simplest rational number that differs from `_real~1~_` by no more than `_real~2~_`. A rational number stem:[q_1 = n_1/m_1] is simpler than another rational number stem:[q_2 = n_2/m_2] if stem:[|n_1| \le |n_2|] and stem:[|m_1| \le |m_2|] and either stem:[|n_1| \lt |n_2|] or stem:[|m_1| \lt |m_2|].
 
 [source,scheme,subs=""]
 ----
@@ -1990,7 +1990,7 @@ procedure:: `(magnitude _num_)` [[objects:s125]]
 returns:: the magnitude of `_num_`
 libraries:: `(rnrs base)`, `(rnrs)`
 
-`magnitude` and `abs` (see <<page:abs,page 178>>) are identical for real arguments. The magnitude of a complex number stem:[x + y_i] is stem:[+\sqrt{x^2+y^2}].
+`magnitude` and `abs` (see <<page:abs,page 178>>) are identical for real arguments. The magnitude of a complex number stem:[x + yi] is stem:[+\sqrt{x^2+y^2}].
 
 [source,scheme,subs=""]
 ----
@@ -2026,7 +2026,7 @@ procedure:: `(exact-integer-sqrt _n_)`
 returns:: see below
 libraries:: `(rnrs base)`, `(rnrs)`
 
-This procedure returns two nonnegative exact integers _s_ and _r_ where stem:[n = s_2 + r] and stem:[n < (s + 1)^2].
+This procedure returns two nonnegative exact integers _s_ and _r_ where stem:[n = s^2 + r] and stem:[n < (s + 1)^2].
 
 [source,scheme,subs=""]
 ----
@@ -2926,13 +2926,13 @@ The absolute value of `_fx~2~_` must be less than the value of `(fixnum-width)`.
 
 Thus, `fxarithmetic-shift` behaves as if defined as follows.
 
-[source,scheme,subs="quotes"]
+[source,scheme,subs=""]
 ----
 (define fxarithmetic-shift
-  (lambda (_fx~1~_ _fx~2~_)
-    (if (fx&lt;? _fx~2~_ 0)
-        (fxarithmetic-shift-right _fx~1~_ (fx- _fx~2~_))
-        (fxarithmetic-shift-left _fx~1~_ _fx~2~_))))
+  (lambda (fx1 fx2)
+    (if (fx&lt;? fx2 0)
+        (fxarithmetic-shift-right fx1 (fx- fx2))
+        (fxarithmetic-shift-left fx1 fx2))))
 ----
 
 [#objects:s174]
@@ -3977,7 +3977,7 @@ procedure:: `(string\->list _string_)`
 returns:: a list of the characters in `_string_`
 libraries:: `(rnrs base)`, `(rnrs)`
 
-`string->list` allows a string to be converted into a list, so that Scheme's list-processing operations may be applied to the processing of strings. `string\->list` may be defined without error checks as follows.
+`string\->list` allows a string to be converted into a list, so that Scheme's list-processing operations may be applied to the processing of strings. `string\->list` may be defined without error checks as follows.
 
 [source,scheme,subs=""]
 ----
@@ -4547,7 +4547,7 @@ v ⇒ #vu8(#xfe #x56 #xfe #x56 #x78 #x98 #x00 #x00)
 
 If native endianness is little:
 
- [source,scheme,subs=""]
+[source,scheme,subs=""]
 ----
 v ⇒ #vu8(#x56 #xfe #x56 #xfe #x98 #x78 #x00 #x00)
 ----
