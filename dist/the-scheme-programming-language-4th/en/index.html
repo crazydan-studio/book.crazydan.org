@@ -3193,7 +3193,7 @@ p ⇒ (1)</code></pre>
 <div class="paragraph">
 <p>We can use <code>letrec</code> to hide the definitions of "help" procedures so that they do not clutter the top-level namespace. This is demonstrated by the definition of <code>list?</code> below, which follows the "hare and tortoise" algorithm outlined in <a href="#exercise_2.9.8">Exercise 2.9.8</a>.</p>
 </div>
-<div class="listingblock">
+<div id="defn:list?" class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code data-lang="scheme" class="language-scheme hljs">(define list?
   (lambda (x)
@@ -5645,8 +5645,8 @@ libraries
 <div class="content">
 <pre class="highlightjs highlight"><code data-lang="scheme" class="language-scheme hljs">(define-syntax when
   (syntax-rules ()
-    [(_ <em>e<sub>0</sub></em> <em>e<sub>1</sub></em> <em>e<sub>2</sub></em> ...)
-     (if <em>e<sub>0</sub></em> (begin <em>e<sub>1</sub></em> <em>e<sub>2</sub></em> ...))]))</code></pre>
+    [(_ e0 e1 e2 ...)
+     (if e0 (begin e1 e2 ...))]))</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -5656,8 +5656,8 @@ libraries
 <div class="content">
 <pre class="highlightjs highlight"><code data-lang="scheme" class="language-scheme hljs">(define-syntax unless
   (syntax-rules ()
-    [(_ <em>e<sub>0</sub></em> <em>e<sub>1</sub></em> <em>e<sub>2</sub></em> ...)
-     (if (not <em>e<sub>0</sub></em>) (begin <em>e<sub>1</sub></em> <em>e<sub>2</sub></em> ...))]))</code></pre>
+    [(_ e0 e1 e2 ...)
+     (if (not e0) (begin e1 e2 ...))]))</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -5667,8 +5667,8 @@ libraries
 <div class="content">
 <pre class="highlightjs highlight"><code data-lang="scheme" class="language-scheme hljs">(define-syntax unless
   (syntax-rules ()
-    [(_ <em>e<sub>0</sub></em> <em>e<sub>1</sub></em> <em>e<sub>2</sub></em> ...)
-     (when (not <em>e<sub>0</sub></em>) <em>e<sub>1</sub></em> <em>e<sub>2</sub></em> ...)]))</code></pre>
+    [(_ e0 e1 e2 ...)
+     (when (not e0) e1 e2 ...)]))</code></pre>
 </div>
 </div>
 <div id="control:s18" class="hdlist">
@@ -5716,7 +5716,7 @@ libraries
 </div>
 </div>
 <div class="paragraph">
-<p><em>expr<sub>0</sub></em> is evaluated and the result is compared (using <code>eqv?</code>) against the keys of each clause in order. If a clause containing a matching key is found, the expressions <code><em>expr<sub>1</sub></em> <em>expr<sub>2</sub></em> ...</code> are evaluated in sequence and the values of the last expression are returned.</p>
+<p><code><em>expr<sub>0</sub></em></code> is evaluated and the result is compared (using <code>eqv?</code>) against the keys of each clause in order. If a clause containing a matching key is found, the expressions <code><em>expr<sub>1</sub></em> <em>expr<sub>2</sub></em> ...</code> are evaluated in sequence and the values of the last expression are returned.</p>
 </div>
 <div class="paragraph">
 <p>If none of the clauses contains a matching key and an <code>else</code> clause is present, the expressions <code><em>expr<sub>1</sub></em> <em>expr<sub>2</sub></em> ...</code> of the <code>else</code> clause are evaluated in sequence and the values of the last expression are returned.</p>
@@ -6540,16 +6540,16 @@ libraries
 </div>
 </div>
 <div class="paragraph">
-<p>Some Scheme implementations support a controlled form of assignment known as <em>fluid binding</em>, in which a variable takes on a temporary value during a given computation and reverts to the old value after the computation has completed. The syntactic form <code>fluid-let</code> defined below in terms of <code>dynamic-wind</code> permits the fluid binding of a single variable <code>x</code> to the value of an expression <code>e</code> within a the body <code><em>b<sub>1</sub></em> <em>b<sub>2</sub></em> ...</code>.</p>
+<p>Some Scheme implementations support a controlled form of assignment known as <em>fluid binding</em>, in which a variable takes on a temporary value during a given computation and reverts to the old value after the computation has completed. The syntactic form <code>fluid-let</code> defined below in terms of <code>dynamic-wind</code> permits the fluid binding of a single variable <code>x</code> to the value of an expression <code>e</code> within a the body <code>b1 b2 ...</code>.</p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code data-lang="scheme" class="language-scheme hljs">(define-syntax fluid-let
   (syntax-rules ()
-    [(_ ((x e)) <em>b<sub>1</sub></em> <em>b<sub>2</sub></em> ...)
+    [(_ ((x e)) b1 b2 ...)
      (let ([y e])
        (let ([swap (lambda () (let ([t x]) (set! x y) (set! y t)))])
-         (dynamic-wind swap (lambda () <em>b<sub>1</sub></em> <em>b<sub>2</sub></em> ...) swap)))]))</code></pre>
+         (dynamic-wind swap (lambda () b1 b2 ...) swap)))]))</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -6592,8 +6592,8 @@ libraries
   (set! x (+ x 1))
   x) ⇒ 2
 x ⇒ 0
-(reenter '<strong>) ⇒ 3
-(reenter '</strong>) ⇒ 4
+(reenter '*) ⇒ 3
+(reenter '*) ⇒ 4
 x ⇒ 0</code></pre>
 </div>
 </div>
@@ -7080,7 +7080,7 @@ libraries
 </div>
 </div>
 <div class="paragraph">
-<p>Since <code><em>producer</em></code> is most often a <code>lambda</code> expression, it is often convenient to use a syntactic extension that suppresses the <code>lambda</code> expression in the interest of readability.</p>
+<p>Since <code><em>producer</em></code> is most often a <code>lambda</code> expression, it is often convenient to use a syntactic extension that suppresses the lambda expression in the interest of readability.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -7110,7 +7110,7 @@ libraries
 <div class="paragraph">
 <p>Many standard syntactic forms and procedures pass along multiple values. Most of these are "automatic," in the sense that nothing special must be done by the implementation to make this happen. The usual expansion of <code>let</code> into a direct <code>lambda</code> call automatically propagates multiple values produced by the body of the <code>let</code>. Other operators must be coded specially to pass along multiple values. The <code>call-with-port</code> procedure (<a href="#section_7.6.">Section 7.6</a>), for example, calls its procedure argument, then closes the port argument before returning the procedure&#8217;s values, so it must save the values temporarily. This is easily accomplished via <code>let-values</code>, <code>apply</code>, and <code>values</code>:</p>
 </div>
-<div id="defn:call-with-port" class="listingblock">
+<div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code data-lang="scheme" class="language-scheme hljs">(define call-with-port
   (lambda (port proc)
@@ -7256,7 +7256,7 @@ libraries
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="scheme" class="language-scheme hljs">(define env (environment '(rnrs) '(prefix <code>(rnrs lists)</code> $)))
+<pre class="highlightjs highlight"><code data-lang="scheme" class="language-scheme hljs">(define env (environment '(rnrs) '(prefix (rnrs lists) $)))
 (eval '($cons* 3 4 (* 5 8)) env) ⇒ (3 4 . 40)</code></pre>
 </div>
 </div>
@@ -8817,7 +8817,7 @@ libraries
 </table>
 </div>
 <div class="paragraph">
-<p>These procedures are defined as the composition of up to four <code>car`s and `cdr`s. The `a&#8217;s and `d&#8217;s between the `c</code> and <code>r</code> represent the application of <code>car</code> or <code>cdr</code> in order from right to left. For example, the procedure <code>cadr</code> applied to a pair yields the <code>car</code> of the <code>cdr</code> of the pair and is equivalent to <code>(lambda (x) (car (cdr x)))</code>.</p>
+<p>These procedures are defined as the composition of up to four <code>car</code>s and <code>cdr</code>s. The <code>a</code>'s and <code>d</code>'s between the <code>c</code> and <code>r</code> represent the application of <code>car</code> or <code>cdr</code> in order from right to left. For example, the procedure <code>cadr</code> applied to a pair yields the <code>car</code> of the <code>cdr</code> of the pair and is equivalent to <code>(lambda (x) (car (cdr x)))</code>.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -8933,7 +8933,7 @@ libraries
 </table>
 </div>
 <div class="paragraph">
-<p><code>list?</code> must return <code>#f</code> for all improper lists, including cyclic lists. A definition of <code>list?</code> is shown on page 67.</p>
+<p><code>list?</code> must return <code>#f</code> for all improper lists, including cyclic lists. A definition of <code>list?</code> is shown on <a href="#defn:list?">page 67</a>.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -8976,7 +8976,7 @@ libraries
 </table>
 </div>
 <div class="paragraph">
-<p><code>length</code> may be defined as follows, using an adaptation of the hare and tortoise algorithm used for the definition of <code>list?</code> on page 67.</p>
+<p><code>length</code> may be defined as follows, using an adaptation of the hare and tortoise algorithm used for the definition of <code>list?</code> on <a href="#defn:list?">page 67</a>.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -9783,16 +9783,16 @@ libraries
 <p>Exact and inexact real numbers are written as exact or inexact integers or rational numbers; no provision is made in the syntax of Scheme numbers for nonrational real numbers, i.e., irrational numbers.</p>
 </div>
 <div class="paragraph">
-<p>Complex numbers may be written in either rectangular or polar form. In rectangular form, a complex number is written as <code><em>x</em>+<em>y<sub>i</sub></em></code> or <code><em>x</em>-<em>y<sub>i</sub></em></code>, where <code><em>x</em></code> is an integer, rational, or real number and <code><em>y</em></code> is an unsigned integer, rational, or real number. The real part, <em>x</em>, may be omitted, in which case it is assumed to be zero. For example, <code>3+4i</code>, <code>3.2-3/4i</code>, <code>+i</code>, and <code>-3e-5i</code> are complex numbers written in rectangular form. In polar form, a complex number is written as <code><em>x</em>@<em>y</em></code>, where <code><em>x</em></code> and <code><em>y</em></code> are integer, rational, or real numbers. For example, <code>1.1@1.764</code> and <code>-1@-1/2</code> are complex numbers written in polar form.</p>
+<p>Complex numbers may be written in either rectangular or polar form. In rectangular form, a complex number is written as <code><em>x</em>+<em>y</em>i</code> or <code><em>x</em>-<em>y</em>i</code>, where <code><em>x</em></code> is an integer, rational, or real number and <code><em>y</em></code> is an unsigned integer, rational, or real number. The real part, <em>x</em>, may be omitted, in which case it is assumed to be zero. For example, <code>3+4i</code>, <code>3.2-3/4i</code>, <code>+i</code>, and <code>-3e-5i</code> are complex numbers written in rectangular form. In polar form, a complex number is written as <code><em>x</em>@<em>y</em></code>, where <code><em>x</em></code> and <code><em>y</em></code> are integer, rational, or real numbers. For example, <code>1.1@1.764</code> and <code>-1@-1/2</code> are complex numbers written in polar form.</p>
 </div>
 <div class="paragraph">
 <p>The syntaxes <code>+inf.0</code> and <code>-inf.0</code> represent inexact real numbers that represent positive and negative infinity. The syntaxes <code>+nan.0</code> and <code>-nan.0</code> represent an inexact "not-a-number" (NaN) value. Infinities may be produced by dividing inexact positive and negative values by inexact zero, and NaNs may also be produced by dividing inexact zero by inexact zero, among other ways.</p>
 </div>
 <div class="paragraph">
-<p>The exactness of a numeric representation may be overridden by preceding the representation by either <code>#e</code> or <code>#i</code>. <code>#e</code> forces the number to be exact, and <code>#i</code> forces it to be inexact. For example, <code>1</code>, <code>#e1</code>, <code>1/1</code>, <code>#e1/1</code>, <code>#e1.0</code>, and <code>#e1e0</code> all represent the exact integer 1, and <code>#i3/10</code>, <code>0.3</code>, <code>#i0.3</code>, and <code>3e-1</code> all represent the inexact rational 0.3.</p>
+<p>The exactness of a numeric representation may be overridden by preceding the representation by either <code>#e</code> or <code>#i</code>. <code>#e</code> forces the number to be exact, and <code>#i</code> forces it to be inexact. For example, <code>1</code>, <code>#e1</code>, 1/1, <code>#e1/1</code>, <code>#e1.0</code>, and <code>#e1e0</code> all represent the exact integer 1, and <code>#i3/10</code>, <code>0.3</code>, <code>#i0.3</code>, and <code>3e-1</code> all represent the inexact rational 0.3.</p>
 </div>
 <div class="paragraph">
-<p>Numbers are written by default in base 10, although the special prefixes <code>#b</code> (binary), <code>#o</code> (octal), <code>#d</code> (decimal), and <code>#x</code> (hexadecimal) can be used to specify base 2, base 8, base 10, or base 16. For radix 16, the letters <code>a</code> through <code>f</code> or <code>A</code> through <code>F</code> serve as the additional numerals required to express digit values 10 through 15. For example, <code>#b10101</code> is the binary equivalent of <code>21<sub>10</sub></code>, <code>#o72</code> is the octal equivalent of <code>58<sub>10</sub></code>, and <code>#xC7</code> is the hexadecimal equivalent of <code>199<sub>10</sub></code>. Numbers written in floating-point and scientific notations are always written in base 10.</p>
+<p>Numbers are written by default in base 10, although the special prefixes <code>#b</code> (binary), <code>#o</code> (octal), <code>#d</code> (decimal), and <code>#x</code> (hexadecimal) can be used to specify base 2, base 8, base 10, or base 16. For radix 16, the letters <code>a</code> through <code>f</code> or <code>A</code> through <code>F</code> serve as the additional numerals required to express digit values 10 through 15. For example, <code>#b10101</code> is the binary equivalent of 21<sub>10</sub>, <code>#o72</code> is the octal equivalent of 58<sub>10</sub>, and <code>#xC7</code> is the hexadecimal equivalent of 199<sub>10</sub>. Numbers written in floating-point and scientific notations are always written in base 10.</p>
 </div>
 <div class="paragraph">
 <p>If both are present, radix and exactness prefixes may appear in either order.</p>
@@ -10725,7 +10725,7 @@ procedure
 returns
 </td>
 <td class="hdlist2">
-<p>the integer closest to <code><em>real</em></code> toward &lt;graphic&gt;</p>
+<p>the integer closest to <code><em>real</em></code> toward \(-\infty\)</p>
 </td>
 </tr>
 <tr>
@@ -10765,7 +10765,7 @@ procedure
 returns
 </td>
 <td class="hdlist2">
-<p>the integer closest to <code><em>real</em></code> toward &lt;graphic&gt;</p>
+<p>the integer closest to <code><em>real</em></code> toward \(+\infty\)</p>
 </td>
 </tr>
 <tr>
@@ -11017,7 +11017,7 @@ libraries
 </table>
 </div>
 <div class="paragraph">
-<p>The result is always nonnegative, i.e., common multiples of -1 are ignored. Although <code>lcm</code> should probably return &lt;graphic&gt; when called with no arguments, it is defined to return 1. If one or more of the arguments is 0, <code>lcm</code> returns 0.</p>
+<p>The result is always nonnegative, i.e., common multiples of -1 are ignored. Although <code>lcm</code> should probably return \(\infty\) when called with no arguments, it is defined to return 1. If one or more of the arguments is 0, <code>lcm</code> returns 0.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -11194,7 +11194,7 @@ libraries
 </table>
 </div>
 <div class="paragraph">
-<p>These are alternative names for <code>inexact</code> and <code>exact</code>, supported for compatibility with the Revised5 Report.</p>
+<p>These are alternative names for <code>inexact</code> and <code>exact</code>, supported for compatibility with the Revised<sup>5</sup> Report.</p>
 </div>
 <div id="objects:s117" class="hdlist">
 <table>
@@ -11225,7 +11225,7 @@ libraries
 </table>
 </div>
 <div class="paragraph">
-<p><code>rationalize</code> returns the simplest rational number that differs from <code><em>real<sub>1</sub></em></code> by no more than <code><em>real<sub>2</sub></em></code>. A rational number \(q_1 = n_1/m_1\) is simpler than another rational number \(q_2 = n_2/m_2\) if \(|n_1| \leq |n_2|\) and \(|m_1| \leq |m_2|\) and either \(|n_1| \lt |n_2|\) or \(|m_1| \lt |m_2|\).</p>
+<p><code>rationalize</code> returns the simplest rational number that differs from <code><em>real<sub>1</sub></em></code> by no more than <code><em>real<sub>2</sub></em></code>. A rational number \(q_1 = n_1/m_1\) is simpler than another rational number \(q_2 = n_2/m_2\) if \(|n_1| \le |n_2|\) and \(|m_1| \le |m_2|\) and either \(|n_1| \lt |n_2|\) or \(|m_1| \lt |m_2|\).</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -11534,7 +11534,7 @@ libraries
 </table>
 </div>
 <div class="paragraph">
-<p><code>magnitude</code> and <code>abs</code> (see <a href="#page:abs">page 178</a>) are identical for real arguments. The magnitude of a complex number \(x + y_i\) is \(+\sqrt{x^2+y^2}\).</p>
+<p><code>magnitude</code> and <code>abs</code> (see <a href="#page:abs">page 178</a>) are identical for real arguments. The magnitude of a complex number \(x + yi\) is \(+\sqrt{x^2+y^2}\).</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -11616,7 +11616,7 @@ libraries
 </table>
 </div>
 <div class="paragraph">
-<p>This procedure returns two nonnegative exact integers <em>s</em> and <em>r</em> where \(n = s_2 + r\) and \(n &lt; (s + 1)^2\).</p>
+<p>This procedure returns two nonnegative exact integers <em>s</em> and <em>r</em> where \(n = s^2 + r\) and \(n &lt; (s + 1)^2\).</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -13870,10 +13870,10 @@ libraries
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code data-lang="scheme" class="language-scheme hljs">(define fxarithmetic-shift
-  (lambda (<em>fx<sub>1</sub></em> <em>fx<sub>2</sub></em>)
-    (if (fx&lt;? <em>fx<sub>2</sub></em> 0)
-        (fxarithmetic-shift-right <em>fx<sub>1</sub></em> (fx- <em>fx<sub>2</sub></em>))
-        (fxarithmetic-shift-left <em>fx<sub>1</sub></em> <em>fx<sub>2</sub></em>))))</code></pre>
+  (lambda (fx1 fx2)
+    (if (fx&lt;? fx2 0)
+        (fxarithmetic-shift-right fx1 (fx- fx2))
+        (fxarithmetic-shift-left fx1 fx2))))</code></pre>
 </div>
 </div>
 <div id="objects:s174" class="hdlist">
@@ -16652,7 +16652,7 @@ libraries
 </table>
 </div>
 <div class="paragraph">
-<p><code>string&#8594;list</code> allows a string to be converted into a list, so that Scheme&#8217;s list-processing operations may be applied to the processing of strings. <code>string-&gt;list</code> may be defined without error checks as follows.</p>
+<p><code>string-&gt;list</code> allows a string to be converted into a list, so that Scheme&#8217;s list-processing operations may be applied to the processing of strings. <code>string-&gt;list</code> may be defined without error checks as follows.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -17974,14 +17974,9 @@ libraries
 <div class="paragraph">
 <p>If native endianness is little:</p>
 </div>
-<div class="literalblock">
-<div class="content">
-<pre>[source,scheme,subs=""]</pre>
-</div>
-</div>
 <div class="listingblock">
 <div class="content">
-<pre>v ⇒ #vu8(#x56 #xfe #x56 #xfe #x98 #x78 #x00 #x00)</pre>
+<pre class="highlightjs highlight"><code data-lang="scheme" class="language-scheme hljs">v ⇒ #vu8(#x56 #xfe #x56 #xfe #x98 #x78 #x00 #x00)</code></pre>
 </div>
 </div>
 <div class="listingblock">
