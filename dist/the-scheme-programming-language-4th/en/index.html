@@ -2323,7 +2323,7 @@ sandwich ⇒ "peanut-butter-and-jelly"</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>[<em>Hint</em>: <code>((a b c) 1 2 3)</code> is the same as <code>\((a b c) . (1 2 3))</code>.]</p>
+<p>[<em>Hint</em>: <code>((a b c) 1 2 3)</code> is the same as <code>((a b c) . (1 2 3))</code>.]</p>
 </div>
 </div>
 </div>
@@ -23999,7 +23999,7 @@ syntax
 syntax
 </td>
 <td class="hdlist2">
-<p><code>(identifier-syntax (<em>id<sub>1</sub></em> <em>tmpl<sub>1</sub></em>) set! <em>id<sub>2</sub></em> <em>e<sub>2</sub></em>) <em>tmpl<sub>2</sub></em></code></p>
+<p><code>(identifier-syntax (<em>id<sub>1</sub></em> <em>tmpl<sub>1</sub></em>) ((set! <em>id<sub>2</sub></em> <em>e<sub>2</sub></em>) <em>tmpl<sub>2</sub></em>))</code></p>
 </td>
 </tr>
 <tr>
@@ -35789,7 +35789,7 @@ RFFT\{ x(n) \}_{n=0}^{N-1} &amp;= \{ X(m) \}_{n=0}^{N-1} \\
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#syntax:s27">297</a></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>(identifier-syntax (<em>id<sub>1</sub></em> <em>tmpl<sub>1</sub></em>) set! <em>id<sub>2</sub></em> <em>e<sub>2</sub></em>) <em>tmpl<sub>2</sub></em></code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>(identifier-syntax (<em>id<sub>1</sub></em> <em>tmpl<sub>1</sub></em>) ((set! <em>id<sub>2</sub></em> <em>e<sub>2</sub></em>) <em>tmpl<sub>2</sub></em>))</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">syntax</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#syntax:s27">297</a></p></td>
 </tr>
@@ -37587,7 +37587,7 @@ document.querySelectorAll('i')
 <td class="tableblock halign-left valign-top"><p class="tableblock">$1&lt;&lt;exercise_$2,Exercise $2&gt;&gt;</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">`[^`]*\(\([^`]+`</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">`[^`]*\(\([^`]+\)\)[^`]*`</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Add slash to the first double brackets</p></td>
 </tr>
 </tbody>
