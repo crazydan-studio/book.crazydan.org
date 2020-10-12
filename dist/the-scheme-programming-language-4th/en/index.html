@@ -879,7 +879,7 @@ ISBN 978-0-262-51298-5 / LOC QA76.73.S34D93<br>
 <div class="sect3">
 <h4 id="exercise_2.2.4">Exercise 2.2.4</h4>
 <div class="paragraph">
-<p><code>(car (car 'a b) (c d))</code> yields <code>a</code>. Determine which compositions of <code>car</code> and <code>cdr</code> applied to <code>a b) (c d</code> yield <code>b</code>, <code>c</code>, and <code>d</code>.</p>
+<p><code>(car (car '((a b) (c d))))</code> yields <code>a</code>. Determine which compositions of <code>car</code> and <code>cdr</code> applied to <code>((a b) (c d))</code> yield <code>b</code>, <code>c</code>, and <code>d</code>.</p>
 </div>
 </div>
 <div class="sect3">
@@ -955,7 +955,7 @@ ISBN 978-0-262-51298-5 / LOC QA76.73.S34D93<br>
 <p>Before we go on to more syntactic forms and procedures, two points related to the evaluation of procedure applications are worthy of note. First, the process given above is overspecified, in that it requires the subexpressions to be evaluated from left to right. That is, <code><em>procedure</em></code> is evaluated before <code><em>arg<sub>1</sub></em></code>, <code><em>arg<sub>1</sub></em></code> is evaluated before <code><em>arg<sub>2</sub></em></code>, and so on. This need not be the case. A Scheme evaluator is free to evaluate the expressions in any order---left to right, right to left, or any other sequential order. In fact, the subexpressions may be evaluated in different orders for different applications, even in the same implementation.</p>
 </div>
 <div class="paragraph">
-<p>The second point is that <code><em>procedure</em></code> is evaluated in the same way as <code><em>arg<sub>1</sub></em> ... <em>arg<sub>n</sub></em></code>. While <code><em>procedure</em></code> is often a variable that names a particular procedure, this need not be the case. <a href="#exercise_2.2.3">Exercise 2.2.3</a> had you determine the value of the expression <code>car (list + - * / 2 3)</code>. Here, <code><em>procedure</em></code> is <code>(car (list + - * /))</code>. The value of <code>(car (list + - * /))</code> is the addition procedure, just as if <code><em>procedure</em></code> were simply the variable <code>+</code>.</p>
+<p>The second point is that <code><em>procedure</em></code> is evaluated in the same way as <code><em>arg<sub>1</sub></em> ... <em>arg<sub>n</sub></em></code>. While <code><em>procedure</em></code> is often a variable that names a particular procedure, this need not be the case. <a href="#exercise_2.2.3">Exercise 2.2.3</a> had you determine the value of the expression <code>((car (list + - * /)) 2 3)</code>. Here, <code><em>procedure</em></code> is <code>(car (list + - * /))</code>. The value of <code>(car (list + - * /))</code> is the addition procedure, just as if <code><em>procedure</em></code> were simply the variable <code>+</code>.</p>
 </div>
 <div class="sect3">
 <h4 id="exercise_2.3.1">Exercise 2.3.1</h4>
@@ -2323,7 +2323,7 @@ sandwich ⇒ "peanut-butter-and-jelly"</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>[<em>Hint</em>: <code>((a b c) 1 2 3)</code> is the same as <code>((a b c) . (1 2 3))</code>.]</p>
+<p>[<em>Hint</em>: <code>((a b c) 1 2 3)</code> is the same as <code>\((a b c) . (1 2 3))</code>.]</p>
 </div>
 </div>
 </div>
