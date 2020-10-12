@@ -907,7 +907,7 @@ ISBN 978-0-262-51298-5 / LOC QA76.73.S34D93<br>
 <div class="sect3">
 <h4 id="exercise_2.2.7">Exercise 2.2.7</h4>
 <div class="paragraph">
-<p>The behavior of <code>(car (car (car 'a b) (c d)))</code> is undefined because <code>(car 'a b) (c d)</code> is <code>(a b)</code>, <code>(car '(a b))</code> is <code>a</code>, and <code>(car 'a)</code> is undefined. Determine all legal compositions of <code>car</code> and <code>cdr</code> applied to <code>a b) (c d</code>.</p>
+<p>The behavior of <code>(car (car (car '((a b) (c d)))))</code> is undefined because <code>(car '((a b) (c d)))</code> is <code>(a b)</code>, <code>(car '(a b))</code> is <code>a</code>, and <code>(car 'a)</code> is undefined. Determine all legal compositions of <code>car</code> and <code>cdr</code> applied to <code>((a b) (c d))</code>.</p>
 </div>
 </div>
 <div class="sect3">
