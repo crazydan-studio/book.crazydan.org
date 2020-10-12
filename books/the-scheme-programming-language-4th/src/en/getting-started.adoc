@@ -398,7 +398,7 @@ Draw the internal list structure produced by the expression below.
 
 ==== Exercise 2.2.7 [[exercise_2.2.7]]
 
-The behavior of `(car (car (car '((a b) (c d)))))` is undefined because `(car '((a b) (c d)))` is `(a b)`, `(car '(a b))` is `a`, and `(car 'a)` is undefined. Determine all legal compositions of `car` and `cdr` applied to `((a b) (c d))`.
+The behavior of `(car (car (car '\((a b) (c d)))))` is undefined because `(car '\((a b) (c d)))` is `(a b)`, `(car '(a b))` is `a`, and `(car 'a)` is undefined. Determine all legal compositions of `car` and `cdr` applied to `\((a b) (c d))`.
 
 ==== Exercise 2.2.8 [[exercise_2.2.8]]
 
