@@ -184,7 +184,7 @@ document.querySelectorAll('i')
 |`(\^\|\(\|[^=] )Exercise ([\d\.]+\d)`
 |++$1<<exercise_$2,Exercise $2>>++
 
-|++`[^`]*\(\([^`]+`++
+|++`[^`]*\(\([^`]+\)\)[^`]*`++
 |Add slash to the first double brackets
 |===
 

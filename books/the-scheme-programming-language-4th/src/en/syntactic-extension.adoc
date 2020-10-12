@@ -216,7 +216,7 @@ These identifiers are auxiliary keywords for `syntax-rules`, `identifier-syntax`
 [#syntax:s27]
 [horizontal]
 syntax:: `(identifier-syntax _tmpl_)`
-syntax:: `(identifier-syntax (_id~1~_ _tmpl~1~_) ((set! _id~2~_ _e~2~_) _tmpl~2~_))`
+syntax:: `(identifier-syntax (_id~1~_ _tmpl~1~_) \((set! _id~2~_ _e~2~_) _tmpl~2~_))`
 returns:: a transformer
 libraries:: `(rnrs base)`, `(rnrs)`
 

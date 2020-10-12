@@ -1590,7 +1590,7 @@ Use `map` to define a procedure, `transpose`, that takes a list of pairs and ret
 (transpose '((a . 1) (b . 2) (c . 3))) ⇒ ((a b c) 1 2 3)
 ----
 
-++[++_Hint_: `\((a b c) 1 2 3)` is the same as `\((a b c) . (1 2 3))`.]
+++[++_Hint_: `\((a b c) 1 2 3)` is the same as `((a b c) . (1 2 3))`.]
 
 === Section 2.9. Assignment [[section_2.9.]]
 
