@@ -449,7 +449,7 @@ All page numbers appearing here refer to the printed version of this book and al
 |`(i/o-read-error? _obj_)` |procedure |<<exceptions:s33,372>>
 |`(i/o-write-error? _obj_)` |procedure |<<exceptions:s34,372>>
 |`(identifier-syntax _tmpl_)` |syntax |<<syntax:s27,297>>
-|`(identifier-syntax (_id~1~_ _tmpl~1~_) ((set! _id~2~_ _e~2~_) _tmpl~2~_))` |syntax |<<syntax:s27,297>>
+|`(identifier-syntax (_id~1~_ _tmpl~1~_) \((set! _id~2~_ _e~2~_) _tmpl~2~_))` |syntax |<<syntax:s27,297>>
 |`(identifier? _obj_)` |procedure |<<syntax:s35,301>>
 |`(if _test_ _consequent_ _alternative_)` |syntax |<<control:s8,109>>
 |`(if _test_ _consequent_)` |syntax |<<control:s8,109>>
