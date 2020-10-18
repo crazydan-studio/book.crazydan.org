@@ -1,0 +1,271 @@
+= Chez Scheme Version 9 User's Guide
+:author:
+:doctype: book
+:toc: left
+:toc-title: Table of Contents
+:toclevels: 2
+:favicon: images/favicon.ico
+//:data-uri:
+:nofooter:
+:stem: latexmath
+:stylesheet: asciidoctor.css
+:stylesdir: ../../theme/default
+:linkcss:
+:source-highlighter: highlightjs
+:highlightjs-languages: scheme, bash, javascript
+:highlightjsdir: ../../theme/js/highlight
+:mathjaxdir: ../../theme/js/mathjax
+ifdef::backend-pdf[]
+:title-logo-image: image::images/logo.png[align=center]
+endif::[]
+:footer-copyright: http://cisco.github.io/ChezScheme/csug9.5/index.html[Chez Scheme Version 9 User's Guide] + \
+                   Copyright © 2020 Cisco Systems, Inc. + \
+                   Licensed under the http://www.apache.org/licenses/LICENSE-2.0[Apache License Version 2.0] \
+                   (http://cisco.github.io/ChezScheme/csug9.5/canned/copyright.html[full copyright notice].). + \
+                   Revised August 2020 for Chez Scheme Version 9.5.4 + \
+                   http://cisco.github.io/ChezScheme/csug9.5/canned/about.html[about this book]
+
+
+ifndef::backend-pdf[]
+image::images/logo.png[align=center]
+endif::[]
+
+
+[dedication]
+
+{footer-copyright}
+
+
+[toc]
+
+// Preface
+include::preface.adoc[]
+
+// Introduction
+include::introduction.adoc[]
+
+// Using Chez Scheme
+include::using-chez-scheme.adoc[]
+
+// Debugging
+include::debugging.adoc[]
+
+// Foreign Interface
+include::foreign-interface.adoc[]
+
+// Binding Forms
+include::binding-forms.adoc[]
+
+// Control Structures
+include::control-structures.adoc[]
+
+// Operations on Objects
+include::operations-on-objects.adoc[]
+
+// Numeric Operations
+include::numeric-operations.adoc[]
+
+// Input/Output Operations
+include::input-output-operations.adoc[]
+
+// Libraries and Top-level Programs
+include::libraries-and-top-level-programs.adoc[]
+
+// Syntactic Extension and Modules
+include::syntactic-extension-and-modules.adoc[]
+
+// System Operations
+include::system-operations.adoc[]
+
+// Storage Management
+include::storage-management.adoc[]
+
+// Expression Editor
+include::expression-editor.adoc[]
+
+// Thread System
+include::thread-system.adoc[]
+
+// Compatibility Features
+include::compatibility-features.adoc[]
+
+// Bibliography
+include::bibliography.adoc[]
+
+// Summary of Forms
+include::summary-of-forms.adoc[]
+
+// Index
+include::index.adoc[]
+
+
+[appendix]
+== Book Converting Tools
+
+- link:https://asciidoctor.org/docs/user-manual/[Asciidoctor User Manual]
+- link:https://asciidoctor.org/docs/asciidoc-syntax-quick-reference/[AsciiDoc Syntax Quick Reference]
+- link:https://math.meta.stackexchange.com/questions/5020/mathjax-basic-tutorial-and-quick-reference[MathJax basic tutorial and quick reference]
+- link:https://www.whatsmyip.org/html-characters/[HTML Entities & Special Characters]
+
+[appendix]
+== Format Javascript and Replacement Regex for The Original Book
+
+- Generate Bash Script for Creating Section Files +
++
+[source,javascript,subs=""]
+----
+var chapters = [];
+document.querySelectorAll('a.toc').forEach(function(node) {
+    var text = node.innerText;
+    if (text.startsWith('Chapter ')) {
+        chapters.push(text);
+    }
+});
+
+chapters.map(function(chapter) {
+    var index = chapter.replace(/^Chapter\s+(\d+)\..+/g, "$1");
+    var name = chapter.replace(/.+\d+\.\s+(.+)/g, "$1").replace(/(\s|\/)+/g, "-").toLowerCase();
+    var file = name + '.adoc';
+
+    return [
+        'touch ' + file,
+        'echo -n \'\' > ' + file,
+        'echo \'[#chp_' + index + ']\' >> ' + file,
+        'echo \'== ' + chapter + '\' >> ' + file,
+        'echo ' + ' >> ' + file,
+        'echo ' + ' >> ' + file,
+    ].join('\n');
+}).join('\n\n');
+----
+
+- Generate Toc of the Book +
++
+[source,javascript,subs=""]
+----
+var chapters = [];
+document.querySelectorAll('a.toc').forEach(function(node) {
+    var text = node.innerText;
+    if (text.startsWith('Chapter ')) {
+        chapters.push(text);
+    }
+});
+
+chapters.map(function(chapter) {
+    var name = chapter.replace(/.+\d+\.\s+(.+)/g, "$1");
+    var file = name.replace(/(\s|\/)+/g, "-").toLowerCase() + '.adoc';
+
+    return [
+        '// ' + name,
+        'include::' + file + '[]',
+    ].join('\n');
+}).join('\n\n');
+----
+
+- Format Javascript +
++
+[source,javascript,subs=""]
+----
+// Format the content with AsciiDoc syntax
+document.querySelectorAll('h3')
+        .forEach(function(node) {
+            var title=node.innerText;
+            var anchor='section_'+title.replace(/^Section ([\d.]+) .+/, '$1');
+            node.outerHTML = '=== ' + title + ' [['+anchor+']]';
+        })
+document.querySelectorAll('h4')
+        .forEach(function(node) {
+            var title=node.innerText;
+            var anchor='exercise_'+title.replace(/^Exercise ([\d.]+)$/, '$1');
+            node.outerHTML = '==== ' + title + ' [['+anchor+']]&lt;br&gt;&lt;br&gt;';
+        })
+document.querySelectorAll('[src="math/tspl/0.gif"]')
+        .forEach(function(node) { node.outerHTML = '⇒' })
+document.querySelectorAll('tt')
+        .forEach(function(node) { node.innerHTML = '`'+node.innerHTML+'`' })
+document.querySelectorAll('i')
+        .forEach(function(node) { node.innerHTML = '_'+node.innerHTML+'_' })
+document.querySelectorAll('li')
+        .forEach(function(node) { node.innerHTML = '- '+node.innerHTML })
+document.querySelectorAll('sub')
+        .forEach(function(node) { node.outerHTML = '~'+node.innerText+'~' })
+document.querySelectorAll('sup')
+        .forEach(function(node) { node.outerHTML = '^'+node.innerText+'^' })
+
+document.querySelectorAll('a')
+        .forEach(function(node) {
+            var name=node.name;
+            if (name && name.match(/^\.\/(.+)$/)) {
+                node.outerHTML='[#'+(name.replace(/^\.\/(.+)$/, '$1'))+']&lt;br&gt;';
+            }
+        })
+document.querySelectorAll('a')
+        .forEach(function(node) {
+            var name=node.name;
+            if (name && name.match(/^[^#.\/]+$/)) {
+                node.outerHTML='[#'+name+']&lt;br&gt;';
+            }
+        })
+
+// Highlight the code blocks and italic text
+document.querySelectorAll('tt')
+        .forEach(function(node) {
+            node.style='font-size: 2em; border-bottom: 1px solid grey;'
+        })
+document.querySelectorAll('i')
+        .forEach(function(node) {
+            node.style='font-size: 2em; border-right: 1px solid red;'
+        })
+
+// JavaScript for generating the page links in the section [Summary of Forms]
+document.querySelectorAll('a').forEach(function(node) {
+    var href = node.href;
+    var text = node.innerText;
+    var anchor = href.replace(/.*#\.\//g, "");
+    if (href.startsWith('http://scheme.com/tspl4/')) {
+        node.innerText = 'link:../../the-scheme-programming-language-4th/en/index.html#' + anchor + '[' + text + ']';
+    } else {
+        node.innerText = '&lt;&lt;' + anchor + ',' + text + '&gt;&gt;';
+    }
+})
+----
+
+- Replacement Regex +
++
+|===
+|Regex |Replacement
+
+|`++^$\n\s*`\s*\(++`
+|`++\n[source,scheme,subs=""]\n----\n(++`
+
+|`++\)`\n^$++`
+|`++)\n----\n++`
+
+|`++\[(\d+)\]++`
+|`++<<ref$1>>++`
+
+|`++(^\|\(\|[^=] )Section ([\d\.]+\d)++`
+|`++$1<<section_$2.,Section $2>>++`
+
+|`++(^\|\(\|[^=] )Exercise ([\d\.]+\d)++`
+|`++$1<<exercise_$2,Exercise $2>>++`
+
+|`++`[^`]*\(\([^`]+\)\)[^`]*`++`
+|Add slash to the first double brackets
+|===
+
+- Check the lost links +
++
+[source,javascript,subs=""]
+----
+var lostAnchors=[];
+document.querySelector('#content')
+        .querySelectorAll('a[href^="#"]')
+        .forEach(function(node) {
+            var anchor = node.getAttribute('href');
+
+            if (!document.querySelector('[id="' + anchor.replace(/^#/, '') + '"]')) {
+                lostAnchors.push(anchor);
+            }
+        });
+console.log(lostAnchors.join('\n'));
+----

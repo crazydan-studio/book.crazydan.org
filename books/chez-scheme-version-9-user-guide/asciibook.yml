@@ -1,0 +1,4 @@
+# https://asciibook.org/docs/_style.html
+theme_dir: theme
+template_dir: templates
+page_level: 3
