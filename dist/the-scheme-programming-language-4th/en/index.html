@@ -37525,6 +37525,7 @@ document.querySelectorAll('sub')
         .forEach(function(node) { node.outerHTML = '~'+node.innerText+'~' })
 document.querySelectorAll('sup')
         .forEach(function(node) { node.outerHTML = '^'+node.innerText+'^' })
+
 document.querySelectorAll('a')
         .forEach(function(node) {
             var name=node.name;
@@ -37548,7 +37549,15 @@ document.querySelectorAll('tt')
 document.querySelectorAll('i')
         .forEach(function(node) {
             node.style='font-size: 2em; border-right: 1px solid red;'
-        })</code></pre>
+        })
+
+// JavaScript for generating the page links in the section [Summary of Forms]
+document.querySelectorAll('a').forEach(function(node) {
+    var href = node.href;
+    var text = node.innerText;
+    var anchor = href.replace(/.*#\.\//g, "");
+    node.innerText = '&lt;&lt;' + anchor + ',' + text + '&gt;&gt;';
+})</code></pre>
 </div>
 </div>
 </li>
@@ -37567,27 +37576,27 @@ document.querySelectorAll('i')
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">^$\n\s*`\s*\(</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>^$\n\s*`\s*\(</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>\n[source,scheme,subs=""]\n----\n(</code></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">\)`\n^$</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>\)`\n^$</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>)\n----\n</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>\[(\d+)\]</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;&lt;ref$1&gt;&gt;</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>&lt;&lt;ref$1&gt;&gt;</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>(^|\(|[^=] )Section ([\d\.]+\d)</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">$1&lt;&lt;section_$2.,Section $2&gt;&gt;</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>$1&lt;&lt;section_$2.,Section $2&gt;&gt;</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>(^|\(|[^=] )Exercise ([\d\.]+\d)</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">$1&lt;&lt;exercise_$2,Exercise $2&gt;&gt;</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>$1&lt;&lt;exercise_$2,Exercise $2&gt;&gt;</code></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">`[^`]*\(\([^`]+\)\)[^`]*`</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>`[^`]*\(\([^`]+\)\)[^`]*`</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Add slash to the first double brackets</p></td>
 </tr>
 </tbody>
