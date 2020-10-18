@@ -1,4 +1,101 @@
 [#chp_1]
 == Chapter 1. Introduction
 
+This book describes _Chez Scheme_ extensions to the Revised^6^ Report on Scheme <<ref28>> (R6RS). It contains as well a concise summary of standard and _Chez Scheme_ forms and procedures, which gives the syntax of each form and the number and types of arguments accepted by each procedure. Details on standard R6RS features can be found in link:../../the-scheme-programming-language-4th/en/index.html[The Scheme Programming Language, 4th Edition] (TSPL4) <<ref11>> or the Revised^6^ Report on Scheme. link:../../the-scheme-programming-language-4th/en/index.html[The Scheme Programming Language, 4th Edition] also contains an extensive introduction to the Scheme language and numerous short and extended examples.
 
+Most of this document also applies equally to _Petite Chez Scheme_, which is fully compatible with the complete _Chez Scheme_ system but uses a high-speed interpreter in place of __Chez Scheme__'s incremental native-code compiler. Programs written for _Chez Scheme_ run unchanged in _Petite Chez Scheme_ as long as they do not require the compiler to be invoked. In fact, _Petite Chez Scheme_ is built from the same sources as _Chez Scheme_, with all but the compiler sources included. A detailed discussion of the impact of this distinction appears in <<section_2.8.,Section 2.8>>.
+
+The remainder of this chapter covers _Chez Scheme_ extensions to Scheme syntax (<<section_1.1.,Section 1.1>>), notational conventions used in this book (<<section_1.2.,Section 1.2>>), the use of parameters for system customization (<<section_1.3.,Section 1.3>>), and where to look for more information on _Chez Scheme_ (<<section_1.4.,Section 1.4>>).
+
+<<chp_2,Chapter 2>> describes how one uses _Chez Scheme_ for program development, scripting, and application delivery, plus how to get the compiler to generate the most efficient code possible. <<chp_3,Chapter 3>> describes debugging and object inspection facilities. <<chp_4,Chapter 4>> documents facilities for interacting with separate processes or code written in other languages. <<chp_5,Chapter 5>> describes binding forms. <<chp_6,Chapter 6>> documents control structures. <<chp_7,Chapter 7>> documents operations on nonnumeric objects, while <<chp_8,Chapter 8>> documents various numeric operations, including efficient type-specific operations. <<chp_9,Chapter 9>> describes input/output operations and generic ports, which allow the definition of ports with arbitrary input/output semantics. <<chp_10,Chapter 10>> discusses how R6RS libraries and top-level programs are loaded into _Chez Scheme_ along with various features for controlling and tracking the loading process. <<chp_11,Chapter 11>> describes syntactic extension and modules. <<chp_12,Chapter 12>> describes system operations, such as operations for interacting with the operating system and customizing __Chez Scheme__'s user interface. <<chp_13,Chapter 13>> describes how to invoke and control the storage management system and documents guardians and weak pairs. <<chp_14,Chapter 14>> describes __Chez Scheme__'s expression editor and how it can be customized. <<chp_15,Chapter 15>> documents the procedures and syntactic forms that comprise the interface to __Chez Scheme__'s native thread system. Finally, <<chp_16,Chapter 16>> describes various compatibility features.
+
+The back of this book contains a bibliography, the summary of forms, and an index. The page numbers appearing in the summary of forms and the italicized page numbers appearing in the index indicate the locations in the text where forms and procedures are formally defined. The summary of forms and index includes entries from TSPL4, so that they cover the entire set of _Chez Scheme_ features. A TSPL4 entry is marked by a "t" prefix on the page number.
+
+Online versions and errata for this book and for TSPL4 can be found at www.scheme.com.
+
+_Acknowledgments:_ Michael Adams, Mike Ashley, Carl Bruggeman, Bob Burger, Sam Daniel, George Davidson, Matthew Flatt, Aziz Ghuloum, Bob Hieb, Andy Keep, and Oscar Waddell have contributed substantially to the development of _Chez Scheme_. __Chez Scheme__'s expression editor is based on a command-line editor for Scheme developed from 1989 through 1994 by C. David Boyer. File compression is performed with the use of the lz4 compression library developed by Yann Collet or the zlib compression library developed by Jean-loup Gailly and Mark Adler. Implementations of the list and vector sorting routines are based on Olin Shiver's opportunistic merge-sort algorithm and implementation. Michael Lenaghan provided a number of corrections for earlier drafts of this book. Many of the features documented in this book were suggested by current _Chez Scheme_ users, and numerous comments from users have also led to improvements in the text. Additional suggestions for improvements to _Chez Scheme_ and to this book are welcome.
+
+=== Section 1.1. Chez Scheme Syntax [[section_1.1.]]
+
+_Chez Scheme_ extends Scheme's syntax both at the object (datum) level and at the level of syntactic forms. At the object level, _Chez Scheme_ supports additional representations for symbols that contain nonstandard characters, nondecimal numbers expressed in floating-point and scientific notation, vectors with explicit lengths, shared and cyclic structures, records, boxes, and more. These extensions are described below. Form-level extensions are described throughout the book and summarized in the Summary of Forms, which also appears in the back of this book.
+
+_Chez Scheme_ extends the syntax of identifiers in several ways. First, the sequence of characters making up an identifier's name may start with digits, periods, plus signs, and minus signs as long as the sequence cannot be parsed as a number. For example, `0abc`, `\+++`, and `..` are all valid identifiers in _Chez Scheme_. Second, the single-character sequences `{` and `}` are identifiers. Third, identifiers containing arbitrary characters may be printed by escaping them with `\` or with `|`. `\` is used to escape a single character (except 'x', since `\x` marks the start of a hex scalar value), whereas `|` is used to escape the group of characters that follow it up through the matching `|`. For example, `\||\|` is an identifier with a two-character name consisting of the character `|` followed by the character `\`, and `|hit me!|` is an identifier whose name contains a space.
+
+In addition, gensyms (page <<section_7.9.,7.9>>) are printed with `\#{` and `}` brackets that enclose both the "pretty" and "unique" names, e.g., `#{g1426 e5g1c94g642dssw-a}`. They may also be printed using the pretty name only with the prefix `\#:`, e.g., `#:g1426`.
+
+Arbitrary radixes from two through 36 may be specified with the prefix `\#__n__r`, where `_n_` is the radix. Case is not significant, so `#__n__R` may be used as well. Digit values from 10 through 35 are specified as either lower- or upper-case alphabetic characters, just as for hexadecimal numbers. For example, `#36rZZ` is stem:[35 × 36 + 35], or 1295.
+
+_Chez Scheme_ also permits nondecimal numbers to be printed in floating-point or scientific notation. For example, `#o1.4` is equivalent to `1.5`, and `#b1e10` is equivalent to `4.0`. Digits take precedence over exponent specifiers, so that `#x1e20` is simply the four-digit hexadecimal number equivalent to `7712`.
+
+In addition to the standard named characters `\#\alarm`, `#\backspace`, `\#\delete`, `#\esc`, `\#\linefeed`, `#\newline`, `\#\page`, `#\return`, `\#\space`, and `#\tab`, _Chez Scheme_ recognizes `\#\bel`, `#\ls`, `\#\nel`, `#\nul`, `\#\rubout`, and `#\vt` (or `\#\vtab`). Characters whose scalar values are less than 256 may also be printed with an octal syntax consisting of the prefix `#\` followed by a three octal-digit sequence. For example, `\#\000` is equivalent to `#\nul`.
+
+__Chez Scheme__'s fxvectors, or fixnum vectors, are printed like vectors but with the prefix `\#vfx(` in place of `#(`. Vectors, bytevectors, and fxvectors may be printed with an explicit length prefix, and when the explicit length prefix is specified, duplicate trailing elements may be omitted. For example, `\#(a b c)` may be printed as `#3(a b c)`, and a vector of length 100 containing all zeros may be printed as `#100(0)`.
+
+__Chez Scheme__'s boxes are printed with a `\#&` prefix, e.g., `#&17` is a box containing the integer `17`.
+
+Records are printed with the syntax `#[_type-name_ _field_ \...]`, where the symbol `_type-name_` is the name of the record type and `_field_ \...` are the printed representations for the contents of the fields of the record.
+
+Shared and cyclic structure may be printed using the graph mark and reference prefixes `\#__n__=` and `#__n__\#`. `#__n__=` is used to mark an item in the input, and `\#__n__#` is used to refer to the item marked `_n_`. For example, `'(\#1=(a) . #1#)` is a pair whose car and cdr contain the same list, and `\#0=(a . #0#)` is a cyclic list, i.e., its cdr is itself.
+
+A `$primitive` form (see <<desc:hash-primitive,page 358>>) may be abbreviated in the same manner as a `quote` form, using the `\#%` prefix. For example, `#%car` is equivalent to `($primitive car)`, `#2%car` to `($primitive 2 car)`, and `#3%car` to `($primitive 3 car)`.
+
+__Chez Scheme__'s end-of-file object is printed `\#!eof`. If the end-of-file object appears outside of any datum within a file being loaded, `load` will treat it as if it were a true end of file and stop loading at that point. Inserting `#!eof` into the middle of a file can thus be handy when tracking down a load-time error.
+
+Broken pointers in weak pairs (see <<desc:weak-cons,page 406>>) are represented by the _broken weak pointer_ object, which is printed `#!bwp`.
+
+In addition to the standard delimiters (whitespace, open and close parentheses, open and close brackets, double quotes, semi-colon, and `#`), _Chez Scheme_ also treats as delimiters open and close braces, single quote, backward quote, and comma.
+
+The _Chez Scheme_ lexical extensions described above are disabled in an input stream after an `\#!r6rs` comment directive has been seen, unless a `#!chezscheme` comment directive has been seen since. Each library loaded implicitly via `import` and each RNRS top-level program loaded via the `--program` command-line option, the `scheme-script` command, or the `load-program` procedure is treated as if it begins implicitly with an `#!r6rs` comment directive.
+
+The case of symbol and character names is normally significant, as required by the Revised^6^ Report. Names are folded, as if by `string-foldcase`, following a `\#!fold-case` comment directive in the same input stream unless a `#!no-fold-case` has been seen since. Names are also folded if neither directive has been seen and the parameter `case-sensitive` has been set to `#f`.
+
+The printer invoked by `write`, `put-datum`, `pretty-print`, and the `format` `~s` option always prints standard Revised^6^ Report objects using the standard syntax, unless a different behavior is requested via the setting of one of the print parameters. For example, it prints symbols in the extended identifier syntax of Chez Scheme described above using hex scalar value escapes, unless the parameter `print-extended-identifiers` is set to true. Similarly, it does not print the explicit length or suppress duplicate trailing elements unless the parameter `print-vector-length` is set to true.
+
+=== Section 1.2. Notational Conventions [[section_1.2.]]
+
+This book follows essentially the same notational conventions as link:../../the-scheme-programming-language-4th/en/index.html[The Scheme Programming Language, 4th Edition]. These conventions are repeated below, with notes specific to _Chez Scheme_.
+
+When the value produced by a procedure or syntactic form is said to be _unspecified_, the form or procedure may return any number of values, each of which may be any Scheme object. _Chez Scheme_ usually returns a single, unique _void_ object (see `void`) whenever the result is unspecified; avoid counting on this behavior, however, especially if your program may be ported to another Scheme implementation. Printing of the void object is suppressed by __Chez Scheme__'s waiter (read-evaluate-print loop).
+
+[#intro:s33]
+This book uses the words "must" and "should" to describe program requirements, such as the requirement to provide an index that is less than the length of the vector in a call to `vector-ref`. If the word "must" is used, it means that the requirement is enforced by the implementation, i.e., an exception is raised, usually with condition type `&assertion`. If the word "should" is used, an exception may or may not be raised, and if not, the behavior of the program is undefined. The phrase "syntax violation" is used to describe a situation in which a program is malformed. Syntax violations are detected prior to program execution. When a syntax violation is detected, an exception of type `&syntax` is raised and the program is not executed.
+
+Scheme objects are displayed in a `typewriter` typeface just as they are to be typed at the keyboard. This includes identifiers, constant objects, parenthesized Scheme expressions, and whole programs. An _italic_ typeface is used to set off syntax variables in the descriptions of syntactic forms and arguments in the descriptions of procedures. Italics are also used to set off technical terms the first time they appear. The first letter of an identifier that is not ordinarily capitalized is not capitalized when it appears at the beginning of a sentence. The same is true for syntax variables written in italics.
+
+In the description of a syntactic form or procedure, a pattern shows the syntactic form or the application of the procedure. The syntax keyword or procedure name is given in typewriter font, as are parentheses. The remaining pieces of the syntax or arguments are shown in italics, using names that imply the types of the expressions or arguments expected by the syntactic form or procedure. Ellipses are used to specify zero or more occurrences of a subexpression or argument.
+
+=== Section 1.3. Parameters [[section_1.3.]]
+
+[#intro:s35]
+All _Chez Scheme_ system customization is done via _parameters_. A parameter is a procedure that encapsulates a hidden state variable. When invoked without arguments, a parameter returns the value of the encapsulated variable. When invoked with one argument, the parameter changes the value of the variable to the value of its argument. A parameter may raise an exception if its argument is not appropriate, or it may filter the argument in some way.
+
+New parameters may be created and used by programs running in _Chez Scheme_. Parameters are used rather than global variables for program customization for two reasons: First, unintentional redefinition of a customization variable can cause unexpected problems, whereas unintentional redefinition of a parameter simply makes the parameter inaccessible. For example, a program that defines `++*print-level*++` for its own purposes in early releases of _Chez Scheme_ would have unexpected effects on the printing of Scheme objects, whereas a program that defines `print-level` for its own purposes simply loses the ability to alter the printer's behavior. Of course, a program that invokes `print-level` by accident can still affect the system in unintended ways, but such an occurrence is less likely, and can only happen in an incorrect program.
+
+Second, invalid values for parameters can be detected and rejected immediately when the "assignment" is made, rather than at the point where the first use occurs, when it is too late to recover and reinstate the old value. For example, an assignment of `++*print-level*++` to -1 would not have been caught until the first call to `write` or `pretty-print`, whereas an attempted assignment of -1 to the parameter `print-level`, i.e., `(print-level -1)`, is flagged as an error immediately, before the change is actually made.
+
+Built-in system parameters are described in different sections throughout this book and are listed along with other syntactic forms and procedures in the Summary of Forms in the back of this book. Parameters marked "thread parameters" have per-thread values in threaded versions of _Chez Scheme_, while the values of parameters marked "global parameters" are shared by all threads. Nonthreaded versions of _Chez Scheme_ do not distinguish between thread and global parameters. See Sections <<section_12.13.,12.13>> and <<section_15.7.,15.7>> for more information on creating and manipulating parameters.
+
+=== Section 1.4. More Information [[section_1.4.]]
+
+The articles and technical reports listed below document various features of _Chez Scheme_ and its implementation:
+
+- syntactic abstraction (<<ref14>>,<<ref8>>,<<ref17>>),
+- modules <<ref32>>,
+- libraries <<ref21>>,
+- storage management (<<ref12>>,<<ref13>>),
+- threads <<ref10>>,
+- multiple return values <<ref2>>,
+- optional arguments <<ref16>>,
+- continuations (<<ref7>>,<<ref25>>,<<ref3>>),
+- eq? hashtables <<ref20>>,
+- internal definitions, `letrec`, and `letrec*` (<<ref33>>,<<ref22>>),
+- `equal?` <<ref1>>,
+- engines <<ref15>>,
+- floating-point printing <<ref4>>,
+- code generation <<ref18>>,
+- register allocation <<ref6>>,
+- procedure inlining <<ref31>>,
+- profiling <<ref5>>, and
+- history of the implementation <<ref9>>.
+
+Links to abstracts and electronic versions of these publications are available at the url http://www.cs.indiana.edu/chezscheme/pubs/.
