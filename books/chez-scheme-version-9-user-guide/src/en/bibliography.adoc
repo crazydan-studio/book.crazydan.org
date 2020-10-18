@@ -1,0 +1,69 @@
+[#bibliography]
+[bibliography]
+== Bibliography
+
+- [[[ref1,1]]] Michael Adams and R. Kent Dybvig. Efficient nondestructive equality checking for trees and graphs. In _Proceedings of the 13th ACM SIGPLAN International Conference on Functional Programming_, 179-188, September 2008.
+
+- [[[ref2,2]]] J. Michael Ashley and R. Kent Dybvig. An efficient implementation of multiple return values in Scheme. In _Proceedings of the 1994 ACM Conference on Lisp and Functional Programming_, 140-149, June 1994.
+
+- [[[ref3,3]]] Carl Bruggeman, Oscar Waddell, and R. Kent Dybvig. Representing control in the presence of one-shot continuations. In _Proceedings of the SIGPLAN '96 Conference on Programming Language Design and Implementation_, 99-107, May 1996.
+
+- [[[ref4,4]]] Robert G. Burger and R. Kent Dybvig. Printing floating-point numbers quickly and accurately. In _Proceedings of the SIGPLAN '96 Conference on Programming Language Design and Implementation_, 108-116, May 1996.
+
+- [[[ref5,5]]] Robert G. Burger and R. Kent Dybvig. An infrastructure for profile-driven dynamic recompilation. In _Proceedings of the IEEE Computer Society 1998 International Conference on Computer Languages_, 240-251, May 1998.
+
+- [[[ref6,6]]] Robert G. Burger, Oscar Waddell, and R. Kent Dybvig. Register allocation using lazy saves, eager restores, and greedy shuffling. In _Proceedings of the ACM SIGPLAN '95 Conference on Programming Language Design and Implementation_, 130-138, June 1995.
+
+- [[[ref7,7]]] R. Kent Dybvig. _Three Implementation Models for Scheme_. PhD thesis, University of North Carolina, Chapel Hill, April 1987.
+
+- [[[ref8,8]]] R. Kent Dybvig. Writing hygienic macros in scheme with syntax-case. Technical Report 356, Indiana Computer Science Department, June 1992.
+
+- [[[ref9,9]]] R. Kent Dybvig. The development of Chez Scheme. In _Proceedings of the Eleventh ACM SIGPLAN International Conference on Functional Programming_, 1-12, September 2006.
+
+- [[[ref10,10]]] R. Kent Dybvig. A Scheme for native threads. In _Symposium in Honor of Mitchell Wand_, August 2009. _http://www.ccs.neu.edu/events/wand-symposium/_.
+
+- [[[ref11,11]]] R. Kent Dybvig. _The Scheme Programming Language_, 4th edition. MIT Press, 2009.
+
+- [[[ref12,12]]] R. Kent Dybvig, Carl Bruggeman, and David Eby. Guardians in a generation-based garbage collector. In _Proceedings of the SIGPLAN '93 Conference on Programming Language Design and Implementation_, 207-216, June 1993.
+
+- [[[ref13,13]]] R. Kent Dybvig, David Eby, and Carl Bruggeman. Don't stop the BiBOP: Flexible and efficient storage management for dynamically-typed languages. Technical Report 400, Indiana Computer Science Department, March 1994.
+
+- [[[ref14,14]]] R. Kent Dybvig, Daniel P. Friedman, and Christopher T. Haynes. Expansion-passing style: A general macro mechanism. _Lisp and Symbolic Computation_, 1(1):53-75, 1988.
+
+- [[[ref15,15]]] R. Kent Dybvig and Robert Hieb. Engines from continuations. _Computer Languages_, 14(2):109-123, 1989.
+
+- [[[ref16,16]]] R. Kent Dybvig and Robert Hieb. A new approach to procedures with variable arity. _Lisp and Symbolic Computation_, 3(3):229-244, September 1990.
+
+- [[[ref17,17]]] R. Kent Dybvig, Robert Hieb, and Carl Bruggeman. Syntactic abstraction in Scheme. _Lisp and Symbolic Computation_, 5(4):295-326, 1993.
+
+- [[[ref18,18]]] R. Kent Dybvig, Robert Hieb, and Tom Butler. Destination-driven code generation. Technical Report 302, Indiana Computer Science Department, February 1990.
+
+- [[[ref19,19]]] Abdulaziz Ghuloum. _Implicit phasing for library dependencies_. PhD thesis, Indiana University, Indianapolis, IN, USA, 2008. Adviser-Dybvig, R. Kent.
+
+- [[[ref20,20]]] Abdulaziz Ghuloum and R. Kent Dybvig. Generation-friendly eq hash tables. In _2007 Workshop on Scheme and Functional Programming_, 27-35, 2007. _http://sfp2007.ift.ulaval.ca/programme.html_.
+
+- [[[ref21,21]]] Abdulaziz Ghuloum and R. Kent Dybvig. Implicit phasing for R6RS libraries. In _Proceedings of the 12th ACM SIGPLAN International Conference on Functional Programming_, 303-314, 2007. http://doi.acm.org/10.1145/1291220.1291197.
+
+- [[[ref22,22]]] Abdulaziz Ghuloum and R. Kent Dybvig. Fixing letrec (reloaded). In 2009 Workshop on Scheme and Functional Programming, August 2009. http://www.schemeworkshop.org/2009/.
+
+- [[[ref23,23]]] Barry Hayes. Ephemerons: a new finalization mechanism. In Proceedings of the 12th ACM SIGPLAN Conference on Object-Oriented Languages, Programming, Systems, and Applications, 176-183, 1997. https://doi.org/10.1145/263700.263733.
+
+- [[[ref24,24]]] Christopher T. Haynes and Daniel P. Friedman. Abstracting timed preemption with engines. Computer Languages, 12(2):109-121, 1987.
+
+- [[[ref25,25]]] Robert Hieb, R. Kent Dybvig, and Carl Bruggeman. Representing control in the presence of first-class continuations. In Proceedings of the SIGPLAN '90 Conference on Programming Language Design and Implementation, 66-77, June 1990.
+
+- [[[ref26,26]]] IEEE Computer Society. IEEE Standard for the Scheme Programming Language, May 1991. IEEE Std 1178-1990.
+
+- [[[ref27,27]]] Eugene Kohlbecker. Syntactic Extensions in the Programming Language Lisp. PhD thesis, Indiana University, Bloomington, August 1986.
+
+- [[[ref28,28]]] Michael Sperber, R. Kent Dybvig, Matthew Flatt, and Anton van Straaten (eds.). Revised^6^ report on the algorithmic language Scheme, September 2007. http://www.r6rs.org/.
+
+- [[[ref29,29]]] Michael Sperber, R. Kent Dybvig, Matthew Flatt, and Anton van Straaten (eds.). Revised^6^ report on the algorithmic language Scheme---non-normative appendices, September 2007. http://www.r6rs.org/.
+
+- [[[ref30,30]]] Guy L. Steele Jr. Common Lisp, the Language, second edition. Digital Press, 1990.
+
+- [[[ref31,31]]] Oscar Waddell and R. Kent Dybvig. Fast and effective procedure inlining. In Fourth International Symposium on Static Analysis, volume 1302 of Springer-Verlag Lecture Notes in Computer Science, 35-52. Springer-Verlag, 1997.
+
+- [[[ref32,32]]] Oscar Waddell and R. Kent Dybvig. Extending the scope of syntactic abstraction. In Conference Record of the 26th Annual ACM Symposium on Principles of Programming Languages, 203-213, January 1999.
+
+- [[[ref33,33]]] Oscar Waddell, Dipanwita Sarkar, and R. Kent Dybvig. Fixing letrec: A faithful yet efficient implementation of Scheme's recursive binding construct. Higher-order and symbolic computation, 18(3/4):299-326, 2005.

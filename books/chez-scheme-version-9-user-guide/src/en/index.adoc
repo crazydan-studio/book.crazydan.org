@@ -1,0 +1,7 @@
+[#index]
+[index]
+== Index
+
+This index is a unified index for this book and link:../../the-scheme-programming-language-4th/en/index.html[The Scheme Programming Language, 4th Edition] (TSPL4). Page numbers prefixed by "t" refer the latter document. Italicized page numbers refer to the primary description of a syntactic form or procedure.
+
+All page numbers appearing here refer to the printed version of these books and also serve as hypertext links to the corresponding locations in the electronic versions of these books.

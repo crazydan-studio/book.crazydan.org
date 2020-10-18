@@ -1,0 +1,1863 @@
+[#summary_of_forms]
+== Summary of Forms
+
+The table that follows summarizes the syntactic forms and procedures described in this book along with standard Scheme syntactic forms and procedures. It shows each item's category and the page number where it is defined. Page numbers prefixed by "t" refer to link:../../the-scheme-programming-language-4th/en/index.html[The Scheme Programming Language, 4th Edition] (TSPL4).
+
+All page numbers appearing here refer to the printed version of these books and also serve as hypertext links to the corresponding locations in the electronic versions of these books.
+
+[%autowidth,grid=none,frame=none]
+|===
+
+|Form |Category |Page
+
+|`'_obj_` |syntax |link:../../the-scheme-programming-language-4th/en/index.html#objects:s2[t141]
+|``_obj_` |syntax |link:../../the-scheme-programming-language-4th/en/index.html#objects:s5[t142]
+|`,_obj_` |syntax |link:../../the-scheme-programming-language-4th/en/index.html#objects:s5[t142]
+|`,@_obj_` |syntax |link:../../the-scheme-programming-language-4th/en/index.html#objects:s5[t142]
+|`\=>` |syntax |link:../../the-scheme-programming-language-4th/en/index.html#control:s16[t112]
+|`_` |syntax |link:../../the-scheme-programming-language-4th/en/index.html#syntax:s26[t297]
+|`\...` |syntax |link:../../the-scheme-programming-language-4th/en/index.html#syntax:s26[t297]
+|`#'_template_` |syntax |link:../../the-scheme-programming-language-4th/en/index.html#syntax:s33[t300]
+|`#`_template_` |syntax |link:../../the-scheme-programming-language-4th/en/index.html#syntax:s40[t305]
+|`#,_template_` |syntax |link:../../the-scheme-programming-language-4th/en/index.html#syntax:s40[t305]
+|`#,@_template_` |syntax |link:../../the-scheme-programming-language-4th/en/index.html#syntax:s40[t305]
+|`#%_variable_` |syntax |<<system:s109,358>>
+|`#2%_variable_` |syntax |<<system:s109,358>>
+|`#3%_variable_` |syntax |<<system:s109,358>>
+|`($primitive _variable_)` |syntax |<<system:s109,358>>
+|`($primitive 2 _variable_)` |syntax |<<system:s109,358>>
+|`($primitive 3 _variable_)` |syntax |<<system:s109,358>>
+|`$system` |module |<<syntax:s35,311>>
+|`&assertion` |syntax |link:../../the-scheme-programming-language-4th/en/index.html#exceptions:s21[t366]
+|`&condition` |syntax |link:../../the-scheme-programming-language-4th/en/index.html#exceptions:s13[t362]
+|`&continuation` |syntax |<<system:s6,327>>
+|`&error` |syntax |link:../../the-scheme-programming-language-4th/en/index.html#exceptions:s22[t367]
+|`&format` |syntax |<<system:s4,326>>
+|`&i/o` |syntax |link:../../the-scheme-programming-language-4th/en/index.html#exceptions:s32[t371]
+|`&i/o-decoding` |syntax |link:../../the-scheme-programming-language-4th/en/index.html#exceptions:s42[t375]
+|`&i/o-encoding` |syntax |link:../../the-scheme-programming-language-4th/en/index.html#exceptions:s43[t376]
+|`&i/o-file-already-exists` |syntax |link:../../the-scheme-programming-language-4th/en/index.html#exceptions:s39[t374]
+|`&i/o-file-does-not-exist` |syntax |link:../../the-scheme-programming-language-4th/en/index.html#exceptions:s40[t374]
+|`&i/o-file-is-read-only` |syntax |link:../../the-scheme-programming-language-4th/en/index.html#exceptions:s38[t374]
+|`&i/o-file-protection` |syntax |link:../../the-scheme-programming-language-4th/en/index.html#exceptions:s37[t373]
+|`&i/o-filename` |syntax |link:../../the-scheme-programming-language-4th/en/index.html#exceptions:s36[t373]
+|`&i/o-invalid-position` |syntax |link:../../the-scheme-programming-language-4th/en/index.html#exceptions:s35[t372]
+|`&i/o-port` |syntax |link:../../the-scheme-programming-language-4th/en/index.html#exceptions:s41[t375]
+|`&i/o-read` |syntax |link:../../the-scheme-programming-language-4th/en/index.html#exceptions:s33[t372]
+|`&i/o-write` |syntax |link:../../the-scheme-programming-language-4th/en/index.html#exceptions:s34[t372]
+|`&implementation-restriction` |syntax |link:../../the-scheme-programming-language-4th/en/index.html#exceptions:s28[t369]
+|`&irritants` |syntax |link:../../the-scheme-programming-language-4th/en/index.html#exceptions:s25[t368]
+|`&lexical` |syntax |link:../../the-scheme-programming-language-4th/en/index.html#exceptions:s29[t370]
+|`&message` |syntax |link:../../the-scheme-programming-language-4th/en/index.html#exceptions:s24[t368]
+|`&no-infinities` |syntax |link:../../the-scheme-programming-language-4th/en/index.html#exceptions:s44[t376]
+|`&no-nans` |syntax |link:../../the-scheme-programming-language-4th/en/index.html#exceptions:s45[t377]
+|`&non-continuable` |syntax |link:../../the-scheme-programming-language-4th/en/index.html#exceptions:s27[t369]
+|`&serious` |syntax |link:../../the-scheme-programming-language-4th/en/index.html#exceptions:s19[t366]
+|`&source` |syntax |<<system:s5,326>>
+|`&syntax` |syntax |link:../../the-scheme-programming-language-4th/en/index.html#exceptions:s30[t370]
+|`&undefined` |syntax |link:../../the-scheme-programming-language-4th/en/index.html#exceptions:s31[t371]
+|`&violation` |syntax |link:../../the-scheme-programming-language-4th/en/index.html#exceptions:s20[t366]
+|`&warning` |syntax |link:../../the-scheme-programming-language-4th/en/index.html#exceptions:s23[t367]
+|`&who` |syntax |link:../../the-scheme-programming-language-4th/en/index.html#exceptions:s26[t369]
+|`(* _num_ \...)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s91[t172]
+|`(+ _num_ \...)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s89[t171]
+|`(- _num_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s90[t172]
+|`(- _num~1~_ _num~2~_ _num~3~_ \...)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s90[t172]
+|`(-1+ _num_)` |procedure |<<numeric:s68,209>>
+|`(/ _num_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s92[t172]
+|`(/ _num~1~_ _num~2~_ _num~3~_ \...)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s92[t172]
+|`(1+ _num_)` |procedure |<<numeric:s68,209>>
+|`(1- _num_)` |procedure |<<numeric:s68,209>>
+|`(< _real~1~_ _real~2~_ _real~3~_ \...)` |procedure |<<numeric:s67,208>>
+|`(< _real~1~_ _real~2~_ _real~3~_ \...)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s88[t170]
+|`(\<= _real~1~_ _real~2~_ _real~3~_ \...)` |procedure |<<numeric:s67,208>>
+|`(\<= _real~1~_ _real~2~_ _real~3~_ \...)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s88[t170]
+|`(= _num~1~_ _num~2~_ _num~3~_ \...)` |procedure |<<numeric:s67,208>>
+|`(= _num~1~_ _num~2~_ _num~3~_ \...)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s88[t170]
+|`(> _real~1~_ _real~2~_ _real~3~_ \...)` |procedure |<<numeric:s67,208>>
+|`(> _real~1~_ _real~2~_ _real~3~_ \...)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s88[t170]
+|`(>= _real~1~_ _real~2~_ _real~3~_ \...)` |procedure |<<numeric:s67,208>>
+|`(>= _real~1~_ _real~2~_ _real~3~_ \...)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s88[t170]
+|`(abort)` |procedure |<<system:s182,377>>
+|`(abort _obj_)` |procedure |<<system:s182,377>>
+|`abort-handler` |thread param |<<system:s183,377>>
+|`(abs _real_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s105[t178]
+|`(acos _num_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s132[t185]
+|`(acosh _num_)` |procedure |<<numeric:s77,212>>
+|`(add-duration _time_ _time~d~_)` |procedure |<<system:s209,383>>
+|`(add-duration! _time_ _time~d~_)` |procedure |<<system:s209,383>>
+|`add-prefix` |syntax |<<syntax:s22,310>>
+|`(add1 _num_)` |procedure |<<numeric:s68,209>>
+|`alias` |syntax |<<syntax:s22,310>>
+|`(alias _id~1~_ _id~2~_)` |syntax |<<syntax:s38,314>>
+|`(and _expr_ \...)` |syntax |link:../../the-scheme-programming-language-4th/en/index.html#control:s11[t110]
+|`(andmap _procedure_ _list~1~_ _list~2~_ \...)` |procedure |<<control:s8,125>>
+|`(angle _num_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s124[t183]
+|`(annotation-expression _annotation_)` |procedure |<<syntax:s51,317>>
+|`(annotation-option-set _symbol_ \...)` |syntax |<<syntax:s68,320>>
+|`(annotation-options _annotation_)` |procedure |<<syntax:s54,318>>
+|`(annotation-source _annotation_)` |procedure |<<syntax:s52,318>>
+|`(annotation-stripped _annotation_)` |procedure |<<syntax:s53,318>>
+|`(annotation? _obj_)` |procedure |<<syntax:s50,317>>
+|`(append)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s49[t160]
+|`(append _list_ \... _obj_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s49[t160]
+|`(append! _list_ \...)` |procedure |<<objects:s13,137>>
+|`(apply _procedure_ _obj_ \... _list_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#control:s3[t107]
+|`(apropos _s_)` |procedure |<<system:s37,335>>
+|`(apropos _s_ _env_)` |procedure |<<system:s37,335>>
+|`(apropos-list _s_)` |procedure |<<system:s36,335>>
+|`(apropos-list _s_ _env_)` |procedure |<<system:s36,335>>
+|`(ash _int_ _count_)` |procedure |<<numeric:s52,204>>
+|`(asin _num_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s132[t185]
+|`(asinh _num_)` |procedure |<<numeric:s77,212>>
+|`(assert _expression_)` |syntax |link:../../the-scheme-programming-language-4th/en/index.html#exceptions:s5[t359]
+|`(assertion-violation _who_ _msg_ _irritant_ \...)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#exceptions:s4[t358]
+|`(assertion-violation? _obj_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#exceptions:s21[t366]
+|`(assertion-violationf _who_ _msg_ _irritant_ \...)` |procedure |<<system:s2,326>>
+|`(assoc _obj_ _alist_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s58[t165]
+|`(assp _procedure_ _alist_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s60[t166]
+|`(assq _obj_ _alist_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s58[t165]
+|`(assv _obj_ _alist_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s58[t165]
+|`(atan _num_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s133[t185]
+|`(atan _real~1~_ _real~2~_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s133[t185]
+|`(atanh _num_)` |procedure |<<numeric:s77,212>>
+|`(atom? _obj_)` |procedure |<<objects:s2,133>>
+|`base-exception-handler` |thread param |<<system:s12,328>>
+|`(begin _expr~1~_ _expr~2~_ \...)` |syntax |link:../../the-scheme-programming-language-4th/en/index.html#control:s4[t108]
+|`(bignum? _obj_)` |procedure |<<numeric:s11,190>>
+|`(binary-port-input-buffer _binary-input-port_)` |procedure |<<io:s16,219>>
+|`(binary-port-input-count _binary-input-port_)` |procedure |<<io:s18,220>>
+|`(binary-port-input-index _binary-input-port_)` |procedure |<<io:s16,219>>
+|`(binary-port-input-size _binary-input-port_)` |procedure |<<io:s16,219>>
+|`(binary-port-output-buffer _output-port_)` |procedure |<<io:s20,221>>
+|`(binary-port-output-count _binary-output-port_)` |procedure |<<io:s22,222>>
+|`(binary-port-output-index _output-port_)` |procedure |<<io:s20,221>>
+|`(binary-port-output-size _output-port_)` |procedure |<<io:s20,221>>
+|`(binary-port? _obj_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#io:s45[t270]
+|`(bitwise-and _exint_ \...)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s134[t186]
+|`(bitwise-arithmetic-shift _exint~1~_ _exint~2~_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s144[t190]
+|`(bitwise-arithmetic-shift-left _exint~1~_ _exint~2~_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s143[t189]
+|`(bitwise-arithmetic-shift-right _exint~1~_ _exint~2~_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s143[t189]
+|`(bitwise-bit-count _exint_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s136[t187]
+|`(bitwise-bit-field _exint~1~_ _exint~2~_ _exint~3~_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s141[t189]
+|`(bitwise-bit-set? _exint~1~_ _exint~2~_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s139[t188]
+|`(bitwise-copy-bit _exint~1~_ _exint~2~_ _exint~3~_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s140[t188]
+|`(bitwise-copy-bit-field _exint~1~_ _exint~2~_ _exint~3~_ _exint~4~_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s142[t189]
+|`(bitwise-first-bit-set _exint_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s138[t187]
+|`(bitwise-if _exint~1~_ _exint~2~_ _exint~3~_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s135[t186]
+|`(bitwise-ior _exint_ \...)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s134[t186]
+|`(bitwise-length _exint_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s137[t187]
+|`(bitwise-not _exint_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s134[t186]
+|`(bitwise-reverse-bit-field _exint~1~_ _exint~2~_ _exint~3~_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s146[t191]
+|`(bitwise-rotate-bit-field _exint~1~_ _exint~2~_ _exint~3~_ _exint~4~_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s145[t190]
+|`(bitwise-xor _exint_ \...)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s134[t186]
+|`(block-read _textual-input-port_ _string_)` |procedure |<<io:s69,235>>
+|`(block-read _textual-input-port_ _string_ _count_)` |procedure |<<io:s69,235>>
+|`(block-write _textual-output-port_ _string_)` |procedure |<<io:s86,242>>
+|`(block-write _textual-output-port_ _string_ _count_)` |procedure |<<io:s86,242>>
+|`(boolean=? _boolean~1~_ _boolean~2~_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s271[t243]
+|`(boolean? _obj_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s14[t150]
+|`(bound-identifier=? _identifier~1~_ _identifier~2~_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#syntax:s37[t302]
+|`(box _obj_)` |procedure |<<objects:s82,150>>
+|`(box-cas! _box_ _old-obj_ _new-obj_)` |procedure |<<objects:s85,151>>
+|`(box-immutable _obj_)` |procedure |<<objects:s87,151>>
+|`(box? _obj_)` |procedure |<<objects:s81,150>>
+|`(break _who_ _msg_ _irritant_ \...)` |procedure |<<system:s17,329>>
+|`(break _who_)` |procedure |<<system:s17,329>>
+|`(break)` |procedure |<<system:s17,329>>
+|`break-handler` |thread param |<<system:s19,330>>
+|`(buffer-mode _symbol_)` |syntax |link:../../the-scheme-programming-language-4th/en/index.html#io:s27[t261]
+|`(buffer-mode? _obj_)` |syntax |link:../../the-scheme-programming-language-4th/en/index.html#io:s28[t262]
+|`(bwp-object? _obj_)` |procedure |<<smgmt:s28,408>>
+|`(bytes-allocated)` |procedure |<<system:s223,389>>
+|`(bytes-allocated _g_)` |procedure |<<system:s223,389>>
+|`(bytes-deallocated)` |procedure |<<system:s225,389>>
+|`(bytevector _fill_ \...)` |procedure |<<objects:s59,146>>
+|`(bytevector\->immutable-bytevector _bytevector_)` |procedure |<<objects:s66,149>>
+|`(bytevector\->s8-list _bytevector_)` |procedure |<<objects:s60,147>>
+|`(bytevector\->sint-list _bytevector_ _eness_ _size_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s260[t238]
+|`(bytevector\->string _bytevector_ _transcoder_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#io:s91[t286]
+|`(bytevector\->u8-list _bytevector_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s252[t232]
+|`(bytevector\->uint-list _bytevector_ _eness_ _size_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s260[t238]
+|`(bytevector-compress _bytevector_)` |procedure |<<objects:s69,149>>
+|`(bytevector-copy _bytevector_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s246[t229]
+|`(bytevector-copy! _src_ _src-start_ _dst_ _dst-start_ _n_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s247[t230]
+|`(bytevector-fill! _bytevector_ _fill_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s245[t229]
+|`(bytevector-ieee-double-native-ref _bytevector_ _n_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s262[t239]
+|`(bytevector-ieee-double-native-set! _bytevector_ _n_ _x_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s263[t239]
+|`(bytevector-ieee-double-ref _bytevector_ _n_ _eness_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s264[t240]
+|`(bytevector-ieee-double-set! _bytevector_ _n_ _x_ _eness_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s265[t240]
+|`(bytevector-ieee-single-native-ref _bytevector_ _n_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s262[t239]
+|`(bytevector-ieee-single-native-set! _bytevector_ _n_ _x_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s263[t239]
+|`(bytevector-ieee-single-ref _bytevector_ _n_ _eness_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s264[t240]
+|`(bytevector-ieee-single-set! _bytevector_ _n_ _x_ _eness_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s265[t240]
+|`(bytevector-length _bytevector_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s243[t229]
+|`(bytevector-s16-native-ref _bytevector_ _n_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s254[t232]
+|`(bytevector-s16-native-set! _bytevector_ _n_ _s16_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s255[t233]
+|`(bytevector-s16-ref _bytevector_ _n_ _eness_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s256[t235]
+|`(bytevector-s16-set! _bytevector_ _n_ _s16_ _eness_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s257[t236]
+|`(bytevector-s24-ref _bytevector_ _n_ _eness_)` |procedure |<<objects:s63,148>>
+|`(bytevector-s24-set! _bytevector_ _n_ _s24_ _eness_)` |procedure |<<objects:s64,148>>
+|`(bytevector-s32-native-ref _bytevector_ _n_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s254[t232]
+|`(bytevector-s32-native-set! _bytevector_ _n_ _s32_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s255[t233]
+|`(bytevector-s32-ref _bytevector_ _n_ _eness_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s256[t235]
+|`(bytevector-s32-set! _bytevector_ _n_ _s32_ _eness_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s257[t236]
+|`(bytevector-s40-ref _bytevector_ _n_ _eness_)` |procedure |<<objects:s63,148>>
+|`(bytevector-s40-set! _bytevector_ _n_ _s40_ _eness_)` |procedure |<<objects:s64,148>>
+|`(bytevector-s48-ref _bytevector_ _n_ _eness_)` |procedure |<<objects:s63,148>>
+|`(bytevector-s48-set! _bytevector_ _n_ _s48_ _eness_)` |procedure |<<objects:s64,148>>
+|`(bytevector-s56-ref _bytevector_ _n_ _eness_)` |procedure |<<objects:s63,148>>
+|`(bytevector-s56-set! _bytevector_ _n_ _s56_ _eness_)` |procedure |<<objects:s64,148>>
+|`(bytevector-s64-native-ref _bytevector_ _n_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s254[t232]
+|`(bytevector-s64-native-set! _bytevector_ _n_ _s64_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s255[t233]
+|`(bytevector-s64-ref _bytevector_ _n_ _eness_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s256[t235]
+|`(bytevector-s64-set! _bytevector_ _n_ _s64_ _eness_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s257[t236]
+|`(bytevector-s8-ref _bytevector_ _n_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s249[t231]
+|`(bytevector-s8-set! _bytevector_ _n_ _s8_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s251[t231]
+|`(bytevector-sint-ref _bytevector_ _n_ _eness_ _size_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s258[t237]
+|`(bytevector-sint-set! _bytevector_ _n_ _sint_ _eness_ _size_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s259[t238]
+|`(bytevector-truncate! _bytevector_ _n_)` |procedure |<<objects:s62,147>>
+|`(bytevector-u16-native-ref _bytevector_ _n_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s254[t232]
+|`(bytevector-u16-native-set! _bytevector_ _n_ _u16_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s255[t233]
+|`(bytevector-u16-ref _bytevector_ _n_ _eness_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s256[t235]
+|`(bytevector-u16-set! _bytevector_ _n_ _u16_ _eness_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s257[t236]
+|`(bytevector-u24-ref _bytevector_ _n_ _eness_)` |procedure |<<objects:s63,148>>
+|`(bytevector-u24-set! _bytevector_ _n_ _u24_ _eness_)` |procedure |<<objects:s64,148>>
+|`(bytevector-u32-native-ref _bytevector_ _n_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s254[t232]
+|`(bytevector-u32-native-set! _bytevector_ _n_ _u32_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s255[t233]
+|`(bytevector-u32-ref _bytevector_ _n_ _eness_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s256[t235]
+|`(bytevector-u32-set! _bytevector_ _n_ _u32_ _eness_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s257[t236]
+|`(bytevector-u40-ref _bytevector_ _n_ _eness_)` |procedure |<<objects:s63,148>>
+|`(bytevector-u40-set! _bytevector_ _n_ _u40_ _eness_)` |procedure |<<objects:s64,148>>
+|`(bytevector-u48-ref _bytevector_ _n_ _eness_)` |procedure |<<objects:s63,148>>
+|`(bytevector-u48-set! _bytevector_ _n_ _u48_ _eness_)` |procedure |<<objects:s64,148>>
+|`(bytevector-u56-ref _bytevector_ _n_ _eness_)` |procedure |<<objects:s63,148>>
+|`(bytevector-u56-set! _bytevector_ _n_ _u56_ _eness_)` |procedure |<<objects:s64,148>>
+|`(bytevector-u64-native-ref _bytevector_ _n_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s254[t232]
+|`(bytevector-u64-native-set! _bytevector_ _n_ _u64_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s255[t233]
+|`(bytevector-u64-ref _bytevector_ _n_ _eness_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s256[t235]
+|`(bytevector-u64-set! _bytevector_ _n_ _u64_ _eness_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s257[t236]
+|`(bytevector-u8-ref _bytevector_ _n_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s248[t230]
+|`(bytevector-u8-set! _bytevector_ _n_ _u8_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s250[t231]
+|`(bytevector-uint-ref _bytevector_ _n_ _eness_ _size_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s258[t237]
+|`(bytevector-uint-set! _bytevector_ _n_ _uint_ _eness_ _size_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s259[t238]
+|`(bytevector-uncompress _bytevector_)` |procedure |<<objects:s72,150>>
+|`(bytevector=? _bytevector~1~_ _bytevector~2~_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s244[t229]
+|`(bytevector? _obj_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s24[t155]
+|`(caaaar _pair_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s42[t157]
+|`(caaadr _pair_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s42[t157]
+|`(caaar _pair_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s42[t157]
+|`(caadar _pair_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s42[t157]
+|`(caaddr _pair_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s42[t157]
+|`(caadr _pair_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s42[t157]
+|`(caar _pair_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s42[t157]
+|`(cadaar _pair_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s42[t157]
+|`(cadadr _pair_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s42[t157]
+|`(cadar _pair_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s42[t157]
+|`(caddar _pair_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s42[t157]
+|`(cadddr _pair_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s42[t157]
+|`(caddr _pair_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s42[t157]
+|`(cadr _pair_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s42[t157]
+|`(call-with-bytevector-output-port _procedure_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#io:s38[t266]
+|`(call-with-bytevector-output-port _procedure_ _?transcoder_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#io:s38[t266]
+|`(call-with-current-continuation _procedure_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#control:s54[t123]
+|`(call-with-input-file _path_ _procedure_)` |procedure |<<io:s58,231>>
+|`(call-with-input-file _path_ _procedure_ _options_)` |procedure |<<io:s58,231>>
+|`(call-with-input-file _path_ _procedure_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#io:s77[t281]
+|`(call-with-output-file _path_ _procedure_)` |procedure |<<io:s78,240>>
+|`(call-with-output-file _path_ _procedure_ _options_)` |procedure |<<io:s78,240>>
+|`(call-with-output-file _path_ _procedure_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#io:s78[t282]
+|`(call-with-port _port_ _procedure_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#io:s51[t272]
+|`(call-with-string-output-port _procedure_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#io:s39[t267]
+|`(call-with-values _producer_ _consumer_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#control:s71[t131]
+|`(call/1cc _procedure_)` |procedure |<<control:s9,126>>
+|`(call/cc _procedure_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#control:s54[t123]
+|`(car _pair_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s38[t156]
+|`(case _expr~0~_ _clause~1~_ _clause~2~_ \...)` |syntax |<<control:s1,123>>
+|`(case _expr~0~_ _clause~1~_ _clause~2~_ \...)` |syntax |link:../../the-scheme-programming-language-4th/en/index.html#control:s18[t113]
+|`(case-lambda _clause_ \...)` |syntax |link:../../the-scheme-programming-language-4th/en/index.html#binding:s13[t94]
+|`case-sensitive` |thread param |<<io:s109,253>>
+|`cd` |global param |<<io:s139,260>>
+|`(cdaaar _pair_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s42[t157]
+|`(cdaadr _pair_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s42[t157]
+|`(cdaar _pair_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s42[t157]
+|`(cdadar _pair_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s42[t157]
+|`(cdaddr _pair_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s42[t157]
+|`(cdadr _pair_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s42[t157]
+|`(cdar _pair_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s42[t157]
+|`(cddaar _pair_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s42[t157]
+|`(cddadr _pair_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s42[t157]
+|`(cddar _pair_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s42[t157]
+|`(cdddar _pair_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s42[t157]
+|`(cddddr _pair_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s42[t157]
+|`(cdddr _pair_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s42[t157]
+|`(cddr _pair_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s42[t157]
+|`(cdr _pair_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s39[t156]
+|`(ceiling _real_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s103[t177]
+|`(cfl* _cflonum_ \...)` |procedure |<<numeric:s38,198>>
+|`(cfl+ _cflonum_ \...)` |procedure |<<numeric:s38,198>>
+|`(cfl- _cflonum~1~_ _cflonum~2~_ \...)` |procedure |<<numeric:s38,198>>
+|`(cfl-conjugate _cflonum_)` |procedure |<<numeric:s39,199>>
+|`(cfl-imag-part _cflonum_)` |procedure |<<numeric:s36,198>>
+|`(cfl-magnitude-squared _cflonum_)` |procedure |<<numeric:s41,199>>
+|`(cfl-real-part _cflonum_)` |procedure |<<numeric:s36,198>>
+|`(cfl/ _cflonum~1~_ _cflonum~2~_ \...)` |procedure |<<numeric:s38,198>>
+|`(cfl= _cflonum_ \...)` |procedure |<<numeric:s37,198>>
+|`(cflonum? _obj_)` |procedure |<<numeric:s13,191>>
+|`(char- _char~1~_ _char~2~_)` |procedure |<<objects:s16,138>>
+|`(char\->integer _char_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s210[t215]
+|`(char-alphabetic? _char_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s203[t213]
+|`(char-ci\<=? _char~1~_ _char~2~_ \...)` |procedure |<<objects:s15,138>>
+|`(char-ci\<=? _char~1~_ _char~2~_ _char~3~_ \...)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s202[t212]
+|`(char-ci<? _char~1~_ _char~2~_ \...)` |procedure |<<objects:s15,138>>
+|`(char-ci<? _char~1~_ _char~2~_ _char~3~_ \...)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s202[t212]
+|`(char-ci=? _char~1~_ _char~2~_ \...)` |procedure |<<objects:s15,138>>
+|`(char-ci=? _char~1~_ _char~2~_ _char~3~_ \...)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s202[t212]
+|`(char-ci>=? _char~1~_ _char~2~_ \...)` |procedure |<<objects:s15,138>>
+|`(char-ci>=? _char~1~_ _char~2~_ _char~3~_ \...)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s202[t212]
+|`(char-ci>? _char~1~_ _char~2~_ \...)` |procedure |<<objects:s15,138>>
+|`(char-ci>? _char~1~_ _char~2~_ _char~3~_ \...)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s202[t212]
+|`(char-downcase _char_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s207[t214]
+|`(char-foldcase _char_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s209[t215]
+|`(char-general-category _char_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s205[t214]
+|`(char-lower-case? _char_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s204[t213]
+|`(char-name _obj_)` |procedure |<<io:s107,251>>
+|`(char-name _name_ _char_)` |procedure |<<io:s107,251>>
+|`(char-numeric? _char_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s203[t213]
+|`(char-ready?)` |procedure |<<io:s68,235>>
+|`(char-ready? _textual-input-port_)` |procedure |<<io:s68,235>>
+|`(char-title-case? _char_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s204[t213]
+|`(char-titlecase _char_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s208[t214]
+|`(char-upcase _char_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s206[t214]
+|`(char-upper-case? _char_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s204[t213]
+|`(char-whitespace? _char_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s203[t213]
+|`(char\<=? _char~1~_ _char~2~_ \...)` |procedure |<<objects:s15,138>>
+|`(char\<=? _char~1~_ _char~2~_ _char~3~_ \...)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s201[t212]
+|`(char<? _char~1~_ _char~2~_ \...)` |procedure |<<objects:s15,138>>
+|`(char<? _char~1~_ _char~2~_ _char~3~_ \...)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s201[t212]
+|`(char=? _char~1~_ _char~2~_ \...)` |procedure |<<objects:s15,138>>
+|`(char=? _char~1~_ _char~2~_ _char~3~_ \...)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s201[t212]
+|`(char>=? _char~1~_ _char~2~_ \...)` |procedure |<<objects:s15,138>>
+|`(char>=? _char~1~_ _char~2~_ _char~3~_ \...)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s201[t212]
+|`(char>? _char~1~_ _char~2~_ \...)` |procedure |<<objects:s15,138>>
+|`(char>? _char~1~_ _char~2~_ _char~3~_ \...)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s201[t212]
+|`(char? _obj_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s19[t154]
+|`(chmod _path_ _mode_)` |procedure |<<io:s150,263>>
+|`(clear-input-port)` |procedure |<<io:s36,226>>
+|`(clear-input-port _input-port_)` |procedure |<<io:s36,226>>
+|`(clear-output-port)` |procedure |<<io:s37,226>>
+|`(clear-output-port _output-port_)` |procedure |<<io:s37,226>>
+|`(close-input-port _input-port_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#io:s88[t285]
+|`(close-output-port _output-port_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#io:s88[t285]
+|`(close-port _port_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#io:s46[t270]
+|`(collect)` |procedure |<<smgmt:s9,402>>
+|`(collect _cg_)` |procedure |<<smgmt:s9,402>>
+|`(collect _cg_ _max-tg_)` |procedure |<<smgmt:s9,402>>
+|`(collect _cg_ _min-tg_ _max-tg_)` |procedure |<<smgmt:s9,402>>
+|`collect-generation-radix` |global param |<<smgmt:s15,404>>
+|`collect-maximum-generation` |global param |<<smgmt:s16,404>>
+|`collect-notify` |global param |<<smgmt:s11,403>>
+|`(collect-rendezvous)` |procedure |<<smgmt:s10,403>>
+|`collect-request-handler` |global param |<<smgmt:s17,404>>
+|`collect-trip-bytes` |global param |<<smgmt:s12,403>>
+|`(collections)` |procedure |<<system:s229,390>>
+|`command-line` |global param |<<system:s193,379>>
+|`(command-line)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#libraries:s17[t350]
+|`command-line-arguments` |global param |<<system:s195,379>>
+|`commonization-level` |thread param |<<system:s122,363>>
+|`(compile _obj_)` |procedure |<<system:s43,337>>
+|`(compile _obj_ _env_)` |procedure |<<system:s43,337>>
+|`(compile-file _input-filename_)` |procedure |<<system:s63,341>>
+|`(compile-file _input-filename_ _output-filename_)` |procedure |<<system:s63,341>>
+|`compile-file-message` |thread param |<<system:s119,360>>
+|`compile-imported-libraries` |thread param |<<libraries:s26,288>>
+|`compile-interpret-simple` |thread param |<<system:s112,359>>
+|`(compile-library _input-filename_)` |procedure |<<system:s68,342>>
+|`(compile-library _input-filename_ _output-filename_)` |procedure |<<system:s68,342>>
+|`compile-library-handler` |thread param |<<system:s72,343>>
+|`(compile-port _input-port_ _output-port_)` |procedure |<<system:s79,345>>
+|`(compile-port _input-port_ _output-port_ _sfd_)` |procedure |<<system:s79,345>>
+|`(compile-port _input-port_ _output-port_ _sfd_ _wpo-port_)` |procedure |<<system:s79,345>>
+|`(compile-port _input-port_ _output-port_ _sfd_ _wpo-port_ _covop_)` |procedure |<<system:s79,345>>
+|`compile-profile` |thread param |<<system:s140,368>>
+|`(compile-program _input-filename_)` |procedure |<<system:s69,342>>
+|`(compile-program _input-filename_ _output-filename_)` |procedure |<<system:s69,342>>
+|`compile-program-handler` |thread param |<<system:s74,344>>
+|`(compile-script _input-filename_)` |procedure |<<system:s66,342>>
+|`(compile-script _input-filename_ _output-filename_)` |procedure |<<system:s66,342>>
+|`(compile-time-value-value _ctv_)` |procedure |<<syntax:s17,302>>
+|`(compile-time-value? _obj_)` |procedure |<<syntax:s16,302>>
+|`(compile-to-file _obj-list_ _output-file_)` |procedure |<<system:s81,346>>
+|`(compile-to-file _obj-list_ _output-file_ _sfd_)` |procedure |<<system:s81,346>>
+|`(compile-to-port _obj-list_ _output-port_)` |procedure |<<system:s80,346>>
+|`(compile-to-port _obj-list_ _output-port_ _sfd_)` |procedure |<<system:s80,346>>
+|`(compile-to-port _obj-list_ _output-port_ _sfd_ _wpo-port_)` |procedure |<<system:s80,346>>
+|`(compile-to-port _obj-list_ _output-port_ _sfd_ _wpo-port_ _covop_)` |procedure |<<system:s80,346>>
+|`(compile-whole-library _input-filename_ _output-filename_)` |procedure |<<system:s78,345>>
+|`(compile-whole-program _input-filename_ _output-filename_)` |procedure |<<system:s76,344>>
+|`(compile-whole-program _input-filename_ _output-filename_ _libs-visible?_)` |procedure |<<system:s76,344>>
+|`(complex? _obj_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s17[t151]
+|`compress-format` |thread param |<<io:s42,227>>
+|`compress-level` |thread param |<<io:s43,227>>
+|`(compute-composition _object_)` |procedure |<<debug:s31,55>>
+|`(compute-composition _object_ _generation_)` |procedure |<<debug:s31,55>>
+|`(compute-size _object_)` |procedure |<<debug:s30,54>>
+|`(compute-size _object_ _generation_)` |procedure |<<debug:s30,54>>
+|`(concatenate-object-files _out-file_ _in-file~1~_ _in-file~2~_ \...)` |procedure |<<system:s82,347>>
+|`(cond _clause~1~_ _clause~2~_ \...)` |syntax |link:../../the-scheme-programming-language-4th/en/index.html#control:s13[t111]
+|`(condition _condition_ \...)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#exceptions:s15[t362]
+|`(condition-accessor _rtd_ _procedure_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#exceptions:s18[t365]
+|`(condition-broadcast _cond_)` |procedure |<<threads:s16,430>>
+|`(condition-continuation _condition_)` |procedure |<<system:s6,327>>
+|`(condition-irritants _condition_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#exceptions:s25[t368]
+|`(condition-message _condition_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#exceptions:s24[t368]
+|`(condition-name _condition_)` |procedure |<<threads:s17,431>>
+|`(condition-predicate _rtd_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#exceptions:s18[t365]
+|`(condition-signal _cond_)` |procedure |<<threads:s15,430>>
+|`(condition-wait _cond_ _mutex_)` |procedure |<<threads:s14,430>>
+|`(condition-wait _cond_ _mutex_ _timeout_)` |procedure |<<threads:s14,430>>
+|`(condition-who _condition_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#exceptions:s26[t369]
+|`(condition? _obj_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#exceptions:s14[t362]
+|`(conjugate _num_)` |procedure |<<numeric:s74,211>>
+|`(cons _obj~1~_ _obj~2~_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s37[t156]
+|`(cons* _obj_ \... _final-obj_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s44[t158]
+|`console-error-port` |thread param |<<io:s73,238>>
+|`console-input-port` |global param |<<io:s55,230>>
+|`console-output-port` |global param |<<io:s71,238>>
+|`_constant_` |syntax |link:../../the-scheme-programming-language-4th/en/index.html#objects:s1[t141]
+|`constructor` |syntax |<<objects:s176,178>>
+|`(continuation-condition? _obj_)` |procedure |<<system:s6,327>>
+|`(copy-environment _env_)` |procedure |<<system:s34,334>>
+|`(copy-environment _env_ _mutable?_)` |procedure |<<system:s34,334>>
+|`(copy-environment _env_ _mutable?_ _syms_)` |procedure |<<system:s34,334>>
+|`(copy-time _time_)` |procedure |<<system:s208,383>>
+|`(cos _num_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s131[t185]
+|`(cosh _num_)` |procedure |<<numeric:s76,211>>
+|`(cost-center-allocation-count _cost-center_)` |procedure |<<system:s245,394>>
+|`(cost-center-instruction-count _cost-center_)` |procedure |<<system:s244,394>>
+|`(cost-center-time _cost-center_)` |procedure |<<system:s246,394>>
+|`(cost-center? _obj_)` |procedure |<<system:s242,393>>
+|`cp0-effort-limit` |thread param |<<system:s120,360>>
+|`cp0-outer-unroll-limit` |thread param |<<system:s120,360>>
+|`cp0-score-limit` |thread param |<<system:s120,360>>
+|`(cpu-time)` |procedure |<<system:s221,388>>
+|`(create-exception-state)` |procedure |<<system:s15,329>>
+|`(create-exception-state _procedure_)` |procedure |<<system:s15,329>>
+|`(critical-section _body~1~_ _body~2~_ \...)` |syntax |<<system:s27,331>>
+|`(current-date)` |procedure |<<system:s210,384>>
+|`(current-date _offset_)` |procedure |<<system:s210,384>>
+|`current-directory` |global param |<<io:s139,260>>
+|`current-error-port` |thread param |<<io:s74,238>>
+|`(current-error-port)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#io:s32[t263]
+|`current-eval` |thread param |<<system:s39,336>>
+|`current-exception-state` |thread param |<<system:s14,328>>
+|`current-expand` |thread param |<<system:s92,349>>
+|`current-input-port` |thread param |<<io:s56,230>>
+|`(current-input-port)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#io:s32[t263]
+|`current-locate-source-object-source` |thread param |<<syntax:s74,321>>
+|`current-make-source-object` |thread param |<<syntax:s62,319>>
+|`(current-memory-bytes)` |procedure |<<system:s226,389>>
+|`current-output-port` |thread param |<<io:s72,238>>
+|`(current-output-port)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#io:s32[t263]
+|`(current-time)` |procedure |<<system:s202,381>>
+|`(current-time _time-type_)` |procedure |<<system:s202,381>>
+|`current-transcoder` |thread param |<<io:s11,218>>
+|`custom-port-buffer-size` |thread param |<<io:s54,230>>
+|`(date\->time-utc _date_)` |procedure |<<system:s216,387>>
+|`(date-and-time)` |procedure |<<system:s217,387>>
+|`(date-and-time _date_)` |procedure |<<system:s217,387>>
+|`(date-day _date_)` |procedure |<<system:s213,385>>
+|`(date-dst? _date_)` |procedure |<<system:s215,386>>
+|`(date-hour _date_)` |procedure |<<system:s213,385>>
+|`(date-minute _date_)` |procedure |<<system:s213,385>>
+|`(date-month _date_)` |procedure |<<system:s213,385>>
+|`(date-nanosecond _date_)` |procedure |<<system:s213,385>>
+|`(date-second _date_)` |procedure |<<system:s213,385>>
+|`(date-week-day _date_)` |procedure |<<system:s214,386>>
+|`(date-year _date_)` |procedure |<<system:s213,385>>
+|`(date-year-day _date_)` |procedure |<<system:s214,386>>
+|`(date-zone-name _date_)` |procedure |<<system:s215,386>>
+|`(date-zone-offset _date_)` |procedure |<<system:s213,385>>
+|`(date? _obj_)` |procedure |<<system:s212,385>>
+|`(datum _template_)` |syntax |<<syntax:s9,297>>
+|`(datum\->syntax _template-identifier_ _obj_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#syntax:s45[t308]
+|`(datum\->syntax-object _template-identifier_ _obj_)` |procedure |<<syntax:s10,297>>
+|`(debug)` |procedure |<<debug:s16,41>>
+|`debug-condition` |thread param |<<system:s13,328>>
+|`debug-level` |thread param |<<system:s110,358>>
+|`debug-on-exception` |global param |<<system:s10,328>>
+|`(decode-float _x_)` |procedure |<<numeric:s30,197>>
+|`(default-exception-handler _obj_)` |procedure |<<system:s8,327>>
+|`(default-library-search-handler _who_ _library_ _directories_ _extensions_)` |procedure |<<libraries:s31,289>>
+|`(default-prompt-and-read _level_)` |procedure |<<system:s176,376>>
+|`default-record-equal-procedure` |thread param |<<objects:s160,171>>
+|`default-record-hash-procedure` |thread param |<<objects:s161,171>>
+|`(define _var_ _expr_)` |syntax |link:../../the-scheme-programming-language-4th/en/index.html#binding:s24[t100]
+|`(define _var_)` |syntax |link:../../the-scheme-programming-language-4th/en/index.html#binding:s24[t100]
+|`(define (_var~0~_ _var~1~_ \...) _body~1~_ _body~2~_ \...)` |syntax |link:../../the-scheme-programming-language-4th/en/index.html#binding:s24[t100]
+|`(define (_var~0~_ . _var~r~_) _body~1~_ _body~2~_ \...)` |syntax |link:../../the-scheme-programming-language-4th/en/index.html#binding:s24[t100]
+|`(define (_var~0~_ _var~1~_ _var~2~_ \... . _var~r~_) _body~1~_ _body~2~_ \...)` |syntax |link:../../the-scheme-programming-language-4th/en/index.html#binding:s24[t100]
+|`(define-condition-type _name_ _parent_ _constructor_ _pred_ _field_ \...)` |syntax |link:../../the-scheme-programming-language-4th/en/index.html#exceptions:s17[t364]
+|`(define-enumeration _name_ (_symbol_ \...) _constructor_)` |syntax |link:../../the-scheme-programming-language-4th/en/index.html#objects:s290[t250]
+|`(define-ftype _ftype-name_ _ftype_)` |syntax |<<foreign:s137,77>>
+|`(define-ftype (_ftype-name_ _ftype_) \...)` |syntax |<<foreign:s137,77>>
+|`(define-property _id_ _key_ _expr_)` |syntax |<<syntax:s18,302>>
+|`(define-record _name_ (_fld~1~_ \...) ((_fld~2~_ _init_) \...) (_opt_ \...))` |syntax |<<objects:s172,174>>
+|`(define-record _name_ _parent_ (_fld~1~_ \...) ((_fld~2~_ _init_) \...) (_opt_ \...))` |syntax |<<objects:s172,174>>
+|`(define-record-type _record-name_ _clause_ \...)` |syntax |link:../../the-scheme-programming-language-4th/en/index.html#records:s13[t328]
+|`(define-record-type (_record-name_ _constructor_ _pred_) _clause_ \...)` |syntax |link:../../the-scheme-programming-language-4th/en/index.html#records:s13[t328]
+|`(define-structure (_name_ _id~1~_ \...) ((_id~2~_ _expr_) \...))` |syntax |<<compat:s25,447>>
+|`(define-syntax _keyword_ _expr_)` |syntax |link:../../the-scheme-programming-language-4th/en/index.html#syntax:s12[t292]
+|`(define-top-level-syntax _symbol_ _obj_)` |procedure |<<binding:s32,119>>
+|`(define-top-level-syntax _symbol_ _obj_ _env_)` |procedure |<<binding:s32,119>>
+|`(define-top-level-value _symbol_ _obj_)` |procedure |<<binding:s24,117>>
+|`(define-top-level-value _symbol_ _obj_ _env_)` |procedure |<<binding:s24,117>>
+|`(define-values _formals_ _expr_)` |syntax |<<binding:s16,114>>
+|`(delay _expr_)` |syntax |link:../../the-scheme-programming-language-4th/en/index.html#control:s65[t128]
+|`(delete-directory _path_)` |procedure |<<io:s148,262>>
+|`(delete-directory _path_ _error?_)` |procedure |<<io:s148,262>>
+|`(delete-file _path_)` |procedure |<<io:s147,262>>
+|`(delete-file _path_ _error?_)` |procedure |<<io:s147,262>>
+|`(delete-file _path_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#io:s90[t286]
+|`(denominator _rat_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s119[t181]
+|`(directory-list _path_)` |procedure |<<io:s140,260>>
+|`(directory-separator)` |procedure |<<io:s153,263>>
+|`(directory-separator? _char_)` |procedure |<<io:s152,263>>
+|`(disable-interrupts)` |procedure |<<system:s26,331>>
+|`(display _obj_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#io:s85[t285]
+|`(display _obj_ _textual-output-port_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#io:s85[t285]
+|`(display-condition _obj_)` |procedure |<<system:s7,327>>
+|`(display-condition _obj_ _textual-output-port_)` |procedure |<<system:s7,327>>
+|`(display-statistics)` |procedure |<<system:s220,388>>
+|`(display-statistics _textual-output-port_)` |procedure |<<system:s220,388>>
+|`(display-string _string_)` |procedure |<<io:s85,242>>
+|`(display-string _string_ _textual-output-port_)` |procedure |<<io:s85,242>>
+|`(div _x~1~_ _x~2~_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s99[t175]
+|`(div-and-mod _x~1~_ _x~2~_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s99[t175]
+|`(div0 _x~1~_ _x~2~_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s100[t176]
+|`(div0-and-mod0 _x~1~_ _x~2~_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s100[t176]
+|`(do ((_var_ _init_ _update_) \...) (_test_ _result_ \...) _expr_ \...)` |syntax |link:../../the-scheme-programming-language-4th/en/index.html#control:s25[t115]
+|`drop-prefix` |syntax |<<syntax:s22,310>>
+|`(dynamic-wind _in_ _body_ _out_)` |procedure |<<control:s11,127>>
+|`(dynamic-wind _critical?_ _in_ _body_ _out_)` |procedure |<<control:s11,127>>
+|`(dynamic-wind _in_ _body_ _out_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#control:s56[t124]
+|`ee-auto-indent` |global param |<<expeditor:s1,415>>
+|`ee-auto-paren-balance` |global param |<<expeditor:s3,416>>
+|`(ee-bind-key _key_ _procedure_)` |procedure |<<expeditor:s10,417>>
+|`ee-common-identifiers` |global param |<<expeditor:s9,416>>
+|`(ee-compose _ecmd_ \...)` |procedure |<<expeditor:s78,425>>
+|`ee-default-repeat` |global param |<<expeditor:s6,416>>
+|`ee-flash-parens` |global param |<<expeditor:s4,416>>
+|`ee-history-limit` |global param |<<expeditor:s8,416>>
+|`ee-noisy` |global param |<<expeditor:s7,416>>
+|`ee-paren-flash-delay` |global param |<<expeditor:s5,416>>
+|`ee-standard-indent` |global param |<<expeditor:s2,415>>
+|`(ee-string-macro _string_)` |procedure |<<expeditor:s77,425>>
+|`else` |syntax |link:../../the-scheme-programming-language-4th/en/index.html#control:s16[t112]
+|`enable-cross-library-optimization` |thread param |<<system:s116,360>>
+|`(enable-interrupts)` |procedure |<<system:s26,331>>
+|`enable-object-counts` |global param |<<system:s237,392>>
+|`(endianness _symbol_)` |syntax |link:../../the-scheme-programming-language-4th/en/index.html#objects:s240[t228]
+|`(engine-block)` |procedure |<<control:s27,131>>
+|`(engine-return _obj_ \...)` |procedure |<<control:s28,132>>
+|`(enum-set\->list _enum-set_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s294[t252]
+|`(enum-set-complement _enum-set_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s299[t254]
+|`(enum-set-constructor _enum-set_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s292[t251]
+|`(enum-set-difference _enum-set~1~_ _enum-set~2~_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s298[t253]
+|`(enum-set-indexer _enum-set_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s301[t254]
+|`(enum-set-intersection _enum-set~1~_ _enum-set~2~_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s298[t253]
+|`(enum-set-member? _symbol_ _enum-set_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s297[t253]
+|`(enum-set-projection _enum-set~1~_ _enum-set~2~_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s300[t254]
+|`(enum-set-subset? _enum-set~1~_ _enum-set~2~_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s295[t252]
+|`(enum-set-union _enum-set~1~_ _enum-set~2~_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s298[t253]
+|`(enum-set-universe _enum-set_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s293[t252]
+|`(enum-set=? _enum-set~1~_ _enum-set~2~_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s296[t252]
+|`(enum-set? _obj_)` |procedure |<<objects:s0,133>>
+|`(enumerate _ls_)` |procedure |<<objects:s9,135>>
+|`(environment _import-spec_ \...)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#control:s81[t137]
+|`(environment-mutable? _env_)` |procedure |<<system:s30,333>>
+|`(environment-symbols _env_)` |procedure |<<system:s35,335>>
+|`(environment? _obj_)` |procedure |<<system:s29,333>>
+|`(eof-object)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#io:s54[t273]
+|`(eof-object? _obj_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#io:s53[t273]
+|`(eol-style _symbol_)` |syntax |link:../../the-scheme-programming-language-4th/en/index.html#io:s23[t259]
+|`(ephemeron-cons _obj~1~_ _obj~2~_)` |procedure |<<smgmt:s26,407>>
+|`(ephemeron-pair? _obj_)` |procedure |<<smgmt:s27,408>>
+|`(eq-hashtable-cell _hashtable_ _key_ _default_)` |procedure |<<objects:s131,164>>
+|`(eq-hashtable-contains? _hashtable_ _key_)` |procedure |<<objects:s129,163>>
+|`(eq-hashtable-delete! _hashtable_ _key_)` |procedure |<<objects:s132,164>>
+|`(eq-hashtable-ephemeron? _hashtable_)` |procedure |<<objects:s126,162>>
+|`(eq-hashtable-ref _hashtable_ _key_ _default_)` |procedure |<<objects:s128,162>>
+|`(eq-hashtable-set! _hashtable_ _key_ _value_)` |procedure |<<objects:s127,162>>
+|`(eq-hashtable-update! _hashtable_ _key_ _procedure_ _default_)` |procedure |<<objects:s130,163>>
+|`(eq-hashtable-weak? _hashtable_)` |procedure |<<objects:s125,162>>
+|`(eq-hashtable? _obj_)` |procedure |<<objects:s124,161>>
+|`(eq? _obj~1~_ _obj~2~_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s10[t143]
+|`(equal-hash _obj_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s279[t245]
+|`(equal? _obj~1~_ _obj~2~_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s13[t148]
+|`(eqv? _obj~1~_ _obj~2~_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s12[t146]
+|`(error _who_ _msg_ _irritant_ \...)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#exceptions:s4[t358]
+|`(error-handling-mode _symbol_)` |syntax |link:../../the-scheme-programming-language-4th/en/index.html#io:s25[t260]
+|`(error? _obj_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#exceptions:s22[t367]
+|`(errorf _who_ _msg_ _irritant_ \...)` |procedure |<<system:s2,326>>
+|`(eval _obj_)` |procedure |<<system:s38,336>>
+|`(eval _obj_ _env_)` |procedure |<<system:s38,336>>
+|`(eval _obj_ _environment_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#control:s80[t136]
+|`eval-syntax-expanders-when` |thread param |<<system:s101,355>>
+|`(eval-when _situations_ _form~1~_ _form~2~_ \...)` |syntax |<<system:s98,351>>
+|`(even? _int_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s96[t174]
+|`(exact _num_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s114[t180]
+|`(exact\->inexact _num_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s116[t181]
+|`(exact-integer-sqrt _n_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s128[t184]
+|`(exact? _num_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s86[t170]
+|`except` |syntax |<<syntax:s22,310>>
+|`(exclusive-cond _clause~1~_ _clause~2~_ \...)` |syntax |<<control:s0,123>>
+|`(exists _procedure_ _list~1~_ _list~2~_ \...)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#control:s36[t119]
+|`(exit _obj_ \...)` |procedure |<<system:s180,377>>
+|`(exit)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#libraries:s18[t350]
+|`(exit _obj_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#libraries:s18[t350]
+|`exit-handler` |thread param |<<system:s181,377>>
+|`(exp _num_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s129[t184]
+|`(expand _obj_)` |procedure |<<system:s90,349>>
+|`(expand _obj_ _env_)` |procedure |<<system:s90,349>>
+|`expand-output` |thread param |<<system:s124,363>>
+|`(expand/optimize _obj_)` |procedure |<<system:s96,350>>
+|`(expand/optimize _obj_ _env_)` |procedure |<<system:s96,350>>
+|`expand/optimize-output` |thread param |<<system:s124,363>>
+|`(export _export-spec_ \...)` |syntax |<<libraries:s17,284>>
+|`expression-editor` |module |<<expeditor:s0,415>>
+|`(expt _num~1~_ _num~2~_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s111[t179]
+|`(expt-mod _int~1~_ _int~2~_ _int~3~_)` |procedure |<<numeric:s69,209>>
+|`(extend-syntax (_name_ _key_ \...) (_pat_ _fender_ _template_) \...)` |syntax |<<compat:s8,441>>
+|`fasl-compressed` |thread param |<<io:s135,260>>
+|`(fasl-file _ifn_ _ofn_)` |procedure |<<io:s138,260>>
+|`(fasl-read _binary-input-port_)` |procedure |<<io:s134,259>>
+|`(fasl-read _binary-input-port situation_)` |procedure |<<io:s134,259>>
+|`(fasl-strip-options _symbol_ \...)` |syntax |<<system:s88,348>>
+|`(fasl-write _obj_ _binary-output-port_)` |procedure |<<io:s133,258>>
+|`fields` |syntax |link:../../the-scheme-programming-language-4th/en/index.html#records:s16[t331]
+|`(file-access-time _path/port_)` |procedure |<<io:s145,261>>
+|`(file-access-time _path/port_ _follow?_)` |procedure |<<io:s145,261>>
+|`file-buffer-size` |thread param |<<io:s51,229>>
+|`(file-change-time _path/port_)` |procedure |<<io:s145,261>>
+|`(file-change-time _path/port_ _follow?_)` |procedure |<<io:s145,261>>
+|`(file-directory? _path_)` |procedure |<<io:s143,261>>
+|`(file-directory? _path_ _follow?_)` |procedure |<<io:s143,261>>
+|`(file-exists? _path_)` |procedure |<<io:s141,261>>
+|`(file-exists? _path_ _follow?_)` |procedure |<<io:s141,261>>
+|`(file-exists? _path_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#io:s89[t286]
+|`(file-length _port_)` |procedure |<<io:s31,224>>
+|`(file-modification-time _path/port_)` |procedure |<<io:s145,261>>
+|`(file-modification-time _path/port_ _follow?_)` |procedure |<<io:s145,261>>
+|`(file-options _symbol_ \...)` |syntax |link:../../the-scheme-programming-language-4th/en/index.html#io:s26[t261]
+|`(file-port? _port_)` |procedure |<<io:s52,229>>
+|`(file-position _port_)` |procedure |<<io:s35,225>>
+|`(file-position _port_ _pos_)` |procedure |<<io:s35,225>>
+|`(file-regular? _path_)` |procedure |<<io:s142,261>>
+|`(file-regular? _path_ _follow?_)` |procedure |<<io:s142,261>>
+|`(file-symbolic-link? _path_)` |procedure |<<io:s144,261>>
+|`(filter _procedure_ _list_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s55[t164]
+|`(find _procedure_ _list_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s57[t165]
+|`(finite? _real_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s97[t174]
+|`(fixnum\->flonum _fx_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s198[t211]
+|`(fixnum-width)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s152[t193]
+|`(fixnum? _obj_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s150[t193]
+|`(fl* _fl_ \...)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s186[t207]
+|`(fl+ _fl_ \...)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s184[t206]
+|`(fl- _fl_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s185[t206]
+|`(fl- _fl~1~_ _fl~2~_ _fl~3~_ \...)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s185[t206]
+|`(fl-make-rectangular _flonum~1~_ _flonum~2~_)` |procedure |<<numeric:s35,198>>
+|`(fl/ _fl_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s187[t207]
+|`(fl/ _fl~1~_ _fl~2~_ _fl~3~_ \...)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s187[t207]
+|`(fl< _flonum~1~_ _flonum~2~_ \...)` |procedure |<<numeric:s28,195>>
+|`(fl\<= _flonum~1~_ _flonum~2~_ \...)` |procedure |<<numeric:s28,195>>
+|`(fl\<=? _fl~1~_ _fl~2~_ _fl~3~_ \...)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s178[t203]
+|`(fl<? _fl~1~_ _fl~2~_ _fl~3~_ \...)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s178[t203]
+|`(fl= _flonum~1~_ _flonum~2~_ \...)` |procedure |<<numeric:s28,195>>
+|`(fl=? _fl~1~_ _fl~2~_ _fl~3~_ \...)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s178[t203]
+|`(fl> _flonum~1~_ _flonum~2~_ \...)` |procedure |<<numeric:s28,195>>
+|`(fl>= _flonum~1~_ _flonum~2~_ \...)` |procedure |<<numeric:s28,195>>
+|`(fl>=? _fl~1~_ _fl~2~_ _fl~3~_ \...)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s178[t203]
+|`(fl>? _fl~1~_ _fl~2~_ _fl~3~_ \...)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s178[t203]
+|`(flabs _fl_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s192[t209]
+|`(flacos _fl_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s195[t210]
+|`(flasin _fl_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s195[t210]
+|`(flatan _fl_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s195[t210]
+|`(flatan _fl~1~_ _fl~2~_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s195[t210]
+|`(flceiling _fl_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s190[t208]
+|`(flcos _fl_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s194[t210]
+|`(fldenominator _fl_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s191[t209]
+|`(fldiv _fl~1~_ _fl~2~_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s188[t207]
+|`(fldiv-and-mod _fl~1~_ _fl~2~_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s188[t207]
+|`(fldiv0 _fl~1~_ _fl~2~_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s189[t208]
+|`(fldiv0-and-mod0 _fl~1~_ _fl~2~_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s189[t208]
+|`(fleven? _fl-int_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s182[t205]
+|`(flexp _fl_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s193[t209]
+|`(flexpt _fl~1~_ _fl~2~_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s197[t210]
+|`(flfinite? _fl_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s181[t205]
+|`(flfloor _fl_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s190[t208]
+|`(flinfinite? _fl_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s181[t205]
+|`(flinteger? _fl_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s180[t204]
+|`(fllog _fl_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s193[t209]
+|`(fllog _fl~1~_ _fl~2~_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s193[t209]
+|`(fllp _flonum_)` |procedure |<<numeric:s31,197>>
+|`(flmax _fl~1~_ _fl~2~_ \...)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s183[t205]
+|`(flmin _fl~1~_ _fl~2~_ \...)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s183[t205]
+|`(flmod _fl~1~_ _fl~2~_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s188[t207]
+|`(flmod0 _fl~1~_ _fl~2~_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s189[t208]
+|`(flnan? _fl_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s181[t205]
+|`(flnegative? _fl_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s179[t204]
+|`(flnonnegative? _fl_)` |procedure |<<numeric:s29,196>>
+|`(flnonpositive? _fl_)` |procedure |<<numeric:s29,196>>
+|`(flnumerator _fl_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s191[t209]
+|`(flodd? _fl-int_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s182[t205]
+|`(flonum\->fixnum _flonum_)` |procedure |<<numeric:s26,195>>
+|`(flonum? _obj_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s177[t203]
+|`(floor _real_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s102[t177]
+|`(flpositive? _fl_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s179[t204]
+|`(flround _fl_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s190[t208]
+|`(flsin _fl_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s194[t210]
+|`(flsqrt _fl_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s196[t210]
+|`(fltan _fl_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s194[t210]
+|`(fltruncate _fl_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s190[t208]
+|`(fluid-let ((_var_ _expr_) \...) _body~1~_ _body~2~_ \...)` |syntax |<<binding:s19,116>>
+|`(fluid-let-syntax ((_keyword_ _expr_) \...) _form~1~_ _form~2~_ \...)` |syntax |<<syntax:s0,293>>
+|`(flush-output-port)` |procedure |<<io:s38,226>>
+|`(flush-output-port _output-port_)` |procedure |<<io:s38,226>>
+|`(flush-output-port _output-port_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#io:s74[t280]
+|`(flzero? _fl_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s179[t204]
+|`(fold-left _procedure_ _obj_ _list~1~_ _list~2~_ \...)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#control:s38[t120]
+|`(fold-right _procedure_ _obj_ _list~1~_ _list~2~_ \...)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#control:s41[t121]
+|`(for-all _procedure_ _list~1~_ _list~2~_ \...)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#control:s37[t119]
+|`(for-each _procedure_ _list~1~_ _list~2~_ \...)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#control:s33[t118]
+|`(force _promise_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#control:s65[t128]
+|`(foreign-address-name _address_)` |procedure |<<foreign:s159,90>>
+|`(foreign-alloc _n_)` |procedure |<<foreign:s132,74>>
+|`(foreign-callable _conv_ \... _proc-exp_ (_param-type_ \...) _res-type_)` |syntax |<<foreign:s127,70>>
+|`(foreign-callable-code-object _address_)` |procedure |<<foreign:s131,73>>
+|`(foreign-callable-entry-point _code_)` |procedure |<<foreign:s130,73>>
+|`(foreign-entry _entry-name_)` |procedure |<<foreign:s158,90>>
+|`(foreign-entry? _entry-name_)` |procedure |<<foreign:s157,90>>
+|`(foreign-free _address_)` |procedure |<<foreign:s133,74>>
+|`(foreign-procedure _conv_ \... _entry-exp_ (_param-type_ \...) _res-type_)` |syntax |<<foreign:s10,59>>
+|`(foreign-ref _type_ _address_ _offset_)` |procedure |<<foreign:s134,75>>
+|`(foreign-set! _type_ _address_ _offset_ _value_)` |procedure |<<foreign:s135,76>>
+|`(foreign-sizeof _type_)` |procedure |<<foreign:s136,77>>
+|`(fork-thread _thunk_)` |procedure |<<threads:s2,428>>
+|`(format _format-string_ _obj_ \...)` |procedure |<<io:s104,249>>
+|`(format #f _format-string_ _obj_ \...)` |procedure |<<io:s104,249>>
+|`(format #t _format-string_ _obj_ \...)` |procedure |<<io:s104,249>>
+|`(format _textual-output-port_ _format-string_ _obj_ \...)` |procedure |<<io:s104,249>>
+|`(format-condition? _obj_)` |procedure |<<system:s4,326>>
+|`(fprintf _textual-output-port_ _format-string_ _obj_ \...)` |procedure |<<io:s106,251>>
+|`(free-identifier=? _identifier~1~_ _identifier~2~_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#syntax:s37[t302]
+|`(fresh-line)` |procedure |<<io:s88,243>>
+|`(fresh-line _textual-output-port_)` |procedure |<<io:s88,243>>
+|`(ftype-&ref _ftype-name_ (_a_ \...) _fptr-expr_)` |syntax |<<foreign:s151,84>>
+|`(ftype-&ref _ftype-name_ (_a_ \...) _fptr-expr_ _index_)` |syntax |<<foreign:s151,84>>
+|`(ftype-guardian _ftype-name_)` |syntax |<<threads:s25,433>>
+|`(ftype-init-lock! _ftype-name_ (_a_ \...) _fptr-expr_)` |syntax |<<threads:s19,432>>
+|`(ftype-init-lock! _ftype-name_ (_a_ \...) _fptr-expr_ _index_)` |syntax |<<threads:s19,432>>
+|`(ftype-lock! _ftype-name_ (_a_ \...) _fptr-expr_)` |syntax |<<threads:s19,432>>
+|`(ftype-lock! _ftype-name_ (_a_ \...) _fptr-expr_ _index_)` |syntax |<<threads:s19,432>>
+|`(ftype-locked-decr! _ftype-name_ (_a_ \...) _fptr-expr_)` |syntax |<<threads:s20,433>>
+|`(ftype-locked-decr! _ftype-name_ (_a_ \...) _fptr-expr_ _index_)` |syntax |<<threads:s20,433>>
+|`(ftype-locked-incr! _ftype-name_ (_a_ \...) _fptr-expr_)` |syntax |<<threads:s20,433>>
+|`(ftype-locked-incr! _ftype-name_ (_a_ \...) _fptr-expr_ _index_)` |syntax |<<threads:s20,433>>
+|`(ftype-pointer\->sexpr _fptr_)` |procedure |<<foreign:s156,88>>
+|`(ftype-pointer-address _fptr_)` |procedure |<<foreign:s148,84>>
+|`(ftype-pointer-ftype _fptr_)` |procedure |<<foreign:s155,88>>
+|`(ftype-pointer-null? _fptr_)` |syntax |<<foreign:s150,84>>
+|`(ftype-pointer=? _fptr~1~_ _fptr~2~_)` |syntax |<<foreign:s149,84>>
+|`(ftype-pointer? _obj_)` |syntax |<<foreign:s147,83>>
+|`(ftype-pointer? _ftype-name_ _obj_)` |syntax |<<foreign:s147,83>>
+|`(ftype-ref _ftype-name_ (_a_ \...) _fptr-expr_)` |syntax |<<foreign:s152,86>>
+|`(ftype-ref _ftype-name_ (_a_ \...) _fptr-expr_ _index_)` |syntax |<<foreign:s152,86>>
+|`(ftype-set! _ftype-name_ (_a_ \...) _fptr-expr_ _val-expr_)` |syntax |<<foreign:s152,86>>
+|`(ftype-set! _ftype-name_ (_a_ \...) _fptr-expr_ _index_ _val-expr_)` |syntax |<<foreign:s152,86>>
+|`(ftype-sizeof _ftype-name_)` |syntax |<<foreign:s142,81>>
+|`(ftype-spin-lock! _ftype-name_ (_a_ \...) _fptr-expr_)` |syntax |<<threads:s19,432>>
+|`(ftype-spin-lock! _ftype-name_ (_a_ \...) _fptr-expr_ _index_)` |syntax |<<threads:s19,432>>
+|`(ftype-unlock! _ftype-name_ (_a_ \...) _fptr-expr_)` |syntax |<<threads:s19,432>>
+|`(ftype-unlock! _ftype-name_ (_a_ \...) _fptr-expr_ _index_)` |syntax |<<threads:s19,432>>
+|`(fx* _fixnum_ \...)` |procedure |<<numeric:s19,193>>
+|`(fx* _fx~1~_ _fx~2~_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s159[t195]
+|`(fx*/carry _fx~1~_ _fx~2~_ _fx~3~_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s162[t197]
+|`(fx+ _fixnum_ \...)` |procedure |<<numeric:s17,192>>
+|`(fx+ _fx~1~_ _fx~2~_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s157[t195]
+|`(fx+/carry _fx~1~_ _fx~2~_ _fx~3~_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s162[t197]
+|`(fx- _fixnum~1~_ _fixnum~2~_ \...)` |procedure |<<numeric:s18,193>>
+|`(fx- _fx_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s158[t195]
+|`(fx- _fx~1~_ _fx~2~_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s158[t195]
+|`(fx-/carry _fx~1~_ _fx~2~_ _fx~3~_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s162[t197]
+|`(fx/ _fixnum~1~_ _fixnum~2~_ \...)` |procedure |<<numeric:s20,193>>
+|`(fx1+ _fixnum_)` |procedure |<<numeric:s21,193>>
+|`(fx1- _fixnum_)` |procedure |<<numeric:s21,193>>
+|`(fx< _fixnum~1~_ _fixnum~2~_ \...)` |procedure |<<numeric:s15,191>>
+|`(fx\<= _fixnum~1~_ _fixnum~2~_ \...)` |procedure |<<numeric:s15,191>>
+|`(fx\<=? _fx~1~_ _fx~2~_ _fx~3~_ \...)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s153[t193]
+|`(fx<? _fx~1~_ _fx~2~_ _fx~3~_ \...)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s153[t193]
+|`(fx= _fixnum~1~_ _fixnum~2~_ \...)` |procedure |<<numeric:s15,191>>
+|`(fx=? _fx~1~_ _fx~2~_ _fx~3~_ \...)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s153[t193]
+|`(fx> _fixnum~1~_ _fixnum~2~_ \...)` |procedure |<<numeric:s15,191>>
+|`(fx>= _fixnum~1~_ _fixnum~2~_ \...)` |procedure |<<numeric:s15,191>>
+|`(fx>=? _fx~1~_ _fx~2~_ _fx~3~_ \...)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s153[t193]
+|`(fx>? _fx~1~_ _fx~2~_ _fx~3~_ \...)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s153[t193]
+|`(fxabs _fixnum_)` |procedure |<<numeric:s25,194>>
+|`(fxand _fx_ \...)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s163[t197]
+|`(fxarithmetic-shift _fx~1~_ _fx~2~_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s173[t201]
+|`(fxarithmetic-shift-left _fx~1~_ _fx~2~_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s172[t201]
+|`(fxarithmetic-shift-right _fx~1~_ _fx~2~_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s172[t201]
+|`(fxbit-count _fx_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s165[t198]
+|`(fxbit-field _fx~1~_ _fx~2~_ _fx~3~_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s170[t200]
+|`(fxbit-set? _fx~1~_ _fx~2~_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s168[t199]
+|`(fxcopy-bit _fx~1~_ _fx~2~_ _fx~3~_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s169[t200]
+|`(fxcopy-bit-field _fx~1~_ _fx~2~_ _fx~3~_ _fx~4~_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s171[t200]
+|`(fxdiv _fx~1~_ _fx~2~_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s160[t196]
+|`(fxdiv-and-mod _fx~1~_ _fx~2~_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s160[t196]
+|`(fxdiv0 _fx~1~_ _fx~2~_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s161[t196]
+|`(fxdiv0-and-mod0 _fx~1~_ _fx~2~_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s161[t196]
+|`(fxeven? _fx_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s155[t194]
+|`(fxfirst-bit-set _fx_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s167[t199]
+|`(fxif _fx~1~_ _fx~2~_ _fx~3~_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s164[t198]
+|`(fxior _fx_ \...)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s163[t197]
+|`(fxlength _fx_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s166[t198]
+|`(fxlogand _fixnum_ \...)` |procedure |<<numeric:s53,204>>
+|`(fxlogbit0 _index_ _fixnum_)` |procedure |<<numeric:s59,206>>
+|`(fxlogbit1 _index_ _fixnum_)` |procedure |<<numeric:s60,207>>
+|`(fxlogbit? _index_ _fixnum_)` |procedure |<<numeric:s57,205>>
+|`(fxlogior _fixnum_ \...)` |procedure |<<numeric:s54,204>>
+|`(fxlognot _fixnum_)` |procedure |<<numeric:s56,205>>
+|`(fxlogor _fixnum_ \...)` |procedure |<<numeric:s54,204>>
+|`(fxlogtest _fixnum~1~_ _fixnum~2~_)` |procedure |<<numeric:s58,206>>
+|`(fxlogxor _fixnum_ \...)` |procedure |<<numeric:s55,205>>
+|`(fxmax _fx~1~_ _fx~2~_ \...)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s156[t195]
+|`(fxmin _fx~1~_ _fx~2~_ \...)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s156[t195]
+|`(fxmod _fx~1~_ _fx~2~_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s160[t196]
+|`(fxmod0 _fx~1~_ _fx~2~_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s161[t196]
+|`(fxmodulo _fixnum~1~_ _fixnum~2~_)` |procedure |<<numeric:s24,194>>
+|`(fxnegative? _fx_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s154[t194]
+|`(fxnonnegative? _fixnum_)` |procedure |<<numeric:s16,192>>
+|`(fxnonpositive? _fixnum_)` |procedure |<<numeric:s16,192>>
+|`(fxnot _fx_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s163[t197]
+|`(fxodd? _fx_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s155[t194]
+|`(fxpositive? _fx_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s154[t194]
+|`(fxquotient _fixnum~1~_ _fixnum~2~_ \...)` |procedure |<<numeric:s22,194>>
+|`(fxremainder _fixnum~1~_ _fixnum~2~_)` |procedure |<<numeric:s23,194>>
+|`(fxreverse-bit-field _fx~1~_ _fx~2~_ _fx~3~_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s175[t202]
+|`(fxrotate-bit-field _fx~1~_ _fx~2~_ _fx~3~_ _fx~4~_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s174[t201]
+|`(fxsll _fixnum_ _count_)` |procedure |<<numeric:s61,207>>
+|`(fxsra _fixnum_ _count_)` |procedure |<<numeric:s63,207>>
+|`(fxsrl _fixnum_ _count_)` |procedure |<<numeric:s62,207>>
+|`(fxvector _fixnum_ \...)` |procedure |<<objects:s43,143>>
+|`(fxvector\->immutable-fxvector _fxvector_)` |procedure |<<objects:s53,146>>
+|`(fxvector\->list _fxvector_)` |procedure |<<objects:s49,145>>
+|`(fxvector-copy _fxvector_)` |procedure |<<objects:s51,145>>
+|`(fxvector-fill! _fxvector_ _fixnum_)` |procedure |<<objects:s48,145>>
+|`(fxvector-length _fxvector_)` |procedure |<<objects:s45,144>>
+|`(fxvector-ref _fxvector_ _n_)` |procedure |<<objects:s46,144>>
+|`(fxvector-set! _fxvector_ _n_ _fixnum_)` |procedure |<<objects:s47,144>>
+|`(fxvector? _obj_)` |procedure |<<objects:s42,143>>
+|`(fxxor _fx_ \...)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s163[t197]
+|`(fxzero? _fx_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s154[t194]
+|`(gcd _int_ \...)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s109[t179]
+|`generate-allocation-counts` |thread param |<<system:s239,393>>
+|`generate-covin-files` |thread param |<<system:s142,369>>
+|`generate-inspector-information` |thread param |<<system:s114,359>>
+|`generate-instruction-counts` |thread param |<<system:s240,393>>
+|`generate-interrupt-trap` |thread param |<<system:s111,358>>
+|`generate-procedure-source-information` |thread param |<<system:s115,359>>
+|`(generate-profile-forms)` |thread param |<<system:s145,369>>
+|`(generate-temporaries _list_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#syntax:s49[t310]
+|`generate-wpo-files` |thread param |<<system:s117,360>>
+|`(gensym)` |procedure |<<objects:s92,152>>
+|`(gensym _pretty-name_)` |procedure |<<objects:s92,152>>
+|`(gensym _pretty-name_ _unique-name_)` |procedure |<<objects:s92,152>>
+|`(gensym\->unique-string _gensym_)` |procedure |<<objects:s102,154>>
+|`gensym-count` |thread param |<<objects:s100,154>>
+|`gensym-prefix` |thread param |<<objects:s100,154>>
+|`(gensym? _obj_)` |procedure |<<objects:s103,154>>
+|`(get-bytevector-all _binary-input-port_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#io:s60[t275]
+|`(get-bytevector-n _binary-input-port_ _n_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#io:s57[t274]
+|`(get-bytevector-n! _binary-input-port_ _bytevector_ _start_ _n_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#io:s58[t274]
+|`(get-bytevector-some _binary-input-port_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#io:s59[t275]
+|`(get-bytevector-some! _binary-input-port_ _bytevector_ _start_ _n_)` |procedure |<<io:s64,233>>
+|`(get-char _textual-input-port_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#io:s61[t275]
+|`(get-datum _textual-input-port_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#io:s67[t278]
+|`(get-datum/annotations _textual-input-port_ _sfd_ _bfp_)` |procedure |<<syntax:s70,320>>
+|`(get-hash-table _ht_ _k_ _d_)` |procedure |<<compat:s3,440>>
+|`(get-line _textual-input-port_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#io:s66[t277]
+|`(get-mode _path_)` |procedure |<<io:s151,263>>
+|`(get-mode _path_ _follow?_)` |procedure |<<io:s151,263>>
+|`(get-output-string _string-output-port_)` |procedure |<<io:s49,228>>
+|`(get-process-id)` |procedure |<<system:s259,399>>
+|`(get-registry _key_)` |procedure |<<system:s262,399>>
+|`(get-source-table! _textual-input-port_ _source-table_)` |procedure |<<syntax:s90,323>>
+|`(get-source-table! _textual-input-port_ _source-table_ _combine_)` |procedure |<<syntax:s90,323>>
+|`(get-string-all _textual-input-port_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#io:s65[t277]
+|`(get-string-n _textual-input-port_ _n_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#io:s63[t276]
+|`(get-string-n! _textual-input-port_ _string_ _start_ _n_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#io:s64[t276]
+|`(get-string-some _textual-input-port_)` |procedure |<<io:s62,232>>
+|`(get-string-some! _textual-input-port_ _string_ _start_ _n_)` |procedure |<<io:s63,233>>
+|`(get-thread-id)` |procedure |<<threads:s4,428>>
+|`(get-u8 _binary-input-port_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#io:s55[t274]
+|`(getenv _key_)` |procedure |<<system:s260,399>>
+|`(getprop _symbol_ _key_)` |procedure |<<objects:s106,155>>
+|`(getprop _symbol_ _key_ _default_)` |procedure |<<objects:s106,155>>
+|`(greatest-fixnum)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s151[t193]
+|`(guard (_var_ _clause~1~_ _clause~2~_ \...) _b1_ _b2_ \...)` |syntax |link:../../the-scheme-programming-language-4th/en/index.html#exceptions:s8[t361]
+|`(guardian? _obj_)` |procedure |<<smgmt:s31,412>>
+|`(hash-table-for-each _ht_ _p_)` |procedure |<<compat:s6,440>>
+|`(hash-table-map _ht_ _p_)` |procedure |<<compat:s5,440>>
+|`(hash-table? _obj_)` |procedure |<<compat:s1,439>>
+|`(hashtable-cell _hashtable_ _key_ _default_)` |procedure |<<objects:s115,158>>
+|`(hashtable-cells _hashtable_)` |procedure |<<objects:s119,160>>
+|`(hashtable-cells _hashtable_ _size_)` |procedure |<<objects:s119,160>>
+|`(hashtable-clear! _hashtable_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s287[t249]
+|`(hashtable-clear! _hashtable_ _size_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s287[t249]
+|`(hashtable-contains? _hashtable_ _key_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s282[t246]
+|`(hashtable-copy _hashtable_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s286[t248]
+|`(hashtable-copy _hashtable_ _mutable?_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s286[t248]
+|`(hashtable-delete! _hashtable_ _key_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s284[t248]
+|`(hashtable-entries _hashtable_)` |procedure |<<objects:s118,159>>
+|`(hashtable-entries _hashtable_ _size_)` |procedure |<<objects:s118,159>>
+|`(hashtable-entries _hashtable_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s289[t250]
+|`(hashtable-ephemeron? _obj_)` |procedure |<<objects:s123,161>>
+|`(hashtable-equivalence-function _hashtable_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s278[t245]
+|`(hashtable-hash-function _hashtable_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s278[t245]
+|`(hashtable-keys _hashtable_)` |procedure |<<objects:s116,158>>
+|`(hashtable-keys _hashtable_ _size_)` |procedure |<<objects:s116,158>>
+|`(hashtable-keys _hashtable_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s288[t249]
+|`(hashtable-mutable? _hashtable_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s277[t245]
+|`(hashtable-ref _hashtable_ _key_ _default_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s281[t246]
+|`(hashtable-set! _hashtable_ _key_ _obj_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s280[t246]
+|`(hashtable-size _hashtable_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s285[t248]
+|`(hashtable-update! _hashtable_ _key_ _procedure_ _default_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s283[t247]
+|`(hashtable-values _hashtable_)` |procedure |<<objects:s117,159>>
+|`(hashtable-values _hashtable_ _size_)` |procedure |<<objects:s117,159>>
+|`(hashtable-weak? _obj_)` |procedure |<<objects:s122,161>>
+|`(hashtable? _obj_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s25[t155]
+|`heap-reserve-ratio` |global param |<<smgmt:s19,405>>
+|`(i/o-decoding-error? _obj_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#exceptions:s42[t375]
+|`(i/o-encoding-error-char _condition_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#exceptions:s43[t376]
+|`(i/o-encoding-error? _obj_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#exceptions:s43[t376]
+|`(i/o-error-filename _condition_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#exceptions:s36[t373]
+|`(i/o-error-port _condition_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#exceptions:s41[t375]
+|`(i/o-error-position _condition_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#exceptions:s35[t372]
+|`(i/o-error? _obj_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#exceptions:s32[t371]
+|`(i/o-file-already-exists-error? _obj_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#exceptions:s39[t374]
+|`(i/o-file-does-not-exist-error? _obj_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#exceptions:s40[t374]
+|`(i/o-file-is-read-only-error? _obj_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#exceptions:s38[t374]
+|`(i/o-file-protection-error? _obj_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#exceptions:s37[t373]
+|`(i/o-filename-error? _obj_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#exceptions:s36[t373]
+|`(i/o-invalid-position-error? _obj_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#exceptions:s35[t372]
+|`(i/o-port-error? _obj_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#exceptions:s41[t375]
+|`(i/o-read-error? _obj_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#exceptions:s33[t372]
+|`(i/o-write-error? _obj_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#exceptions:s34[t372]
+|`(iconv-codec _code-page_)` |procedure |<<io:s10,218>>
+|`(identifier-syntax _tmpl_)` |syntax |link:../../the-scheme-programming-language-4th/en/index.html#syntax:s27[t297]
+|`(identifier-syntax (_id~1~_ _tmpl~1~_) ((set! _id~2~_ _e~2~_) _tmpl~2~_))` |syntax |link:../../the-scheme-programming-language-4th/en/index.html#syntax:s27[t297]
+|`(identifier? _obj_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#syntax:s35[t301]
+|`ieee` |module |<<syntax:s33,311>>
+|`(ieee-environment)` |procedure |<<system:s32,333>>
+|`(if _test_ _consequent_ _alternative_)` |syntax |link:../../the-scheme-programming-language-4th/en/index.html#control:s8[t109]
+|`(if _test_ _consequent_)` |syntax |link:../../the-scheme-programming-language-4th/en/index.html#control:s8[t109]
+|`(imag-part _num_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s121[t182]
+|`immutable` |syntax |link:../../the-scheme-programming-language-4th/en/index.html#records:s16[t331]
+|`(immutable-box? _obj_)` |procedure |<<objects:s86,151>>
+|`(immutable-bytevector? _obj_)` |procedure |<<objects:s65,149>>
+|`(immutable-fxvector? _obj_)` |procedure |<<objects:s52,146>>
+|`(immutable-string? _obj_)` |procedure |<<objects:s24,141>>
+|`(immutable-vector? _obj_)` |procedure |<<objects:s34,142>>
+|`(implementation-restriction-violation? _obj_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#exceptions:s28[t369]
+|`(implicit-exports #t)` |syntax |<<libraries:s19,286>>
+|`(implicit-exports #f)` |syntax |<<libraries:s19,286>>
+|`(import _import-spec_ \...)` |syntax |<<libraries:s16,280>>
+|`import-notify` |thread param |<<libraries:s29,289>>
+|`(import-only _import-spec_ \...)` |syntax |<<libraries:s16,280>>
+|`(include _path_)` |syntax |<<syntax:s12,298>>
+|`(indirect-export _id_ _indirect-id_ \...)` |syntax |<<libraries:s18,285>>
+|`(inexact _num_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s112[t180]
+|`(inexact\->exact _num_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s116[t181]
+|`(inexact? _num_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s87[t170]
+|`(infinite? _real_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s97[t174]
+|`(initial-bytes-allocated)` |procedure |<<system:s224,389>>
+|`(input-port-ready? _input-port_)` |procedure |<<io:s67,235>>
+|`(input-port? _obj_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#io:s44[t270]
+|`(inspect _obj_)` |procedure |<<debug:s22,42>>
+|`(inspect/object _object_)` |procedure |<<debug:s25,47>>
+|`(integer\->char _n_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s211[t215]
+|`(integer-length _n_)` |procedure |<<numeric:s71,210>>
+|`(integer-valued? _obj_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s18[t153]
+|`(integer? _obj_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s17[t151]
+|`interaction-environment` |thread param |<<system:s33,334>>
+|`(interactive?)` |procedure |<<system:s258,398>>
+|`internal-defines-as-letrec*` |thread param |<<binding:s15,114>>
+|`(interpret _obj_)` |procedure |<<system:s44,337>>
+|`(interpret _obj_ _env_)` |procedure |<<system:s44,337>>
+|`(invoke-library _libref_)` |procedure |<<libraries:s20,287>>
+|`(iota _n_)` |procedure |<<objects:s8,135>>
+|`(irritants-condition? _obj_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#exceptions:s25[t368]
+|`(isqrt _n_)` |procedure |<<numeric:s70,210>>
+|`keyboard-interrupt-handler` |thread param |<<system:s20,330>>
+|`(lambda _formals_ _body~1~_ _body~2~_ \...)` |syntax |link:../../the-scheme-programming-language-4th/en/index.html#binding:s3[t92]
+|`(last-pair _list_)` |procedure |<<objects:s4,134>>
+|`(latin-1-codec)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#io:s22[t259]
+|`(lcm _int_ \...)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s110[t179]
+|`(least-fixnum)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s151[t193]
+|`(length _list_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s46[t159]
+|`(let ((_var_ _expr_) \...) _body~1~_ _body~2~_ \...)` |syntax |link:../../the-scheme-programming-language-4th/en/index.html#binding:s16[t95]
+|`(let _name_ ((_var_ _expr_) \...) _body~1~_ _body~2~_ \...)` |syntax |link:../../the-scheme-programming-language-4th/en/index.html#control:s20[t114]
+|`(let* ((_var_ _expr_) \...) _body~1~_ _body~2~_ \...)` |syntax |link:../../the-scheme-programming-language-4th/en/index.html#binding:s18[t96]
+|`(let*-values ((_formals_ _expr_) \...) _body~1~_ _body~2~_ \...)` |syntax |link:../../the-scheme-programming-language-4th/en/index.html#binding:s23[t99]
+|`(let-syntax ((_keyword_ _expr_) \...) _form~1~_ _form~2~_ \...)` |syntax |link:../../the-scheme-programming-language-4th/en/index.html#syntax:s13[t293]
+|`(let-values ((_formals_ _expr_) \...) _body~1~_ _body~2~_ \...)` |syntax |link:../../the-scheme-programming-language-4th/en/index.html#binding:s23[t99]
+|`(letrec ((_var_ _expr_) \...) _body~1~_ _body~2~_ \...)` |syntax |link:../../the-scheme-programming-language-4th/en/index.html#binding:s20[t97]
+|`(letrec* ((_var_ _expr_) \...) _body~1~_ _body~2~_ \...)` |syntax |link:../../the-scheme-programming-language-4th/en/index.html#binding:s22[t98]
+|`(letrec-syntax ((_keyword_ _expr_) \...) _form~1~_ _form~2~_ \...)` |syntax |link:../../the-scheme-programming-language-4th/en/index.html#syntax:s13[t293]
+|`(lexical-violation? _obj_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#exceptions:s29[t370]
+|`(library _name_ _exports_ _imports_ _library-body_)` |syntax |<<libraries:s13,278>>
+|`library-directories` |thread param |<<libraries:s23,288>>
+|`(library-exports _libref_)` |procedure |<<libraries:s33,290>>
+|`library-extensions` |thread param |<<libraries:s23,288>>
+|`(library-list)` |procedure |<<libraries:s32,290>>
+|`(library-object-filename _libref_)` |procedure |<<libraries:s33,290>>
+|`(library-requirements _libref_)` |procedure |<<libraries:s33,290>>
+|`(library-requirements _libref_ _options_)` |procedure |<<libraries:s33,290>>
+|`(library-requirements-options _symbol_ \...)` |syntax |<<libraries:s34,291>>
+|`library-search-handler` |thread param |<<libraries:s30,289>>
+|`(library-version _libref_)` |procedure |<<libraries:s33,290>>
+|`(list _obj_ \...)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s43[t158]
+|`(list* _obj_ \... _final-obj_)` |procedure |<<objects:s6,135>>
+|`(list\->fxvector _list_)` |procedure |<<objects:s50,145>>
+|`(list\->string _list_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s229[t223]
+|`(list\->vector _list_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s238[t226]
+|`(list-copy _list_)` |procedure |<<objects:s5,134>>
+|`(list-head _list_ _n_)` |procedure |<<objects:s3,134>>
+|`(list-ref _list_ _n_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s47[t159]
+|`(list-sort _predicate_ _list_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s62[t167]
+|`(list-tail _list_ _n_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s48[t160]
+|`(list? _obj_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s45[t158]
+|`(literal-identifier=? _identifier~1~_ _identifier~2~_)` |procedure |<<syntax:s14,300>>
+|`(load _path_)` |procedure |<<system:s45,337>>
+|`(load _path_ _eval-proc_)` |procedure |<<system:s45,337>>
+|`(load-compiled-from-port _input-port_)` |procedure |<<system:s56,339>>
+|`(load-library _path_)` |procedure |<<system:s47,338>>
+|`(load-library _path_ _eval-proc_)` |procedure |<<system:s47,338>>
+|`(load-program _path_)` |procedure |<<system:s48,338>>
+|`(load-program _path_ _eval-proc_)` |procedure |<<system:s48,338>>
+|`(load-shared-object _path_)` |procedure |<<foreign:s160,91>>
+|`(locate-source _sfd_ _pos_)` |procedure |<<syntax:s72,320>>
+|`(locate-source _sfd_ _pos_ _use-cache?_)` |procedure |<<syntax:s72,320>>
+|`(locate-source-object-source _source-object_ _get-start?_ _use-cache?_)` |procedure |<<syntax:s73,321>>
+|`(lock-object _obj_)` |procedure |<<smgmt:s36,413>>
+|`(locked-object? _obj_)` |procedure |<<smgmt:s39,414>>
+|`(log _num_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s130[t184]
+|`(log _num~1~_ _num~2~_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s130[t184]
+|`(logand _int_ \...)` |procedure |<<numeric:s44,200>>
+|`(logbit0 _index_ _int_)` |procedure |<<numeric:s50,203>>
+|`(logbit1 _index_ _int_)` |procedure |<<numeric:s51,203>>
+|`(logbit? _index_ _int_)` |procedure |<<numeric:s48,201>>
+|`(logior _int_ \...)` |procedure |<<numeric:s45,200>>
+|`(lognot _int_)` |procedure |<<numeric:s47,201>>
+|`(logor _int_ \...)` |procedure |<<numeric:s45,200>>
+|`(logtest _int~1~_ _int~2~_)` |procedure |<<numeric:s49,202>>
+|`(logxor _int_ \...)` |procedure |<<numeric:s46,201>>
+|`(lookahead-char _textual-input-port_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#io:s62[t275]
+|`(lookahead-u8 _binary-input-port_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#io:s56[t274]
+|`(machine-type)` |procedure |<<system:s89,349>>
+|`(magnitude _num_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s125[t183]
+|`(magnitude-squared _num_)` |procedure |<<numeric:s75,211>>
+|`(make-annotation _obj_ _source-object_ _stripped-obj_)` |procedure |<<syntax:s49,317>>
+|`(make-annotation _obj_ _source-object_ _stripped-obj_ _options_)` |procedure |<<syntax:s49,317>>
+|`(make-assertion-violation)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#exceptions:s21[t366]
+|`(make-boot-file _output-filename_ _base-boot-list_ _input-filename_ \...)` |procedure |<<system:s83,347>>
+|`(make-boot-header _output-filename_ _base-boot~1~_ _base-boot~2~_\...)` |procedure |<<system:s86,347>>
+|`(make-bytevector _n_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s242[t228]
+|`(make-bytevector _n_ _fill_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s242[t228]
+|`(make-compile-time-value _obj_)` |procedure |<<syntax:s15,300>>
+|`(make-condition)` |procedure |<<threads:s12,430>>
+|`(make-condition _name_)` |procedure |<<threads:s12,430>>
+|`(make-continuation-condition _continuation_)` |procedure |<<system:s6,327>>
+|`(make-cost-center)` |procedure |<<system:s241,393>>
+|`(make-custom-binary-input-port _id_ _r!_ _gp_ _sp!_ _close_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#io:s41[t267]
+|`(make-custom-binary-input/output-port _id_ _r!_ _w!_ _gp_ _sp!_ _close_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#io:s41[t267]
+|`(make-custom-binary-output-port _id_ _w!_ _gp_ _sp!_ _close_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#io:s41[t267]
+|`(make-custom-textual-input-port _id_ _r!_ _gp_ _sp!_ _close_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#io:s42[t268]
+|`(make-custom-textual-input/output-port _id_ _r!_ _w!_ _gp_ _sp!_ _close_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#io:s42[t268]
+|`(make-custom-textual-output-port _id_ _w!_ _gp_ _sp!_ _close_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#io:s42[t268]
+|`(make-date _nsec_ _sec_ _min_ _hour_ _day_ _mon_ _year_)` |procedure |<<system:s211,384>>
+|`(make-date _nsec_ _sec_ _min_ _hour_ _day_ _mon_ _year_ _offset_)` |procedure |<<system:s211,384>>
+|`(make-engine _thunk_)` |procedure |<<control:s16,127>>
+|`(make-enumeration _symbol-list_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s291[t251]
+|`(make-ephemeron-eq-hashtable)` |procedure |<<objects:s121,161>>
+|`(make-ephemeron-eq-hashtable _size_)` |procedure |<<objects:s121,161>>
+|`(make-ephemeron-eqv-hashtable)` |procedure |<<objects:s121,161>>
+|`(make-ephemeron-eqv-hashtable _size_)` |procedure |<<objects:s121,161>>
+|`(make-eq-hashtable)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s274[t243]
+|`(make-eq-hashtable _size_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s274[t243]
+|`(make-eqv-hashtable)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s275[t244]
+|`(make-eqv-hashtable _size_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s275[t244]
+|`(make-error)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#exceptions:s22[t367]
+|`(make-format-condition)` |procedure |<<system:s4,326>>
+|`(make-ftype-pointer _ftype-name_ _expr_)` |syntax |<<foreign:s143,82>>
+|`(make-fxvector _n_)` |procedure |<<objects:s44,144>>
+|`(make-fxvector _n_ _fixnum_)` |procedure |<<objects:s44,144>>
+|`(make-guardian)` |procedure |<<smgmt:s29,408>>
+|`(make-hash-table)` |procedure |<<compat:s0,439>>
+|`(make-hash-table _weak?_)` |procedure |<<compat:s0,439>>
+|`(make-hashtable _hash_ _equiv?_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s276[t244]
+|`(make-hashtable _hash_ _equiv?_ _size_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s276[t244]
+|`(make-i/o-decoding-error _pobj_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#exceptions:s42[t375]
+|`(make-i/o-encoding-error _pobj_ _cobj_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#exceptions:s43[t376]
+|`(make-i/o-error)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#exceptions:s32[t371]
+|`(make-i/o-file-already-exists-error _filename_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#exceptions:s39[t374]
+|`(make-i/o-file-does-not-exist-error _filename_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#exceptions:s40[t374]
+|`(make-i/o-file-is-read-only-error _filename_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#exceptions:s38[t374]
+|`(make-i/o-file-protection-error _filename_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#exceptions:s37[t373]
+|`(make-i/o-filename-error _filename_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#exceptions:s36[t373]
+|`(make-i/o-invalid-position-error _position_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#exceptions:s35[t372]
+|`(make-i/o-port-error _pobj_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#exceptions:s41[t375]
+|`(make-i/o-read-error)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#exceptions:s33[t372]
+|`(make-i/o-write-error)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#exceptions:s34[t372]
+|`(make-implementation-restriction-violation)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#exceptions:s28[t369]
+|`(make-input-port _handler_ _input-buffer_)` |procedure |<<io:s13,219>>
+|`(make-input/output-port _handler_ _input-buffer_ _output-buffer_)` |procedure |<<io:s13,219>>
+|`(make-irritants-condition _irritants_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#exceptions:s25[t368]
+|`(make-lexical-violation)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#exceptions:s29[t370]
+|`(make-list _n_)` |procedure |<<objects:s7,135>>
+|`(make-list _n_ _obj_)` |procedure |<<objects:s7,135>>
+|`(make-message-condition _message_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#exceptions:s24[t368]
+|`(make-mutex)` |procedure |<<threads:s6,428>>
+|`(make-mutex _name_)` |procedure |<<threads:s6,428>>
+|`(make-no-infinities-violation)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#exceptions:s44[t376]
+|`(make-no-nans-violation)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#exceptions:s45[t377]
+|`(make-non-continuable-violation)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#exceptions:s27[t369]
+|`(make-object-finder _pred_)` |procedure |<<debug:s26,53>>
+|`(make-object-finder _pred_ _g_)` |procedure |<<debug:s26,53>>
+|`(make-object-finder _pred_ _x_ _g_)` |procedure |<<debug:s26,53>>
+|`(make-output-port _handler_ _output-buffer_)` |procedure |<<io:s13,219>>
+|`(make-parameter _object_)` |procedure |<<system:s248,394>>
+|`(make-parameter _object_ _procedure_)` |procedure |<<system:s248,394>>
+|`(make-polar _real~1~_ _real~2~_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s123[t183]
+|`(make-record-constructor-descriptor _rtd_ _parent-rcd_ _protocol_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#records:s24[t332]
+|`(make-record-type _type-name_ _fields_)` |procedure |<<objects:s186,182>>
+|`(make-record-type _parent-rtd_ _type-name_ _fields_)` |procedure |<<objects:s186,182>>
+|`(make-record-type-descriptor _name_ _parent_ _uid_ _s?_ _o?_ _fields_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#records:s20[t331]
+|`(make-rectangular _real~1~_ _real~2~_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s122[t182]
+|`(make-serious-condition)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#exceptions:s19[t366]
+|`(make-source-condition _form_)` |procedure |<<system:s5,326>>
+|`(make-source-file-descriptor _string_ _binary-input-port_)` |procedure |<<syntax:s63,319>>
+|`(make-source-file-descriptor _string_ _binary-input-port_ _reset?_)` |procedure |<<syntax:s63,319>>
+|`(make-source-object _sfd_ _bfp_ _efp_)` |procedure |<<syntax:s55,318>>
+|`(make-source-object _sfd_ _bfp_ _efp_ _line_ _column_)` |procedure |<<syntax:s55,318>>
+|`(make-source-table)` |procedure |<<syntax:s81,322>>
+|`(make-sstats _cpu_ _real_ _bytes_ _gc-count_ _gc-cpu_ _gc-real_ _gc-bytes_)` |procedure |<<system:s231,390>>
+|`(make-string _n_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s218[t218]
+|`(make-string _n_ _char_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s218[t218]
+|`(make-syntax-violation _form_ _subform_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#exceptions:s30[t370]
+|`(make-thread-parameter _object_)` |procedure |<<threads:s30,435>>
+|`(make-thread-parameter _object_ _procedure_)` |procedure |<<threads:s30,435>>
+|`(make-time _type_ _nsec_ _sec_)` |procedure |<<system:s203,381>>
+|`(make-transcoder _codec_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#io:s19[t259]
+|`(make-transcoder _codec_ _eol-style_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#io:s19[t259]
+|`(make-transcoder _codec_ _eol-style_ _error-handling-mode_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#io:s19[t259]
+|`(make-undefined-violation)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#exceptions:s31[t371]
+|`(make-variable-transformer _procedure_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#syntax:s42[t306]
+|`(make-vector _n_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s232[t224]
+|`(make-vector _n_ _obj_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s232[t224]
+|`(make-violation)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#exceptions:s20[t366]
+|`(make-warning)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#exceptions:s23[t367]
+|`(make-weak-eq-hashtable)` |procedure |<<objects:s120,160>>
+|`(make-weak-eq-hashtable _size_)` |procedure |<<objects:s120,160>>
+|`(make-weak-eqv-hashtable)` |procedure |<<objects:s120,160>>
+|`(make-weak-eqv-hashtable _size_)` |procedure |<<objects:s120,160>>
+|`(make-who-condition _who_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#exceptions:s26[t369]
+|`(map _procedure_ _list~1~_ _list~2~_ \...)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#control:s30[t117]
+|`(mark-port-closed! _port_)` |procedure |<<io:s24,222>>
+|`(max _real~1~_ _real~2~_ \...)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s107[t178]
+|`(maximum-memory-bytes)` |procedure |<<system:s227,389>>
+|`(maybe-compile-file _input-filename_)` |procedure |<<system:s71,343>>
+|`(maybe-compile-file _input-filename_ _output-filename_)` |procedure |<<system:s71,343>>
+|`(maybe-compile-library _input-filename_)` |procedure |<<system:s71,343>>
+|`(maybe-compile-library _input-filename_ _output-filename_)` |procedure |<<system:s71,343>>
+|`(maybe-compile-program _input-filename_)` |procedure |<<system:s71,343>>
+|`(maybe-compile-program _input-filename_ _output-filename_)` |procedure |<<system:s71,343>>
+|`(member _obj_ _list_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s51[t161]
+|`(memp _procedure_ _list_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s52[t163]
+|`(memq _obj_ _list_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s51[t161]
+|`(memv _obj_ _list_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s51[t161]
+|`(merge _predicate_ _list~1~_ _list~2~_)` |procedure |<<objects:s114,157>>
+|`(merge! _predicate_ _list~1~_ _list~2~_)` |procedure |<<objects:s114,157>>
+|`(message-condition? _obj_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#exceptions:s24[t368]
+|`(meta . _definition_)` |syntax |<<syntax:s36,312>>
+|`(meta-cond _clause~1~_ _clause~2~_ \...)` |syntax |<<syntax:s37,313>>
+|`(min _real~1~_ _real~2~_ \...)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s108[t178]
+|`(mkdir _path_)` |procedure |<<io:s146,262>>
+|`(mkdir _path_ _mode_)` |procedure |<<io:s146,262>>
+|`(mod _x~1~_ _x~2~_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s99[t175]
+|`(mod0 _x~1~_ _x~2~_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s100[t176]
+|`(module _name_ _interface_ _defn_ \... _init_ \...)` |syntax |<<syntax:s21,305>>
+|`(module _interface_ _defn_ \... _init_ \...)` |syntax |<<syntax:s21,305>>
+|`(modulo _int~1~_ _int~2~_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s98[t175]
+|`(most-negative-fixnum)` |procedure |<<numeric:s14,191>>
+|`(most-positive-fixnum)` |procedure |<<numeric:s14,191>>
+|`(multibyte\->string _code-page_ _bytevector_)` |procedure |<<io:s92,244>>
+|`mutable` |syntax |link:../../the-scheme-programming-language-4th/en/index.html#records:s16[t331]
+|`(mutable-box? _obj_)` |procedure |<<objects:s86,151>>
+|`(mutable-bytevector? _obj_)` |procedure |<<objects:s65,149>>
+|`(mutable-fxvector? _obj_)` |procedure |<<objects:s52,146>>
+|`(mutable-string? _obj_)` |procedure |<<objects:s24,141>>
+|`(mutable-vector? _obj_)` |procedure |<<objects:s34,142>>
+|`(mutex-acquire _mutex_)` |procedure |<<threads:s8,429>>
+|`(mutex-acquire _mutex_ _block?_)` |procedure |<<threads:s8,429>>
+|`(mutex-name _mutex_)` |procedure |<<threads:s11,429>>
+|`(mutex-release _mutex_)` |procedure |<<threads:s9,429>>
+|`(mutex? _obj_)` |procedure |<<threads:s7,428>>
+|`(nan? _real_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s97[t174]
+|`(native-endianness)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s241[t228]
+|`(native-eol-style)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#io:s24[t260]
+|`(native-transcoder)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#io:s21[t259]
+|`(negative? _real_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s95[t173]
+|`(new-cafe)` |procedure |<<system:s167,374>>
+|`(new-cafe _eval-proc_)` |procedure |<<system:s167,374>>
+|`(newline)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#io:s87[t285]
+|`(newline _textual-output-port_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#io:s87[t285]
+|`(no-infinities-violation? _obj_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#exceptions:s44[t376]
+|`(no-nans-violation? _obj_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#exceptions:s45[t377]
+|`(non-continuable-violation? _obj_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#exceptions:s27[t369]
+|`nongenerative` |syntax |link:../../the-scheme-programming-language-4th/en/index.html#records:s16[t331]
+|`(nonnegative? _real_)` |procedure |<<numeric:s73,211>>
+|`(nonpositive? _real_)` |procedure |<<numeric:s72,210>>
+|`(not _obj_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#control:s10[t110]
+|`(null-environment _version_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#control:s82[t137]
+|`(null? _obj_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s15[t151]
+|`(number\->string _num_)` |procedure |<<numeric:s79,212>>
+|`(number\->string _num_ _radix_)` |procedure |<<numeric:s79,212>>
+|`(number\->string _num_ _radix_ _precision_)` |procedure |<<numeric:s79,212>>
+|`(number\->string _num_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s148[t191]
+|`(number\->string _num_ _radix_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s148[t191]
+|`(number\->string _num_ _radix_ _precision_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s148[t191]
+|`(number? _obj_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s17[t151]
+|`(numerator _rat_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s118[t181]
+|`(object-counts)` |procedure |<<system:s238,392>>
+|`(oblist)` |procedure |<<objects:s111,156>>
+|`(odd? _int_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s96[t174]
+|`only` |syntax |<<syntax:s22,310>>
+|`opaque` |syntax |link:../../the-scheme-programming-language-4th/en/index.html#records:s16[t331]
+|`(open-bytevector-input-port _bytevector_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#io:s34[t264]
+|`(open-bytevector-input-port _bytevector_ _?transcoder_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#io:s34[t264]
+|`(open-bytevector-output-port)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#io:s36[t265]
+|`(open-bytevector-output-port _?transcoder_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#io:s36[t265]
+|`(open-fd-input-port _fd_)` |procedure |<<io:s60,232>>
+|`(open-fd-input-port _fd_ _b-mode_)` |procedure |<<io:s60,232>>
+|`(open-fd-input-port _fd_ _b-mode_ _?transcoder_)` |procedure |<<io:s60,232>>
+|`(open-fd-input/output-port _fd_)` |procedure |<<io:s90,244>>
+|`(open-fd-input/output-port _fd_ _b-mode_)` |procedure |<<io:s90,244>>
+|`(open-fd-input/output-port _fd_ _b-mode_ _?transcoder_)` |procedure |<<io:s90,244>>
+|`(open-fd-output-port _fd_)` |procedure |<<io:s80,241>>
+|`(open-fd-output-port _fd_ _b-mode_)` |procedure |<<io:s80,241>>
+|`(open-fd-output-port _fd_ _b-mode_ _?transcoder_)` |procedure |<<io:s80,241>>
+|`(open-file-input-port _path_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#io:s29[t262]
+|`(open-file-input-port _path_ _options_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#io:s29[t262]
+|`(open-file-input-port _path_ _options_ _b-mode_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#io:s29[t262]
+|`(open-file-input-port _path_ _options_ _b-mode_ _?transcoder_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#io:s29[t262]
+|`(open-file-input/output-port _path_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#io:s31[t263]
+|`(open-file-input/output-port _path_ _options_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#io:s31[t263]
+|`(open-file-input/output-port _path_ _options_ _b-mode_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#io:s31[t263]
+|`(open-file-input/output-port _path_ _options_ _b-mode_ _?transcoder_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#io:s31[t263]
+|`(open-file-output-port _path_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#io:s30[t262]
+|`(open-file-output-port _path_ _options_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#io:s30[t262]
+|`(open-file-output-port _path_ _options_ _b-mode_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#io:s30[t262]
+|`(open-file-output-port _path_ _options_ _b-mode_ _?transcoder_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#io:s30[t262]
+|`(open-input-file _path_)` |procedure |<<io:s57,230>>
+|`(open-input-file _path_ _options_)` |procedure |<<io:s57,230>>
+|`(open-input-file _path_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#io:s75[t280]
+|`(open-input-output-file _path_)` |procedure |<<io:s89,243>>
+|`(open-input-output-file _path_ _options_)` |procedure |<<io:s89,243>>
+|`(open-input-string _string_)` |procedure |<<io:s44,228>>
+|`(open-output-file _path_)` |procedure |<<io:s75,239>>
+|`(open-output-file _path_ _options_)` |procedure |<<io:s75,239>>
+|`(open-output-file _path_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#io:s76[t281]
+|`(open-output-string)` |procedure |<<io:s47,228>>
+|`(open-process-ports _command_)` |procedure |<<foreign:s5,58>>
+|`(open-process-ports _command_ _b-mode_)` |procedure |<<foreign:s5,58>>
+|`(open-process-ports _command_ _b-mode_ _?transcoder_)` |procedure |<<foreign:s5,58>>
+|`(open-source-file _sfd_)` |procedure |<<syntax:s71,320>>
+|`(open-string-input-port _string_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#io:s35[t265]
+|`(open-string-output-port)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#io:s37[t266]
+|`optimize-level` |thread param |<<system:s104,357>>
+|`(or _expr_ \...)` |syntax |link:../../the-scheme-programming-language-4th/en/index.html#control:s12[t110]
+|`(ormap _procedure_ _list~1~_ _list~2~_ \...)` |procedure |<<control:s7,125>>
+|`(output-port-buffer-mode _port_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#io:s52[t273]
+|`(output-port? _obj_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#io:s44[t270]
+|`(pair? _obj_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s16[t151]
+|`(parameterize ((_param_ _expr_) \...) _body~1~_ _body~2~_ \...)` |syntax |<<system:s250,395>>
+|`parent` |syntax |link:../../the-scheme-programming-language-4th/en/index.html#records:s16[t331]
+|`parent-rtd` |syntax |link:../../the-scheme-programming-language-4th/en/index.html#records:s16[t331]
+|`(pariah _expr~1~_ _expr~2~_ \...)` |syntax |<<system:s127,364>>
+|`(partition _procedure_ _list_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s56[t164]
+|`(path-absolute? _path_)` |procedure |<<io:s154,264>>
+|`(path-extension _path_)` |procedure |<<io:s154,264>>
+|`(path-first _path_)` |procedure |<<io:s154,264>>
+|`(path-last _path_)` |procedure |<<io:s154,264>>
+|`(path-parent _path_)` |procedure |<<io:s154,264>>
+|`(path-rest _path_)` |procedure |<<io:s154,264>>
+|`(path-root _path_)` |procedure |<<io:s154,264>>
+|`(peek-char)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#io:s83[t284]
+|`(peek-char _textual-input-port_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#io:s83[t284]
+|`(petite?)` |procedure |<<system:s256,398>>
+|`(port-bol? _port_)` |procedure |<<io:s27,223>>
+|`(port-closed? _port_)` |procedure |<<io:s25,222>>
+|`(port-eof? _input-port_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#io:s68[t278]
+|`(port-file-compressed! _port_)` |procedure |<<io:s39,226>>
+|`(port-file-descriptor _port_)` |procedure |<<io:s53,229>>
+|`(port-handler _port_)` |procedure |<<io:s15,219>>
+|`(port-has-port-length? _port_)` |procedure |<<io:s31,224>>
+|`(port-has-port-nonblocking?? _port_)` |procedure |<<io:s33,225>>
+|`(port-has-port-position? _port_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#io:s49[t271]
+|`(port-has-set-port-length!? _port_)` |procedure |<<io:s32,224>>
+|`(port-has-set-port-nonblocking!? _port_)` |procedure |<<io:s34,225>>
+|`(port-has-set-port-position!? _port_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#io:s50[t272]
+|`(port-input-buffer _input-port_)` |procedure |<<io:s16,219>>
+|`(port-input-count _input-port_)` |procedure |<<io:s18,220>>
+|`(port-input-empty? _input-port_)` |procedure |<<io:s19,220>>
+|`(port-input-index _input-port_)` |procedure |<<io:s16,219>>
+|`(port-input-size _input-port_)` |procedure |<<io:s16,219>>
+|`(port-length _port_)` |procedure |<<io:s31,224>>
+|`(port-name _port_)` |procedure |<<io:s29,223>>
+|`(port-nonblocking? _port_)` |procedure |<<io:s33,225>>
+|`(port-output-buffer _output-port_)` |procedure |<<io:s20,221>>
+|`(port-output-count _output-port_)` |procedure |<<io:s22,222>>
+|`(port-output-full? _output-port_)` |procedure |<<io:s23,222>>
+|`(port-output-index _output-port_)` |procedure |<<io:s20,221>>
+|`(port-output-size _output-port_)` |procedure |<<io:s20,221>>
+|`(port-position _port_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#io:s49[t271]
+|`(port-transcoder _port_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#io:s48[t271]
+|`(port? _obj_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#io:s43[t270]
+|`(positive? _real_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s94[t173]
+|`predicate` |syntax |<<objects:s176,178>>
+|`prefix` |syntax |<<objects:s176,178>>
+|`(pretty-file _ifn_ _ofn_)` |procedure |<<io:s94,245>>
+|`(pretty-format _sym_)` |procedure |<<io:s95,246>>
+|`(pretty-format _sym_ _fmt_)` |procedure |<<io:s95,246>>
+|`pretty-initial-indent` |thread param |<<io:s100,248>>
+|`pretty-line-length` |thread param |<<io:s98,248>>
+|`pretty-maximum-lines` |thread param |<<io:s103,248>>
+|`pretty-one-line-limit` |thread param |<<io:s98,248>>
+|`(pretty-print _obj_)` |procedure |<<io:s93,245>>
+|`(pretty-print _obj_ _textual-output-port_)` |procedure |<<io:s93,245>>
+|`pretty-standard-indent` |thread param |<<io:s102,248>>
+|`print-brackets` |thread param |<<io:s125,256>>
+|`print-char-name` |thread param |<<io:s108,253>>
+|`print-extended-identifiers` |thread param |<<io:s127,256>>
+|`print-gensym` |thread param |<<io:s120,255>>
+|`print-graph` |thread param |<<io:s110,253>>
+|`print-length` |thread param |<<io:s114,254>>
+|`print-level` |thread param |<<io:s114,254>>
+|`print-precision` |thread param |<<io:s130,258>>
+|`print-radix` |thread param |<<io:s119,255>>
+|`print-record` |thread param |<<objects:s185,182>>
+|`print-unicode` |thread param |<<io:s131,258>>
+|`print-vector-length` |thread param |<<io:s128,257>>
+|`(printf _format-string_ _obj_ \...)` |procedure |<<io:s106,251>>
+|`(_expr~0~_ _expr~1~_ \...)` |syntax |link:../../the-scheme-programming-language-4th/en/index.html#control:s1[t107]
+|`(procedure-arity-mask _proc_)` |procedure |<<objects:s200,187>>
+|`(procedure? _obj_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s23[t155]
+|`(process _command_)` |procedure |<<foreign:s7,58>>
+|`(profile _source-object_)` |syntax |<<system:s144,369>>
+|`(profile-clear)` |procedure |<<system:s146,369>>
+|`(profile-clear-database)` |procedure |<<system:s166,374>>
+|`(profile-dump)` |procedure |<<system:s148,370>>
+|`(profile-dump-data _path_)` |procedure |<<system:s163,373>>
+|`(profile-dump-data _path_ _dump_)` |procedure |<<system:s163,373>>
+|`(profile-dump-html)` |procedure |<<system:s159,371>>
+|`(profile-dump-html _prefix_)` |procedure |<<system:s159,371>>
+|`(profile-dump-html _prefix_ _dump_)` |procedure |<<system:s159,371>>
+|`(profile-dump-list)` |procedure |<<system:s162,372>>
+|`(profile-dump-list _warn?_)` |procedure |<<system:s162,372>>
+|`(profile-dump-list _warn?_ _dump_)` |procedure |<<system:s162,372>>
+|`(profile-line-number-color)` |thread param |<<system:s161,372>>
+|`(profile-load-data _path_ \...)` |procedure |<<system:s164,373>>
+|`(profile-palette)` |thread param |<<system:s160,371>>
+|`(profile-query-weight _obj_)` |procedure |<<system:s165,374>>
+|`(profile-release-counters)` |procedure |<<system:s147,370>>
+|`(property-list _symbol_)` |procedure |<<objects:s110,156>>
+|`protocol` |syntax |link:../../the-scheme-programming-language-4th/en/index.html#records:s16[t331]
+|`(put-bytevector _binary-output-port_ _bytevector_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#io:s70[t279]
+|`(put-bytevector _binary-output-port_ _bytevector_ _start_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#io:s70[t279]
+|`(put-bytevector _binary-output-port_ _bytevector_ _start_ _n_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#io:s70[t279]
+|`(put-bytevector-some _binary-output-port_ _bytevector_)` |procedure |<<io:s83,242>>
+|`(put-bytevector-some _binary-output-port_ _bytevector_ _start_)` |procedure |<<io:s83,242>>
+|`(put-bytevector-some _binary-output-port_ _bytevector_ _start_ _n_)` |procedure |<<io:s83,242>>
+|`(put-char _textual-output-port_ _char_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#io:s71[t279]
+|`(put-datum _textual-output-port_ _obj_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#io:s73[t279]
+|`(put-hash-table! _ht_ _k_ _v_)` |procedure |<<compat:s2,440>>
+|`(put-registry! _key_ _val_)` |procedure |<<system:s262,399>>
+|`(put-source-table _textual-output-port_ _source-table_)` |procedure |<<syntax:s89,323>>
+|`(put-string _textual-output-port_ _string_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#io:s72[t279]
+|`(put-string _textual-output-port_ _string_ _start_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#io:s72[t279]
+|`(put-string _textual-output-port_ _string_ _start_ _n_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#io:s72[t279]
+|`(put-string-some _textual-output-port_ _string_)` |procedure |<<io:s84,242>>
+|`(put-string-some _textual-output-port_ _string_ _start_)` |procedure |<<io:s84,242>>
+|`(put-string-some _textual-output-port_ _string_ _start_ _n_)` |procedure |<<io:s84,242>>
+|`(put-u8 _binary-output-port_ _octet_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#io:s69[t278]
+|`(putenv _key_ _value_)` |procedure |<<system:s261,399>>
+|`(putprop _symbol_ _key_ _value_)` |procedure |<<objects:s104,154>>
+|`(quasiquote _obj_ \...)` |syntax |link:../../the-scheme-programming-language-4th/en/index.html#objects:s5[t142]
+|`(quasisyntax _template_ \...)` |syntax |link:../../the-scheme-programming-language-4th/en/index.html#syntax:s40[t305]
+|`(quote _obj_)` |syntax |link:../../the-scheme-programming-language-4th/en/index.html#objects:s2[t141]
+|`(quotient _int~1~_ _int~2~_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s98[t175]
+|`r5rs` |module |<<syntax:s29,311>>
+|`r5rs-syntax` |module |<<syntax:s31,311>>
+|`(raise _obj_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#exceptions:s3[t357]
+|`(raise-continuable _obj_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#exceptions:s3[t357]
+|`(random _real_)` |procedure |<<numeric:s64,208>>
+|`random-seed` |thread param |<<numeric:s65,208>>
+|`(rational-valued? _obj_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s18[t153]
+|`(rational? _obj_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s17[t151]
+|`(rationalize _real~1~_ _real~2~_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s117[t181]
+|`(ratnum? _obj_)` |procedure |<<numeric:s12,191>>
+|`(read)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#io:s81[t284]
+|`(read _textual-input-port_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#io:s81[t284]
+|`(read-char)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#io:s82[t284]
+|`(read-char _textual-input-port_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#io:s82[t284]
+|`(read-token)` |procedure |<<io:s70,236>>
+|`(read-token _textual-input-port_)` |procedure |<<io:s70,236>>
+|`(read-token _textual-input-port_ _sfd_ _bfp_)` |procedure |<<io:s70,236>>
+|`(real\->flonum _real_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s198[t211]
+|`(real-part _num_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s120[t182]
+|`(real-time)` |procedure |<<system:s222,388>>
+|`(real-valued? _obj_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s18[t153]
+|`(real? _obj_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s17[t151]
+|`(rec _var_ _expr_)` |syntax |<<binding:s17,115>>
+|`(record-accessor _rtd_ _idx_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#records:s31[t334]
+|`(record-case _expr_ _clause~1~_ _clause~2~_ \...)` |syntax |<<control:s3,124>>
+|`(record-constructor _rcd_)` |procedure |<<objects:s189,184>>
+|`(record-constructor _rtd_)` |procedure |<<objects:s189,184>>
+|`(record-constructor _rcd_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#records:s29[t333]
+|`(record-constructor-descriptor _record-name_)` |syntax |link:../../the-scheme-programming-language-4th/en/index.html#records:s28[t333]
+|`(record-constructor-descriptor? _obj_)` |procedure |<<objects:s1,133>>
+|`(record-equal-procedure _record~1~_ _record~2~_)` |procedure |<<objects:s157,170>>
+|`(record-field-accessible? _rtd_ _field-id_)` |procedure |<<objects:s191,184>>
+|`(record-field-accessor _rtd_ _field-id_)` |procedure |<<objects:s190,184>>
+|`(record-field-mutable? _rtd_ _field-id_)` |procedure |<<objects:s193,185>>
+|`(record-field-mutable? _rtd_ _idx_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#records:s39[t338]
+|`(record-field-mutator _rtd_ _field-id_)` |procedure |<<objects:s192,184>>
+|`(record-hash-procedure _record_)` |procedure |<<objects:s159,171>>
+|`(record-mutator _rtd_ _idx_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#records:s32[t334]
+|`(record-predicate _rtd_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#records:s30[t333]
+|`(record-reader _name_)` |procedure |<<objects:s180,179>>
+|`(record-reader _rtd_)` |procedure |<<objects:s180,179>>
+|`(record-reader _name_ _rtd_)` |procedure |<<objects:s180,179>>
+|`(record-reader _name_ #f)` |procedure |<<objects:s180,179>>
+|`(record-reader _rtd_ #f)` |procedure |<<objects:s180,179>>
+|`(record-rtd _record_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#records:s41[t338]
+|`(record-type-descriptor _rec_)` |procedure |<<objects:s199,186>>
+|`(record-type-descriptor _record-name_)` |syntax |link:../../the-scheme-programming-language-4th/en/index.html#records:s28[t333]
+|`(record-type-descriptor? _obj_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#records:s23[t332]
+|`(record-type-equal-procedure _rtd_ _equal-proc_)` |procedure |<<objects:s156,170>>
+|`(record-type-equal-procedure _rtd_)` |procedure |<<objects:s156,170>>
+|`(record-type-field-decls _rtd_)` |procedure |<<objects:s197,186>>
+|`(record-type-field-names _rtd_)` |procedure |<<objects:s196,185>>
+|`(record-type-field-names _rtd_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#records:s38[t337]
+|`(record-type-generative? _rtd_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#records:s37[t337]
+|`(record-type-hash-procedure _rtd_ _hash-proc_)` |procedure |<<objects:s158,170>>
+|`(record-type-hash-procedure _rtd_)` |procedure |<<objects:s158,170>>
+|`(record-type-name _rtd_)` |procedure |<<objects:s194,185>>
+|`(record-type-name _rtd_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#records:s34[t336]
+|`(record-type-opaque? _rtd_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#records:s37[t337]
+|`(record-type-parent _rtd_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#records:s35[t336]
+|`(record-type-sealed? _rtd_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#records:s37[t337]
+|`(record-type-symbol _rtd_)` |procedure |<<objects:s195,185>>
+|`(record-type-uid _rtd_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#records:s36[t336]
+|`(record-writer _rtd_)` |procedure |<<objects:s181,180>>
+|`(record-writer _rtd_ _procedure_)` |procedure |<<objects:s181,180>>
+|`(record? _obj_)` |procedure |<<objects:s198,186>>
+|`(record? _obj_ _rtd_)` |procedure |<<objects:s198,186>>
+|`(record? _obj_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#records:s40[t338]
+|`(register-signal-handler _sig_ _procedure_)` |procedure |<<system:s28,332>>
+|`release-minimum-generation` |global param |<<smgmt:s18,404>>
+|`(remainder _int~1~_ _int~2~_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s98[t175]
+|`(remove _obj_ _list_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s53[t163]
+|`(remove! _obj_ _list_)` |procedure |<<objects:s10,136>>
+|`(remove-foreign-entry _entry-name_)` |procedure |<<foreign:s162,93>>
+|`(remove-hash-table! _ht_ _k_)` |procedure |<<compat:s4,440>>
+|`(remove-registry! _key_)` |procedure |<<system:s262,399>>
+|`(remp _procedure_ _list_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s54[t163]
+|`(remprop _symbol_ _key_)` |procedure |<<objects:s108,155>>
+|`(remq _obj_ _list_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s53[t163]
+|`(remq! _obj_ _list_)` |procedure |<<objects:s10,136>>
+|`(remv _obj_ _list_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s53[t163]
+|`(remv! _obj_ _list_)` |procedure |<<objects:s10,136>>
+|`rename` |syntax |<<syntax:s22,310>>
+|`(rename-file _old-pathname_ _new-pathname_)` |procedure |<<io:s149,263>>
+|`require-nongenerative-clause` |thread param |<<objects:s142,167>>
+|`(reset)` |procedure |<<system:s178,377>>
+|`(reset-cost-center! _cost-center_)` |procedure |<<system:s247,394>>
+|`reset-handler` |thread param |<<system:s179,377>>
+|`(reset-maximum-memory-bytes!)` |procedure |<<system:s228,389>>
+|`(reverse _list_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s50[t161]
+|`(reverse! _list_)` |procedure |<<objects:s12,137>>
+|`(revisit _path_)` |procedure |<<system:s61,340>>
+|`(revisit-compiled-from-port _input-port_)` |procedure |<<system:s58,340>>
+|`(round _real_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s104[t178]
+|`run-cp0` |thread param |<<system:s120,360>>
+|`(s8-list\->bytevector _list_)` |procedure |<<objects:s61,147>>
+|`(sc-expand _obj_)` |procedure |<<system:s95,349>>
+|`(sc-expand _obj_ _env_)` |procedure |<<system:s95,349>>
+|`scheme` |module |<<syntax:s28,311>>
+|`(scheme-environment)` |procedure |<<system:s31,333>>
+|`scheme-program` |global param |<<system:s189,378>>
+|`(scheme-report-environment _version_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#control:s82[t137]
+|`scheme-script` |global param |<<system:s185,378>>
+|`scheme-start` |global param |<<system:s184,378>>
+|`(scheme-version)` |procedure |<<system:s254,398>>
+|`(scheme-version-number)` |procedure |<<system:s255,398>>
+|`sealed` |syntax |link:../../the-scheme-programming-language-4th/en/index.html#records:s16[t331]
+|`(serious-condition? _obj_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#exceptions:s19[t366]
+|`(set! _var_ _expr_)` |syntax |link:../../the-scheme-programming-language-4th/en/index.html#binding:s28[t102]
+|`(set-binary-port-input-buffer! _binary-input-port_ _bytevector_)` |procedure |<<io:s17,220>>
+|`(set-binary-port-input-index! _binary-input-port_ _n_)` |procedure |<<io:s17,220>>
+|`(set-binary-port-input-size! _binary-input-port_ _n_)` |procedure |<<io:s17,220>>
+|`(set-binary-port-output-buffer! _binary-output-port_ _bytevector_)` |procedure |<<io:s21,221>>
+|`(set-binary-port-output-index! _output-port_ _n_)` |procedure |<<io:s21,221>>
+|`(set-binary-port-output-size! _output-port_ _n_)` |procedure |<<io:s21,221>>
+|`(set-box! _box_ _obj_)` |procedure |<<objects:s84,151>>
+|`(set-car! _pair_ _obj_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s40[t157]
+|`(set-cdr! _pair_ _obj_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s41[t157]
+|`(set-port-bol! _output-port_ _obj_)` |procedure |<<io:s26,222>>
+|`(set-port-eof! _input-port_ _obj_)` |procedure |<<io:s28,223>>
+|`(set-port-input-buffer! _input-port_ _x_)` |procedure |<<io:s17,220>>
+|`(set-port-input-index! _input-port_ _n_)` |procedure |<<io:s17,220>>
+|`(set-port-input-size! _input-port_ _n_)` |procedure |<<io:s17,220>>
+|`(set-port-length! _port_ _len_)` |procedure |<<io:s32,224>>
+|`(set-port-name! _port_ _obj_)` |procedure |<<io:s30,224>>
+|`(set-port-nonblocking! _port_ _obj_)` |procedure |<<io:s34,225>>
+|`(set-port-output-buffer! _output-port_ _x_)` |procedure |<<io:s21,221>>
+|`(set-port-output-index! _output-port_ _n_)` |procedure |<<io:s21,221>>
+|`(set-port-output-size! _output-port_ _n_)` |procedure |<<io:s21,221>>
+|`(set-port-position! _port_ _pos_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#io:s50[t272]
+|`(set-sstats-bytes! _s_ _new-value_)` |procedure |<<system:s234,391>>
+|`(set-sstats-cpu! _s_ _new-value_)` |procedure |<<system:s234,391>>
+|`(set-sstats-gc-bytes! _s_ _new-value_)` |procedure |<<system:s234,391>>
+|`(set-sstats-gc-count! _s_ _new-value_)` |procedure |<<system:s234,391>>
+|`(set-sstats-gc-cpu! _s_ _new-value_)` |procedure |<<system:s234,391>>
+|`(set-sstats-gc-real! _s_ _new-value_)` |procedure |<<system:s234,391>>
+|`(set-sstats-real! _s_ _new-value_)` |procedure |<<system:s234,391>>
+|`(set-textual-port-input-buffer! _textual-input-port_ _string_)` |procedure |<<io:s17,220>>
+|`(set-textual-port-input-index! _textual-input-port_ _n_)` |procedure |<<io:s17,220>>
+|`(set-textual-port-input-size! _textual-input-port_ _n_)` |procedure |<<io:s17,220>>
+|`(set-textual-port-output-buffer! _textual-output-port_ _string_)` |procedure |<<io:s21,221>>
+|`(set-textual-port-output-index! _textual-output-port_ _n_)` |procedure |<<io:s21,221>>
+|`(set-textual-port-output-size! _textual-output-port_ _n_)` |procedure |<<io:s21,221>>
+|`(set-time-nanosecond! _time_ _nsec_)` |procedure |<<system:s206,382>>
+|`(set-time-second! _time_ _sec_)` |procedure |<<system:s206,382>>
+|`(set-time-type! _time_ _type_)` |procedure |<<system:s206,382>>
+|`(set-timer _n_)` |procedure |<<system:s22,330>>
+|`(set-top-level-value! _symbol_ _obj_)` |procedure |<<binding:s26,118>>
+|`(set-top-level-value! _symbol_ _obj_ _env_)` |procedure |<<binding:s26,118>>
+|`(set-virtual-register! _k_ _x_)` |procedure |<<system:s252,397>>
+|`(simple-conditions _condition_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#exceptions:s16[t363]
+|`(sin _num_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s131[t185]
+|`(sinh _num_)` |procedure |<<numeric:s76,211>>
+|`(sint-list\->bytevector _list_ _eness_ _size_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s261[t239]
+|`(sleep _time_)` |procedure |<<system:s218,387>>
+|`(sort _predicate_ _list_)` |procedure |<<objects:s113,157>>
+|`(sort! _predicate_ _list_)` |procedure |<<objects:s113,157>>
+|`(source-condition-form _condition_)` |procedure |<<system:s5,326>>
+|`(source-condition? _obj_)` |procedure |<<system:s5,326>>
+|`source-directories` |global param |<<system:s102,356>>
+|`(source-file-descriptor _path_ _checksum_)` |procedure |<<syntax:s67,319>>
+|`(source-file-descriptor-checksum _sfd_)` |procedure |<<syntax:s65,319>>
+|`(source-file-descriptor-path _sfd_)` |procedure |<<syntax:s66,319>>
+|`(source-file-descriptor? _obj_)` |procedure |<<syntax:s64,319>>
+|`(source-object-bfp _source-object_)` |procedure |<<syntax:s58,318>>
+|`(source-object-column _source-object_)` |procedure |<<syntax:s61,319>>
+|`(source-object-efp _source-object_)` |procedure |<<syntax:s59,318>>
+|`(source-object-line _source-object_)` |procedure |<<syntax:s60,318>>
+|`(source-object-sfd _source-object_)` |procedure |<<syntax:s57,318>>
+|`(source-object? _obj_)` |procedure |<<syntax:s56,318>>
+|`(source-table-cell _source-table_ _source-object_ _default_)` |procedure |<<syntax:s86,322>>
+|`(source-table-contains? _source-table_ _source-object_)` |procedure |<<syntax:s85,322>>
+|`(source-table-delete! _source-table_ _source-object_)` |procedure |<<syntax:s87,323>>
+|`(source-table-dump _source-table_)` |procedure |<<system:s153,371>>
+|`(source-table-ref _source-table_ _source-object_ _default_)` |procedure |<<syntax:s84,322>>
+|`(source-table-set! _source-table_ _source-object_ _obj_)` |procedure |<<syntax:s83,322>>
+|`(source-table-size _source-table_)` |procedure |<<syntax:s88,323>>
+|`(source-table? _obj_)` |procedure |<<syntax:s82,322>>
+|`(sqrt _num_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s127[t183]
+|`(sstats-bytes _s_)` |procedure |<<system:s233,391>>
+|`(sstats-cpu _s_)` |procedure |<<system:s233,391>>
+|`(sstats-difference _s~1~_ _s~2~_)` |procedure |<<system:s235,391>>
+|`(sstats-gc-bytes _s_)` |procedure |<<system:s233,391>>
+|`(sstats-gc-count _s_)` |procedure |<<system:s233,391>>
+|`(sstats-gc-cpu _s_)` |procedure |<<system:s233,391>>
+|`(sstats-gc-real _s_)` |procedure |<<system:s233,391>>
+|`(sstats-print _s_)` |procedure |<<system:s236,391>>
+|`(sstats-print _s_ _textual-output-port_)` |procedure |<<system:s236,391>>
+|`(sstats-real _s_)` |procedure |<<system:s233,391>>
+|`(sstats? _obj_)` |procedure |<<system:s232,391>>
+|`(standard-error-port)` |procedure |<<io:s82,241>>
+|`(standard-error-port _b-mode_)` |procedure |<<io:s82,241>>
+|`(standard-error-port _b-mode_ _?transcoder_)` |procedure |<<io:s82,241>>
+|`(standard-error-port)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#io:s33[t264]
+|`(standard-input-port)` |procedure |<<io:s61,232>>
+|`(standard-input-port _b-mode_)` |procedure |<<io:s61,232>>
+|`(standard-input-port _b-mode_ _?transcoder_)` |procedure |<<io:s61,232>>
+|`(standard-input-port)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#io:s33[t264]
+|`(standard-output-port)` |procedure |<<io:s81,241>>
+|`(standard-output-port _b-mode_)` |procedure |<<io:s81,241>>
+|`(standard-output-port _b-mode_ _?transcoder_)` |procedure |<<io:s81,241>>
+|`(standard-output-port)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#io:s33[t264]
+|`(statistics)` |procedure |<<system:s230,390>>
+|`(string _char_ \...)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s217[t218]
+|`(string\->bytevector _string_ _transcoder_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#io:s92[t287]
+|`(string\->immutable-string _string_)` |procedure |<<objects:s25,141>>
+|`(string\->list _string_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s228[t222]
+|`(string\->multibyte _code-page_ _string_)` |procedure |<<io:s92,244>>
+|`(string\->number _string_)` |procedure |<<numeric:s78,212>>
+|`(string\->number _string_ _radix_)` |procedure |<<numeric:s78,212>>
+|`(string\->number _string_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s147[t191]
+|`(string\->number _string_ _radix_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s147[t191]
+|`(string\->symbol _string_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s269[t242]
+|`(string\->utf16 _string_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#io:s94[t287]
+|`(string\->utf16 _string_ _endianness_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#io:s94[t287]
+|`(string\->utf32 _string_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#io:s94[t287]
+|`(string\->utf32 _string_ _endianness_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#io:s94[t287]
+|`(string\->utf8 _string_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#io:s93[t287]
+|`(string-append _string_ \...)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s223[t219]
+|`(string-ci-hash _string_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s279[t245]
+|`(string-ci\<=? _string~1~_ _string~2~_ _string~3~_ \...)` |procedure |<<objects:s20,139>>
+|`(string-ci\<=? _string~1~_ _string~2~_ _string~3~_ \...)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s216[t217]
+|`(string-ci<? _string~1~_ _string~2~_ _string~3~_ \...)` |procedure |<<objects:s20,139>>
+|`(string-ci<? _string~1~_ _string~2~_ _string~3~_ \...)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s216[t217]
+|`(string-ci=? _string~1~_ _string~2~_ _string~3~_ \...)` |procedure |<<objects:s20,139>>
+|`(string-ci=? _string~1~_ _string~2~_ _string~3~_ \...)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s216[t217]
+|`(string-ci>=? _string~1~_ _string~2~_ _string~3~_ \...)` |procedure |<<objects:s20,139>>
+|`(string-ci>=? _string~1~_ _string~2~_ _string~3~_ \...)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s216[t217]
+|`(string-ci>? _string~1~_ _string~2~_ _string~3~_ \...)` |procedure |<<objects:s20,139>>
+|`(string-ci>? _string~1~_ _string~2~_ _string~3~_ \...)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s216[t217]
+|`(string-copy _string_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s222[t219]
+|`(string-copy! _src_ _src-start_ _dst_ _dst-start_ _n_)` |procedure |<<objects:s21,139>>
+|`(string-downcase _string_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s226[t221]
+|`(string-fill! _string_ _char_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s225[t220]
+|`(string-foldcase _string_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s226[t221]
+|`(string-for-each _procedure_ _string~1~_ _string~2~_ \...)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#control:s50[t122]
+|`(string-hash _string_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s279[t245]
+|`(string-length _string_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s219[t218]
+|`(string-normalize-nfc _string_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s227[t222]
+|`(string-normalize-nfd _string_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s227[t222]
+|`(string-normalize-nfkc _string_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s227[t222]
+|`(string-normalize-nfkd _string_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s227[t222]
+|`(string-ref _string_ _n_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s220[t218]
+|`(string-set! _string_ _n_ _char_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s221[t219]
+|`(string-titlecase _string_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s226[t221]
+|`(string-truncate! _string_ _n_)` |procedure |<<objects:s23,140>>
+|`(string-upcase _string_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s226[t221]
+|`(string\<=? _string~1~_ _string~2~_ _string~3~_ \...)` |procedure |<<objects:s20,139>>
+|`(string\<=? _string~1~_ _string~2~_ _string~3~_ \...)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s215[t216]
+|`(string<? _string~1~_ _string~2~_ _string~3~_ \...)` |procedure |<<objects:s20,139>>
+|`(string<? _string~1~_ _string~2~_ _string~3~_ \...)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s215[t216]
+|`(string=? _string~1~_ _string~2~_ _string~3~_ \...)` |procedure |<<objects:s20,139>>
+|`(string=? _string~1~_ _string~2~_ _string~3~_ \...)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s215[t216]
+|`(string>=? _string~1~_ _string~2~_ _string~3~_ \...)` |procedure |<<objects:s20,139>>
+|`(string>=? _string~1~_ _string~2~_ _string~3~_ \...)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s215[t216]
+|`(string>? _string~1~_ _string~2~_ _string~3~_ \...)` |procedure |<<objects:s20,139>>
+|`(string>? _string~1~_ _string~2~_ _string~3~_ \...)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s215[t216]
+|`(string? _obj_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s20[t154]
+|`(strip-fasl-file _input-path_ _output-path_ _options_)` |procedure |<<system:s87,348>>
+|`(sub1 _num_)` |procedure |<<numeric:s68,209>>
+|`subset-mode` |thread param |<<system:s263,400>>
+|`(subst _new_ _old_ _tree_)` |procedure |<<objects:s11,136>>
+|`(subst! _new_ _old_ _tree_)` |procedure |<<objects:s11,136>>
+|`(substq _new_ _old_ _tree_)` |procedure |<<objects:s11,136>>
+|`(substq! _new_ _old_ _tree_)` |procedure |<<objects:s11,136>>
+|`(substring _string_ _start_ _end_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s224[t220]
+|`(substring-fill! _string_ _start_ _end_ _char_)` |procedure |<<objects:s22,140>>
+|`(substv _new_ _old_ _tree_)` |procedure |<<objects:s11,136>>
+|`(substv! _new_ _old_ _tree_)` |procedure |<<objects:s11,136>>
+|`(subtract-duration _time_ _time~d~_)` |procedure |<<system:s209,383>>
+|`(subtract-duration! _time_ _time~d~_)` |procedure |<<system:s209,383>>
+|`suppress-greeting` |global param |<<system:s197,379>>
+|`(symbol\->string _symbol_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s270[t242]
+|`(symbol-hash _symbol_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s279[t245]
+|`(symbol-hashtable-cell _hashtable_ _key_ _default_)` |procedure |<<objects:s138,166>>
+|`(symbol-hashtable-contains? _hashtable_ _key_)` |procedure |<<objects:s136,165>>
+|`(symbol-hashtable-delete! _hashtable_ _key_)` |procedure |<<objects:s139,167>>
+|`(symbol-hashtable-ref _hashtable_ _key_ _default_)` |procedure |<<objects:s135,165>>
+|`(symbol-hashtable-set! _hashtable_ _key_ _value_)` |procedure |<<objects:s134,164>>
+|`(symbol-hashtable-update! _hashtable_ _key_ _procedure_ _default_)` |procedure |<<objects:s137,165>>
+|`(symbol-hashtable? _obj_)` |procedure |<<objects:s133,164>>
+|`(symbol=? _symbol~1~_ _symbol~2~_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s268[t242]
+|`(symbol? _obj_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s22[t154]
+|`(syntax _template_)` |syntax |link:../../the-scheme-programming-language-4th/en/index.html#syntax:s33[t300]
+|`(syntax\->annotation _obj_)` |procedure |<<syntax:s69,320>>
+|`(syntax\->datum _obj_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#syntax:s44[t308]
+|`(syntax\->list _syntax-object_)` |procedure |<<syntax:s6,295>>
+|`(syntax\->vector _syntax-object_)` |procedure |<<syntax:s7,296>>
+|`(syntax-case _expr_ (_literal_ \...) _clause_ \...)` |syntax |link:../../the-scheme-programming-language-4th/en/index.html#syntax:s30[t299]
+|`(syntax-error _obj_ _string_ \...)` |procedure |<<syntax:s13,299>>
+|`(syntax-object\->datum _obj_)` |procedure |<<syntax:s8,296>>
+|`(syntax-rules (_literal_ \...) _clause_ \...)` |syntax |<<syntax:s4,295>>
+|`(syntax-rules (_literal_ \...) _clause_ \...)` |syntax |link:../../the-scheme-programming-language-4th/en/index.html#syntax:s14[t294]
+|`(syntax-violation _who_ _msg_ _form_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#exceptions:s6[t359]
+|`(syntax-violation _who_ _msg_ _form_ _subform_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#exceptions:s6[t359]
+|`(syntax-violation-form _condition_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#exceptions:s30[t370]
+|`(syntax-violation-subform _condition_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#exceptions:s30[t370]
+|`(syntax-violation? _obj_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#exceptions:s30[t370]
+|`(system _command_)` |procedure |<<foreign:s4,57>>
+|`(tan _num_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s131[t185]
+|`(tanh _num_)` |procedure |<<numeric:s76,211>>
+|`(textual-port-input-buffer _textual-input-port_)` |procedure |<<io:s16,219>>
+|`(textual-port-input-count _textual-input-port_)` |procedure |<<io:s18,220>>
+|`(textual-port-input-index _textual-input-port_)` |procedure |<<io:s16,219>>
+|`(textual-port-input-size _textual-input-port_)` |procedure |<<io:s16,219>>
+|`(textual-port-output-buffer _output-port_)` |procedure |<<io:s20,221>>
+|`(textual-port-output-count _textual-output-port_)` |procedure |<<io:s22,222>>
+|`(textual-port-output-index _output-port_)` |procedure |<<io:s20,221>>
+|`(textual-port-output-size _output-port_)` |procedure |<<io:s20,221>>
+|`(textual-port? _obj_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#io:s45[t270]
+|`(thread-condition? _obj_)` |procedure |<<threads:s13,430>>
+|`(thread? _obj_)` |procedure |<<threads:s3,428>>
+|`(threaded?)` |procedure |<<system:s257,398>>
+|`(time _expr_)` |syntax |<<system:s219,388>>
+|`(time-difference _time~1~_ _time~2~_)` |procedure |<<system:s209,383>>
+|`(time-difference! _time~1~_ _time~2~_)` |procedure |<<system:s209,383>>
+|`(time-nanosecond _time_)` |procedure |<<system:s205,382>>
+|`(time-second _time_)` |procedure |<<system:s205,382>>
+|`(time-type _time_)` |procedure |<<system:s205,382>>
+|`(time-utc\->date _time_)` |procedure |<<system:s216,387>>
+|`(time-utc\->date _time_ _offset_)` |procedure |<<system:s216,387>>
+|`(time\<=? _time~1~_ _time~2~_)` |procedure |<<system:s207,383>>
+|`(time<? _time~1~_ _time~2~_)` |procedure |<<system:s207,383>>
+|`(time=? _time~1~_ _time~2~_)` |procedure |<<system:s207,383>>
+|`(time>=? _time~1~_ _time~2~_)` |procedure |<<system:s207,383>>
+|`(time>? _time~1~_ _time~2~_)` |procedure |<<system:s207,383>>
+|`(time? _obj_)` |procedure |<<system:s204,382>>
+|`timer-interrupt-handler` |thread param |<<system:s24,330>>
+|`(top-level-bound? _symbol_)` |procedure |<<binding:s30,118>>
+|`(top-level-bound? _symbol_ _env_)` |procedure |<<binding:s30,118>>
+|`(top-level-mutable? _symbol_)` |procedure |<<binding:s31,119>>
+|`(top-level-mutable? _symbol_ _env_)` |procedure |<<binding:s31,119>>
+|`(top-level-program _imports_ _body_)` |syntax |<<libraries:s14,279>>
+|`(top-level-syntax _symbol_)` |procedure |<<binding:s34,120>>
+|`(top-level-syntax _symbol_ _env_)` |procedure |<<binding:s34,120>>
+|`(top-level-syntax? _symbol_)` |procedure |<<binding:s35,121>>
+|`(top-level-syntax? _symbol_ _env_)` |procedure |<<binding:s35,121>>
+|`(top-level-value _symbol_)` |procedure |<<binding:s29,118>>
+|`(top-level-value _symbol_ _env_)` |procedure |<<binding:s29,118>>
+|`(trace _var~1~_ _var~2~_ \...)` |syntax |<<debug:s9,36>>
+|`(trace)` |syntax |<<debug:s9,36>>
+|`(trace-case-lambda _name_ _clause_ \...)` |syntax |<<debug:s3,34>>
+|`(trace-define _var_ _expr_)` |syntax |<<debug:s14,38>>
+|`(trace-define (_var_ . _idspec_) _body~1~_ _body~2~_ \...)` |syntax |<<debug:s14,38>>
+|`(trace-define-syntax _keyword_ _expr_)` |syntax |<<debug:s15,39>>
+|`(trace-do ((_var_ _init_ _update_) \...) (_test_ _result_ \...) _expr_ \...)` |syntax |<<debug:s7,35>>
+|`(trace-lambda _name_ _formals_ _body~1~_ _body~2~_ \...)` |syntax |<<debug:s0,33>>
+|`(trace-let _name_ ((_var_ _expr_) \...) _body~1~_ _body~2~_ \...)` |syntax |<<debug:s5,34>>
+|`trace-output-port` |thread param |<<debug:s11,38>>
+|`trace-print` |thread param |<<debug:s12,38>>
+|`(transcoded-port _binary-port_ _transcoder_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#io:s47[t271]
+|`(transcoder-codec _transcoder_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#io:s20[t259]
+|`(transcoder-eol-style _transcoder_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#io:s20[t259]
+|`(transcoder-error-handling-mode _transcoder_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#io:s20[t259]
+|`(transcoder? _obj_)` |procedure |<<io:s12,218>>
+|`(transcript-cafe _path_)` |procedure |<<system:s201,380>>
+|`(transcript-off)` |procedure |<<system:s200,380>>
+|`(transcript-on _path_)` |procedure |<<system:s199,380>>
+|`(truncate _real_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s101[t177]
+|`(truncate-file _output-port_)` |procedure |<<io:s87,243>>
+|`(truncate-file _output-port_ _pos_)` |procedure |<<io:s87,243>>
+|`(truncate-port _output-port_)` |procedure |<<io:s87,243>>
+|`(truncate-port _output-port_ _pos_)` |procedure |<<io:s87,243>>
+|`(type-descriptor _name_)` |syntax |<<objects:s179,179>>
+|`(u8-list\->bytevector _list_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s253[t232]
+|`(uint-list\->bytevector _list_ _eness_ _size_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s261[t239]
+|`(unbox _box_)` |procedure |<<objects:s83,150>>
+|`undefined-variable-warnings` |thread param |<<system:s123,363>>
+|`(undefined-violation? _obj_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#exceptions:s31[t371]
+|`(unget-char _textual-input-port_ _char_)` |procedure |<<io:s65,234>>
+|`(unget-u8 _binary-input-port_ _octet_)` |procedure |<<io:s66,235>>
+|`(unless _test-expr_ _expr~1~_ _expr~2~_ \...)` |syntax |link:../../the-scheme-programming-language-4th/en/index.html#control:s17[t112]
+|`(unlock-object _obj_)` |procedure |<<smgmt:s38,414>>
+|`(unquote _obj_ \...)` |syntax |link:../../the-scheme-programming-language-4th/en/index.html#objects:s5[t142]
+|`(unquote-splicing _obj_ \...)` |syntax |link:../../the-scheme-programming-language-4th/en/index.html#objects:s5[t142]
+|`(unread-char _char_)` |procedure |<<io:s65,234>>
+|`(unread-char _char_ _textual-input-port_)` |procedure |<<io:s65,234>>
+|`(unregister-guardian _guardian_)` |procedure |<<smgmt:s32,412>>
+|`(unsyntax _template_ \...)` |syntax |link:../../the-scheme-programming-language-4th/en/index.html#syntax:s40[t305]
+|`(unsyntax-splicing _template_ \...)` |syntax |link:../../the-scheme-programming-language-4th/en/index.html#syntax:s40[t305]
+|`(untrace _var~1~_ _var~2~_ \...)` |syntax |<<debug:s10,37>>
+|`(untrace)` |syntax |<<debug:s10,37>>
+|`(utf-16-codec)` |procedure |<<io:s9,217>>
+|`(utf-16-codec _endianness_)` |procedure |<<io:s9,217>>
+|`(utf-16-codec)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#io:s22[t259]
+|`(utf-16be-codec)` |procedure |<<io:s9,217>>
+|`(utf-16le-codec)` |procedure |<<io:s9,217>>
+|`(utf-8-codec)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#io:s22[t259]
+|`(utf16\->string _bytevector_ _endianness_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#io:s96[t288]
+|`(utf16\->string _bytevector_ _endianness_ _endianness-mandatory?_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#io:s96[t288]
+|`(utf32\->string _bytevector_ _endianness_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#io:s96[t288]
+|`(utf32\->string _bytevector_ _endianness_ _endianness-mandatory?_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#io:s96[t288]
+|`(utf8\->string _bytevector_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#io:s95[t287]
+|`(values _obj_ \...)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#control:s70[t131]
+|`_variable_` |syntax |link:../../the-scheme-programming-language-4th/en/index.html#binding:s2[t91]
+|`(vector _obj_ \...)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s231[t224]
+|`(vector\->immutable-vector _vector_)` |procedure |<<objects:s35,143>>
+|`(vector\->list _vector_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s237[t225]
+|`(vector-cas! _vector_ _n_ _old-obj_ _new-obj_)` |procedure |<<objects:s33,142>>
+|`(vector-copy _vector_)` |procedure |<<objects:s31,141>>
+|`(vector-fill! _vector_ _obj_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s236[t225]
+|`(vector-for-each _procedure_ _vector~1~_ _vector~2~_ \...)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#control:s47[t122]
+|`(vector-length _vector_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s233[t224]
+|`(vector-map _procedure_ _vector~1~_ _vector~1~_ \...)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#control:s44[t121]
+|`(vector-ref _vector_ _n_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s234[t224]
+|`(vector-set! _vector_ _n_ _obj_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s235[t225]
+|`(vector-set-fixnum! _vector_ _n_ _fixnum_)` |procedure |<<objects:s32,142>>
+|`(vector-sort _predicate_ _vector_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s239[t226]
+|`(vector-sort! _predicate_ _vector_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s239[t226]
+|`(vector? _obj_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s21[t154]
+|`(verify-loadability _situation_ _input_ \...)` |procedure |<<system:s50,339>>
+|`(violation? _obj_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#exceptions:s20[t366]
+|`(virtual-register _k_)` |procedure |<<system:s253,397>>
+|`(virtual-register-count)` |procedure |<<system:s251,397>>
+|`(visit _path_)` |procedure |<<system:s59,340>>
+|`(visit-compiled-from-port _input-port_)` |procedure |<<system:s57,339>>
+|`(void)` |procedure |<<objects:s112,157>>
+|`waiter-prompt-and-read` |thread param |<<system:s175,376>>
+|`waiter-prompt-string` |thread param |<<system:s174,375>>
+|`waiter-write` |thread param |<<system:s177,376>>
+|`(warning _who_ _msg_ _irritant_ \...)` |procedure |<<system:s1,325>>
+|`(warning? _obj_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#exceptions:s23[t367]
+|`(warningf _who_ _msg_ _irritant_ \...)` |procedure |<<system:s2,326>>
+|`(weak-cons _obj~1~_ _obj~2~_)` |procedure |<<smgmt:s24,406>>
+|`(weak-pair? _obj_)` |procedure |<<smgmt:s25,407>>
+|`(when _test-expr_ _expr~1~_ _expr~2~_ \...)` |syntax |link:../../the-scheme-programming-language-4th/en/index.html#control:s17[t112]
+|`(who-condition? _obj_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#exceptions:s26[t369]
+|`(with ((_pat_ _expr_) \...) _template_)` |syntax |<<compat:s20,443>>
+|`(with-cost-center _cost-center_ _thunk_)` |procedure |<<system:s243,393>>
+|`(with-cost-center _timed?_ _cost-center_ _thunk_)` |procedure |<<system:s243,393>>
+|`(with-exception-handler _procedure_ _thunk_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#exceptions:s7[t360]
+|`(with-implicit (_id~0~_ _id~1~_ \...) _body~1~_ _body~2~_ \...)` |syntax |<<syntax:s11,297>>
+|`(with-input-from-file _path_ _thunk_)` |procedure |<<io:s59,231>>
+|`(with-input-from-file _path_ _thunk_ _options_)` |procedure |<<io:s59,231>>
+|`(with-input-from-file _path_ _thunk_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#io:s79[t283]
+|`(with-input-from-string _string_ _thunk_)` |procedure |<<io:s46,228>>
+|`(with-interrupts-disabled _body~1~_ _body~2~_ \...)` |syntax |<<system:s27,331>>
+|`(with-mutex _mutex_ _body~1~_ _body~2~_ \...)` |syntax |<<threads:s10,429>>
+|`(with-output-to-file _path_ _thunk_)` |procedure |<<io:s79,240>>
+|`(with-output-to-file _path_ _thunk_ _options_)` |procedure |<<io:s79,240>>
+|`(with-output-to-file _path_ _thunk_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#io:s80[t283]
+|`(with-output-to-string _thunk_)` |procedure |<<io:s50,229>>
+|`(with-profile-tracker _thunk_)` |procedure |<<system:s150,370>>
+|`(with-profile-tracker _preserve-existing?_ _thunk_)` |procedure |<<system:s150,370>>
+|`(with-source-path _who_ _name_ _procedure_)` |procedure |<<system:s103,356>>
+|`(with-syntax ((_pattern_ _expr_) \...) _body~1~_ _body~2~_ \...)` |syntax |link:../../the-scheme-programming-language-4th/en/index.html#syntax:s38[t304]
+|`(write _obj_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#io:s84[t284]
+|`(write _obj_ _textual-output-port_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#io:s84[t284]
+|`(write-char _char_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#io:s86[t285]
+|`(write-char _char_ _textual-output-port_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#io:s86[t285]
+|`(zero? _num_)` |procedure |link:../../the-scheme-programming-language-4th/en/index.html#objects:s93[t173]
+
+|===
