@@ -1,4 +1,1025 @@
 [#chp_2]
 == Chapter 2. Using Chez Scheme
 
+_Chez Scheme_ is often used interactively to support program development and debugging, yet it may also be used to create stand-alone applications with no interactive component. This chapter describes the various ways in which _Chez Scheme_ is typically used and, more generally, how to get the most out of the system. Sections <<section_2.1.,2.1>>, <<section_2.2.,2.2>>, and <<section_2.3.,2.3>> describe how one uses _Chez Scheme_ interactively. <<section_2.4.,Section 2.4>> discusses how libraries and RNRS top-level programs are used in _Chez Scheme_. <<section_2.5.,Section 2.5>> covers support for writing and running Scheme scripts, including compiled scripts and compiled RNRS top-level programs. <<section_2.6.,Section 2.6>> describes how to structure and compile an application to get the most efficient code possible out of the compiler. <<section_2.7.,Section 2.7>> describes how one can customize the startup process, e.g., to alter or eliminate the command-line options, to preload Scheme or foreign code, or to run _Chez Scheme_ as a subordinate program of another program. <<section_2.8.,Section 2.8>> describes how to build applications using _Chez Scheme_ with _Petite Chez Scheme_ for run-time support. Finally, <<section_2.9.,Section 2.9>> covers command-line options used when invoking _Chez Scheme_.
 
+=== Section 2.1. Interacting with Chez Scheme [[section_2.1.]]
+
+One of the simplest and most effective ways to write and test Scheme programs is to compose them using a text editor, like `vi` or `emacs`, and test them interactively with _Chez Scheme_ running in a shell window. When _Chez Scheme_ is installed with default options, entering the command `scheme` at the shell's prompt starts an interactive Scheme session. The command `petite` does the same for _Petite Chez Scheme_. After entering this command, you should see a short greeting followed by an angle-bracket on a line by itself, like this:
+
+[source,scheme,subs="quotes"]
+----
+Chez Scheme Version 9.5.1
+Copyright 1984-2017 Cisco Systems, Inc.
+
+>
+----
+
+You also should see that the cursor is sitting one space to the right of the angle-bracket. The angle-bracket is a prompt issued by the system's "REPL," which stands for "Read Eval Print Loop," so called because it reads, evaluates, and prints an expression, then loops back to read, evaluate, and print the next, and so on. (In _Chez Scheme_, the REPL is also called a waiter.)
+
+In response to the prompt, you can type any Scheme expression. If the expression is well-formed, the REPL will run the expression and print the value. Here are a few examples:
+
+[source,scheme,subs="quotes"]
+----
+> 3
+3
+> (+ 3 4)
+7
+> (cons 'a '(b c d))
+(a b c d)
+----
+
+The reader used by the REPL is more sophisticated than an ordinary reader. In fact, it's a full-blown "expression editor" ("expeditor" for short) like a regular text editor but for just one expression at a time. One thing you might soon notice is that the system automatically indents the second and subsequent lines of an expression. For example, let's say we want to define `fact`, a procedure that implements the factorial function. If we type `(define fact` followed by the enter key, the cursor should be sitting under the first `e` in `define`, so that if we then type `(lambda (x)`, we should see:
+
+[source,scheme,subs="quotes"]
+----
+> (define fact
+    (lambda (x)
+----
+
+The expeditor also allows us to move around within the expression (even across lines) and edit the expression to correct mistakes. After typing:
+
+[source,scheme,subs="quotes"]
+----
+> (define fact
+    (lambda (x)
+      (if (= n 0)
+          0
+          (* n (fact
+----
+
+we might notice that the procedure's argument is named `x` but we have been referencing it as `n`. We can move back to the second line using the arrow keys, remove the offending `x` with the backspace key, and replace it with `n`.
+
+[source,scheme,subs="quotes"]
+----
+> (define fact
+    (lambda (n)
+      (if (= n 0)
+          0
+          (* n (fact
+----
+
+We can then return to the end of the expression with the arrow keys and complete the definition.
+
+[source,scheme,subs="quotes"]
+----
+> (define fact
+    (lambda (n)
+      (if (= n 0)
+          0
+          (* n (fact (- n 1))))))
+----
+
+Now that we have a complete form with balanced parentheses, if we hit enter with the cursor just after the final parenthesis, the expeditor will send it on to the evaluator. We'll know that it has accepted the definition when we get another right-angle prompt.
+
+Now we can test our definition by entering, say, `(fact 6)` in response to the prompt:
+
+[source,scheme,subs="quotes"]
+----
+> (fact 6)
+0
+----
+
+The printed value isn't what we'd hoped for, since stem:[6!] is actually 720. The problem, of course, is that the base-case return-value `0` should have been `1`. Fortunately, we don't have to retype the definition to correct the mistake. Instead, we can use the expeditor's history mechanism to retrieve the earlier definition. The up-arrow key moves backward through the history. In this case, the first up-arrow retrieves `(fact 6)`, and the second retrieves the `fact` definition.
+
+As we move back through the history, the expression editor shows us only the first line, so after two up arrows, this is all we see of the definition:
+
+[source,scheme,subs="quotes"]
+----
+> (define fact
+----
+
+We can force the expeditor to show the entire expression by typing `^L` (control `L`, i.e., the control and `L` keys pressed together):
+
+[source,scheme,subs="quotes"]
+----
+> (define fact
+    (lambda (n)
+      (if (= n 0)
+          0
+          (* n (fact (- n 1))))))
+----
+
+Now we can move to the fourth line and change the `0` to a `1`.
+
+[source,scheme,subs="quotes"]
+----
+> (define fact
+    (lambda (n)
+      (if (= n 0)
+          1
+          (* n (fact (- n 1))))))
+----
+
+We're now ready to enter the corrected definition. If the cursor is on the fourth line and we hit enter, however, it will just open up a new line between the old fourth and fifth lines. This is useful in other circumstances, but not now. Of course, we can work around this by using the arrow keys to move to the end of the expression, but an easier way is to type `^J`, which forces the expression to be entered immediately no matter where the cursor is.
+
+Finally, we can bring back `(fact 6)` with another two hits of the up-arrow key and try it again:
+
+[source,scheme,subs="quotes"]
+----
+> (fact 6)
+720
+----
+
+To exit from the REPL and return back to the shell, we can type `^D` or call the `exit` procedure.
+
+The interaction described above uses just a few of the expeditor's features. The expeditor's remaining features are described in the following section.
+
+Running programs may be interrupted by typing the interrupt character (typically `^C`). In response, the system enters a debug handler, which prompts for input with a `break>` prompt. One of several commands may be issued to the break handler (followed by a newline), including
+
+"e"::
+    or end-of-file to exit from the handler and continue,
+"r"::
+    to stop execution and reset to the current café,
+"a"::
+    to abort _Chez Scheme_,
+"n"::
+    to enter a new café (see below),
+"i"::
+    to inspect the current continuation,
+"s"::
+    to display statistics about the interrupted program, and
+"?"::
+    to display a list of these options.
+
+When an exception other than a warning occurs, the default exception handler prints a message that describes the exception to the console error port. If a REPL is running, the exception handler then returns to the REPL, where the programmer can call the `debug` procedure to start up the debug handler, if desired. The debug handler is similar to the break handler and allows the programmer to inspect the continuation (control stack) of the exception to help determine the cause of the problem. If no REPL is running, as is the case for a script or top-level program run via the `--script` or `--program` command-line options, the default exception handler exits from the script or program after printing the message. To allow scripts and top-level programs to be debugged, the default exception handler can be forced via the `debug-on-exception` parameter or the `--debug-on-exception` command-line option to invoke `debug` directly.
+
+Developing a large program entirely in the REPL is unmanageable, and we usually even want to store smaller programs in a file for future use. (The expeditor's history is saved across Scheme sessions, but there is a limit on the number of items, so it is not a good idea to count on a program remaining in the history indefinitely.) Thus, a Scheme programmer typically creates a file containing Scheme source code using a text editor, such as `vi`, and loads the file into _Chez Scheme_ to test them. The conventional filename extension for _Chez Scheme_ source files is `.ss`, but the file can have any extension or even no extension at all. A source file can be loaded during an interactive session by typing `(load "_path_")`. Files to be loaded can also be named on the command line when the system is started. Any form that can be typed interactively can be placed in a file to be loaded.
+
+_Chez Scheme_ compiles source forms as it sees them to machine code before evaluating them, i.e., "just in time." In order to speed loading of a large file or group of files, each file can be compiled ahead of time via `compile-file`, which puts the compiled code into a separate object file. For example, `(compile-file "_path_")` compiles the forms in the file ``_path_``.ss and places the resulting object code in the file ``_path_``.so. Loading a pre-compiled file is essentially no different from loading the source file, except that loading is faster since compilation has already been done.
+
+[#use:s6]
+When compiling a file or set of files, it is often more convenient to use a shell command than to enter _Chez Scheme_ interactively to perform the compilation. This is easily accomplished by "piping" in the command to compile the file as shown below.
+
+[source,bash,subs="quotes"]
+----
+echo '(compile-file "_filename_")' | scheme -q
+----
+
+The `-q` option suppresses the system's greeting messages for more compact output, which is especially useful when compiling numerous files. The single-quote marks surrounding the `compile-file` call should be left off for Windows shells.
+
+When running in this "batch" mode, especially from within "make" files, it is often desirable to force the default exception handler to exit immediately to the shell with a nonzero exit status. This may be accomplished by setting the `reset-handler` to `abort`.
+
+[source,bash,subs="quotes"]
+----
+echo '(reset-handler abort) (compile-file "_filename_")' | scheme -q
+----
+
+One can also redefine the `base-exception-handler` (<<section_12.1.,Section 12.1>>) to achieve a similar effect while exercising more control over the format of the messages that are produced.
+
+=== Section 2.2. Expression Editor [[section_2.2.]]
+
+When Chez Scheme is used interactively in a shell window, as described above, or when `new-cafe` is invoked explicitly from a top-level program or script run via `--program` or `--script`, the waiter's "prompt and read" procedure employs an expression editor that permits entry and editing of single- and multiple-line expressions, automatically indents expressions as they are entered, supports identifier completion outside string constants based on the identifiers defined in the interactive environment, and supports filename completion within string constants. The expression editor also maintains a history of expressions typed during and across sessions and supports tcsh-like history movement and search commands. Other editing commands include simple cursor movement via arrow keys, deletion of characters via backspace and delete, and movement, deletion, and other commands using mostly emacs key bindings.
+
+The expression editor does not run if the TERM environment variable is not set (on Unix-based systems), if the standard input or output files have been redirected, or if the `--eedisable` command-line option (<<section_2.9.,Section 2.9>>) has been used. The history is saved across sessions, by default, in the file ".chezscheme_history" in the user's home directory. The `--eehistory` command-line option (<<section_2.9.,Section 2.9>>) can be used to specify a different location for the history file or to disable the saving and restoring of the history file.
+
+Keys for nearly all printing characters (letters, digits, and special characters) are "self inserting" by default. The open parenthesis, close parenthesis, open bracket, and close bracket keys are self inserting as well, but also cause the editor to "flash" to the matching delimiter, if any. Furthermore, when a close parenthesis or close bracket is typed, it is automatically corrected to match the corresponding open delimiter, if any.
+
+Key bindings for other keys and key sequences initially recognized by the expression editor are given below, organized into groups by function. Some keys or key sequences serve more than one purpose depending upon context. For example, tab is used for identifier completion, filename completion, and indentation. Such bindings are shown in each applicable functional group.
+
+Multiple-key sequences are displayed with hyphens between the keys of the sequences, but these hyphens should not be entered. When two or more key sequences perform the same operation, the sequences are shown separated by commas.
+
+Detailed descriptions of the editing commands are given in <<chp_14,Chapter 14>>, which also describes parameters that allow control over the expression editor, mechanisms for adding or changing key bindings, and mechanisms for creating new commands.
+
+Newlines, acceptance, exiting, and redisplay:
+
+[%autowidth,grid=none,frame=none]
+|===
+
+|enter, `^M` |accept balanced entry if used at end of entry;
+|            |else add a newline before the cursor and indent
+|`^J`        |accept entry unconditionally
+|`^O`        |insert newline after the cursor and indent
+|`^D`        |exit from the waiter if entry is empty;
+|            |else delete character under cursor
+|`^Z`        |suspend to shell if shell supports job control
+|`^L`        |redisplay entry
+|``\^L``-``^L``   |clear screen and redisplay entry
+
+|===
+
+Basic movement and deletion:
+
+[%autowidth,grid=none,frame=none]
+|===
+
+|leftarrow, `^B`  |move cursor left
+|rightarrow, `^F` |move cursor right
+|uparrow, `^P`    |move cursor up; from top of unmodified entry,
+|                 |move to preceding history entry.
+|downarrow, `^N`  |move cursor down; from bottom of unmodified entry,
+|                 |move to next history entry
+|`^D`             |delete character under cursor if entry not empty,
+|                 |else exit from the waiter
+|backspace, `^H`  |delete character before cursor
+|delete           |delete character under cursor
+
+|===
+
+Line movement and deletion:
+
+[%autowidth,grid=none,frame=none]
+|===
+
+|home, `^A`  |move cursor to beginning of line
+|end, `^E`   |move cursor to end of line
+|`^K`, esc-k |delete to end of line or, if cursor is at the end
+|            |of a line, join with next line
+|`^U`        |delete contents of current line
+
+|===
+
+When used on the first line of a multiline entry of which only the first line is displayed, i.e., immediately after history movement, `^U` deletes the contents of the entire entry, like `^G` (described below).
+
+Expression movement and deletion:
+
+[%autowidth,grid=none,frame=none]
+|===
+
+|esc-``^F``                |move cursor to next expression
+|esc-``^B``                |move cursor to preceding expression
+|esc-``]``                 |move cursor to matching delimiter
+|`^]`                    |flash cursor to matching delimiter
+|esc-``^K``, esc-delete    |delete next expression
+|esc-backspace, esc-``^H`` |delete preceding expression
+
+|===
+
+Entry movement and deletion:
+
+[%autowidth,grid=none,frame=none]
+|===
+
+|esc-``<`` |move cursor to beginning of entry
+|esc-``>`` |move cursor to end of entry
+|`^G`    |delete current entry contents
+|`^C`    |delete current entry contents; reset to end of history
+
+|===
+
+Indentation:
+
+[%autowidth,grid=none,frame=none]
+|===
+
+|tab                        |re-indent current line if identifier/filename prefix
+|                           |not just entered; else insert completion
+|esc-tab                    |re-indent current line unconditionally
+|esc-``q``, esc-``Q``, esc-``^Q`` |re-indent each line of entry
+
+|===
+
+Identifier/filename completion:
+
+[%autowidth,grid=none,frame=none]
+|===
+
+|tab     |insert completion if identifier/filename prefix just
+|        |entered; else re-indent current line
+|tab-tab |show possible identifier/filename completions at end
+|        |of identifier/filename just typed, else re-indent
+|`^R`    |insert next identifier/filename completion
+
+|===
+
+Identifier completion is performed outside of a string constant, and filename completion is performed within a string constant. (In determining whether the cursor is within a string constant, the expression editor looks only at the current line and so can be fooled by string constants that span multiple lines.) If at end of existing identifier or filename, i.e., not one just typed, the first tab re-indents, the second tab inserts identifier completion, and the third shows possible completions.
+
+History movement:
+
+[%autowidth,grid=none,frame=none]
+|===
+
+|uparrow, `^P`           |move to preceding entry if at top of unmodified
+|                        |entry; else move up within entry
+|downarrow, `^N`         |move to next entry if at bottom of unmodified
+|                        |entry; else move down within entry
+|esc-uparrow, esc-``^P``   |move to preceding entry from unmodified entry
+|esc-downarrow, esc-``^N`` |move to next entry from unmodified entry
+|esc-p                   |search backward through history for given prefix
+|esc-n                   |search forward through history for given prefix
+|esc-P                   |search backward through history for given string
+|esc-N                   |search forward through history for given string
+
+|===
+
+To search, enter a prefix or string followed by one of the search key sequences. Follow with additional search key sequences to search further backward or forward in the history. For example, enter "(define" followed by one or more esc-p key sequences to search backward for entries that are definitions, or "(define" followed by one or more esc-P key sequences for entries that contain definitions.
+
+Word and page movement:
+
+[%autowidth,grid=none,frame=none]
+|===
+
+|esc-``f``, esc-``F`` |move cursor to end of next word
+|esc-``b``, esc-``B`` |move cursor to start of preceding word
+|``^X``-``[``         |move cursor up one screen page
+|``^X``-``]``         |move cursor down one screen page
+
+|===
+
+Inserting saved text:
+
+[%autowidth,grid=none,frame=none]
+|===
+
+|`^Y` |insert most recently deleted text
+|`^V` |insert contents of window selection/paste buffer
+
+|===
+
+Mark operations:
+
+[%autowidth,grid=none,frame=none]
+|===
+
+|`^@`, ``^``space, `^^` |set mark to current cursor position
+|``\^X``-``^X``            |move cursor to mark, leave mark at old cursor position
+|`^W`                 |delete between current cursor position and mark
+
+|===
+
+Command repetition:
+
+[%autowidth,grid=none,frame=none]
+|===
+
+|esc-``^U``       |repeat next command four times
+|esc-``^U``-__n__ |repeat next command _n_ times
+
+|===
+
+=== Section 2.3. The Interaction Environment [[section_2.3.]]
+
+[#use:s9]
+[#use:s10]
+[#use:s11]
+In the language of the Revised^6^ Report, code is structured into libraries and "top-level programs." The Revised^6^ Report does not require an implementation to support interactive use, and it does not specify how an interactive top level should operate, leaving such details up to the implementation.
+
+In _Chez Scheme_, when one enters definitions or expressions at the prompt or loads them from a file, they operate on an interaction environment, which is a mutable environment that initially holds bindings only for built-in keywords and primitives. It may be augmented by user-defined identifier bindings via top-level definitions. The interaction environment is also referred to as the top-level environment, because it is at the top level for purposes of scoping. Programs entered at the prompt or loaded from a file via `load` should not be confused with RNRS top-level programs, which are actually more similar to libraries in their behavior. In particular, while the same identifier can be defined multiple times in the interaction environment, to support incremental program development, an identifier can be defined at most once in an RNRS top-level program.
+
+The default interaction environment used for any code that occurs outside of an RNRS top-level program or library (including such code typed at a prompt or loaded from a file) contains all of the bindings of the `(chezscheme)` library (or `scheme` module, which exports the same set of bindings). This set contains a number of bindings that are not in the RNRS libraries. It also contains a number of bindings that extend the RNRS counterparts in some way and are thus not strictly compatible with the RNRS bindings for the same identifiers. To replace these with bindings strictly compatible with RNRS, simply import the `rnrs` libraries into the interaction environment by typing the following into the REPL or loading it from a file:
+
+[source,scheme,subs="quotes"]
+----
+(import
+  (rnrs)
+  (rnrs eval)
+  (rnrs mutable-pairs)
+  (rnrs mutable-strings)
+  (rnrs r5rs))
+----
+
+[#use:s12]
+To obtain an interaction environment that contains all _and only_ RNRS bindings, use the following.
+
+[source,scheme,subs="quotes"]
+----
+(interaction-environment
+  (copy-environment
+    (environment
+      '(rnrs)
+      '(rnrs eval)
+      '(rnrs mutable-pairs)
+      '(rnrs mutable-strings)
+      '(rnrs r5rs))
+    #t))
+----
+
+To be useful for most purposes, `library` and `import` should probably also be included, from the `(chezscheme)` library.
+
+[source,scheme,subs="quotes"]
+----
+(interaction-environment
+  (copy-environment
+    (environment
+      '(rnrs)
+      '(rnrs eval)
+      '(rnrs mutable-pairs)
+      '(rnrs mutable-strings)
+      '(rnrs r5rs)
+      '(only (chezscheme) library import))
+    #t))
+----
+
+It might also be useful to include `debug` in the set of identifiers imported from `(chezscheme)` to allow the debugger to be entered after an exception is raised.
+
+Most of the identifiers bound in the default interaction environment that are not strictly compatible with the Revised^6^ Report are variables bound to procedures with extended interfaces, i.e., optional arguments or extended argument domains. The others are keywords bound to transformers that extend the Revised^6^ Report syntax in some way. This should not be a problem except for programs that count on exceptions being raised in cases that coincide with the extensions. For example, if a program passes the `=` procedure a single numeric argument and expects an exception to be raised, it will fail in the initial interaction environment because `=` returns `#t` when passed a single numeric argument.
+
+Within the default interaction environment and those created as described above, variables that name built-in procedures are read-only, i.e., cannot be assigned, since they resolve to the read-only bindings exported from the `(chezscheme)` library or some other library:
+
+[source,scheme,subs="quotes"]
+----
+(set! cons +) ⇒ _exception: cons is immutable_
+----
+
+Before assigning a variable bound to the name of a built-in procedure, the programmer must first define the variable. For example,
+
+[source,scheme,subs="quotes"]
+----
+(define cons-count 0)
+(define original-cons cons)
+(define cons
+  (lambda (x y)
+    (set! cons-count (+ cons-count 1))
+    (original-cons x y)))
+----
+
+redefines `cons` to count the number of times it is called, and
+
+[source,scheme,subs="quotes"]
+----
+(set! cons original-cons)
+----
+
+assigns `cons` to its original value. Once a variable has been defined in the interaction environment using `define`, a subsequent definition of the same variable is equivalent to a `set!`, so
+
+[source,scheme,subs="quotes"]
+----
+(define cons original-cons)
+----
+
+has the same effect as the `set!` above. The expression
+
+[source,scheme,subs="quotes"]
+----
+(import (only (chezscheme) cons))
+----
+
+also binds `cons` to its original value. It also returns it to its original read-only state.
+
+The simpler redefinition
+
+[source,scheme,subs="quotes"]
+----
+(define cons (let () (import scheme) cons))
+----
+
+turns `cons` into a mutable variable with the same value as it originally had. Doing so, however, prevents the compiler from generating efficient code for calls to `cons` or producing warning messages when `cons` is passed the wrong number of arguments.
+
+All identifiers not bound in the initial interaction environment and not defined by the programmer are treated as "potentially bound" as variables to facilitate the definition of mutually recursive procedures. For example, assuming that `yin` and `yang` have not been defined,
+
+[source,scheme,subs="quotes"]
+----
+(define yin (lambda () (- (yang) 1)))
+----
+
+defines `yin` at top level as a variable bound to a procedure that calls the value of the top-level variable `yang`, even though `yang` has not yet been defined. If this is followed by
+
+[source,scheme,subs="quotes"]
+----
+(define yang (lambda () (+ (yin) 1)))
+----
+
+the result is a mutually recursive pair of procedures that, when called, will loop indefinitely or until the system runs out of space to hold the recursion stack. If `yang` must be defined as anything other than a variable, its definition should precede the definition of `yin`, since the compiler assumes `yang` is a variable in the absence of any indication to the contrary when `yang` has not yet been defined.
+
+[#use:s13]
+A subtle consequence of this useful quirk of the interaction environment is that the procedure `free-identifier=?` (link:../../the-scheme-programming-language-4th/en/index.html#section_8.3.[Section 8.3] of _The Scheme Programming Language, 4th Edition_) does not consider unbound library identifiers to be equivalent to (as yet) undefined top-level identifiers, even if they have the same name, because the latter are actually assumed to be valid variable bindings.
+
+[source,scheme,subs="quotes"]
+----
+(library (A) (export a)
+  (import (rnrs))
+  (define-syntax a
+    (lambda (x)
+      (syntax-case x ()
+        [(_ id) (free-identifier=? #'id #'undefined)]))))
+(let () (import (A)) (a undefined)) ⇒ #f
+----
+
+[#use:s14]
+If it is necessary that they have the same binding, as in the case where an identifier is used as an auxiliary keyword in a syntactic abstraction exported from a library and used at top level, the library should define and export a binding for the identifier.
+
+[source,scheme,subs="quotes"]
+----
+(library (A) (export a aux-a)
+  (import (rnrs) (only (chezscheme) syntax-error))
+  (define-syntax aux-a
+    (lambda (x)
+      (syntax-error x "invalid context")))
+  (define-syntax a
+    (lambda (x)
+      (syntax-case x (aux-a)
+        [(_ aux-a) #''okay]
+        [(_ _) #''oops]))))
+(let () (import (A)) (a aux-a)) ⇒ okay
+(let () (import (only (A) a)) (a aux-a)) ⇒ oops
+----
+
+This issue does not arise when libraries are used entirely within other libraries or within RNRS top-level programs, since the interaction environment does not come into play.
+
+=== Section 2.4. Using Libraries and Top-Level Programs [[section_2.4.]]
+
+[#use:s15]
+[#use:s16]
+An R6RS library can be defined directly in the REPL, loaded explicitly from a file (using `load` or `load-library`), or loaded implicitly from a file via `import`. When defined directly in the REPL or loaded explicitly from a file, a library form can be used to redefine an existing library, but `import` never reloads a library once it has been defined.
+
+A library to be loaded implicitly via `import` must reside in a file whose name reflects the name of the library. For example, if the library's name is `(tools sorting)`, the base name of the file must be `sorting` with a valid extension, and the file must be in a directory named `tools` which itself resides in one of the directories searched by `import`. The set of directories searched by `import` is determined by the `library-directories` parameter, and the set of extensions is determined by the `library-extensions` parameter.
+
+The values of both parameters are lists of pairs of strings. The first string in each `library-directories` pair identifies a source-file base directory, and the second identifies the corresponding object-file base directory. Similarly, the first string in each `library-extensions` pair identifies a source-file extension, and the second identifies the corresponding object-file extension. The full path of a library source or object file consists of the source or object base followed by the components of the library name, separated by slashes, with the library extension added on the end. For example, for base `/usr/lib/scheme`, library name `(app lib1)`, and extension `.sls`, the full path is `/usr/lib/scheme/app/lib1.sls`. So, if `(library-directories)` contains the pathnames `"/usr/lib/scheme/libraries"` and `"."`, and `(library-extensions)` contains the extensions `.ss` and `.sls`, the path of the `(tools sorting)` library must be one of the following.
+
+[source,scheme,subs="quotes"]
+----
+/usr/lib/scheme/libraries/tools/sorting.ss
+/usr/lib/scheme/libraries/tools/sorting.sls
+./tools/sorting.ss
+./tools/sorting.sls
+----
+
+When searching for a library, `import` first constructs a partial name from the list of components in the library name, e.g., `a/b` for library `(a b)`. It then searches for the partial name in each pair of base directories, in order, trying each of the source extensions then each of the object extensions in turn before moving onto the next pair of base directories. If the partial name is an absolute pathname, e.g., `~/.myappinit` for a library named `(~/.myappinit)`, only the specified absolute path is searched, first with each source extension, then with each object extension. If the expander finds both a source file and its corresponding object file, and the object file is not older than the source file, the expander loads the object file. If the object file does not exist, if the object file is older, or if after loading the object file, the expander determines it was built using a library or include file that has changed, the source file is loaded or compiled, depending on the value of the parameter `compile-imported-libraries`. If `compile-imported-libraries` is set to `#t`, the expander compiles the library via the value of the `compile-library-handler` parameter, which by default calls `compile-library` (which is described below). Otherwise, the expander loads the source file. (Loading the source file actually causes the code to be compiled, assuming the default value of `current-eval`, but the compiled code is not saved to an object file.) An exception is raised during this process if a source or object file exists but is not readable or if an object file cannot be created.
+
+[#use:s20]
+[#use:s21]
+The search process used by the expander when processing an `import` for a library that has not yet been loaded can be monitored by setting the parameter `import-notify` to `#t`. This parameter can be set from the command line via the `--import-notify` command-line option.
+
+Whenever the expander determines it must compile a library to a file or load one from source, it adds the directory in which the file resides to the front of the `source-directories` list while compiling or loading the library. This allows a library to include files stored in or relative to its own directory.
+
+When `import` compiles a library as described above, it does not also load the compiled library, because this would cause portions of library to be reevaluated. Because of this, run-time expressions in the file outside of a `library` form will not be evaluated. If such expressions are present and should be evaluated, the library should be compiled ahead of time or loaded explicitly.
+
+[#use:s23]
+[#use:s24]
+A file containing a library may be compiled with `compile-file` or `compile-library`. The only difference between the two is that the latter treats the source file as if it were prefixed by an implicit `\#!r6rs`, which disables _Chez Scheme_ lexical extensions unless an explicit `#!chezscheme` marker appears in the file. Any libraries upon which the library depends must be compiled first. If one of the libraries imported by the library is subsequently recompiled (say because it was modified), the importing library must also be recompiled. Compilation and recompilation of imported libraries must be done explicitly by default but is done automatically when the parameter `compile-imported-libraries` is set to `#t` before compiling the importing library.
+
+As with `compile-file`, `compile-library` can be used in "batch" mode via a shell command:
+
+[source,bash,subs="quotes"]
+----
+echo '(compile-library "_filename_")' | scheme -q
+----
+
+with single-quote marks surrounding the `compile-library` call omitted for Windows shells.
+
+An RNRS top-level-program usually resides in a file, but one can also enter one directly into the REPL using the `top-level-program` forms, e.g.:
+
+[source,scheme,subs="quotes"]
+----
+(top-level-program
+  (import (rnrs))
+  (display "What's up?\n"))
+----
+
+A top-level program stored in a file does not have the `top-level-program` wrapper, so the same top-level program in a file is just:
+
+[source,scheme,subs="quotes"]
+----
+(import (rnrs))
+(display "What's up?\n")
+----
+
+A top-level program stored in a file can be loaded from the file via the `load-program` procedure. A top-level program can also be loaded via `load`, but not without affecting the semantics. A program loaded via `load` is scoped at top level, where it can see all top-level bindings, whereas a top-level program loaded via `load-program` is self-contained, i.e., it can see only the bindings made visible by the leading `import` form. Also, the variable bindings in a program loaded via `load` also become top-level bindings, whereas they are local to the program when the program is loaded via `load-program`. Moreover, `load-program`, like `load-library`, treats the source file as if it were prefixed by an implicit `\#!r6rs`, which disables _Chez Scheme_ lexical extensions unless an explicit `#!chezscheme` marker appears in the file. A program loaded via `load` is also likely to be less efficient. Since the program's variables are not local to the program, the compiler must assume they could change at any time, which inhibits many of its optimizations.
+
+[#use:s25]
+Top-level programs may be compiled using `compile-program`, which is like `compile-file` but, as with `load-program`, properly implements the semantics and lexical restrictions of top-level programs. `compile-program` also copies the leading `#!` line, if any, from the source file to the object file, resulting in an executable object file. Any libraries upon which the top-level program depends, other than built-in libraries, must be compiled first. The program must be recompiled if any of the libraries upon which it depends are recompiled. Compilation and recompilation of imported libraries must be done explicitly by default but is done automatically when the parameter `compile-imported-libraries` is set to `#t` before compiling the importing library.
+
+As with `compile-file` and `compile-library`, `compile-program` can be used in "batch" mode via a shell command:
+
+[source,bash,subs="quotes"]
+----
+echo '(compile-program "_filename_")' | scheme -q
+----
+
+with single-quote marks surrounding the `compile-program` call omitted for Windows shells.
+
+`compile-program` returns a list of libraries directly invoked by the compiled top-level program. When combined with the `library-requirements` and `library-object-filename` procedures, the list of libraries returned by `compile-program` can be used to determine the set of files that must be distributed with the compiled program file.
+
+When run, a compiled program automatically loads the run-time code for each library upon which it depends, as if via `revisit`. If the program also imports one of the same libraries at run time, e.g., via the `environment` procedure, the system will attempt to load the compile-time information from the same file. The compile-time information can also be loaded explicitly from the same or a different file via `load` or `visit`.
+
+=== Section 2.5. Scheme Shell Scripts [[section_2.5.]]
+
+[#use:s29]
+[#use:s30]
+[#use:s31]
+When the `--script` command-line option is present, the named file is treated as a Scheme shell script, and the command-line is made available via the parameter `command-line`. This is primarily useful on Unix-based systems, where the script file itself may be made executable. To support executable shell scripts, the system ignores the first line of a loaded script if it begins with `#!` followed by a space or forward slash. For example, assuming that the _Chez Scheme_ executable has been installed as `/usr/bin/scheme`, the following script prints its command-line arguments.
+
+[source,scheme,subs="quotes"]
+----
+#! /usr/bin/scheme --script
+(for-each
+  (lambda (x) (display x) (newline))
+  (cdr (command-line)))
+----
+
+The following script implements the traditional Unix `echo` command.
+
+[source,scheme,subs="quotes"]
+----
+#! /usr/bin/scheme --script
+(let ([args (cdr (command-line))])
+  (unless (null? args)
+    (let-values ([(newline? args)
+                  (if (equal? (car args) "-n")
+                      (values #f (cdr args))
+                      (values #t args))])
+      (do ([args args (cdr args)] [sep "" " "])
+          ((null? args))
+        (printf "\~a~a" sep (car args)))
+      (when newline? (newline)))))
+----
+
+Scripts may be compiled using `compile-script`, which is like `compile-file` but differs in that it copies the leading `#!` line from the source-file script into the object file.
+
+If _Petite Chez Scheme_ is installed, but not _Chez Scheme_, `/usr/bin/scheme` may be replaced with `/usr/bin/petite`.
+
+[#use:s33]
+[#use:s34]
+The `--program` command-line option is like `--script` except that the script file is treated as an RNRS top-level program (<<chp_10,Chapter 10>>). The following RNRS top-level program implements the traditional Unix `echo` command, as with the script above.
+
+[source,scheme,subs="quotes"]
+----
+#! /usr/bin/scheme --program
+(import (rnrs))
+(let ([args (cdr (command-line))])
+  (unless (null? args)
+    (let-values ([(newline? args)
+                  (if (equal? (car args) "-n")
+                      (values #f (cdr args))
+                      (values #t args))])
+      (do ([args args (cdr args)] [sep "" " "])
+          ((null? args))
+        (display sep)
+        (display (car args)))
+      (when newline? (newline)))))
+----
+
+Again, if only _Petite Chez Scheme_ is installed, `/usr/bin/scheme` may be replaced with `/usr/bin/petite`.
+
+`scheme-script` may be used in place of `scheme --program` or `petite --program`, i.e.,
+
+[source,scheme,subs="quotes"]
+----
+#! /usr/bin/scheme-script
+----
+
+`scheme-script` runs _Chez Scheme_, if available, otherwise _Petite Chez Scheme_.
+
+It is also possible to use `/usr/bin/env`, as recommended in the Revised^6^ Report nonnormative appendices, which allows `scheme-script` to appear anywhere in the user's path.
+
+[source,scheme,subs="quotes"]
+----
+#! /usr/bin/env scheme-script
+----
+
+[#use:s35]
+[#use:s36]
+If a top-level program depends on libraries other than those built into _Chez Scheme_, the `--libdirs` option can be used to specify which source and object directories to search. Similarly, if a library upon which a top-level program depends has an extension other than one of the standard extensions, the `--libexts` option can be used to specify additional extensions to search.
+
+[#use:s37]
+[#use:s38]
+These options set the corresponding _Chez Scheme_ parameters `library-directories` and `library-extensions`, which are described in <<section_2.4.,Section 2.4>>. The format of the arguments to `--libdirs` and `--libexts` is the same: a sequence of substrings separated by a single separator character. The separator character is a colon (:), except under Windows where it is a semi-colon (;). Between single separators, the source and object strings, if both are specified, are separated by two separator characters. If a single separator character appears at the end of the string, the specified pairs are added to the front of the existing list; otherwise, the specified pairs replace the existing list.
+
+For example, where the separator is a colon,
+
+[source,bash,subs="quotes"]
+----
+scheme --libdirs "/home/moi/lib:"
+----
+
+adds the source/object directory pair
+
+[source,scheme,subs="quotes"]
+----
+("/home/moi/lib" . "/home/moi/lib")
+----
+
+to the front of the default set of library directories, and
+
+[source,bash,subs="quotes"]
+----
+scheme --libdirs "/home/moi/libsrc::/home/moi/libobj:"
+----
+
+adds the source/object directory pair
+
+[source,scheme,subs="quotes"]
+----
+("/home/moi/libsrc" . "/home/moi/libobj")
+----
+
+to the front of the default set of library directories. The parameters are set after all boot files have been loaded.
+
+[#use:s39]
+[#use:s40]
+If no `--libdirs` option appears and the CHEZSCHEMELIBDIRS environment variable is set, the string value of CHEZSCHEMELIBDIRS is treated as if it were specified by a `--libdirs` option. Similarly, if no `--libexts` option appears and the CHEZSCHEMELIBEXTS environment variable is set, the string value of CHEZSCHEMELIBEXTS is treated as if it were specified by a `--libexts` option.
+
+=== Section 2.6. Optimization [[section_2.6.]]
+
+[#use:s41]
+To get the most out of the _Chez Scheme_ compiler, it is necessary to give it a little bit of help. The most important assistance is to avoid the use of top-level (interaction-environment) bindings. Top-level bindings are convenient and appropriate during program development, since they simplify testing, redefinition, and tracing (<<section_3.1.,Section 3.1>>) of individual procedures and syntactic forms. This convenience comes at a sizable price, however.
+
+[#use:s42]
+[#use:s43]
+The compiler can propagate copies (of one variable to another or of a constant to a variable) and inline procedures bound to local, unassigned variables within a single top-level expression. For the procedures it does not inline, it can avoid constructing and passing unneeded closures, bypass argument-count checks, branch to the proper entry point in a case-lambda, and build rest arguments (more efficiently) on the caller side, where the length of the rest list is known at compile time. It can also discard the definitions of unreferenced variables, so there's no penalty for including a large library of routines, only a few of which are actually used.
+
+It cannot do any of this with top-level variable bindings, since the top-level bindings can change at any time and new references to those bindings can be introduced at any time.
+
+[#use:s44]
+[#use:s45]
+Fortunately, it is easy to restructure a program to avoid top-level bindings. This is naturally accomplished for portable code by placing the code into a single RNRS top-level program or by placing a portion of the code in a top-level program and the remainder in one or more separate libraries. Although not portable, one can also put all of the code into a single top-level `module` form or `let` expression, perhaps using `include` to bring in portions of the code from separate files. The compiler performs some optimization even across library boundaries, so the penalty for breaking a program up in this manner is generally acceptable. The compiler also supports whole-program optimization (via `compile-whole-program`), which can be used to eliminate all overhead for placing portions of a program into separate libraries.
+
+Once an application's code has been placed into a single top-level program or into a top-level program and one or more libraries, the code can be loaded from source via `load-program` or compiled via `compile-program` and `compile-library`, as described in <<section_2.4.,Section 2.4>>. Be sure not to use `compile-file` for the top-level program since this does not preserve the semantics nor result in code that is as efficient.
+
+With an application structured as a single top-level program or as a top-level program and one or more libraries that do not interact frequently, we have done most of what can be done to help the compiler, but there are still a few more things we can do.
+
+[#use:s48]
+[#use:s49]
+First, we can allow the compiler to generate "unsafe" code, i.e., allow the compiler to generate code in which the usual run-time type checks have been disabled. We do this by using the compiler's "optimize level 3" when compiling the program and library files. This can be accomplished by setting the parameter `optimize-level` to 3 while compiling the library or program, e.g.:
+
+[source,scheme,subs="quotes"]
+----
+(parameterize ([optimize-level 3]) (compile-program "_filename_"))
+----
+
+[#use:s50]
+or in batch mode via the `--optimize-level` command-line option:
+
+[source,bash,subs="quotes"]
+----
+echo '(compile-program "_filename_")' | scheme -q --optimize-level 3
+----
+
+It may also be useful to experiment with some of the other compiler control parameters and also with the storage manager's run-time operation. The compiler-control parameters, including `optimize-level`, are described in <<section_12.6.,Section 12.6>>, and the storage manager control parameters are described in <<section_13.1.,Section 13.1>>.
+
+[#use:s51]
+Finally, it is often useful to "profile" your code to determine that parts of the code that are executed most frequently. While this will not help the system optimize your code, it can help you identify "hot spots" where you need to concentrate your own hand-optimization efforts. In these hot spots, consider using more efficient operators, like fixnum or flonum operators in place of generic arithmetic operators, and using explicit loops rather than nested combinations of linear list-processing operators like `append`, `reverse`, and `map`. These operators can make code more readable when used judiciously, but they can slow down time-critical code.
+
+<<section_12.7.,Section 12.7>> describes how to use the compiler's support for automatic profiling. Be sure that profiling is not enabled when you compile your production code, since the code introduced into the generated code to perform the profiling adds significant run-time overhead.
+
+=== Section 2.7. Customization [[section_2.7.]]
+
+[#use:s52]
+[#use:s53]
+[#use:s54]
+[#use:s55]
+_Chez Scheme_ and _Petite Chez Scheme_ are built from several subsystems: a "kernel" encapsulated in a static or shared library (dynamic link library) that contains operating-system interface and low-level storage management code, an executable that parses command-line arguments and calls into the kernel to initialize and run the system, a base boot file (petite.boot) that contains the bulk of the run-time library code, and an additional boot file (scheme.boot), for _Chez Scheme_ only, that contains the compiler.
+
+While the kernel and base boot file are essential to the operation of all programs, the executable may be replaced or even eliminated, and the compiler boot file need be loaded only if the compiler is actually used. In fact, the compiler is typically not loaded for distributed applications unless the application creates and executes code at run time.
+
+The kernel exports a set of entry points that are used to initialize the Scheme system, load boot or heap files, run an interactive Scheme session, run script files, and deinitialize the system. In the threaded versions of the system, the kernel also exports entry points for activating, deactivating, and destroying threads. These entry points may be used to create your own executable image that has different (or no) command-line options or to run Scheme as a subordinate program within another program, i.e., for use as an extension language.
+
+These entry points are described in <<section_4.8.,Section 4.8>>, along with other entry points for accessing and modifying Scheme data structures and calling Scheme procedures.
+
+[#use:s56]
+The file main.c in the 'c' subdirectory contains the "main" routine for the distributed executable image; look at this file to gain an understanding of how the system startup entry points are used.
+
+=== Section 2.8. Building and Distributing Applications [[section_2.8.]]
+
+[#use:s57]
+[#use:s58]
+Although useful as a stand-alone Scheme system, _Petite Chez Scheme_ was conceived as a run-time system for compiled _Chez Scheme_ applications. The remainder of this section describes how to create and distribute such applications using _Petite Chez Scheme_. It begins with a discussion of the characteristics of _Petite Chez Scheme_ and how it compares with _Chez Scheme_, then describes how to prepare application source code, how to build and run applications, and how to distribute them.
+
+Petite Chez Scheme Characteristics.  Although interpreter-based, _Petite Chez Scheme_ evaluates Scheme source code faster than might be expected. Some of the reasons for this are listed below.
+
+- The run-time system is fully compiled, so library implementations of primitives ranging from `+` and `car` to `sort` and `printf` are just as efficient as in _Chez Scheme_, although they cannot be open-coded as in code compiled by _Chez Scheme_.
+
+- The interpreter is itself a compiled Scheme application. Because it is written in Scheme, it directly benefits from various characteristics of Scheme that would have to be dealt with explicitly and with additional overhead in most other languages, including proper treatment of tail calls, first-class procedures, automatic storage management, and continuations.
+
+- The interpreter employs a preprocessor that converts the code into a form that can be interpreted efficiently. In fact, the preprocessor shares its front end with the compiler, and this front end performs a variety of source-level optimizations.
+
+Nevertheless, compiled code is still more efficient for most applications. The difference between the speed of interpreted and compiled code varies significantly from one application to another, but often amounts to a factor of five and sometimes to a factor of ten or more.
+
+Several additional limitations result from the fact that _Petite Chez Scheme_ does not include the compiler:
+
+- The compiler must be present to process `foreign-procedure` and `foreign-callable` expressions, even when these forms are evaluated by the interpreter. These forms cannot be processed by the interpreter alone, so they cannot appear in source code to be processed by _Petite Chez Scheme_. Compiled versions of `foreign-procedure` and `foreign-callable` forms may, however, be included in compiled code loaded into _Petite Chez Scheme_.
+
+- Inspector information is attached to code objects, which are generated only by the compiler, so source information and variable names are not available for interpreted procedures or continuations into interpreted procedures. This makes the inspector less effective for debugging interpreted code than it is for debugging compiled code.
+
+- Procedure names are also attached to code objects, so while the compiler associates a name with each procedure when an appropriate name can be determined, the interpreter does not do so. This mostly impacts the quality of error messages, e.g., an error message might read " incorrect number of arguments to `\#<procedure>` " rather than the likely more useful " incorrect number of arguments to `#<procedure _name_>` ".
+
+- The compiler detects, at compile time, some potential errors that the interpreter does not detect and reports them via compile-time warnings that identify the expression or the location in the source file, if any, where the expression appears.
+
+- Automatic profiling cannot be enabled for interpreted code as it is for compiled code when `compile-profile` is set to `#t`.
+
+Except as noted above, _Petite Chez Scheme_ does not restrict what programs can do, and like _Chez Scheme_, it places essentially no limits on the size of programs or the memory images they create, beyond the inherent limitations of the underlying hardware or operating system.
+
+*Compiled scripts and programs.* One simple mechanism for distributing an application is to structure it as a script or RNRS top-level program, use `compile-script` or `compile-program`, as appropriate to compile it as described in <<section_2.5.,Section 2.5>>, and distribute the resulting object file along with a complete distribution of _Petite Chez Scheme_. When this mechanism is used on Unix-based systems, if the source file begins with `#!` and the path that follows is the path to the _Chez Scheme_ executable, e.g., `/usr/bin/scheme`, the one at the front of the object file should be replaced with the path to the _Petite Chez Scheme_ executable, e.g., `/usr/bin/petite`. The path may have to be adjusted by the application's installation program based on where _Petite Chez Scheme_ is installed on the target system. When used under Windows, the application's installation program should set up an appropriate shortcut that starts _Petite Chez Scheme_ with the `--script` or `--program` option, as appropriate, followed by the path to the object file.
+
+The remainder of this section describes how to distribute applications that do not require _Petite Chez Scheme_ to be installed as a stand-alone system on the target machine.
+
+*Preparing Application Code.* While it is possible to distribute applications in source-code form, i.e., as a set of Scheme source files to be loaded into _Petite Chez Scheme_ by the end user, distributing compiled code has two major advantages over distributing source code. First, compiled code is usually much more efficient, as discussed in the preceding section, and second, compiled code is in binary form and thus provides more protection for proprietary application code.
+
+Application source code generally consists of a set of Scheme source files possibly augmented by foreign code developed specifically for the application and packaged in shared libraries (also known as shared objects or, on Windows, dynamic link libraries). The following assumes that any shared-library source code has been converted into object form; how to do this varies by platform. (Some hints are given in <<section_4.6.,Section 4.6>>.) The result is a set of one or more shared libraries that are loaded explicitly by the Scheme source code during program initialization.
+
+Once the shared libraries have been created, the next step is to compile the Scheme source files into a set of Scheme object files. Doing so typically involves simply invoking `compile-file`, `compile-library`, or `compile-program`, as appropriate, on each source file to produce the corresponding object file. This may be done within a build script or "make" file via a command line such as the following:
+
+[source,bash,subs="quotes"]
+----
+echo '(compile-file "_filename_")' | scheme
+----
+
+which produces the object file `filename.so` from the source file `filename.ss`.
+
+If the application code has been developed interactively or is usually loaded directly from source, it may be necessary to make some adjustments to a file to be compiled if the file contains expressions or definitions that affect the compilation of subsequent forms in the file. This can be accomplished via `eval-when` (<<section_12.4.,Section 12.4>>). This is not typically necessary or desirable if the application consists of a set of RNRS libraries and programs.
+
+You may also wish to disable generation of inspector information both to reduce the size of the compiled application code and to prevent others from having access to the expanded source code that is retained as part of the inspector information. To do so, set the parameter `generate-inspector-information` to `#f` while compiling each file The downside of disabling inspector information is that the information will not be present if you need to debug your application, so it is usually desirable to disable inspector information only for production builds of your application. An alternative is to compile the code with inspector information enabled and strip out the debugging information later with `strip-fasl-file`.
+
+The Scheme startup procedure determines what the system does when it is started. The default startup procedure loads the files listed on the command line (via `load`) and starts up a new café, like this.
+
+[source,scheme,subs="quotes"]
+----
+(lambda fns (for-each load fns) (new-cafe))
+----
+
+The startup procedure may be changed via the parameter `scheme-start`. The following example demonstrates the installation of a variant of the default startup procedure that prints the name of each file before loading it.
+
+[source,scheme,subs="quotes"]
+----
+(scheme-start
+  (lambda fns
+    (for-each
+      (lambda (fn)
+        (printf "loading ~a ..." fn)
+        (load fn)
+        (printf "~%"))
+      fns)
+    (new-cafe)))
+----
+
+A typical application startup procedure would first invoke the application's initialization procedure(s) and then start the application itself:
+
+[source,scheme,subs="quotes"]
+----
+(scheme-start
+  (lambda fns
+    (initialize-application)
+    (start-application fns)))
+----
+
+Any shared libraries that must be present during the running of an application must be loaded during initialization. In addition, all foreign procedure expressions must be executed after the shared libraries are loaded so that the addresses of foreign routines are available to be recorded with the resulting foreign procedures. The following demonstrates one way in which initialization might be accomplished for an application that links to a foreign procedure `show_state` in the Windows shared library `state.dll`:
+
+[source,scheme,subs="quotes"]
+----
+(define show-state)
+
+(define app-init
+  (lambda ()
+    (load-shared-object "state.dll")
+    (set! show-state
+      (foreign-procedure "show_state" (integer-32)
+        integer-32))))
+
+(scheme-start
+  (lambda fns
+    (app-init)
+    (app-run fns)))
+----
+
+*Building and Running the Application.* Building and running an application is straightforward once all shared libraries have been built and Scheme source files have been compiled to object code.
+
+Although not strictly necessary, we suggest that you concatenate your object files, if you have more than one, into a single object file via the `concatenate-object-files` procedure. Placing all of the object code into a single file simplifies both building and distribution of applications.
+
+For top-level programs with separate libraries, `compile-whole-program` can be used to produce a single, fully optimized object file. Otherwise, when concatenating object files, put each library after the libraries it depends upon, with the program last.
+
+With the Scheme object code contained within a single composite object file, it is possible to run the application simply by loading the composite object file into _Petite Chez Scheme_, e.g.:
+
+[source,bash,subs="quotes"]
+----
+petite app.so
+----
+
+where `app.so` is the name of the composite object file, and invoking the startup procedure to restart the system:
+
+[source,scheme,subs="quotes"]
+----
+> ((scheme-start))
+----
+
+The point of setting `scheme-start`, however, is to allow the set of object files to be converted into a _boot file_. Boot files are loaded during the process of building the initial heap. Because of this, boot files have the following advantages over ordinary object files.
+
+- Any code and data structures contained in the boot file or created while it is loaded is automatically compacted along with the base run-time library code and made static. Static code and data are never collected by the storage manager, so garbage collection overhead is reduced. (It is also possible to make code and data static explicitly at any time via the `collect` procedure.)
+
+- The system looks for boot files automatically in a set of standard directories based on the name of the executable image, so you can install a copy of the _Petite Chez Scheme_ executable image under your application's name and spare your users from supplying any command-line arguments or running a separate script to load the application code.
+
+[#use:s69]
+When an application is packaged into a boot file, the source code that is compiled and converted into a boot file should set `scheme-start` to a procedure that starts the application, as shown in the example above. The application should not be started directly from the boot file, because boot files are loaded before final initialization of the Scheme system. The value of `scheme-start` is invoked automatically after final initialization.
+
+A boot file is simply an object file containing the code for one or more source files, prefixed by a boot header. The boot header identifies a base boot file upon which the application directly depends, or possibly two or more alternatives upon which the application can be run. In most cases, petite.boot will be identified as the base boot file, but in a layered application it may be another boot file of your creation that in turn depends upon petite.boot. The base boot file, and its base boot file, if any, are loaded automatically when your application boot file is loaded.
+
+Boot files are created with `make-boot-file`. This procedure accepts two or more arguments. The first is a string naming the file into which the boot header and object code should be placed, the second is a list of strings naming base boot files, and the remainder are strings naming input files. For example, the call:
+
+[source,scheme,subs="quotes"]
+----
+(make-boot-file "app.boot" '("petite") "app1.so" "app2.ss" "app3.so")
+----
+
+creates the boot file app.boot that identifies a dependency upon petite.boot and contains the object code for app1.so, the object code resulting from compiling app2.ss, and the object code for app3.so. The call:
+
+[source,scheme,subs="quotes"]
+----
+(make-boot-file "app.boot" '("scheme" "petite") "app.so")
+----
+
+creates a header file that identifies a dependency upon either scheme.boot or petite.boot, with the object code from app.so. In the former case, the system will automatically load petite.boot when the application boot file is loaded, and in the latter it will load scheme.boot if it can find it, otherwise petite.boot. This would allow your application to run on top of the full _Chez Scheme_ if present, otherwise _Petite Chez Scheme_.
+
+In most cases, you can construct your application so it does not depend upon features of scheme.boot (specifically, the compiler) by specifying only `"petite"` in the call to `make-boot-file`. If your application calls `eval`, however, and you wish to allow users to be able to take advantage of the faster execution speed of compiled code, then specifying both `"scheme"` and `"petite"` is appropriate.
+
+Here is how we might create and run a simple "echo" application from a Linux shell:
+
+[source,bash,subs="quotes"]
+----
+echo '(suppress-greeting #t)' > myecho.ss
+echo '(scheme-start (lambda fns (printf "\~{~a~^ ~}\n" fns)))' >> myecho.ss
+echo '(compile-file "myecho.ss") \
+      (make-boot-file "myecho.boot" (quote ("petite")) "myecho.so")' \
+     | scheme -q
+scheme -b myecho.boot hello world
+----
+
+If we take the extra step of installing a copy of the _Petite Chez Scheme_ executable as `myecho` and copying `myecho.boot` into the same directory as `petite.boot` (or set SCHEMEHEAPDIRS to include the directory containing myecho.boot), we can simply invoke `myecho` to run our echo application:
+
+[source,bash,subs="quotes"]
+----
+myecho hello world
+----
+
+*Distributing the Application.* Distributing an application involves can be as simple as creating a distribution package that includes the following items:
+
+- the _Petite Chez Scheme_ distribution,
+- the application boot file,
+- any application-specific shared libraries,
+- an application installation script.
+
+The application installation script should install _Petite Chez Scheme_ if not already installed on the target system. It should install the application boot file in the same directory as the _Petite Chez Scheme_ boot file petite.boot is installed, and it should install the application shared libraries, if any, either in the same location or in a standard location for shared libraries on the target system. It should also create a link to or copy of the _Petite Chez Scheme_ executable under the name of your application, i.e., the name given to your application boot file. Where appropriate, it should also install desktop and start-menu shortcuts to run the executable.
+
+=== Section 2.9. Command-Line Options [[section_2.9.]]
+
+[#use:s71]
+[#use:s72]
+[#use:s73]
+[#use:s74]
+[#use:s75]
+[#use:s76]
+[#use:s77]
+[#use:s78]
+[#use:s79]
+[#use:s80]
+[#use:s81]
+[#use:s82]
+[#use:s83]
+[#use:s84]
+[#use:s85]
+[#use:s86]
+[#use:s87]
+[#use:s88]
+[#use:s89]
+[#use:s90]
+[#use:s91]
+_Chez Scheme_ recognizes the following command-line options.
+
+[%autowidth,grid=none,frame=none]
+|===
+
+|`-q`, `--quiet` |  suppress greeting and prompt
+|`--script _path_` |  run as shell script
+|`--program _path_` |  run rnrs top-level program as shell script
+|`--libdirs _dir_:\...` |  set library directories
+|`--libexts _ext_:\...` |  set library extensions
+|`--compile-imported-libraries` |  compile libraries before loading
+|`--import-notify` |  enable import search messages
+|`--optimize-level 0 \| 1 \| 2 \| 3` |  set initial optimize level
+|`--debug-on-exception` |  on uncaught exception, call `debug`
+|`--eedisable` |  disable expression editor
+|`--eehistory off \| _path_` |  expression-editor history file
+|`--enable-object-counts` |  have collector maintain object counts
+|`--retain-static-relocation` |  keep reloc info for compute-size, etc.
+|`-b _path_`, `--boot _path_` |  load boot file
+|`--verbose` |  trace boot-file search process
+|`--version` |  print version and exit
+|`--help` |  print help and exit
+|`--` |  pass through remaining args
+
+|===
+
+[#use:s92]
+[#use:s93]
+[#use:s94]
+[#use:s95]
+[#use:s96]
+[#use:s97]
+The following options are recognized but cause the system to print an error message and exit because saved heaps are no longer supported.
+
+[%autowidth,grid=none,frame=none]
+|===
+
+|`-h _path_`, `--heap _path_` |  load heap file
+|`-s[_n_] _path_`, `--saveheap[_n_] _path_` |  save heap file
+|`-c`, `--compact` |  toggle compaction flag
+
+|===
+
+With the default `scheme-start` procedure (<<section_2.8.,Section 2.8>>), any remaining command-line arguments are treated as the names of files to be loaded before _Chez Scheme_ begins interacting with the user, unless the `--script` or `--program` is present, in which case the remaining arguments are made available to the script via the `command-line` parameter (<<section_2.1.,Section 2.1>>).
+
+Most of the options are described elsewhere in this chapter, and a few are self-explanatory. The remainder pertain to the loading of boot files at system start-up time and are described below.
+
+[#use:s98]
+[#use:s99]
+When _Chez Scheme_ is run, it looks for one or more boot files to load. Boot files contain the compiled Scheme code that implements most of the Scheme system, including the interpreter, compiler, and most libraries. Boot files may be specified explicitly on the command line via `-b` options or implicitly. In the simplest case, no `-b` options are given and the necessary boot files are loaded automatically based on the name of the executable.
+
+For example, if the executable name is "frob", the system looks for "frob.boot" in a set of standard directories. It also looks for and loads any subordinate boot files required by "frob.boot".
+
+Subordinate boot files are also loaded automatically for the first boot file explicitly specified via the command line. Each boot file must be listed before those that depend upon it.
+
+The `--verbose` option may be used to trace the file searching process and must appear before any boot arguments for which search tracing is desired.
+
+Ordinarily, the search for boot files is limited to a set of installation directories, but this may be overridden by setting the environment variable `SCHEMEHEAPDIRS`. `SCHEMEHEAPDIRS` should be a colon-separated list of directories, listed in the order in which they should be searched. Within each directory, the two-character escape sequence " `%v` " is replaced by the current version, and the two-character escape sequence " `%m` " is replaced by the machine type. A percent followed by any other character is replaced by the second character; in particular, " `%%` " is replaced by " `%` ", and " `%:` " is replaced by " `:` ". If `SCHEMEHEAPDIRS` ends in a non-escaped colon, the default directories are searched after those in `SCHEMEHEAPDIRS`; otherwise, only those listed in `SCHEMEHEAPDIRS` are searched.
+
+Under Windows, semi-colons are used in place of colons, and one additional escape is recognized: " `%x` ", which is replaced by the directory in which the executable file resides. The default search path under Windows consists of " `%x` " and " `%x\..\..\boot\%m` ". The registry key `HeapSearchPath` in `HKLM\SOFTWARE\Chez Scheme\csv__version__`, where `_version_` is the _Chez Scheme_ version number, e.g., `7.9.4`, can be set to override the default search path, and the `SCHEMEHEAPDIRS` environment variable overrides both the default and the registry setting, if any.
+
+Boot files consist of ordinary compiled code and consist of a boot header and the compiled code for one or more source files. See <<section_2.8.,Section 2.8>> for instructions on how to create boot files.
