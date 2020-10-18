@@ -1,5 +1,6 @@
 = Chez Scheme Version 9 User's Guide
-:author:
+Cisco Systems, Inc.
+:author: Cisco Systems, Inc.
 :doctype: book
 :toc: left
 :toc-title: Table of Contents
@@ -178,10 +179,8 @@ document.querySelectorAll('h4')
             var anchor='exercise_'+title.replace(/^Exercise ([\d.]+)$/, '$1');
             node.outerHTML = '==== ' + title + ' [['+anchor+']]&lt;br&gt;&lt;br&gt;';
         })
-document.querySelectorAll('[src="math/tspl/0.gif"]')
+document.querySelectorAll('[src="math/csug/0.gif"]')
         .forEach(function(node) { node.outerHTML = '⇒' })
-document.querySelectorAll('tt')
-        .forEach(function(node) { node.innerHTML = '`'+node.innerHTML+'`' })
 document.querySelectorAll('i')
         .forEach(function(node) { node.innerHTML = '_'+node.innerHTML+'_' })
 document.querySelectorAll('li')
@@ -190,10 +189,29 @@ document.querySelectorAll('sub')
         .forEach(function(node) { node.outerHTML = '~'+node.innerText+'~' })
 document.querySelectorAll('sup')
         .forEach(function(node) { node.outerHTML = '^'+node.innerText+'^' })
+document.querySelectorAll('tt').forEach(function(node) {
+    if (node.parentNode.nodeName.toLowerCase() == 'p' && node.innerText == node.parentNode.innerText) {
+        node.innerHTML = '[source,scheme,subs="quotes"]&lt;br&gt;----&lt;br&gt;'+node.innerHTML+'&lt;br&gt;----&lt;br&gt;';
+    } else {
+        node.innerHTML = '`'+node.innerHTML+'`';
+    }
+})
+
+document.querySelectorAll('tbody').forEach(function(node) {
+    node.innerHTML = '[%autowidth,grid=none,frame=none]&lt;br&gt;|===&lt;br&gt;&lt;br&gt;'+node.innerHTML+'&lt;br&gt;|===&lt;br&gt;';
+
+    node.querySelectorAll('td').forEach(function(td) {
+        td.innerHTML = '|' + td.innerHTML + ' ';
+    });
+})
 
 document.querySelectorAll('a')
         .forEach(function(node) {
             var name=node.name;
+            if (node.previousSibling
+                && node.previousSibling.nodeName.toLowerCase() == '#text') {
+                return;
+            }
             if (name && name.match(/^\.\/(.+)$/)) {
                 node.outerHTML='[#'+(name.replace(/^\.\/(.+)$/, '$1'))+']&lt;br&gt;';
             }
@@ -201,9 +219,18 @@ document.querySelectorAll('a')
 document.querySelectorAll('a')
         .forEach(function(node) {
             var name=node.name;
+            if (node.previousSibling
+                && node.previousSibling.nodeName.toLowerCase() == '#text') {
+                return;
+            }
             if (name && name.match(/^[^#.\/]+$/)) {
                 node.outerHTML='[#'+name+']&lt;br&gt;';
             }
+        })
+document.querySelectorAll('a.citation')
+        .forEach(function(node) {
+            var text = node.innerText;
+            node.innerText = '&lt;&lt;ref' + text + '&gt;&gt;';
         })
 
 // Highlight the code blocks and italic text
@@ -234,20 +261,20 @@ document.querySelectorAll('a').forEach(function(node) {
 |===
 |Regex |Replacement
 
-|`++^$\n\s*`\s*\(++`
-|`++\n[source,scheme,subs=""]\n----\n(++`
-
-|`++\)`\n^$++`
-|`++)\n----\n++`
-
 |`++\[(\d+)\]++`
 |`++<<ref$1>>++`
+
+|`++(^\|\(\|[^=] )Chapter (\d+)++`
+|`++$1<<chp_$2,Chapter $2>>++`
 
 |`++(^\|\(\|[^=] )Section ([\d\.]+\d)++`
 |`++$1<<section_$2.,Section $2>>++`
 
 |`++(^\|\(\|[^=] )Exercise ([\d\.]+\d)++`
 |`++$1<<exercise_$2,Exercise $2>>++`
+
+|`++Sections ([\d\.]+) and ([\d\.]+)++`
+|`++Sections <<section_$1.,$1>> and <<section_$2.,$2>>++`
 
 |`++`[^`]*\(\([^`]+\)\)[^`]*`++`
 |Add slash to the first double brackets
