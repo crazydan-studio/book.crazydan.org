@@ -189,6 +189,8 @@ document.querySelectorAll('sub')
         .forEach(function(node) { node.outerHTML = '~'+node.innerText+'~' })
 document.querySelectorAll('sup')
         .forEach(function(node) { node.outerHTML = '^'+node.innerText+'^' })
+document.querySelectorAll('b')
+        .forEach(function(node) { node.innerHTML = '*'+node.innerHTML+'*' })
 document.querySelectorAll('tt').forEach(function(node) {
     if (node.parentNode.nodeName.toLowerCase() == 'p' && node.innerText == node.parentNode.innerText) {
         node.innerHTML = '[source,scheme,subs="quotes"]&lt;br&gt;----&lt;br&gt;'+node.innerHTML+'&lt;br&gt;----&lt;br&gt;';
@@ -278,6 +280,9 @@ document.querySelectorAll('a').forEach(function(node) {
 
 |`++`[^`]*\(\([^`]+\)\)[^`]*`++`
 |Add slash to the first double brackets
+
+|`++(^$\|\[.+\])\n([\w\s]+::)++`
+|`++$1\n[horizontal]\n$2++`
 |===
 
 - Check the lost links +
