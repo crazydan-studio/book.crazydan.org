@@ -1,4 +1,880 @@
 [#chp_3]
 == Chapter 3. Debugging
 
+_Chez Scheme_ has several features that support debugging. In addition to providing error messages when fully type-checked code is run, _Chez Scheme_ also permits tracing of procedure calls, interruption of any computation, redefinition of exception and interrupt handlers, and inspection of any object, including the continuations of exceptions and interrupts.
 
+Programmers new to Scheme or _Chez Scheme_, and even more experienced Scheme programmers, might want to consult the tutorial "How to Debug Chez Scheme Programs." HTML and PDF versions are available at http://www.cs.indiana.edu/chezscheme/debug/.
+
+=== Section 3.1. Tracing [[section_3.1.]]
+
+Tracing is one of the most useful mechanisms for debugging Scheme programs. _Chez Scheme_ permits any primitive or user-defined procedure to be traced. The trace package prints the arguments and return values for each traced procedure with a compact indentation mechanism that shows the nesting depth of calls. The distinction between tail calls and nontail calls is reflected properly by an increase in indentation for nontail calls only. For nesting depths of 10 or greater, a number in brackets is used in place of indentation to signify nesting depth.
+
+This section covers the mechanisms for tracing procedures and controlling trace output.
+
+[horizontal]
+syntax:: `(trace-lambda _name_ _formals_ _body~1~_ _body~2~_ \...)`
+returns:: a traced procedure
+libraries:: `(chezscheme)`
+
+[#debug:s1]
+A `trace-lambda` expression is equivalent to a `lambda` expression with the same formals and body except that trace information is printed to the trace output port whenever the procedure is invoked, using `_name_` to identify the procedure. The trace information shows the value of the arguments passed to the procedure and the values returned by the procedure, with indentation to show the nesting of calls.
+
+The traced procedure `half` defined below returns the integer quotient of its argument and 2.
+
+[source,scheme,subs="quotes"]
+----
+(define half
+  (trace-lambda half (x)
+    (cond
+      [(zero? x) 0]
+      [(odd? x) (half (- x 1))]
+      [(even? x) (+ (half (- x 1)) 1)])))
+----
+
+A trace of the call `(half 5)`, which returns 2, is shown below.
+
+[source,scheme,subs="quotes"]
+----
+|(half 5)
+|(half 4)
+| (half 3)
+| (half 2)
+| |(half 1)
+| |(half 0)
+| |0
+| 1
+|2
+----
+
+This example highlights the proper treatment of tail and nontail calls by the trace package. Since `half` tail calls itself when its argument is odd, the call `(half 4)` appears at the same level of indentation as the call `(half 5)`. Furthermore, since the return values of `(half 5)` and `(half 4)` are necessarily the same, only one return value is shown for both calls.
+
+[horizontal]
+syntax:: `(trace-case-lambda _name_ _clause_ \...)`
+returns:: a traced procedure
+libraries:: `(chezscheme)`
+
+[#debug:s4]
+A `trace-case-lambda` expression is equivalent to a `case-lambda` expression with the same clauses except that trace information is printed to the trace output port whenever the procedure is invoked, using `_name_` to identify the procedure. The trace information shows the value of the arguments passed to the procedure and the values returned by the procedure, with indentation to show the nesting of calls.
+
+[horizontal]
+syntax:: `(trace-let _name_ ((_var_ _expr_) \...) _body~1~_ _body~2~_ \...)`
+returns:: the values of the body `_body~1~_ _body~2~_ \...`
+libraries:: `(chezscheme)`
+
+[#debug:s6]
+A `trace-let` expression is equivalent to a named `let` expression with the same name, bindings, and body except that trace information is printed to the trace output port on entry or reentry (via invocation of the procedure bound to `name`) into the `trace-let` expression.
+
+A `trace-let` expression of the form
+
+[source,scheme,subs="quotes"]
+----
+(trace-let _name_ ([_var_ _expr_] ...)
+  _body~1~_ _body~2~_ ...)
+----
+
+can be rewritten in terms of `trace-lambda` as follows:
+
+[source,scheme,subs="quotes"]
+----
+((letrec ([_name_
+           (trace-lambda _name_ (_var_ ...)
+             _body~1~_ _body~2~_ ...)])
+   _name_)
+ _expr_ ...)
+----
+
+`trace-let` may be used to trace ordinary `let` expressions as well as `let` expressions as long as the name inserted along with the `trace-let` keyword in place of `let` does not appear free within the body of the `let` expression. It is also sometimes useful to insert a `trace-let` expression into a program simply to display the value of an arbitrary expression at the current trace indentation. For example, a call to the following variant of `half`
+
+[source,scheme,subs="quotes"]
+----
+(define half
+  (trace-lambda half (x)
+    (cond
+      [(zero? x) 0]
+      [(odd? x) (half (trace-let decr-value () (- x 1)))]
+      [(even? x) (+ (half (- x 1)) 1)])))
+----
+
+with argument 5 results in the trace:
+
+[source,scheme,subs="quotes"]
+----
+|(half 5)
+| (decr-value)
+| 4
+|(half 4)
+| (half 3)
+| |(decr-value)
+| |2
+| (half 2)
+| |(half 1)
+| | (decr-value)
+| | 0
+| |(half 0)
+| 1
+|2
+----
+
+[#debug:s7]
+[horizontal]
+syntax:: `(trace-do ((_var_ _init_ _update_) \...) (_test_ _result_ \...) _expr_ \...)`
+returns:: the values of the last `_result_` expression
+libraries:: `(chezscheme)`
+
+[#debug:s8]
+A `trace-do` expression is equivalent to a `do` expression with the same subforms, except that trace information is printed to the trace output port, showing the values of `_var_ \...` and each iteration and the final value of the loop on termination. For example, the expression
+
+[source,scheme,subs="quotes"]
+----
+(trace-do ([old '(a b c) (cdr old)]
+           [new '() (cons (car old) new)])
+  ((null? old) new))
+----
+
+produces the trace
+
+[source,scheme,subs="quotes"]
+----
+|(do (a b c) ())
+|(do (b c) (a))
+|(do (c) (b a))
+|(do () (c b a))
+|(c b a)
+----
+
+and returns `(c b a)`.
+
+[horizontal]
+syntax:: `(trace _var~1~_ _var~2~_ \...)`
+returns:: a list of `_var~1~_ _var~2~_ \...`
+syntax:: `(trace)`
+returns:: a list of all currently traced top-level variables
+libraries:: `(chezscheme)`
+
+In the first form, `trace` reassigns the top-level values of `_var~1~_ _var~2~_ \...`, whose values must be procedures, to equivalent procedures that display trace information in the manner of `trace-lambda`.
+
+`trace` works by encapsulating the old value of each var in a traced procedure. It could be defined approximately as follows. (The actual version records and returns information about traced variables.)
+
+[source,scheme,subs="quotes"]
+----
+(define-syntax trace
+  (syntax-rules ()
+    [(_ var ...)
+     (begin
+       (set-top-level-value! 'var
+         (let ([p (top-level-value 'var)])
+           (trace-lambda var args (apply p args))))
+       ...)]))
+----
+
+Tracing for a procedure traced in this manner may be disabled via `untrace` (see below), an assignment of the corresponding variable to a different, untraced value, or a subsequent use of `trace` for the same variable. Because the value is traced and not the binding, however, a traced value obtained before tracing is disabled and retained after tracing is disabled will remain traced.
+
+`trace` without subexpressions evaluates to a list of all currently traced variables. A variable is currently traced if it has been traced and not subsequently untraced or assigned to a different value.
+
+The following transcript demonstrates the use of `trace` in an interactive session.
+
+[source,scheme,subs="quotes"]
+----
+> (define half
+    (lambda (x)
+      (cond
+        [(zero? x) 0]
+        [(odd? x) (half (- x 1))]
+        [(even? x) (+ (half (- x 1)) 1)])))
+> (half 5)
+2
+> (trace half)
+(half)
+> (half 5)
+|(half 5)
+|(half 4)
+| (half 3)
+| (half 2)
+| |(half 1)
+| |(half 0)
+| |0
+| 1
+|2
+2
+> (define traced-half half)
+> (untrace half)
+(half)
+> (half 2)
+1
+> (traced-half 2)
+|(half 2)
+|1
+1
+----
+
+[#debug:s10]
+[horizontal]
+syntax:: `(untrace _var~1~_ _var~2~_ \...)`
+syntax:: `(untrace)`
+returns:: a list of untraced variables
+libraries:: `(chezscheme)`
+
+`untrace` restores the original (pre-`trace`) top-level values of each currently traced variable in `_var~1~_ _var~2~_ \...`, effectively disabling the tracing of the values of these variables. Any variable in `_var~1~_ _var~2~_ \...` that is not currently traced is ignored. If `untrace` is called without arguments, the values of all currently traced variables are restored.
+
+The following transcript demonstrates the use of `trace` and `untrace` in an interactive session to debug an incorrect procedure definition.
+
+[source,scheme,subs="quotes"]
+----
+> (define square-minus-one
+    (lambda (x)
+      (- (* x x) 2)))
+> (square-minus-one 3)
+7
+> (trace square-minus-one * -)
+(square-minus-one * -)
+> (square-minus-one 3)
+|(square-minus-one 3)
+| (* 3 3)
+| 9
+|(- 9 2)
+|7
+7
+> (define square-minus-one
+    (lambda (x)
+      (- (* x x) 1))) ; change the 2 to 1
+> (trace)
+(- *)
+> (square-minus-one 3)
+|(* 3 3)
+|9
+|(- 9 1)
+|8
+8
+> (untrace square-minus-one)
+()
+> (untrace * -)
+(- *)
+> (square-minus-one 3)
+8
+----
+
+The first call to `square-minus-one` indicates there is an error, the second (traced) call indicates the step at which the error occurs, the third call demonstrates that the fix works, and the fourth call demonstrates that `untrace` does not wipe out the fix.
+
+[horizontal]
+thread parameter:: `trace-output-port`
+libraries:: `(chezscheme)`
+
+`trace-output-port` is a parameter that determines the output port to which tracing information is sent. When called with no arguments, `trace-output-port` returns the current trace output port. When called with one argument, which must be a textual output port, `trace-output-port` changes the value of the current trace output port.
+
+[horizontal]
+thread parameter:: `trace-print`
+libraries:: `(chezscheme)`
+
+The value of `trace-print` must be a procedure of two arguments, an object and an output port. The trace package uses the value of `trace-print` to print the arguments and return values for each call to a traced procedure. `trace-print` is set to `pretty-print` by default.
+
+The trace package sets `pretty-initial-indent` to an appropriate value for the current nesting level before calling the value of `trace-print` so that multiline output can be indented properly.
+
+[horizontal]
+syntax:: `(trace-define _var_ _expr_)`
+syntax:: `(trace-define (_var_ . _idspec_) _body~1~_ _body~2~_ \...)`
+returns:: unspecified
+libraries:: `(chezscheme)`
+
+`trace-define` is a convenient shorthand for defining variables bound to traced procedures of the same name. The first form is equivalent to
+
+[source,scheme,subs="quotes"]
+----
+(define _var_
+  (let ([x _expr_])
+    (trace-lambda _var_ args
+      (apply x args))))
+----
+
+and the second is equivalent to
+
+[source,scheme,subs="quotes"]
+----
+(define _var_
+  (trace-lambda _var_ _idspec_
+    _body~1~_ _body~2~_ ...))
+----
+
+In the former case, `_expr_` must evaluate to a procedure.
+
+[source,scheme,subs="quotes"]
+----
+> (let ()
+    (trace-define plus
+      (lambda (x y)
+        (+ x y)))
+    (list (plus 3 4) (+ 5 6)))
+|(plus 3 4)
+|7
+(7 11)
+----
+
+[#debug:s15]
+[horizontal]
+syntax:: `(trace-define-syntax _keyword_ _expr_)`
+returns:: unspecified
+libraries:: `(chezscheme)`
+
+`trace-define-syntax` traces the input and output to the transformer value of `_expr_`, stripped of the contextual information used by the expander to maintain lexical scoping.
+
+[source,scheme,subs="quotes"]
+----
+> (trace-define-syntax let*
+    (syntax-rules ()
+      [(_ () b1 b2 ...)
+       (let () b1 b2 ...)]
+      [(_ ((x e) m ...) b1 b2 ...)
+       (let ((x e))
+         (let* (m ...) b1 b2 ...))]))
+> (let* ([x 3] [y (+ x x)]) (list x y))
+|(let* (let* [(x 3) (y (+ x x))] [list x y]))
+|(let ([x 3]) (let* ([y (+ x x)]) (list x y)))
+|(let* (let* [(y (+ x x))] [list x y]))
+|(let ([y (+ x x)]) (let* () (list x y)))
+|(let* (let* () [list x y]))
+|(let () (list x y))
+(3 6)
+----
+
+Without contextual information, the displayed forms are more readable but less precise, since different identifiers with the same name are indistinguishable, as shown in the example below.
+
+[source,scheme,subs="quotes"]
+----
+> (let ([x 0])
+    (trace-define-syntax a
+      (syntax-rules ()
+        [(_ y) (eq? x y)]))
+    (let ([x 1])
+      (a x)))
+|(a (a x))
+|(eq? x x)
+#f
+----
+
+=== Section 3.2. The Interactive Debugger [[section_3.2.]]
+
+The interactive debugger is entered as a result of a call to the procedure `debug` after an exception is handled by the default exception handler. It can also be entered directly from the default exception handler, for serious or non-warning conditions, if the parameter `debug-on-exception` is true.
+
+Within the debugger, the command "?" lists the debugger command options. These include commands to:
+
+- inspect the raise continuation,
+- display the condition,
+- inspect the condition, and
+- exit the debugger.
+
+The raise continuation is the continuation encapsulated within the condition, if any. The standard exception reporting procedures and forms `assert`, `assertion-violation`, and `error` as well as the _Chez Scheme_ procedures `assertion-violationf`, `errorf`, and `syntax-error` all raise exceptions with conditions that encapsulate the continuations of their calls, allowing the programmer to inspect the frames of pending calls at the point of a violation, error, or failed assertion.
+
+A variant of the interactive debugger, the break handler, is entered as the result of a keyboard interrupt handled by the default keyboard-interrupt handler or an explicit call to the procedure `break` handled by the default break handler. Again, the command "?" lists the command options. These include commands to:
+
+- exit the break handler and continue,
+- reset to the current café,
+- abort the entire Scheme session,
+- enter a new café,
+- inspect the current continuation, and
+- display program statistics (run time and memory usage).
+
+It is also usually possible to exit from the debugger or break handler by typing the end-of-file character ("control-D" under Unix, "control-Z" under Windows).
+
+[horizontal]
+procedure:: `(debug)`
+returns:: does not return
+libraries:: `(chezscheme)`
+
+When the default exception handler receives a serious or non-warning condition, it displays the condition and resets to the current café. Before it resets, it saves the condition in the parameter `debug-condition`. The `debug` procedure may be used to inspect the condition. Whenever one of the built-in error-reporting mechanisms is used to raise an exception, the continuation at the point where the exception was raised can be inspected as well. More generally, `debug` allows the continuation contained within any continuation condition created by `make-continuation-condition` to be inspected.
+
+If the parameter `debug-on-exception` is set to `#t`, the default exception handler enters the debugger directly for all serious and non-warning conditions, delaying its reset until after the debugger exits. The `--debug-on-exception` command-line option may be used to set `debug-on-exception` to `#t` from the command line, which is particularly useful when debugging scripts or top-level programs run via the `--script` or `--program` command-line options.
+
+=== Section 3.3. The Interactive Inspector [[section_3.3.]]
+
+The inspector may be called directly via the procedure `inspect` or indirectly from the debugger. It allows the programmer to examine circular objects, objects such as ports and procedures that do not have a reader syntax, and objects such as continuations and variables that are not directly accessible by the programmer, as well as ordinary printable Scheme objects.
+
+The primary intent of the inspector is examination, not alteration, of objects. The values of assignable variables may be changed from within the inspector, however. Assignable variables are generally limited to those for which assignments occur in the source program. It is also possible to invoke arbitrary procedures (including mutation procedures such as `set-car!`) on an object. No mechanism is provided for altering objects that are inherently immutable, e.g., nonassignable variables, procedures, and bignums, since doing so can violate assumptions made by the compiler and run-time system.
+
+The user is presented with a prompt line that includes a printed representation of the current object, abbreviated if necessary to fit on the line. Various commands are provided for displaying objects and moving around inside of objects. On-line descriptions of the command options are provided. The command "?" displays commands that apply specifically to the current object. The command "??" displays commands that are always applicable. The command "h" provides a brief description of how to use the inspector. The end-of-file character or the command "q" exits the inspector.
+
+[horizontal]
+procedure:: `(inspect _obj_)`
+returns:: unspecified
+libraries:: `(chezscheme)`
+
+Invokes the inspector on `_obj_`, as described above. The commands recognized by the inspector are listed below, categorized by the type of the current object.
+
+*Generally applicable commands*
+
+`help` or `h` displays a brief description of how to use the inspector.
+
+`?` displays commands applicable to the current type of object.
+
+`??` displays the generally applicable commands.
+
+`print` or `p` prints the current object (using `pretty-print`).
+
+`write` or `w` writes the current object (using `write`).
+
+`size` writes the size in bytes occupied by the current object (determined via `compute-size`), including any objects accessible from the current object except those for which the size was previously requested during the same interactive inspector session.
+
+`find` `_expr_` [ `_g_` ] evaluates `_expr_`, which should evaluate to a procedure of one argument, and searches (via `make-object-finder`) for the first occurrence of an object within the current object for which the predicate returns a true value, treating immediate values (e.g., fixnums), values in generations older than `_g_`, and values already visited during the search as leaves. If `_g_` is not unspecified, it defaults to the current maximum generation, i.e., the value of `collect-maximum-generation`. If specified, `_g_` must be an exact nonnegative integer less than or equal to the current maximum generation or the symbol `static` representing the static generation. If such an object is found, the inspector's focus moves to that object as if through a series of steps that lead from the current object to the located object, so that the `up` command can be used to determine where the object was found relative to the original object.
+
+`find-next` repeats the last `find`, locating an occurrence not previously found, if any.
+
+`up` or `u` `_n_` returns to the `_nth_` previous level. Used to move outwards in the structure of the inspected object. `_n_` defaults to 1.
+
+`top` or `t` returns to the outermost level of the inspected object.
+
+`forward` or `f` moves to the `_nth_` next expression. Used to move from one element to another of an object containing a sequence of elements, such as a list, vector, record, frame, or closure. `_n_` defaults to 1.
+
+`back` or `b` moves to the `_nth_` previous expression. Used to move from one element to another of an object containing a sequence of elements, such as a list, vector, record, frame, or closure. `_n_` defaults to 1.
+
+`\=>` `_expr_` sends the current object to the procedure value of `_expr_`. `_expr_` may begin on the current or following line and may span multiple lines.
+
+`file` `_path_` opens the source file at the specified path for listing. The parameter `source-directories` (<<section_12.5.,Section 12.5>>) determines the set of directories searched for source files.
+
+`list` `_line_` `_count_` lists `_count_` lines of the current source file (see `file`) starting at `_line_`. `_line_` defaults to the end of the previous set of lines listed and `_count_` defaults to ten or the number of lines previously listed. If `_line_` is negative, listing begins `_line_` lines before the previous set of lines listed.
+
+`files` shows the currently open source files.
+
+`mark` or `m` `_m_` marks the current location with the symbolic mark `_m_`. If `_m_` is not specified, the current location is marked with a unique default mark.
+
+`goto` or `g` `_m_` returns to the location marked `_m_`. If `_m_` is not specified, the inspector returns to the location marked with the default mark.
+
+`new-cafe` or `n` enters a new read-eval-print loop (café), giving access to the normal top-level environment.
+
+`quit` or `q` exits from the inspector.
+
+`reset` or `r` resets to the current café.
+
+`abort` or `a` `_x_` aborts from Scheme with exit status `_x_`, which defaults to -1.
+
+*Continuation commands*
+
+`show-frames` or `sf` shows the next `_n_` frames. If `_n_` is not specified, all frames are displayed.
+
+`depth` displays the number of frames in the continuation.
+
+`down` or `d` `_n_` move to the `_nth_` frame down in the continuation. `_n_` defaults to 1.
+
+`show` or `s` shows the continuation (next frame) and, if available, the calling procedure source, the pending call source, the closure, and the frame and free-variable values. Source is available only if generation of inspector information was enabled during compilation of the corresponding lambda expression.
+
+`show-local` or `sl` is like `show` or `s` except that free variable values are not shown. (If present, free variable values can be found by inspecting the closure.)
+
+`length` or `l` displays the number of elements in the topmost frame of the continuation.
+
+`ref` or `r` moves to the `_nth_` or named frame element. `_n_` defaults to 0. If multiple elements have the same name, only one is accessible by name, and the others must be accessed by number.
+
+`code` or `c` moves to the source for the calling procedure.
+
+`call` moves to the source for the pending call.
+
+`file` opens the source file containing the pending call, if known. The parameter `source-directories` (<<section_12.5.,Section 12.5>>) determines the list of source directories searched for source files identified by relative path names.
+
+For absolute pathnames starting with a `/` (or `\` or a directory specifier under Windows), the inspector tries the absolute pathname first, then looks for the last (filename) component of the path in the list of source directories. For pathnames starting with `./` (or `.\` under Windows) or `../` (or `..\` under Windows), the inspector looks in `"."` or `".."` first, as appropriate, then for the entire `.`- or `..`-prefixed pathname in the source directories, then for the last (filename) component in the source directories. For other (relative) pathnames, the inspector looks for the entire relative pathname in the list of source directories, then the last (filename) component in the list of source directories.
+
+If a file by the same name as but different contents from the original source file is found during this process, it will be skipped over. This typically happens because the file has been modified since it was compiled. Pass an explicit filename argument to force opening of a particular file (see the generally applicable commands above).
+
+`eval` or `e` `_expr_` evaluates the expression `_expr_` in an environment containing bindings for the elements of the frame. Within the evaluated expression, the value of each frame element `_n_` is accessible via the variable `%_n_`. Named elements are accessible via their names as well. Names are available only if generation of inspector information was enabled during compilation of the corresponding lambda expression.
+
+`set!` or `!` `_n_` `_e_` sets the value of the `_nth_` frame element to `_e_`, if the frame element corresponds to an assignable variable. `_n_` defaults to 0.
+
+*Procedure commands*
+
+`show` or `s` shows the source and free variables of the procedure. Source is available only if generation of inspector information was enabled during compilation of the corresponding lambda expression.
+
+`code` or `c` moves to the source for the procedure.
+
+`file` opens the file containing the procedure's source code, if known. See the description of the continuation `file` entry above for more information.
+
+`length` or `l` displays the number of free variables whose values are recorded in the procedure object.
+
+`ref` or `r` moves to the `_nth_` or named free variable. `_n_` defaults to 0. If multiple free variables have the same name, only one is accessible by name, and the others must be accessed by number.
+
+`set!` or `!` `_n_` `_e_` sets the value of the `_nth_` free variable to `_e_`, if the variable is assignable. `_n_` defaults to 0.
+
+`eval` or `e` `_expr_` evaluates the expression `_expr_` in an environment containing bindings for the free variables of the procedure. Within the evaluated expression, the value of each free variable `_n_` is accessible via the variable `%_n_`. Named free variables are accessible via their names as well. Names are available only if generation of inspector information was enabled during compilation of the corresponding lambda expression.
+
+*Pair (list) commands*
+
+`show` or `s` `_n_` shows the first `_n_` elements of the list. If `_n_` is not specified, all elements are displayed.
+
+`length` or `l` displays the list length.
+
+`car` moves to the object in the car of the current object.
+
+`cdr` moves to the object in the cdr.
+
+`ref` or `r` `_n_` moves to the `_nth_` element of the list. `_n_` defaults to 0.
+
+`tail` `_n_` moves to the `_nth_` cdr of the list. `_n_` defaults to 1.
+
+*Vector, Bytevector, and Fxvector commands*
+
+`show` or `s` `_n_` shows the first `_n_` elements of the vector. If `_n_` is not specified, all elements are displayed.
+
+`length` or `l` displays the vector length.
+
+`ref` or `r` `_n_` moves to the `_nth_` element of the vector. `_n_` defaults to 0.
+
+*String commands*
+
+`show` or `s` `_n_` shows the first `_n_` elements of the string. If `_n_` is not specified, all elements are displayed.
+
+`length` or `l` displays the string length.
+
+`ref` or `r` `_n_` moves to the `_nth_` element of the string. `_n_` defaults to 0.
+
+`unicode` `_n_` displays the first `_n_` elements of the string as hexadecimal Unicode scalar values.
+
+`ascii` `_n_` displays the first `_n_` elements of the string as hexadecimal ASCII values, using `--` to denote characters whose Unicode scalar values are not in the ASCII range.
+
+*Symbol commands*
+
+`show` or `s` shows the fields of the symbol.
+
+`value` or `v` moves to the top-level value of the symbol.
+
+`name` or `n` moves to the name of the symbol.
+
+`property-list` or `pl` moves to the property list of the symbol.
+
+`ref` or `r` `_n_` moves to the `_nth_` field of the symbol. Field 0 is the top-level value of the symbol, field 1 is the symbol's name, and field 2 is its property list. `_n_` defaults to 0.
+
+*Character commands*
+
+`unicode` displays the hexadecimal Unicode scalar value for the character.
+
+`ascii` displays the hexadecimal ASCII code for the character, using `--` to denote characters whose Unicode scalar values are not in the ASCII range.
+
+*Box commands*
+
+`show` or `s` shows the contents of the box.
+
+`unbox` or `ref` or `r` moves to the boxed object.
+
+*Port commands*
+
+`show` or `s` shows the fields of the port, including the input and output size, index, and buffer fields.
+
+`name` moves to the port's name.
+
+`handler` moves to the port's handler.
+
+`output-buffer` or `ob` moves to the port's output buffer.
+
+`input-buffer` or `ib` moves to the port's input buffer.
+
+*Record commands*
+
+`show` or `s` shows the contents of the record.
+
+`fields` moves to the list of field names of the record.
+
+`name` moves to the name of the record.
+
+`rtd` moves to the record-type descriptor of the record.
+
+`ref` or `r` `_name_` moves to the named field of the record, if accessible.
+
+`set!` or `!` `_name_` `_value_` sets the value of the named field of the record, if mutable.
+
+*Transport Link Cell (TLC) commands*
+
+`show` or `s` shows the fields of the TLC.
+
+`keyval` moves to the keyval of the TLC.
+
+`tconc` moves to the tconc of the TLC.
+
+`next` moves to the next link of the TLC.
+
+`ref` or `r` `_n_` moves to the `_nth_` field of the symbol. Field 0 is the keyval, field 1 the tconc, and field 2 the next link. `_n_` defaults to 0.
+
+=== Section 3.4. The Object Inspector [[section_3.4.]]
+
+A facility for noninteractive inspection is also provided to allow construction of different inspection interfaces. Like the interactive facility, it allows objects to be examined in ways not ordinarily possible. The noninteractive system follows a simple, object-oriented protocol. Ordinary Scheme objects are encapsulated in procedures, or inspector objects, that take symbolic messages and return either information about the encapsulated object or new inspector objects that encapsulate pieces of the object.
+
+[horizontal]
+procedure:: `(inspect/object _object_)`
+returns:: an inspector object procedure
+libraries:: `(chezscheme)`
+
+`inspect/object` is used to turn an ordinary Scheme object into an inspector object. All inspector objects accept the messages `type`, `print`, `write`, and `size`. The `type` message returns a symbolic representation of the type of the object. The `print` and `write` messages must be accompanied by a port parameter. They cause a representation of the object to be written to the port, using the Scheme procedures `pretty-print` and `write`. The `size` message returns a fixnum representing the size in bytes occupied by the object, including any objects accessible from the current object except those for which the size was already requested via an inspector object derived from the argument of the same `inspect/object` call.
+
+All inspector objects except for variable inspector objects accept the message `value`, which returns the actual object encapsulated in the inspector object.
+
+[source,scheme,subs="quotes"]
+----
+(define x (inspect/object '(1 2 3)))
+(x 'type) ⇒ pair
+(define p (open-output-string))
+(x 'write p)
+(get-output-string p) ⇒ "(1 2 3)"
+(x 'length) ⇒ (proper 3)
+(define y (x 'car))
+(y 'type) ⇒ simple
+(y 'value) ⇒ 1
+----
+
+*Pair inspector objects.* Pair inspector objects contain Scheme pairs.
+
+`(_pair-object_ 'type)` returns the symbol `pair`.
+
+`(_pair-object_ 'car)` returns an inspector object containing the "car" field of the pair.
+
+`(_pair-object_ 'cdr)` returns an inspector object containing the "cdr" field of the pair.
+
+`(_pair-object_ 'length)` returns a list of the form `(_type_ _count_)`. The type field contains the symbol `proper`, the symbol `improper`, or the symbol `circular`, depending on the structure of the list. The count field contains the number of distinct pairs in the list.
+
+*Box inspector objects.* Box inspector objects contain _Chez Scheme_ boxes.
+
+`(_box-object_ 'type)` returns the symbol `box`.
+
+`(_box-object_ 'unbox)` returns an inspector object containing the contents of the box.
+
+*TLC inspector objects.* Box inspector objects contain _Chez Scheme_ boxes.
+
+`(_tlc-object_ 'type)` returns the symbol `tlc`.
+
+`(_tlc-object_ 'keyval)` returns an inspector object containing the TLC's keyval.
+
+`(_tlc-object_ 'tconc)` returns an inspector object containing the TLC's tconc.
+
+`(_tlc-object_ 'next)` returns an inspector object containing the TLC's next link.
+
+*Vector, String, Bytevector, and Fxvector inspector objects.* Vector (bytevector, string, fxvector) inspector objects contain Scheme vectors (bytevectors, strings, fxvectors).
+
+`(_vector-object_ 'type)` returns the symbol `vector` (`string`, `bytevector`, `fxvector`).
+
+`(_vector-object_ 'length)` returns the number of elements in the vector or string.
+
+`(_vector-object_ 'ref _n_)` returns an inspector object containing the `_nth_` element of the vector or string.
+
+*Simple inspector objects.* Simple inspector objects contain unstructured, unmodifiable objects. These include numbers, booleans, the empty list, the end-of-file object, and the void object. They may be examined directly by asking for the `value` of the object.
+
+`(_simple-object_ 'type)` returns the symbol `simple`.
+
+*Unbound inspector objects.* Although unbound objects are not normally accessible to Scheme programs, they may be encountered when inspecting variables.
+
+`(_unbound-object_ 'type)` returns the symbol `unbound`.
+
+*Procedure inspector objects.* Procedure inspector objects contain Scheme procedures.
+
+`(_procedure-object_ 'type)` returns the symbol `procedure`.
+
+`(_procedure-object_ 'length)` returns the number of free variables.
+
+`(_procedure-object_ 'ref _n_)` returns an inspector object containing the `_nth_` free variable of the procedure. See the description below of variable inspector objects. `_n_` must be nonnegative and less than the length of the procedure.
+
+`(_procedure-object_ 'eval _expr_)` evaluates expr and returns its value. The values of the procedure's free variables are bound within the evaluated expression to identifiers of the form %__n__, where _n_ is the location number displayed by the inspector. The values of named variables are also bound to their names.
+
+`(_procedure-object_ 'code)` returns an inspector object containing the procedure's code object. See the description below of code inspector objects.
+
+*Continuation inspector objects.* Continuations created by `call/cc` are actually procedures. However, when inspecting such a procedure the underlying data structure that embodies the continuation may be exposed. A continuation structure contains the location at which computation is to resume, the variable values necessary to perform the computation, and a link to the next continuation.
+
+`(_continuation-object_ 'type)` returns the symbol `continuation`.
+
+`(_continuation-object_ 'length)` returns the number of free variables.
+
+`(_continuation-object_ 'ref _n_)` returns an inspector object containing the `_nth_` free variable of the continuation. See the description below of variable inspector objects. `_n_` must be nonnegative and less than the length of the continuation.
+
+`(_continuation-object_ 'eval _expr_)` evaluates expr and returns its value. The values of frame locations are bound within the evaluated expression to identifiers of the form %_n_, where _n_ is the location number displayed by the inspector. The values of named locations are also bound to their names.
+
+`(_continuation-object_ 'code)` returns an inspector object containing the code object for the procedure that was active when the current continuation frame was created. See the description below of code inspector objects.
+
+`(_continuation-object_ 'depth)` returns the number of frames in the continuation.
+
+`(_continuation-object_ 'link)` returns an inspector object containing the next continuation frame. The depth must be greater than 1.
+
+`(_continuation-object_ 'link* _n_)` returns an inspector object containing the `_nth_` continuation link. `_n_` must be less than the depth.
+
+`(_continuation-object_ 'source)` returns an inspector object containing the source information attached to the continuation (representing the source for the application that resulted in the formation of the continuation) or `#f` if no source information is attached.
+
+`(_continuation-object_ 'source-object)` returns an inspector object containing the source object for the procedure application that resulted in the formation of the continuation or `#f` if no source object is attached.
+
+`(_continuation-object_ 'source-path)` attempts to find the pathname of the file containing the source for the procedure application that resulted in the formation of the continuation. If successful, three values are returned to identify the file and position of the application within the file: `_path_`, `_line_`, and `_char_`. Two values, a file name and an absolute character position, are returned if the file name is known but the named file cannot be found. The search may be unsuccessful even if a file by the expected name is found in the path if the file has been modified since the source code was compiled. If no file name is known, no values are returned. The parameter `source-directories` (<<section_12.5.,Section 12.5>>) determines the set of directories searched for source files identified by relative path names.
+
+*Code inspector objects.* Code inspector objects contain _Chez Scheme_ code objects.
+
+`(_code-object_ 'type)` returns the symbol `code`.
+
+`(_code-object_ 'name)` returns a string or `#f`. The name associated with a code inspector object is the name of the variable to which the procedure was originally bound or assigned. Since the binding of a variable can be changed, this name association may not always be accurate. `#f` is returned if the inspector cannot determine a name for the procedure.
+
+`(_code-object_ 'source)` returns an inspector object containing the source information attached to the code object or `#f` if no source information is attached.
+
+`(_continuation-object_ 'source-object)` returns an inspector object containing the source object for the code object or `#f` if no source object is attached.
+
+`(_code-object_ 'source-path)` attempts to find the pathname of the file containing the source for the lambda expression that produced the code object. If successful, three values are returned to identify the file and position of the application within the file: `_path_`, `_line_`, and `_char_`. Two values, a file name and an absolute character position, are returned if the file name is known but the named file cannot be found. The search may be unsuccessful even if a file by the expected name is found in the path if the file has been modified since the source code was compiled. If no file name is known, no values are returned. The parameter `source-directories` (<<section_12.5.,Section 12.5>>) determines the set of directories searched for source files identified by relative path names.
+
+`(_code-object_ 'free-count)` returns the number of free variables in any procedure for which this is the corresponding code.
+
+*Variable inspector objects.* Variable inspector objects encapsulate variable bindings. Although the actual underlying representation varies, the variable inspector object provides a uniform interface.
+
+`(_variable-object_ 'type)` returns the symbol `variable`.
+
+`(_variable-object_ 'name)` returns a symbol or `#f`. `#f` is returned if the name is not available or if the variable is a compiler-generated temporary variable. Variable names are not retained when the parameter `generate-inspector-information` (<<section_12.6.,Section 12.6>>) is false during compilation.
+
+`(_variable-object_ 'ref)` returns an inspector object containing the current value of the variable.
+
+`(_variable-object_ 'set! _e_)` returns unspecified, after setting the current value of the variable to `_e_`. An exception is raised with condition type `&assertion` if the variable is not assignable.
+
+*Port inspector objects.* Port inspector objects contain ports.
+
+`(_port-object_ 'type)` returns the symbol `port`.
+
+`(_port-object_ 'input?)` returns `#t` if the port is an input port, `#f` otherwise.
+
+`(_port-object_ 'output?)` returns `#t` if the port is an output port, `#f` otherwise.
+
+`(_port-object_ 'binary?)` returns `#t` if the port is a binary port, `#f` otherwise.
+
+`(_port-object_ 'closed?)` returns `#t` if the port is closed, `#f` if the port is open.
+
+`(_port-object_ 'name)` returns an inspector object containing the port's name.
+
+`(_port-object_ 'handler)` returns a procedure inspector object encapsulating the port handler, such as would be returned by `port-handler`.
+
+`(_port-object_ 'output-size)` returns the output buffer size as a fixnum if the port is an output port (otherwise the value is unspecified).
+
+`(_port-object_ 'output-index)` returns the output buffer index as a fixnum if the port is an output port (otherwise the value is unspecified).
+
+`(_port-object_ 'output-buffer)` returns an inspector object containing the string used for buffered output.
+
+`(_port-object_ 'input-size)` returns the input buffer size as a fixnum if the port is an input port (otherwise the value is unspecified).
+
+`(_port-object_ 'input-index)` returns the input buffer index as a fixnum if the port is an input port (otherwise the value is unspecified).
+
+`(_port-object_ 'input-buffer)` returns an inspector object containing the string used for buffered input.
+
+*Symbol inspector objects.* Symbol inspector objects contain symbols. These include gensyms.
+
+`(_symbol-object_ 'type)` returns the symbol `symbol`.
+
+`(_symbol-object_ 'name)` returns a string inspector object. The string name associated with a symbol inspector object is the print representation of a symbol, such as would be returned by the procedure `symbol\->string`.
+
+`(_symbol-object_ 'gensym?)` returns `#t` if the symbol is a gensym, `#f` otherwise. Gensyms are created by `gensym`.
+
+`(_symbol-object_ 'top-level-value)` returns an inspector object containing the global value of the symbol.
+
+`(_symbol-object_ 'property-list)` returns an inspector object containing the property list for the symbol.
+
+*Record inspector objects.* Record inspector objects contain records.
+
+`(_record-object_ 'type)` returns the symbol `record`.
+
+`(_record-object_ 'name)` returns a string inspector object corresponding to the name of the record type.
+
+`(_record-object_ 'fields)` returns an inspector object containing a list of the field names of the record type.
+
+`(_record-object_ 'length)` returns the number of fields.
+
+`(_record-object_ 'rtd)` returns an inspector object containing the record-type descriptor of the record type.
+
+`(_record-object_ 'accessible? _name_)` returns `#t` if the named field is accessible, `#f` otherwise. A field may be inaccessible if optimized away by the compiler.
+
+`(_record-object_ 'ref _name_)` returns an inspector object containing the value of the named field. An exception is raised with condition type `&assertion` if the named field is not accessible.
+
+`(_record-object_ 'mutable? _name_)` returns `#t` if the named field is mutable, `#f` otherwise. A field is immutable if it is not declared mutable or if the compiler optimizes away all assignments to the field.
+
+`(_record-object_ 'set! _name_ _value_)` sets the value of the named field to `_value_`. An exception is raised with condition type `&assertion` if the named field is not assignable.
+
+=== Section 3.5. Locating objects [[section_3.5.]]
+
+[horizontal]
+procedure:: `(make-object-finder _pred_)`
+procedure:: `(make-object-finder _pred_ _g_)`
+procedure:: `(make-object-finder _pred_ _x_ _g_)`
+returns:: see below
+libraries:: `(chezscheme)`
+
+The procedure `make-object-finder` takes a predicate `_pred_` and two optional arguments: a starting point `_x_` and a maximum generation `_g_`. The starting point defaults to the value of the procedure `oblist`, and the maximum generation defaults to the value of the parameter `collect-maximum-generation`. `make-object-finder` returns an object finder `_p_` that can be used to search for objects satisfying `_pred_` within the starting-point object `_x_`. Immediate objects and objects in generations older than `_g_` are treated as leaves. `_p_` is a procedure accepting no arguments. If an object `_y_` satisfying `_pred_` can be found starting with `_x_`, `_p_` returns a list whose first element is `_y_` and whose remaining elements represent the path of objects from `_x_` to `_y_`, listed in reverse order. `_p_` can be invoked multiple times to find additional objects satisfying the predicate, if any. `_p_` returns `#f` if no more objects matching the predicate can be found.
+
+`_p_` maintains internal state recording where it has been so it can restart at the point of the last found object and not return the same object twice. The state can be several times the size of the starting-point object `_x_` and all that is reachable from `_x_`.
+
+The interactive inspector provides a convenient interface to the object finder in the form of `find` and `find-next` commands.
+
+Relocation tables for static code objects are discarded by default, which prevents object finders from providing accurate results when static code objects are involved. That is, they will not find any objects pointed to directly from a code object that has been promoted to the static generation. If this is a problem, the command-line argument `--retain-static-relocation` can be used to prevent the relocation tables from being discarded.
+
+=== Section 3.6. Nested object size and composition [[section_3.6.]]
+
+The procedures `compute-size` and `compute-composition` can be used to determine the size or composition of an object, including anything reachable via pointers from the object. Depending on the number of objects reachable from the object, the procedures potentially allocate a large amount of memory. In an application for which knowing the number, size, generation, and types of all objects in the heap is sufficient, `object-counts` is potentially much more efficient.
+
+These procedures treat immediate objects such as fixnums, booleans, and characters as zero-count, zero-byte leaves.
+
+By default, these procedures also treat static objects (those in the initial heap) as zero-count, zero-byte leaves. Both procedures accept an optional second argument that specifies the maximum generation of interest, with the symbol `static` being used to represent the static generation.
+
+Objects sometimes point to a great deal more than one might expect. For example, if static data is included, the procedure value of `(lambda (x) x)` points indirectly to the exception handling subsystem (because of the argument-count check) and many other things as a result of that.
+
+Relocation tables for static code objects are discarded by default, which prevents these procedures from providing accurate results when static code objects are involved. That is, they will not find any objects pointed to directly from a code object that has been promoted to the static generation. If accurate sizes and compositions for static code objects are required, the command-line argument `--retain-static-relocation` can be used to prevent the relocation tables from being discarded.
+
+[horizontal]
+procedure:: `(compute-size _object_)`
+procedure:: `(compute-size _object_ _generation_)`
+returns:: see below
+libraries:: `(chezscheme)`
+
+`_object_` can be any object. `_generation_` must be a fixnum between 0 and the value of `collect-maximum-generation`, inclusive, or the symbol `static`. If `_generation_` is not supplied, it defaults to the value of `collect-maximum-generation`.
+
+`compute-size` returns the amount of memory, in bytes, occupied by `_object_` and anything reachable from `_object_` in any generation less than or equal to `_generation_`. Immediate values such as fixnums, booleans, and characters have zero size.
+
+The following examples are valid for machines with 32-bit pointers.
+
+[source,scheme,subs="quotes"]
+----
+(compute-size 0) ⇒ 0
+(compute-size (cons 0 0)) ⇒ 8
+(compute-size (cons (vector #t #f) 0)) ⇒ 24
+
+(compute-size
+  (let ([x (cons 0 0)])
+    (set-car! x x)
+    (set-cdr! x x)
+    x))                  ⇒ 8
+
+(define-record-type frob (fields x))
+(collect 1 1) ; force rtd into generation 1
+(compute-size
+  (let ([x (make-frob 0)])
+    (cons x x))
+  0)                       ⇒ 16
+----
+
+[#debug:s31]
+[horizontal]
+procedure:: `(compute-composition _object_)`
+procedure:: `(compute-composition _object_ _generation_)`
+returns:: see below
+libraries:: `(chezscheme)`
+
+`_object_` can be any object. `_generation_` must be a fixnum between 0 and the value of `collect-maximum-generation`, inclusive, or the symbol `static`. If `_generation_` is not supplied, it defaults to the value of `collect-maximum-generation`.
+
+`compute-composition` returns an association list representing the composition of `_object_`, including anything reachable from it in any generation less than or equal to `_generation_`. The association list has the following structure:
+
+[source,scheme,subs="quotes"]
+----
+((_type_ _count_ . _bytes_) ...)
+----
+
+`_type_` is either the name of a primitive type, represented as a symbol, e.g., `pair`, or a record-type descriptor (rtd). `_count_` and `_bytes_` are nonnegative fixnums.
+
+Immediate values such as fixnums, booleans, and characters are not included in the composition.
+
+The following examples are valid for machines with 32-bit pointers.
+
+[source,scheme,subs="quotes"]
+----
+(compute-composition 0) ⇒ ()
+(compute-composition (cons 0 0)) ⇒ ((pair 1 . 8))
+(compute-composition
+  (cons (vector \#t #f) 0)) ⇒ ((pair 1 . 8) (vector 1 . 16))
+
+(compute-composition
+  (let ([x (cons 0 0)])
+    (set-car! x x)
+    (set-cdr! x x)
+    x))                 ⇒ ((pair 1 . 8)
+
+(define-record-type frob (fields x))
+(collect 1 1) ; force rtd into generation 1
+(compute-composition
+  (let ([x (make-frob 0)])
+    (cons x x))
+  0)                       ⇒ ((pair 1 . 8)
+                                (#&lt;record type frob&gt; 1 . 8))
+----
