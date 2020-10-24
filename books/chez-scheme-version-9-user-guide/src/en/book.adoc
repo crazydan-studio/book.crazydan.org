@@ -266,20 +266,23 @@ document.querySelectorAll('a').forEach(function(node) {
 |`++\[(\d+)\]++`
 |`++<<ref$1>>++`
 
-|`++(^\|\(\|[^=] )Chapter (\d+)++`
+|`++(^\|\(\|[^=]\s+)Chapter\s+(\d+)++`
 |`++$1<<chp_$2,Chapter $2>>++`
 
-|`++(^\|\(\|[^=] )Section ([\d\.]+\d)++`
+|`++(^\|\(\|[^=]\s+)Section\s+([\d\.]+\d)++`
 |`++$1<<section_$2.,Section $2>>++`
 
-|`++(^\|\(\|[^=] )Exercise ([\d\.]+\d)++`
+|`++(^\|\(\|[^=]\s+)Exercise\s+([\d\.]+\d)++`
 |`++$1<<exercise_$2,Exercise $2>>++`
 
-|`++Sections ([\d\.]+) and ([\d\.]+)++`
+|`++Sections\s+([\d\.]+)\s+and\s+([\d\.]+)++`
 |`++Sections <<section_$1.,$1>> and <<section_$2.,$2>>++`
 
 |`++`[^`]*\(\([^`]+\)\)[^`]*`++`
 |Add slash to the first double brackets
+
+|`++`[^`]*\s+\.\.\.[^`]*`++`
+|Add slash to the head of \...
 
 |`++(^$\|\[.+\])\n([\w\s]+::)++`
 |`++$1\n[horizontal]\n$2++`
