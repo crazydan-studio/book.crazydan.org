@@ -1,7 +1,7 @@
 [#chp_6]
 == Chapter 6. Control Structures
 
-This chapter describes _Chez Scheme_ extensions to the set of standard control structures. See link:../../the-scheme-programming-language-4th/en/index.html#chp_control_operations[Chapter 5] of _The Scheme Programming Language, 4th Edition_ or the Revised^6^ Report on Scheme for a description of standard control structures.
+This chapter describes _Chez Scheme_ extensions to the set of standard control structures. See link:../../the-scheme-programming-language-4th/en/index.html#chp_5[Chapter 5] of _The Scheme Programming Language, 4th Edition_ or the Revised^6^ Report on Scheme for a description of standard control structures.
 
 === Section 6.1. Conditionals [[section_6.1.]]
 

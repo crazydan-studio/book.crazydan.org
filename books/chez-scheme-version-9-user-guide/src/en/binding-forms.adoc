@@ -1,7 +1,7 @@
 [#chp_5]
 == Chapter 5. Binding Forms
 
-This chapter describes _Chez Scheme_ extensions to the set of Revised^6^ Report binding forms. See link:../../the-scheme-programming-language-4th/en/index.html#chp_procedures_and_variable_bindings[Chapter 4] of _The Scheme Programming Language, 4th Edition_ or the Revised^6^ Report for a description of standard binding forms.
+This chapter describes _Chez Scheme_ extensions to the set of Revised^6^ Report binding forms. See link:../../the-scheme-programming-language-4th/en/index.html#chp_4[Chapter 4] of _The Scheme Programming Language, 4th Edition_ or the Revised^6^ Report for a description of standard binding forms.
 
 === Section 5.1. Definitions [[section_5.1.]]
 
