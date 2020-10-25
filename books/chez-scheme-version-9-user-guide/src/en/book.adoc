@@ -284,7 +284,7 @@ document.querySelectorAll('a').forEach(function(node) {
 |`++`[^`]*\s+\.\.\.[^`]*`++`
 |Add slash to the head of \...
 
-|`++(^$\|\[.+\])\n([\w\s]+::)++`
+|`++(^$\|^\[.+\])\n([\w\s]+::)++`
 |`++$1\n[horizontal]\n$2++`
 |===
 
