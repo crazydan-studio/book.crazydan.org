@@ -263,8 +263,8 @@ document.querySelectorAll('a').forEach(function(node) {
 |===
 |Regex |Replacement
 
-|`++\[(\d+)\]++`
-|`++<<ref$1>>++`
+|`++\[(<<ref\d+>>)\]++`
+|`++$1++`
 
 |`++(^\|\(\|[^=]\s+)Chapter\s+(\d+)++`
 |`++$1<<chp_$2,Chapter $2>>++`
