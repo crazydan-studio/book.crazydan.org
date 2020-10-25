@@ -1,4 +1,4 @@
-[#chp_getting_started]
+[#chp_2]
 == Chapter 2. Getting Started
 
 image::images/ch2.png[]

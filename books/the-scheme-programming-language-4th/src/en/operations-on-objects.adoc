@@ -1,9 +1,9 @@
-[#chp_operations_on_objects]
+[#chp_6]
 == Chapter 6. Operations on Objects
 
 image::images/ch6.png[]
 
-This chapter describes the operations on objects, including lists, numbers, characters, strings, vectors, bytevectors, symbols, booleans, hashtables, and enumerations. The first section covers constant objects and quotation. The second section describes generic equivalence predicates for comparing two objects and predicates for determining the type of an object. Later sections describe procedures that deal primarily with one of the object types mentioned above. There is no section treating operations on procedures, since the only operation defined specifically for procedures is application, and this is described in <<chp_control_operations,Chapter 5>>. Operations on ports are covered in the more general discussion of input and output in <<chp_input_and_output,Chapter 7>>. A mechanism for defining new data types is described in <<chp_records,Chapter 9>>.
+This chapter describes the operations on objects, including lists, numbers, characters, strings, vectors, bytevectors, symbols, booleans, hashtables, and enumerations. The first section covers constant objects and quotation. The second section describes generic equivalence predicates for comparing two objects and predicates for determining the type of an object. Later sections describe procedures that deal primarily with one of the object types mentioned above. There is no section treating operations on procedures, since the only operation defined specifically for procedures is application, and this is described in <<chp_5,Chapter 5>>. Operations on ports are covered in the more general discussion of input and output in <<chp_7,Chapter 7>>. A mechanism for defining new data types is described in <<chp_9,Chapter 9>>.
 
 === Section 6.1. Constants and Quotation [[section_6.1.]]
 
@@ -3448,7 +3448,7 @@ libraries:: `(rnrs arithmetic flonums)`, `(rnrs)`
 [#objects:s199]
 Characters are atomic objects representing letters, digits, special symbols such as `$` or `-`, and certain nongraphic control characters such as space and newline. Characters are written with a `\#\` prefix. For most characters, the prefix is followed by the character itself. The written character representation of the letter `A`, for example, is `#\A`. The characters newline, space, and tab may be written in this manner as well, but they can be written more clearly as `\#\newline`, `#\space`, and `\#\tab`. Other character names are supported as well, as defined by the grammar for character objects on <<grammar:characters,page 457>>. Any Unicode character may be written with the syntax `#\x__n__`, where `_n_` consists of one or more hexadecimal digits and represents a valid Unicode scalar value.
 
-This section describes the operations that deal primarily with characters. See also the following section on strings and <<chp_input_and_output,Chapter 7>> on input and output for other operations relating to characters.
+This section describes the operations that deal primarily with characters. See also the following section on strings and <<chp_7,Chapter 7>> on input and output for other operations relating to characters.
 
 [#objects:s201]
 [horizontal]

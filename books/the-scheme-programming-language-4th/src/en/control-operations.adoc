@@ -1,4 +1,4 @@
-[#chp_control_operations]
+[#chp_5]
 == Chapter 5. Control Operations
 
 image::images/ch5.png[]
@@ -1363,7 +1363,7 @@ procedure:: `(environment _import-spec_ \...)`
 returns:: an environment
 libraries:: `(rnrs eval)`
 
-`environment` returns an environment formed from the combined bindings of the given import specifiers. Each `_import-spec_` must be an s-expression representing a valid import specifier (see <<chp_libraries_and_top_level_programs,Chapter 10>>).
+`environment` returns an environment formed from the combined bindings of the given import specifiers. Each `_import-spec_` must be an s-expression representing a valid import specifier (see <<chp_10,Chapter 10>>).
 
 [source,scheme,subs=""]
 ----

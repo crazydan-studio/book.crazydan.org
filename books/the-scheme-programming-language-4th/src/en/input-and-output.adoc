@@ -1,4 +1,4 @@
-[#chp_input_and_output]
+[#chp_7]
 == Chapter 7. Input and Output
 
 image::images/ch7.png[]
