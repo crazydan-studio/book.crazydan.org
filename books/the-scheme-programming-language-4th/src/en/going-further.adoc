@@ -1,4 +1,4 @@
-[#chp_going_further]
+[#chp_3]
 == Chapter 3. Going Further
 
 image::images/ch3.png[]
@@ -15,7 +15,7 @@ It _is_ necessary for a Scheme implementation to distinguish between core forms 
 
 The exact set of syntactic forms making up the core of the language is thus subject to debate, although it must be possible to derive all other forms from any set of forms declared to be core forms. The set described here is among the simplest for which this constraint is satisfied.
 
-The core syntactic forms include top-level `define` forms, constants, variables, procedure applications, `quote` expressions, `lambda` expressions, `if` expressions, and `set!` expressions. The grammar below describes the core syntax of Scheme in terms of these definitions and expressions. In the grammar, vertical bars ( | ) separate alternatives, and a form followed by an asterisk ( * ) represents zero or more occurrences of the form. <variable> is any Scheme identifier. <datum> is any Scheme object, such as a number, list, symbol, or vector. <boolean> is either `#t` or `#f`, <number> is any number, <character> is any character, and <string> is any string. We have already seen examples of numbers, strings, lists, symbols, and booleans. See <<chp_operations_on_objects,Chapter 6>> or the formal syntax description starting on <<formal_syntax,page 455>> for more on the object-level syntax of these and other objects.
+The core syntactic forms include top-level `define` forms, constants, variables, procedure applications, `quote` expressions, `lambda` expressions, `if` expressions, and `set!` expressions. The grammar below describes the core syntax of Scheme in terms of these definitions and expressions. In the grammar, vertical bars ( | ) separate alternatives, and a form followed by an asterisk ( * ) represents zero or more occurrences of the form. <variable> is any Scheme identifier. <datum> is any Scheme object, such as a number, list, symbol, or vector. <boolean> is either `#t` or `#f`, <number> is any number, <character> is any character, and <string> is any string. We have already seen examples of numbers, strings, lists, symbols, and booleans. See <<chp_6,Chapter 6>> or the formal syntax description starting on <<formal_syntax,page 455>> for more on the object-level syntax of these and other objects.
 
 [%autowidth,grid=none,frame=none]
 |===
@@ -71,9 +71,9 @@ Syntactic extensions are defined with `define-syntax`. `define-syntax` is simila
      ((lambda (x ...) b1 b2 ...) e ...)]))
 ----
 
-The identifier appearing after `define-syntax` is the name, or keyword, of the syntactic extension being defined, in this case `let`. The `syntax-rules` form is an expression that evaluates to a transformer. The item following `syntax-rules` is a list of _auxiliary keywords_ and is nearly always `()`. An example of an auxiliary keyword is the `else` of `cond`. (Other examples requiring the use of auxiliary keywords are given in  <<chp_syntactic_extension,Chapter 8>>.) Following the list of auxiliary keywords is a sequence of one or more _rules_, or _pattern/template_ pairs. Only one rule appears in our definition of `let`. The pattern part of a rule specifies the form that the input must take, and the template specifies to what the input should be transformed.
+The identifier appearing after `define-syntax` is the name, or keyword, of the syntactic extension being defined, in this case `let`. The `syntax-rules` form is an expression that evaluates to a transformer. The item following `syntax-rules` is a list of _auxiliary keywords_ and is nearly always `()`. An example of an auxiliary keyword is the `else` of `cond`. (Other examples requiring the use of auxiliary keywords are given in  <<chp_8,Chapter 8>>.) Following the list of auxiliary keywords is a sequence of one or more _rules_, or _pattern/template_ pairs. Only one rule appears in our definition of `let`. The pattern part of a rule specifies the form that the input must take, and the template specifies to what the input should be transformed.
 
-The pattern should always be a structured expression whose first element is an underscore ( `\_` ). (As we will see in  <<chp_syntactic_extension,Chapter 8>>, the use of `_` is only a convention, but it is a good one to follow.) If more than one rule is present, the appropriate one is chosen by matching the patterns, in order, against the input during expansion. It is a syntax violation if none of the patterns match the input.
+The pattern should always be a structured expression whose first element is an underscore ( `\_` ). (As we will see in  <<chp_8,Chapter 8>>, the use of `_` is only a convention, but it is a good one to follow.) If more than one rule is present, the appropriate one is chosen by matching the patterns, in order, against the input during expansion. It is a syntax violation if none of the patterns match the input.
 
 Identifiers other than an underscore or ellipsis appearing within a pattern are _pattern variables_, unless they are listed as auxiliary keywords. Pattern variables match any substructure and are bound to that substructure within the corresponding template. The notation `_pat_ \...` in the pattern allows for zero or more expressions matching the ellipsis prototype `_pat_` in the input. Similarly, the notation `_expr_ \...` in the template produces zero or more expressions from the ellipsis prototype `_expr_` in the output. The number of ``__pat__``s in the input determines the number of ``__expr__``s in the output; in order for this to work, any ellipsis prototype in the template must contain at least one pattern variable from an ellipsis prototype in the pattern.
 
@@ -1196,7 +1196,7 @@ If your Scheme implementation supports `import` in the interactive top level, yo
 (gpa->grade 2.8) ⇒ b
 ----
 
-<<chp_libraries_and_top_level_programs,Chapter 10>> describes libraries in more detail and provides additional examples of their use.
+<<chp_10,Chapter 10>> describes libraries in more detail and provides additional examples of their use.
 
 ==== Exercise 3.6.1 [[exercise_3.6.1]]
 

@@ -1,11 +1,11 @@
-[#chp_procedures_and_variable_bindings]
+[#chp_4]
 == Chapter 4. Procedures and Variable Bindings
 
 image::images/ch4.png[]
 
 Procedures and variable bindings are the fundamental building blocks of Scheme programs. This chapter describes the small set of syntactic forms whose primary purpose is to create procedures and manipulate variable bindings. It begins with the two most fundamental building blocks of Scheme programs: variable references and `lambda` expressions, and continues with descriptions of the variable binding and assignment forms such as `define`, `letrec`, `let-values`, and `set!`.
 
-Various other forms that bind or assign variables for which the binding or assignment is not the primary purpose (such as named `let`) are found in <<chp_control_operations,Chapter 5>>.
+Various other forms that bind or assign variables for which the binding or assignment is not the primary purpose (such as named `let`) are found in <<chp_5,Chapter 5>>.
 
 === Section 4.1. Variable References [[section_4.1.]]
 
@@ -389,7 +389,7 @@ where `_formals_` is `(_var~1~_ \...)`, `_var~r~_`, or `(_var~1~_ _var~2~_ \... 
 
 Definitions may appear at the front of a `library` body, anywhere among the forms of a top-level-program body, and at the front of a `lambda` or `case-lambda` body or the body of any form derived from `lambda`, e.g., `let`, or `letrec*`. Any body that begins with a sequence of definitions is transformed during macro expansion into a `letrec*` expression as described on <<body-expansion,page 292>>.
 
-Syntax definitions may appear along with variable definitions wherever variable definitions may appear; see <<chp_syntactic_extension,Chapter 8>>.
+Syntax definitions may appear along with variable definitions wherever variable definitions may appear; see <<chp_8,Chapter 8>>.
 
 [source,scheme,subs=""]
 ----

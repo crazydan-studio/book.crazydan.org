@@ -1,4 +1,4 @@
-[#chp_syntactic_extension]
+[#chp_8]
 == Chapter 8. Syntactic Extension
 
 image::images/ch8.png[]

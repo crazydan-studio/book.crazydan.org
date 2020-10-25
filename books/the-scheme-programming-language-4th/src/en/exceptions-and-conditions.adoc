@@ -1,4 +1,4 @@
-[#chp_exceptions_and_conditions]
+[#chp_11]
 == Chapter 11. Exceptions and Conditions
 
 image::images/ch11.png[]
@@ -161,7 +161,7 @@ Condition types are similar to record types but are more flexible in that a cond
 syntax:: `&condition`
 libraries:: `(rnrs conditions)`, `(rnrs)`
 
-`&condition` is a record-type name (<<chp_records,Chapter 9>>) and the root of the condition-type hierarchy. All simple condition types are extensions of this type, and all conditions, whether simple or compound, are considered instances of this type.
+`&condition` is a record-type name (<<chp_9,Chapter 9>>) and the root of the condition-type hierarchy. All simple condition types are extensions of this type, and all conditions, whether simple or compound, are considered instances of this type.
 
 [#exceptions:s14]
 [horizontal]

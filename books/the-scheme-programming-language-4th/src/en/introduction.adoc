@@ -1,4 +1,4 @@
-[#chp_introduction]
+[#chp_1]
 == Chapter 1. Introduction
 
 image::images/ch1.png[]
@@ -56,7 +56,7 @@ Structured forms and list constants are enclosed within parentheses, e.g., `(a b
 
 Strings are enclosed in double quotation marks, e.g., `"I am a string"`. Characters are preceded by `\#\`, e.g., `#\a`. Case is important within character and string constants, as within identifiers. Numbers may be written as integers, e.g., -123, as ratios, e.g., 1/2, in floating-point or scientific notation, e.g., 1.3 or 1e23, or as complex numbers in rectangular or polar notation, e.g., 1.3-2.7i or -1.2@73. Case is not important in the syntax of a number. The boolean values representing _true_ and _false_ are written `#t` and `#f`. Scheme conditional expressions actually treat `#f` as false and all other objects as true, so `3`, `0`, `()`, `"false"`, and `nil` all count as true.
 
-Details of the syntax for each type of constant data are given in the individual sections of <<chp_operations_on_objects,Chapter 6>> and in the formal syntax of Scheme starting on page <<formal_syntax,455>>.
+Details of the syntax for each type of constant data are given in the individual sections of <<chp_6,Chapter 6>> and in the formal syntax of Scheme starting on page <<formal_syntax,455>>.
 
 Scheme expressions may span several lines, and no explicit terminator is required. Since the number of whitespace characters (spaces and newlines) between expressions is not significant, Scheme programs should be indented to show the structure of the code in a way that makes the code as readable as possible. Comments may appear on any line of a Scheme program, between a semicolon ( `;` ) and the end of the line. Comments explaining a particular Scheme expression are normally placed at the same indentation level as the expression, on the line before the expression. Comments explaining a procedure or group of procedures are normally placed before the procedures, without indentation. Multiple comment characters are often used to set off the latter kind of comment, e.g., `++;;;++ The following procedures \...`.
 
