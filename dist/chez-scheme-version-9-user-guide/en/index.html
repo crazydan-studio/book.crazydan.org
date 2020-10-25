@@ -64,8 +64,23 @@
 <li><a href="#section_4.9.">Section 4.9. Example: Socket Operations</a></li>
 </ul>
 </li>
-<li><a href="#chp_5">Chapter 5. Binding Forms</a></li>
-<li><a href="#chp_6">Chapter 6. Control Structures</a></li>
+<li><a href="#chp_5">Chapter 5. Binding Forms</a>
+<ul class="sectlevel2">
+<li><a href="#section_5.1.">Section 5.1. Definitions</a></li>
+<li><a href="#section_5.2.">Section 5.2. Multiple-value Definitions</a></li>
+<li><a href="#section_5.3.">Section 5.3. Recursive Bindings</a></li>
+<li><a href="#section_5.4.">Section 5.4. Fluid Bindings</a></li>
+<li><a href="#section_5.5.">Section 5.5. Top-Level Bindings</a></li>
+</ul>
+</li>
+<li><a href="#chp_6">Chapter 6. Control Structures</a>
+<ul class="sectlevel2">
+<li><a href="#section_6.1.">Section 6.1. Conditionals</a></li>
+<li><a href="#section_6.2.">Section 6.2. Mapping and Folding</a></li>
+<li><a href="#section_6.3.">Section 6.3. Continuations</a></li>
+<li><a href="#section_6.4.">Section 6.4. Engines</a></li>
+</ul>
+</li>
 <li><a href="#chp_7">Chapter 7. Operations on Objects</a></li>
 <li><a href="#chp_8">Chapter 8. Numeric Operations</a></li>
 <li><a href="#chp_9">Chapter 9. Input/Output Operations</a></li>
@@ -6968,13 +6983,1477 @@ server:
 <div class="sect1">
 <h2 id="chp_5">Chapter 5. Binding Forms</h2>
 <div class="sectionbody">
+<div class="paragraph">
+<p>This chapter describes <em>Chez Scheme</em> extensions to the set of Revised<sup>6</sup> Report binding forms. See <a href="../../the-scheme-programming-language-4th/en/index.html#chp_procedures_and_variable_bindings">Chapter 4</a> of <em>The Scheme Programming Language, 4th Edition</em> or the Revised<sup>6</sup> Report for a description of standard binding forms.</p>
+</div>
+<div class="sect2">
+<h3 id="section_5.1.">Section 5.1. Definitions</h3>
+<div class="paragraph">
+<p>A definition in Revised<sup>6</sup> Report Scheme is a variable definition, keyword definition, or derived definition, i.e., a syntactic extension that expands into a definition. In addition, the forms within a <code>begin</code> expression appearing after a sequence of definitions is spliced onto the end of the sequence of definitions so that definitions at the front of the <code>begin</code> expression are treated as if they were part of the outer sequence of definitions. A <code>let-syntax</code> or <code>letrec-syntax</code> form is treated similarly, so that definitions at the front of the body are treated as if they were part of the outer sequence of definitions, albeit scoped where the bindings of the <code>let-syntax</code> or <code>letrec-syntax</code> form are visible.</p>
+</div>
+<div class="paragraph">
+<p><em>Chez Scheme</em> extends the set of definitions to include <code>module</code> forms, <code>import</code> forms, <code>import-only</code> forms, <code>meta</code> definitions, and <code>alias</code> forms, although the <code>module</code>, <code>import</code>, <code>import-only</code>, <code>meta</code>, and <code>alias</code> keywords are not available in a library or RNRS top-level program unless the <code>scheme</code> library is included in the library or top-level programs imports. These forms are described in <a href="#chp_11">Chapter 11</a>.</p>
+</div>
+<div class="paragraph">
+<p>In Revised<sup>6</sup> Report Scheme, definitions can appear at the front of a <code>lambda</code> or similar body (e.g., a <code>let</code> or <code>letrec</code> body), at the front of a library body, or intermixed with expressions within an RNRS top-level program body. In <em>Chez Scheme</em>, definitions may also be used in the interactive top-level, i.e., they can be intermixed with expressions in the REPL or in program text to be loaded from a file via <code>load</code> (<a href="#section_12.4.">Section 12.4</a>). The Revised<sup>6</sup> Report does not mandate the existence nor specify the semantics of an interactive top-level, nor of a <code>load</code> procedure.</p>
+</div>
+<div class="paragraph">
+<p>The macro expander uses the same two-pass algorithm for expanding top-level <code>begin</code> expressions as it uses for a <code>lambda</code>, <code>library</code>, or top-level program body. (This algorithm is described in <a href="../../the-scheme-programming-language-4th/en/index.html#section_8.1.">Section 8.1</a> of <em>The Scheme Programming Language, 4th Edition</em>.) As a result,</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="scheme" class="language-scheme hljs">(begin
+  (define-syntax a (identifier-syntax 3))
+  (define x a))</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>and</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="scheme" class="language-scheme hljs">(begin
+  (define x a)
+  (define-syntax a (identifier-syntax 3)))</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>both result in the giving <code>x</code> the value 3, even though an unbound variable reference to <code>a</code> would result if the two forms within the latter <code>begin</code> expression were run independently at top level.</p>
+</div>
+<div class="paragraph">
+<p>Similarly, the <code>begin</code> form produced by a use of</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="scheme" class="language-scheme hljs">(define-syntax define-constant
+  (syntax-rules ()
+    [(_ x e)
+     (begin
+       (define t e)
+       (define-syntax x (identifier-syntax t)))]))</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>and the <code>begin</code> form produced by a use of</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="scheme" class="language-scheme hljs">(define-syntax define-constant
+  (syntax-rules ()
+    [(_ x e)
+     (begin
+       (define-syntax x (identifier-syntax t))
+       (define t e))]))</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>are equivalent.</p>
+</div>
+<div class="paragraph">
+<p>The Revised<sup>6</sup> Report specifies that internal variable definitions be treated like <code>letrec*</code>, while earlier reports required internal variable definitions to be treated like <code>letrec</code>. By default, <em>Chez Scheme</em> implements the Revised<sup>6</sup> Report semantics for internal variable definitions, as for all other things, but this behavior may be overridden via the <code>internal-defines-as-letrec*</code> parameter.</p>
+</div>
+<div class="hdlist">
+<table>
+<tr>
+<td class="hdlist1">
+thread parameter
+</td>
+<td class="hdlist2">
+<p><code>internal-defines-as-letrec*</code></p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+libraries
+</td>
+<td class="hdlist2">
+<p><code>(chezscheme)</code></p>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>When this parameter is set to <code>#t</code> (the default), internal variable definitions are evaluated using <code>letrec*</code> semantics. It may be set to <code>#f</code> to revert to the <code>letrec</code> semantics for internal variable definitions, for backward compatibility.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="section_5.2.">Section 5.2. Multiple-value Definitions</h3>
+<div class="hdlist">
+<table>
+<tr>
+<td class="hdlist1">
+syntax
+</td>
+<td class="hdlist2">
+<p><code>(define-values <em>formals</em> <em>expr</em>)</code></p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+libraries
+</td>
+<td class="hdlist2">
+<p><code>(chezscheme)</code></p>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>A <code>define-values</code> form is a definition and can appear anywhere other definitions can appear. It is like a <code>define</code> form but permits an arbitrary formals list (like <code>lambda</code>) on the left-hand side. It evaluates <code><em>expr</em></code> and binds the variables appearing in <code><em>formals</em></code> to the resulting values, in the same manner as the formal parameters of a procedure are bound to its arguments.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="scheme" class="language-scheme hljs">(let ()
+  (define-values (x y) (values 1 2))
+  (list x y)) ⇒ (1 2)
+(let ()
+  (define-values (x y . z) (values 1 2 3 4))
+  (list x y z)) ⇒ (1 2 (3 4))</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>A <code>define-values</code> form expands into a sequence of definitions, the first for a hidden temporary bound to a data structure holding the values returned by <code><em>expr</em></code> and the remainder binding each of the formals to the corresponding value or list of values, extracted from the data structure via a reference to the temporary. Because the temporary must be defined before the other variables are defined, this works for internal <code>define-values</code> forms only if <code>internal-defines-as-letrec*</code> is set to the default value <code>#t</code>.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="section_5.3.">Section 5.3. Recursive Bindings</h3>
+<div class="hdlist">
+<table>
+<tr>
+<td class="hdlist1">
+syntax
+</td>
+<td class="hdlist2">
+<p><code>(rec <em>var</em> <em>expr</em>)</code></p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+returns
+</td>
+<td class="hdlist2">
+<p>value of <code><em>expr</em></code></p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+libraries
+</td>
+<td class="hdlist2">
+<p><code>(chezscheme)</code></p>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>The syntactic form <code>rec</code> creates a recursive object from <code><em>expr</em></code> by establishing a binding of <code><em>var</em></code> within <code><em>expr</em></code> to the value of <code><em>expr</em></code>. In essence, it is a special case of <code>letrec</code> for self-recursive objects.</p>
+</div>
+<div class="paragraph">
+<p>This form is useful for creating recursive objects (especially procedures) that do not depend on external variables for the recursion, which are sometimes undesirable because the external bindings can change. For example, a recursive procedure defined at top level depends on the value of the top-level variable given as its name. If the value of this variable should change, the meaning of the procedure itself would change. If the procedure is defined instead with <code>rec</code>, its meaning is independent of the variable to which it is bound.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="scheme" class="language-scheme hljs">(map (rec sum
+       (lambda (x)
+         (if (= x 0)
+             0
+             (+ x (sum (- x 1))))))
+     '(0 1 2 3 4 5)) ⇒ (0 1 3 6 10 15)
 
+(define cycle
+  (rec self
+    (list (lambda () self))))
+
+(eq? ((car cycle)) cycle) ⇒ #t</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The definition below expands <code>rec</code> in terms of <code>letrec</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="scheme" class="language-scheme hljs">(define-syntax rec
+  (syntax-rules ()
+    [(_ x e) (letrec ((x e)) x)]))</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="section_5.4.">Section 5.4. Fluid Bindings</h3>
+<div class="hdlist">
+<table>
+<tr>
+<td class="hdlist1">
+syntax
+</td>
+<td class="hdlist2">
+<p><code>(fluid-let ((<em>var</em> <em>expr</em>) ...) <em>body<sub>1</sub></em> <em>body<sub>2</sub></em> ...)</code></p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+returns
+</td>
+<td class="hdlist2">
+<p>the values of the body <code><em>body<sub>1</sub></em> <em>body<sub>2</sub></em> ...</code></p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+libraries
+</td>
+<td class="hdlist2">
+<p><code>(chezscheme)</code></p>
+</td>
+</tr>
+</table>
+</div>
+<div id="binding:s21" class="paragraph">
+<p>The syntactic form <code>fluid-let</code> provides a way to temporarily assign values to a set of variables. The new values are in effect only during the evaluation of the body of the <code>fluid-let</code> expression. The scopes of the variables are not determined by <code>fluid-let</code>; as with <code>set!</code>, the variables must be bound at top level or by an enclosing <code>lambda</code> or other binding form. It is possible, therefore, to control the scope of a variable with <code>lambda</code> or <code>let</code> while establishing a temporary value with <code>fluid-let</code>.</p>
+</div>
+<div class="paragraph">
+<p>Although it is similar in appearance to <code>let</code>, its operation is more like that of <code>set!</code>. Each <code><em>var</em></code> is assigned, as with <code>set!</code>, to the value of the corresponding <code><em>expr</em></code> within the body <code><em>body<sub>1</sub></em> <em>body<sub>2</sub></em> ...</code>. Should the body exit normally or by invoking a continuation made outside of the body (see <code>call/cc</code>), the values in effect before the bindings were changed are restored. Should control return back to the body by the invocation of a continuation created within the body, the bindings are changed once again to the values in effect when the body last exited.</p>
+</div>
+<div class="paragraph">
+<p>Fluid bindings are most useful for maintaining variables that must be shared by a group of procedures. Upon entry to the group of procedures, the shared variables are fluidly bound to a new set of initial values so that on exit the original values are restored automatically. In this way, the group of procedures itself can be reentrant; it may call itself directly or indirectly without affecting the values of its shared variables.</p>
+</div>
+<div class="paragraph">
+<p>Fluid bindings are similar to <em>special</em> bindings in Common Lisp <a href="#ref30">[30]</a>, except that (1) there is a single namespace for both lexical and fluid bindings, and (2) the scope of a fluidly bound variable is not necessarily global.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="scheme" class="language-scheme hljs">(let ([x 3])
+  (+ (fluid-let ([x 5])
+       x)
+     x)) ⇒ 8
+
+(let ([x 'a])
+  (letrec ([f (lambda (y) (cons x y))])
+    (fluid-let ([x 'b])
+      (f 'c)))) ⇒ (b . c)
+
+(let ([x 'a])
+  (call/cc
+    (lambda (k)
+       (fluid-let ([x 'b])
+         (letrec ([f (lambda (y) (k '*))])
+           (f '*)))))
+  x) ⇒ a</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>fluid-let</code> may be defined in terms of <code>dynamic-wind</code> as follows.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="scheme" class="language-scheme hljs">(define-syntax fluid-let
+  (lambda (x)
+    (syntax-case x ()
+      [(_ () b1 b2 ...) #'(let () b1 b2 ...)]
+      [(_ ((x e) ...) b1 b2 ...)
+       (andmap identifier? #'(x ...))
+       (with-syntax ([(y ...) (generate-temporaries #'(x ...))])
+         #'(let ([y e] ...)
+             (let ([swap (lambda ()
+                           (let ([t x]) (set! x y) (set! y t))
+                           ...)])
+               (dynamic-wind swap (lambda () b1 b2 ...) swap))))])))</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="section_5.5.">Section 5.5. Top-Level Bindings</h3>
+<div class="paragraph">
+<p>The procedures described in this section allow the direct manipulation of top-level bindings for variables and keywords. They are intended primarily to support the definition of interpreters or compilers for Scheme in Scheme but may be used to access or alter top-level bindings anywhere within a program whether at top level or not.</p>
+</div>
+<div class="hdlist">
+<table>
+<tr>
+<td class="hdlist1">
+procedure
+</td>
+<td class="hdlist2">
+<p><code>(define-top-level-value <em>symbol</em> <em>obj</em>)</code></p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+procedure
+</td>
+<td class="hdlist2">
+<p><code>(define-top-level-value <em>symbol</em> <em>obj</em> <em>env</em>)</code></p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+returns
+</td>
+<td class="hdlist2">
+<p>unspecified</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+libraries
+</td>
+<td class="hdlist2">
+<p><code>(chezscheme)</code></p>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p><code>define-top-level-value</code> is used to establish a binding for the variable named by <code><em>symbol</em></code> to the value <code><em>obj</em></code> in the environment <code><em>env</em></code>. If <code><em>env</em></code> is not provided, it defaults to the value of <code>interaction-environment</code>, i.e., the top-level evaluation environment (<a href="#section_12.3.">Section 12.3</a>).</p>
+</div>
+<div class="paragraph">
+<p>An exception is raised with condition type <code>&amp;assertion</code> if <code><em>env</em></code> is not mutable.</p>
+</div>
+<div class="paragraph">
+<p>A call to <code>define-top-level-value</code> is similar to a top-level <code>define</code> form, except that a call to <code>define-top-level-value</code> need not occur at top-level and the variable for which the binding is to be established can be determined at run time, as can the environment.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="scheme" class="language-scheme hljs">(begin
+  (define-top-level-value 'xyz "hi")
+  xyz) ⇒ "hi"
+
+(let ([var 'xyz])
+  (define-top-level-value var "mom")
+  (list var xyz)) ⇒ (xyz "mom")</code></pre>
+</div>
+</div>
+<div id="binding:s26" class="hdlist">
+<table>
+<tr>
+<td class="hdlist1">
+procedure
+</td>
+<td class="hdlist2">
+<p><code>(set-top-level-value! <em>symbol</em> <em>obj</em>)</code></p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+procedure
+</td>
+<td class="hdlist2">
+<p><code>(set-top-level-value! <em>symbol</em> <em>obj</em> <em>env</em>)</code></p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+returns
+</td>
+<td class="hdlist2">
+<p>unspecified</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+libraries
+</td>
+<td class="hdlist2">
+<p><code>(chezscheme)</code></p>
+</td>
+</tr>
+</table>
+</div>
+<div id="binding:s27" class="paragraph">
+<p><code>set-top-level-value!</code> assigns the variable named by <code><em>symbol</em></code> to the value <code><em>obj</em></code> in the environment <code><em>env</em></code>. If <code><em>env</em></code> is not provided, it defaults to the value of <code>interaction-environment</code>, i.e., the top-level evaluation environment (<a href="#section_12.3.">Section 12.3</a>).</p>
+</div>
+<div class="paragraph">
+<p>An exception is raised with condition type <code>&amp;assertion</code> if the identifier named by <code><em>symbol</em></code> is not defined as a variable in <code><em>env</em></code> or if the variable or environment is not mutable.</p>
+</div>
+<div class="paragraph">
+<p><code>set-top-level-value!</code> is similar to <code>set!</code> when <code>set!</code> is used on top-level variables except that the variable to be assigned can be determined at run time, as can the environment.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="scheme" class="language-scheme hljs">(let ([v (let ([cons list])
+           (set-top-level-value! 'cons +)
+           (cons 3 4))])
+  (list v (cons 3 4))) ⇒ ((3 4) 7)</code></pre>
+</div>
+</div>
+<div id="binding:s29" class="hdlist">
+<table>
+<tr>
+<td class="hdlist1">
+procedure
+</td>
+<td class="hdlist2">
+<p><code>(top-level-value <em>symbol</em>)</code></p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+procedure
+</td>
+<td class="hdlist2">
+<p><code>(top-level-value <em>symbol</em> <em>env</em>)</code></p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+returns
+</td>
+<td class="hdlist2">
+<p>the top-level value of the variable named by <code><em>symbol</em></code> in <code><em>env</em></code></p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+libraries
+</td>
+<td class="hdlist2">
+<p><code>(chezscheme)</code></p>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>If <code><em>env</em></code> is not provided, it defaults to the value of <code>interaction-environment</code>, i.e., the top-level evaluation environment (<a href="#section_12.3.">Section 12.3</a>).</p>
+</div>
+<div class="paragraph">
+<p>An exception is raised with condition type <code>&amp;assertion</code> if the identifier named by <code><em>symbol</em></code> is not defined as a variable in <code><em>env</em></code>.</p>
+</div>
+<div class="paragraph">
+<p><code>top-level-value</code> is similar to a top-level variable reference except that the variable to be referenced can be determined at run time, as can the environment.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="scheme" class="language-scheme hljs">(let ([cons +])
+  (list (cons 3 4)
+        ((top-level-value 'cons) 3 4))) ⇒ (7 (3 . 4))
+
+(define e (copy-environment (scheme-environment)))
+(define-top-level-value 'pi 3.14 e)
+(top-level-value 'pi e) ⇒ 3.14
+(set-top-level-value! 'pi 3.1416 e)
+(top-level-value 'pi e) ⇒ 3.1416</code></pre>
+</div>
+</div>
+<div id="binding:s30" class="hdlist">
+<table>
+<tr>
+<td class="hdlist1">
+procedure
+</td>
+<td class="hdlist2">
+<p><code>(top-level-bound? <em>symbol</em>)</code></p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+procedure
+</td>
+<td class="hdlist2">
+<p><code>(top-level-bound? <em>symbol</em> <em>env</em>)</code></p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+returns
+</td>
+<td class="hdlist2">
+<p><code>#t</code> if <code><em>symbol</em></code> is defined as a variable in <code><em>env</em></code>, <code>#f</code> otherwise</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+libraries
+</td>
+<td class="hdlist2">
+<p><code>(chezscheme)</code></p>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>If <code><em>env</em></code> is not provided, it defaults to the value of <code>interaction-environment</code>, i.e., the top-level evaluation environment (<a href="#section_12.3.">Section 12.3</a>).</p>
+</div>
+<div class="paragraph">
+<p>This predicate is useful in an interpreter to check for the existence of a top-level binding before requesting the value with <code>top-level-value</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="scheme" class="language-scheme hljs">(top-level-bound? 'xyz) ⇒ #f
+
+(begin
+  (define-top-level-value 'xyz 3)
+  (top-level-bound? 'xyz)) ⇒ #t
+
+(define e (copy-environment (interaction-environment)))
+(define-top-level-value 'pi 3.14 e)
+(top-level-bound? 'pi) ⇒ #f
+(top-level-bound? 'pi e) ⇒ #t</code></pre>
+</div>
+</div>
+<div id="binding:s31" class="hdlist">
+<table>
+<tr>
+<td class="hdlist1">
+procedure
+</td>
+<td class="hdlist2">
+<p><code>(top-level-mutable? <em>symbol</em>)</code></p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+procedure
+</td>
+<td class="hdlist2">
+<p><code>(top-level-mutable? <em>symbol</em> <em>env</em>)</code></p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+returns
+</td>
+<td class="hdlist2">
+<p><code>#t</code> if <code><em>symbol</em></code> is mutable in <code><em>env</em></code>, <code>#f</code> otherwise</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+libraries
+</td>
+<td class="hdlist2">
+<p><code>(chezscheme)</code></p>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>If <code><em>env</em></code> is not provided, it defaults to the value of <code>interaction-environment</code>, i.e., the top-level evaluation environment (<a href="#section_12.3.">Section 12.3</a>).</p>
+</div>
+<div class="paragraph">
+<p>This predicate is useful in an interpreter to check whether a variable can be assigned before assigning it with <code>set-top-level-value!</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="scheme" class="language-scheme hljs">(define xyz 3)
+(top-level-mutable? 'xyz) ⇒ #t
+(set-top-level-value! 'xyz 4)
+(top-level-value 'xyz) ⇒ 4
+
+(define e (copy-environment (interaction-environment) #f))
+(top-level-mutable? 'xyz e) ⇒ #f
+(set-top-level-value! 'xyz e) ⇒ <em>exception: xyz is immutable</em></code></pre>
+</div>
+</div>
+<div id="binding:s32" class="hdlist">
+<table>
+<tr>
+<td class="hdlist1">
+procedure
+</td>
+<td class="hdlist2">
+<p><code>(define-top-level-syntax <em>symbol</em> <em>obj</em>)</code></p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+procedure
+</td>
+<td class="hdlist2">
+<p><code>(define-top-level-syntax <em>symbol</em> <em>obj</em> <em>env</em>)</code></p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+returns
+</td>
+<td class="hdlist2">
+<p>unspecified</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+libraries
+</td>
+<td class="hdlist2">
+<p><code>(chezscheme)</code></p>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p><code>define-top-level-syntax</code> is used to establish a top-level binding for the identifier named by <code><em>symbol</em></code> to the value of <code><em>obj</em></code> in the environment <code><em>env</em></code>. The value must be a procedure, the result of a call to <code>make-variable-transformer</code>, or the result of a call to <code>top-level-syntax</code>. If <code><em>env</em></code> is not provided, it defaults to the value of <code>interaction-environment</code>, i.e., the top-level evaluation environment (<a href="#section_12.3.">Section 12.3</a>).</p>
+</div>
+<div class="paragraph">
+<p>An exception is raised with condition type <code>&amp;assertion</code> if <code><em>env</em></code> is not mutable.</p>
+</div>
+<div class="paragraph">
+<p>A call to <code>define-top-level-syntax</code> is similar to a top-level <code>define-syntax</code> form, except that a call to <code>define-top-level-syntax</code> need not occur at top-level and the identifier for which the binding is to be established can be determined at run time, as can the environment.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="scheme" class="language-scheme hljs">(define-top-level-syntax 'let1
+  (syntax-rules ()
+    [(_ x e b1 b2 ...) (let ([x e]) b1 b2 ...)]))
+(let1 a 3 (+ a 1)) ⇒ 4</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>define-top-level-syntax</code> can also be used to attach to an identifier arbitrary compile-time bindings obtained via <code>top-level-syntax</code>.</p>
+</div>
+<div class="hdlist">
+<table>
+<tr>
+<td class="hdlist1">
+procedure
+</td>
+<td class="hdlist2">
+<p><code>(top-level-syntax <em>symbol</em>)</code></p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+procedure
+</td>
+<td class="hdlist2">
+<p><code>(top-level-syntax <em>symbol</em> <em>env</em>)</code></p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+returns
+</td>
+<td class="hdlist2">
+<p>unspecified</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+libraries
+</td>
+<td class="hdlist2">
+<p><code>(chezscheme)</code></p>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p><code>top-level-syntax</code> is used to retrieve the transformer, compile-time value, or other compile-time binding to which the identifier named by <code><em>symbol</em></code> is bound in the environment <code><em>env</em></code>. If <code><em>env</em></code> is not provided, it defaults to the value of <code>interaction-environment</code>, i.e., the top-level evaluation environment (<a href="#section_12.3.">Section 12.3</a>). All identifiers bound in an environment have compile-time bindings, including variables.</p>
+</div>
+<div class="paragraph">
+<p>An exception is raised with condition type <code>&amp;assertion</code> if the identifier named by <code><em>symbol</em></code> is not defined as a keyword in <code><em>env</em></code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="scheme" class="language-scheme hljs">(define-top-level-syntax 'also-let (top-level-syntax 'let))
+(also-let ([x 3] [y 4]) (+ x y)) ⇒ 7
+
+(define foo 17)
+(define-top-level-syntax 'also-foo (top-level-syntax 'foo))
+also-foo ⇒ 17
+(set! also-foo 23)
+also-foo ⇒ 23
+foo ⇒ 23</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The effect of the last example can be had more clearly with <code>alias</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="scheme" class="language-scheme hljs">(define foo 17)
+(alias also-foo foo)
+also-foo ⇒ 17
+(set! also-foo 23)
+also-foo ⇒ 23
+foo ⇒ 23</code></pre>
+</div>
+</div>
+<div id="binding:s35" class="hdlist">
+<table>
+<tr>
+<td class="hdlist1">
+procedure
+</td>
+<td class="hdlist2">
+<p><code>(top-level-syntax? <em>symbol</em>)</code></p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+procedure
+</td>
+<td class="hdlist2">
+<p><code>(top-level-syntax? <em>symbol</em> <em>env</em>)</code></p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+returns
+</td>
+<td class="hdlist2">
+<p><code>#t</code> if <code><em>symbol</em></code> is bound as a keyword in <code><em>env</em></code>, <code>#f</code> otherwise</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+libraries
+</td>
+<td class="hdlist2">
+<p><code>(chezscheme)</code></p>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>If <code><em>env</em></code> is not provided, it defaults to the value of <code>interaction-environment</code>, i.e., the top-level evaluation environment (<a href="#section_12.3.">Section 12.3</a>).</p>
+</div>
+<div class="paragraph">
+<p>All identifiers bound in an environment have compile-time bindings, including variables, so this predicate amounts to a bound check, but is more general than <code>top-level-bound?</code>, which returns true only for bound variables.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="scheme" class="language-scheme hljs">(define xyz 'hello)
+(top-level-syntax? 'cons) ⇒ #t
+(top-level-syntax? 'lambda) ⇒ #t
+(top-level-syntax? 'hello) ⇒ #t
+
+(top-level-syntax? 'cons (scheme-environment)) ⇒ #t
+(top-level-syntax? 'lambda (scheme-environment)) ⇒ #t
+(top-level-syntax? 'hello (scheme-environment)) ⇒ #f</code></pre>
+</div>
+</div>
+</div>
 </div>
 </div>
 <div class="sect1">
 <h2 id="chp_6">Chapter 6. Control Structures</h2>
 <div class="sectionbody">
+<div class="paragraph">
+<p>This chapter describes <em>Chez Scheme</em> extensions to the set of standard control structures. See <a href="../../the-scheme-programming-language-4th/en/index.html#chp_control_operations">Chapter 5</a> of <em>The Scheme Programming Language, 4th Edition</em> or the Revised<sup>6</sup> Report on Scheme for a description of standard control structures.</p>
+</div>
+<div class="sect2">
+<h3 id="section_6.1.">Section 6.1. Conditionals</h3>
+<div class="hdlist">
+<table>
+<tr>
+<td class="hdlist1">
+syntax
+</td>
+<td class="hdlist2">
+<p><code>(exclusive-cond <em>clause<sub>1</sub></em> <em>clause<sub>2</sub></em> ...)</code></p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+returns
+</td>
+<td class="hdlist2">
+<p>see below</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+libraries
+</td>
+<td class="hdlist2">
+<p><code>(chezscheme)</code></p>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p><code>exclusive-cond</code> is a version of <code>cond</code> (<a href="#section_5.3.">Section 5.3</a> of TSPLFOUR) that differs from <code>cond</code> in that the tests embedded within the clauses are assumed to be exclusive in the sense that if one of the tests is true, the others are not. This allows the implementation to reorder clauses when profiling information is available at expansion time (<a href="#section_12.7.">Section 12.7</a>).</p>
+</div>
+<div class="paragraph">
+<p>The <code>(<em>test</em>)</code> form of clause is not supported. The order chosen when profiling information is available is based on the relative numbers of times the RHS of each clause is executed, and <code>(<em>test</em>)</code> has no RHS. <code>(<em>test</em> =&gt; values)</code> is equivalent, abeit less concise.</p>
+</div>
+<div class="hdlist">
+<table>
+<tr>
+<td class="hdlist1">
+syntax
+</td>
+<td class="hdlist2">
+<p><code>(case <em>expr<sub>0</sub></em> <em>clause<sub>1</sub></em> <em>clause<sub>2</sub></em> ...)</code></p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+returns
+</td>
+<td class="hdlist2">
+<p>see below</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+libraries
+</td>
+<td class="hdlist2">
+<p><code>(chezscheme)</code></p>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Each clause but the last must take one of the forms:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="scheme" class="language-scheme hljs">((<em>key</em> ...) <em>expr<sub>1</sub></em> <em>expr<sub>2</sub></em> ...)
+(<em>key</em> <em>expr<sub>1</sub></em> <em>expr<sub>2</sub></em> ...)</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>where each <code><em>key</em></code> is a datum distinct from the other keys. The last clause may be in the above form or it may be an <code>else</code> clause of the form</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="scheme" class="language-scheme hljs">(else <em>expr<sub>1</sub></em> <em>expr<sub>2</sub></em> ...)</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code><em>expr<sub>0</sub></em></code> is evaluated and the result is compared (using <code>equal?</code>) against the keys of each clause in order. If a clause containing a matching key is found, the expressions <code><em>expr<sub>1</sub></em> <em>expr<sub>2</sub></em> ...</code> are evaluated in sequence and the values of the last expression are returned.</p>
+</div>
+<div class="paragraph">
+<p>If none of the clauses contains a matching key and an <code>else</code> clause is present, the expressions <code><em>expr<sub>1</sub></em> <em>expr<sub>2</sub></em> ...</code> of the <code>else</code> clause are evaluated in sequence and the values of the last expression are returned.</p>
+</div>
+<div class="paragraph">
+<p>If none of the clauses contains a matching key and no <code>else</code> clause is present, the value or values are unspecified.</p>
+</div>
+<div class="paragraph">
+<p>The Revised<sup>6</sup> Report version of <code>case</code> does not support singleton keys (the second of the first two clause forms above) and uses <code>eqv?</code> rather than <code>equal?</code> as the comparison procedure. Both versions are defined in terms of <code>exclusive-cond</code> so that if profiling information is available at expansion time, the clauses will be reordered to put those that are most frequently executed first.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="scheme" class="language-scheme hljs">(let ([ls '(ii iv)])
+  (case (car ls)
+    [i 1]
+    [ii 2]
+    [iii 3]
+    [(iiii iv) 4]
+    [else 'out-of-range])) ⇒ 2
 
+(define p
+  (lambda (x)
+    (case x
+      [("abc" "def") 'one]
+      [((a b c)) 'two]
+      [else #f])))
+
+(p (string #\d #\e #\f)) ⇒ one
+(p '(a b c)) ⇒ two</code></pre>
+</div>
+</div>
+<div id="control:s3" class="hdlist">
+<table>
+<tr>
+<td class="hdlist1">
+syntax
+</td>
+<td class="hdlist2">
+<p><code>(record-case <em>expr</em> <em>clause<sub>1</sub></em> <em>clause<sub>2</sub></em> ...)</code></p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+returns
+</td>
+<td class="hdlist2">
+<p>see explanation</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+libraries
+</td>
+<td class="hdlist2">
+<p><code>(chezscheme)</code></p>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p><code>record-case</code> is a restricted form of <code>case</code> that supports the destructuring of <em>records</em>, or <em>tagged lists</em>. A record has as its first element a tag that determines what "type" of record it is; the remaining elements are the fields of the record.</p>
+</div>
+<div class="paragraph">
+<p>Each clause but the last must take the form</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="scheme" class="language-scheme hljs">((<em>key</em> ...) <em>formals</em> <em>body<sub>1</sub></em> <em>body<sub>2</sub></em> ...)</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>where each <code><em>key</em></code> is a datum distinct from the other keys. The last clause may be in the above form or it may be an <code>else</code> clause of the form</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="scheme" class="language-scheme hljs">(else <em>body<sub>1</sub></em> <em>body<sub>2</sub></em> ...)</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code><em>expr</em></code> must evaluate to a pair. <code><em>expr</em></code> is evaluated and the car of its value is compared (using <code>eqv?</code>) against the keys of each clause in order. If a clause containing a matching key is found, the variables in <code><em>formals</em></code> are bound to the remaining elements of the list and the expressions <code><em>body<sub>1</sub></em> <em>body<sub>2</sub></em> ...</code> are evaluated in sequence. The value of the last expression is returned. The effect is identical to the application of</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="scheme" class="language-scheme hljs">(lambda <em>formals</em> <em>body<sub>1</sub></em> <em>body<sub>2</sub></em> ...)</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>to the cdr of the list.</p>
+</div>
+<div class="paragraph">
+<p>If none of the clauses contains a matching key and an <code>else</code> clause is present, the expressions <code><em>body<sub>1</sub></em> <em>body<sub>2</sub></em> ...</code> of the <code>else</code> clause are evaluated in sequence and the value of the last expression is returned.</p>
+</div>
+<div class="paragraph">
+<p>If none of the clauses contains a matching key and no <code>else</code> clause is present, the value is unspecified.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="scheme" class="language-scheme hljs">(define calc
+  (lambda (x)
+    (record-case x
+      [(add) (x y) (+ x y)]
+      [(sub) (x y) (- x y)]
+      [(mul) (x y) (* x y)]
+      [(div) (x y) (/ x y)]
+      [else (assertion-violationf 'calc "invalid expression ~s" x)])))
+
+(calc '(add 3 4)) ⇒ 7
+(calc '(div 3 4)) ⇒ 3/4</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="section_6.2.">Section 6.2. Mapping and Folding</h3>
+<div class="hdlist">
+<table>
+<tr>
+<td class="hdlist1">
+procedure
+</td>
+<td class="hdlist2">
+<p><code>(ormap <em>procedure</em> <em>list<sub>1</sub></em> <em>list<sub>2</sub></em> ...)</code></p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+returns
+</td>
+<td class="hdlist2">
+<p>see explanation</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+libraries
+</td>
+<td class="hdlist2">
+<p><code>(chezscheme)</code></p>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p><code>ormap</code> is identical to the Revised<sup>6</sup> Report <code>exists</code>.</p>
+</div>
+<div class="hdlist">
+<table>
+<tr>
+<td class="hdlist1">
+procedure
+</td>
+<td class="hdlist2">
+<p><code>(andmap <em>procedure</em> <em>list<sub>1</sub></em> <em>list<sub>2</sub></em> ...)</code></p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+returns
+</td>
+<td class="hdlist2">
+<p>see explanation</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+libraries
+</td>
+<td class="hdlist2">
+<p><code>(chezscheme)</code></p>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p><code>andmap</code> is identical to the Revised<sup>6</sup> Report <code>for-all</code>.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="section_6.3.">Section 6.3. Continuations</h3>
+<div class="paragraph">
+<p><em>Chez Scheme</em> supports one-shot continuations as well as the standard multi-shot continuations obtainable via <code>call/cc</code>. One-shot continuations are continuations that may be invoked at most once, whether explicitly or implicitly. They are obtained with <code>call/1cc</code>.</p>
+</div>
+<div class="hdlist">
+<table>
+<tr>
+<td class="hdlist1">
+procedure
+</td>
+<td class="hdlist2">
+<p><code>(call/1cc <em>procedure</em>)</code></p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+returns
+</td>
+<td class="hdlist2">
+<p>see below</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+libraries
+</td>
+<td class="hdlist2">
+<p><code>(chezscheme)</code></p>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p><code>call/1cc</code> obtains its continuation and passes it to <code><em>procedure</em></code>, which should accept one argument. The continuation itself is represented by a procedure. This procedure normally takes one argument but may take an arbitrary number of arguments depending upon whether the context of the call to <code>call/1cc</code> expects multiple return values or not. When this procedure is applied to a value or values, it returns the values to the continuation of the <code>call/1cc</code> application.</p>
+</div>
+<div class="paragraph">
+<p>The continuation obtained by <code>call/1cc</code> is a "one-shot continuation." A one-shot continuation should not be returned to multiple times, either by invoking the continuation or returning normally from <code><em>procedure</em></code> more than once. A one-shot continuation is "promoted" into a normal (multishot) continuation, however, if it is still active when a normal continuation is obtained by <code>call/cc</code>. After a one-shot continuation is promoted into a multishot continuation, it behaves exactly as if it had been obtained via <code>call/cc</code>. This allows <code>call/cc</code> and <code>call/1cc</code> to be used together transparently in many applications.</p>
+</div>
+<div class="paragraph">
+<p>One-shot continuations may be more efficient for some applications than multishot continuations. See the paper "Representing control in the presence of one-shot continuations" <a href="#ref3">[3]</a> for more information about one-shot continuations, including how they are implemented in <em>Chez Scheme</em>.</p>
+</div>
+<div class="paragraph">
+<p>The following examples highlight the similarities and differences between one-shot and normal continuations.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="scheme" class="language-scheme hljs">(define prod
+ ; compute the product of the elements of ls, bugging out
+ ; with no multiplications if a zero element is found
+  (lambda (ls)
+    (lambda (k)
+      (if (null? ls)
+          1
+          (if (= (car ls) 0)
+              (k 0)
+              (* (car ls) ((prod (cdr ls)) k)))))))
+
+(call/cc (prod '(1 2 3 4))) ⇒ 24
+(call/1cc (prod '(1 2 3 4))) ⇒ 24
+
+(call/cc (prod '(1 2 3 4 0))) ⇒ 0
+(call/1cc (prod '(1 2 3 4 0))) ⇒ 0
+
+(let ([k (call/cc (lambda (x) x))])
+  (k (lambda (x) 0))) ⇒ 0
+
+(let ([k (call/1cc (lambda (x) x))])
+  (k (lambda (x) 0))) ⇒ <em>exception</em></code></pre>
+</div>
+</div>
+<div id="dynamic-wind" class="hdlist">
+<table>
+<tr>
+<td class="hdlist1">
+procedure
+</td>
+<td class="hdlist2">
+<p><code>(dynamic-wind <em>in</em> <em>body</em> <em>out</em>)</code></p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+procedure
+</td>
+<td class="hdlist2">
+<p><code>(dynamic-wind <em>critical?</em> <em>in</em> <em>body</em> <em>out</em>)</code></p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+returns
+</td>
+<td class="hdlist2">
+<p>values resulting from the application of <code><em>body</em></code></p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+libraries
+</td>
+<td class="hdlist2">
+<p><code>(chezscheme)</code></p>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>The first form is identical to the Revised<sup>6</sup> Report <code>dynamic-wind</code>. When the optional <code><em>critical?</em></code> argument is present and non-false, the <code><em>in</em></code> thunk is invoked in a critical section along with the code that records that the body has been entered, and the <code><em>out</em></code> thunk is invoked in a critical section along with the code that records that the body has been exited. Extreme caution must be taken with this form of <code>dynamic-wind</code>, since an error or long-running computation can leave interrupts and automatic garbage collection disabled.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="section_6.4.">Section 6.4. Engines</h3>
+<div class="paragraph">
+<p>Engines are a high-level process abstraction supporting <em>timed preemption</em> (<a href="#ref15">[15]</a>,<a href="#ref24">[24]</a>). Engines may be used to simulate multiprocessing, implement operating system kernels, and perform nondeterministic computations.</p>
+</div>
+<div class="hdlist">
+<table>
+<tr>
+<td class="hdlist1">
+procedure
+</td>
+<td class="hdlist2">
+<p><code>(make-engine <em>thunk</em>)</code></p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+returns
+</td>
+<td class="hdlist2">
+<p>an engine</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+libraries
+</td>
+<td class="hdlist2">
+<p><code>(chezscheme)</code></p>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>An engine is created by passing a thunk (no argument procedure) to <code>make-engine</code>. The body of the thunk is the computation to be performed by the engine. An engine itself is a procedure of three arguments:</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code><em>ticks</em></code></dt>
+<dd>
+<p>a positive integer that specifies the amount of <em>fuel</em> to be given to the engine. An engine executes until this fuel runs out or until its computation finishes.</p>
+</dd>
+<dt class="hdlist1"><code><em>complete</em></code></dt>
+<dd>
+<p>a procedure of one or more arguments that specifies what to do if the computation finishes. Its arguments are the amount of fuel left over and the values produced by the computation.</p>
+</dd>
+<dt class="hdlist1"><code><em>expire</em></code></dt>
+<dd>
+<p>a procedure of one argument that specifies what to do if the fuel runs out before the computation finishes. Its argument is a new engine capable of continuing the computation from the point of interruption.</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p>When an engine is applied to its arguments, it sets up a timer to fire in <code><em>ticks</em></code> time units. (See <code>set-timer</code> on <a href="#desc:set-timer">page 330</a>.) If the engine computation completes before the timer expires, the system invokes <code><em>complete</em></code>, passing it the number of <code><em>ticks</em></code> left over and the values produced by the computation. If, on the other hand, the timer goes off before the engine computation completes, the system creates a new engine from the continuation of the interrupted computation and passes this engine to <code><em>expire</em></code>. <code><em>complete</em></code> and <code><em>expire</em></code> are invoked in the continuation of the engine invocation.</p>
+</div>
+<div class="paragraph">
+<p>An implementation of engines is given in <a href="../../the-scheme-programming-language-4th/en/index.html#section_12.11.">Section 12.11</a> of <em>The Scheme Programming Language, 4th Edition</em>.</p>
+</div>
+<div class="paragraph">
+<p>Do not use the timer interrupt (see <code>set-timer</code>) and engines at the same time, since engines are implemented in terms of the timer.</p>
+</div>
+<div class="paragraph">
+<p>The following example creates an engine from a trivial computation, 3, and gives the engine 10 ticks.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="scheme" class="language-scheme hljs">(define eng
+  (make-engine
+    (lambda () 3)))
+
+(eng 10
+     (lambda (ticks value) value)
+     (lambda (x) x)) ⇒ 3</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>It is often useful to pass <code>list</code> as the <code><em>complete</em></code> procedure to an engine, causing an engine that completes to return a list whose first element is the ticks remaining and whose remaining elements are the values returned by the computation.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="scheme" class="language-scheme hljs">(define eng
+  (make-engine
+    (lambda () 3)))
+
+(eng 10
+     list
+     (lambda (x) x)) ⇒ (9 3)</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In the example above, the value is 3 and there are 9 ticks left over, i.e., it takes one unit of fuel to evaluate 3. (The fuel amounts given here are for illustration only. Your mileage may vary.)</p>
+</div>
+<div class="paragraph">
+<p>Typically, the engine computation does not finish in one try. The following example displays the use of an engine to compute the 10th Fibonacci number in steps.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="scheme" class="language-scheme hljs">(define fibonacci
+  (lambda (n)
+    (let fib ([i n])
+      (cond
+        [(= i 0) 0]
+        [(= i 1) 1]
+        [else (+ (fib (- i 1))
+                 (fib (- i 2)))]))))
+
+(define eng
+  (make-engine
+    (lambda ()
+      (fibonacci 10))))
+
+(eng 50
+     list
+     (lambda (new-eng)
+       (set! eng new-eng)
+       "expired")) ⇒ "expired"
+
+(eng 50
+     list
+     (lambda (new-eng)
+       (set! eng new-eng)
+       "expired")) ⇒ "expired"
+
+(eng 50
+     list
+     (lambda (new-eng)
+       (set! eng new-eng)
+       "expired")) ⇒ "expired"
+
+(eng 50
+     list
+     (lambda (new-eng)
+       (set! eng new-eng)
+       "expired")) ⇒ (21 55)</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Each time the engine&#8217;s fuel runs out, the <code><em>expire</em></code> procedure assigns <code>eng</code> to the new engine. The entire computation requires four blocks of 50 ticks to complete; of the last 50 it uses all but 21. Thus, the total amount of fuel used is 179 ticks. This leads to the following procedure, <code>mileage</code>, which "times" a computation using engines:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="scheme" class="language-scheme hljs">(define mileage
+  (lambda (thunk)
+    (let loop ([eng (make-engine thunk)] [total-ticks 0])
+      (eng 50
+           (lambda (ticks . values)
+             (+ total-ticks (- 50 ticks)))
+           (lambda (new-eng)
+             (loop new-eng
+                   (+ total-ticks 50)))))))
+
+(mileage (lambda () (fibonacci 10))) ⇒ 179</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The choice of 50 for the number of ticks to use each time is arbitrary, of course. It might make more sense to pass a much larger number, say 10000, in order to reduce the number of times the computation is interrupted.</p>
+</div>
+<div class="paragraph">
+<p>The next procedure is similar to <code>mileage</code>, but it returns a list of engines, one for each tick it takes to complete the computation. Each of the engines in the list represents a "snapshot" of the computation, analogous to a single frame of a moving picture. <code>snapshot</code> might be useful for "single stepping" a computation.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="scheme" class="language-scheme hljs">(define snapshot
+  (lambda (thunk)
+    (let again ([eng (make-engine thunk)])
+      (cons eng
+            (eng 1 (lambda (t . v) '()) again)))))</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The recursion embedded in this procedure is rather strange. The complete procedure performs the base case, returning the empty list, and the expire procedure performs the recursion.</p>
+</div>
+<div class="paragraph">
+<p>The next procedure, <code>round-robin</code>, could be the basis for a simple time-sharing operating system. <code>round-robin</code> maintains a queue of processes (a list of engines), cycling through the queue in a <em>round-robin</em> fashion, allowing each process to run for a set amount of time. <code>round-robin</code> returns a list of the values returned by the engine computations in the order that the computations complete. Each computation is assumed to produce exactly one value.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="scheme" class="language-scheme hljs">(define round-robin
+  (lambda (engs)
+    (if (null? engs)
+        '()
+        ((car engs)
+         1
+         (lambda (ticks value)
+           (cons value (round-robin (cdr engs))))
+         (lambda (eng)
+           (round-robin
+             (append (cdr engs) (list eng))))))))</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Since the amount of fuel supplied each time, one tick, is constant, the effect of <code>round-robin</code> is to return a list of the values sorted from the quickest to complete to the slowest to complete. Thus, when we call <code>round-robin</code> on a list of engines, each computing one of the Fibonacci numbers, the output list is sorted with the earlier Fibonacci numbers first, regardless of the order of the input list.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="scheme" class="language-scheme hljs">(round-robin
+  (map (lambda (x)
+         (make-engine
+           (lambda ()
+             (fibonacci x))))
+       '(4 5 2 8 3 7 6 2))) ⇒ (1 1 2 3 5 8 13 21)</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>More interesting things can happen if the amount of fuel varies each time through the loop. In this case, the computation would be nondeterministic, i.e., the results would vary from call to call.</p>
+</div>
+<div class="paragraph">
+<p>The following syntactic form, <code>por</code> (parallel-or), returns the first of its expressions to complete with a true value. <code>por</code> is implemented with the procedure <code>first-true</code>, which is similar to <code>round-robin</code> but quits when any of the engines completes with a true value. If all of the engines complete, but none with a true value, <code>first-true</code> (and hence <code>por</code>) returns <code>#f</code>. Also, although <code>first-true</code> passes a fixed amount of fuel to each engine, it chooses the next engine to run at random, and is thus nondeterministic.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="scheme" class="language-scheme hljs">(define-syntax por
+  (syntax-rules ()
+    [(_ x ...)
+     (first-true
+       (list (make-engine (lambda () x)) ...))]))
+
+(define first-true
+  (let ([pick
+         (lambda (ls)
+           (list-ref ls (random (length ls))))])
+    (lambda (engs)
+      (if (null? engs)
+          #f
+          (let ([eng (pick engs)])
+            (eng 1
+                 (lambda (ticks value)
+                   (or value
+                       (first-true
+                         (remq eng engs))))
+                 (lambda (new-eng)
+                   (first-true
+                     (cons new-eng
+                           (remq eng engs))))))))))</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The list of engines is maintained with <code>pick</code>, which randomly chooses an element of the list, and <code>remq</code>, which removes the chosen engine from the list. Since <code>por</code> is nondeterministic, subsequent uses with the same expressions may not return the same values.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="scheme" class="language-scheme hljs">(por 1 2 3) ⇒ 2
+(por 1 2 3) ⇒ 3
+(por 1 2 3) ⇒ 2
+(por 1 2 3) ⇒ 1</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Furthermore, even if one of the expressions is an infinite loop, <code>por</code> still finishes as long as one of the other expressions completes and returns a true value.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="scheme" class="language-scheme hljs">(por (let loop () (loop)) 2) ⇒ 2</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>With <code>engine-return</code> and <code>engine-block</code>, it is possible to terminate an engine explicitly. <code>engine-return</code> causes the engine to complete, as if the computation had finished. Its arguments are passed to the <code><em>complete</em></code> procedure along with the number of ticks remaining. It is essentially a nonlocal exit from the engine. Similarly, <code>engine-block</code> causes the engine to expire, as if the timer had run out. A new engine is made from the continuation of the call to <code>engine-block</code> and passed to the <code><em>expire</em></code> procedure.</p>
+</div>
+<div class="hdlist">
+<table>
+<tr>
+<td class="hdlist1">
+procedure
+</td>
+<td class="hdlist2">
+<p><code>(engine-block)</code></p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+returns
+</td>
+<td class="hdlist2">
+<p>does not return</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+libraries
+</td>
+<td class="hdlist2">
+<p><code>(chezscheme)</code></p>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>This causes a running engine to stop, create a new engine capable of continuing the computation, and pass the new engine to the original engine&#8217;s third argument (the expire procedure). Any remaining fuel is forfeited.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="scheme" class="language-scheme hljs">(define eng
+  (make-engine
+    (lambda ()
+      (engine-block)
+      "completed")))
+
+(eng 100
+     (lambda (ticks value) value)
+     (lambda (x)
+        (set! eng x)
+        "expired")) ⇒ "expired"
+
+(eng 100
+     (lambda (ticks value) value)
+     (lambda (x)
+        (set! eng x)
+        "expired")) ⇒ "completed"</code></pre>
+</div>
+</div>
+<div id="control:s28" class="hdlist">
+<table>
+<tr>
+<td class="hdlist1">
+procedure
+</td>
+<td class="hdlist2">
+<p><code>(engine-return <em>obj</em> ...)</code></p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+returns
+</td>
+<td class="hdlist2">
+<p>does not return</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+libraries
+</td>
+<td class="hdlist2">
+<p><code>(chezscheme)</code></p>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>This causes a running engine to stop and pass control to the engine&#8217;s <code><em>complete</em></code> argument. The first argument passed to the complete procedure is the amount of fuel remaining, as usual, and the remaining arguments are the objects <code><em>obj</em> ...</code> passed to <code>engine-return</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="scheme" class="language-scheme hljs">(define eng
+  (make-engine
+    (lambda ()
+      (reverse (engine-return 'a 'b 'c)))))
+
+(eng 100
+     (lambda (ticks . values) values)
+     (lambda (new-eng) "expired")) ⇒ (a b c)</code></pre>
+</div>
+</div>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -16617,8 +18096,8 @@ document.querySelectorAll('a').forEach(function(node) {
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>\[(\d+)\]</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>&lt;&lt;ref$1&gt;&gt;</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>\[(&lt;&lt;ref\d+&gt;&gt;)\]</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>$1</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>(^|\(|[^=]\s+)Chapter\s+(\d+)</code></p></td>
@@ -16645,7 +18124,7 @@ document.querySelectorAll('a').forEach(function(node) {
 <td class="tableblock halign-left valign-top"><p class="tableblock">Add slash to the head of ...</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>(^$|\[.+\])\n([\w\s]+::)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>(^$|^\[.+\])\n([\w\s]+::)</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>$1\n[horizontal]\n$2</code></p></td>
 </tr>
 </tbody>
