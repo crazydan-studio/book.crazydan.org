@@ -15,6 +15,7 @@ Cisco Systems, Inc.
 :source-highlighter: highlightjs
 :highlightjs-languages: scheme, bash, javascript
 :highlightjsdir: ../../theme/js/highlight
+// Mathjax Symbols: https://pic.plover.com/MISC/symbols.pdf
 :mathjaxdir: ../../theme/js/mathjax
 ifdef::backend-pdf[]
 :title-logo-image: image::images/logo.png[align=center]
@@ -281,11 +282,11 @@ document.querySelectorAll('a').forEach(function(node) {
 |`++`[^`]*\(\([^`]+\)\)[^`]*`++`
 |Add slash to the first double brackets
 
-|`++`[^`]*\s+\.\.\.[^`]*`++`
-|Add slash to the head of \...
+|`++`([^`]*\s+)(\.\.\.)([^`]*)`++`
+|Add slash to the head of \... : `++`$1\\$2$3`++`
 
-|`++`[^\\`]*(->\|=>\|<=)[^`]*`++`
-|Add slash to the head of \->, \=> or \<=
+|`++`([^\\`]*)(->\|=>\|<=)([^`]*)`++`
+|Add slash to the head of \->, \=> or \<= : `++`$1\\$2$3`++`
 
 |`++(^$\|^\[.+\])\n([\w\s]+::)++`
 |`++$1\n[horizontal]\n$2++`
