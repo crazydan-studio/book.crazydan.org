@@ -293,6 +293,9 @@ document.querySelectorAll('a').forEach(function(node) {
 
 |`++#<([^<>]+)>++`
 |`++#&lt;$1&gt;++`
+
+|`++"(`[^`"]+`)"++`
+|`+++++"++$1++"+++++`
 |===
 
 - Check the lost links +
