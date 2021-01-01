@@ -161,6 +161,7 @@ Fluid bindings are similar to _special_ bindings in Common Lisp <<ref30>>, excep
 
 `fluid-let` may be defined in terms of `dynamic-wind` as follows.
 
+[#defn:fluid-let]
 [source,scheme,subs="quotes"]
 ----
 (define-syntax fluid-let
