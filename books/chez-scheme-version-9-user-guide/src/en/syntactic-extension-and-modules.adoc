@@ -1,4 +1,1373 @@
 [#chp_11]
 == Chapter 11. Syntactic Extension and Modules
 
+This chapter describes the _Chez Scheme_ extensions to the syntax-case syntactic abstraction mechanism now standardized in the Revised^6^ Report. These extensions include the module system (<<section_11.5.,Section 11.5>>), meta definitions (<<section_11.8.,Section 11.8>>), conditional expansion (<<section_11.9.,Section 11.9>>) `syntax-rules` fenders, `fluid-let-syntax`, and `include`.
 
+=== Section 11.1. Fluid Keyword Bindings [[section_11.1.]]
+
+Keyword bindings established via the Revised^6^ Report `define-syntax`, `let-syntax`, or `letrec-syntax` forms may be rebound temporarily with `fluid-let-syntax`.
+
+[horizontal]
+syntax:: `(fluid-let-syntax ((_keyword_ _expr_) \...) _form~1~_ _form~2~_ \...)`
+returns:: see explanation
+libraries:: `(chezscheme)`
+
+Each `_expr_` must evaluate to a transformer. `fluid-let-syntax` is similar to the standard `let-syntax`, except that instead of introducing new bindings for the keywords `_keyword_ \...`, `fluid-let-syntax` temporarily alters the existing bindings for the keywords during the expansion of its body. That is, during the expansion of `_form~1~_ _form~2~_ \...`, the visible lexical (or top-level) binding for each `keyword` is temporarily replaced by a new association between the keyword and the corresponding transformer. This affects any references to the keyword that resolve to the same lexical (or top-level) binding whether the references occur in the text of the body or are introduced during its expansion. In contrast, `let-syntax` captures only those references that occur within the text of its body.
+
+The following example shows how `fluid-let-syntax` differs from `let-syntax`.
+
+[source,scheme,subs="quotes"]
+----
+(let ([f (lambda (x) (+ x 1))])
+  (let-syntax ([g (syntax-rules ()
+                    [(_ x) (f x)])])
+    (let-syntax ([f (syntax-rules ()
+                      [(_ x) x])])
+      (g 1)))) ⇒ 2
+
+(let ([f (lambda (x) (+ x 1))])
+  (let-syntax ([g (syntax-rules ()
+                    [(_ x) (f x)])])
+    (fluid-let-syntax ([f (syntax-rules ()
+                            [(_ x) x])])
+      (g 1)))) ⇒ 1
+----
+
+The two expressions are identical except that the inner `let-syntax` form in the first expression is a `fluid-let-syntax` form in the second. In the first expression, the `f` occurring in the expansion of `(g 1)` refers to the ``let``-bound variable `f`, whereas in the second it refers to the keyword `f` by virtue of the fluid syntax binding for `f`.
+
+[#syntax:s2]
+The following code employs `fluid-let-syntax` in the definition of a `define-integrable` form that is similar to `define` for procedure definitions except that it causes the code for the procedure to be _integrated_, or inserted, wherever a direct call to the procedure is found. No semantic difference is visible between procedures defined with `define-integrable` and those defined with `define`, except that a top-level `define-integrable` form must appear before the first reference to the defined identifier. Lexical scoping is preserved, the actual parameters in an integrated call are evaluated once and at the proper time, integrable procedures may be used as first-class values, and recursive procedures do not cause indefinite recursive expansion.
+
+[source,scheme,subs="quotes"]
+----
+(define-syntax define-integrable
+  (syntax-rules (lambda)
+    [(_ name (lambda formals form1 form2 ...))
+     (begin
+       (define xname
+         (fluid-let-syntax ([name (identifier-syntax xname)])
+           (lambda formals form1 form2 ...)))
+       (define-syntax name
+         (lambda (x)
+           (syntax-case x ()
+             [_ (identifier? x) #'xname]
+             [(_ arg (... ...))
+              #'((fluid-let-syntax ([name (identifier-syntax xname)])
+                   (lambda formals form1 form2 ...))
+                  arg
+                  (... ...))]))))]))
+----
+
+A `define-integrable` has the following form.
+
+[source,scheme,subs="quotes"]
+----
+(define-integrable _name_ _lambda-expression_)
+----
+
+A `define-integrable` form expands into a pair of definitions: a syntax definition of `_name_` and a variable definition of `xname`. The transformer for `_name_` converts apparent calls to `_name_` into direct calls to `_lambda-expression_`. Since the resulting forms are merely direct `lambda` applications (the equivalent of `let` expressions), the actual parameters are evaluated exactly once and before evaluation of the procedure's body, as required. All other references to `_name_` are replaced with references to `xname`. The definition of `xname` binds it to the value of `_lambda-expression_`. This allows the procedure to be used as a first-class value. Because `xname` is introduced by the transformer, the binding for `xname` is not visible anywhere except where references to it are introduced by the transformer for `_name_`.
+
+Within `_lambda-expression_`, wherever it appears, `_name_` is rebound to a transformer that expands all references into references to `xname`. The use of `fluid-let-syntax` for this purpose prevents indefinite expansion from indirect recursion among integrable procedures. This allows the procedure to be recursive without causing indefinite expansion. Nothing special is done by `define-integrable` to maintain lexical scoping, since lexical scoping is maintained automatically by the expander.
+
+_Chez Scheme_ integrate locally defined procedures automatically when it is appropriate to do so. It cannot integrate procedures defined at top-level, however, since code that assigns top-level variables can be introduced into the system (via `eval` or `load`) at any time. `define-integrable` can be used to force the integration of procedures bound at top-level, even if the integration of locally bound procedures is left to the compiler. It can also be used to force the integration of large procedures that the compiler would not normally integrate. (The `expand/optimize` procedure is useful for determining when integration does or does not take place.)
+
+=== Section 11.2. Syntax-Rules Transformers [[section_11.2.]]
+
+_Chez Scheme_ extends `syntax-rules` to permit clause to include fenders just like those allowed within `syntax-case` clauses.
+
+[horizontal]
+syntax:: `(syntax-rules (_literal_ \...) _clause_ \...)`
+returns:: a transformer
+libraries:: `(chezscheme)`
+
+Each `_literal_` must be an identifier other than an underscore ( `_` ) or ellipsis ( `\...` ). Each clause must take the form below.
+
+[source,scheme,subs="quotes"]
+----
+(_pattern_ _template_)
+(_pattern_ _fender_ _template_)
+----
+
+The first form is the only form supported by the Revised^6^ Report.
+
+=== Section 11.3. Syntax-Case Transformers [[section_11.3.]]
+
+_Chez Scheme_ provides several procedures and syntactic forms that may be used to simplify the coding of certain syntactic abstractions.
+
+[horizontal]
+procedure:: `(syntax\->list _syntax-object_)`
+returns:: a list of syntax objects
+libraries:: `(chezscheme)`
+
+This procedure takes a syntax object representing a list-structured form and returns a list of syntax objects, each representing the corresponding subform of the input form.
+
+`syntax\->list` may be defined as follows.
+
+[source,scheme,subs="quotes"]
+----
+(define syntax->list
+  (lambda (ls)
+    (syntax-case ls ()
+      [() '()]
+      [(x . r) (cons \#'x (syntax->list #'r))])))
+
+#'(a b c) ⇒ #&lt;syntax (a b c)&gt;
+(syntax->list #'(a b c)) ⇒ (#&lt;syntax a&gt; #&lt;syntax b&gt; #&lt;syntax c&gt;)
+----
+
+`syntax\->list` is not required for list structures constructed from individual pattern variable values or sequences of pattern-variable values, since such structures are already lists. For example:
+
+[source,scheme,subs="quotes"]
+----
+(list? (with-syntax ([x #'a] [y #'b] [z #'c]) #'(x y z)))) ⇒ #t
+(list? (with-syntax ([(x ...) #'(a b c)]) #'(x ...))) ⇒ #t
+----
+
+[#syntax:s7]
+[horizontal]
+procedure:: `(syntax\->vector _syntax-object_)`
+returns:: a vector of syntax objects
+libraries:: `(chezscheme)`
+
+This procedure takes a syntax object representing a vector-structured form and returns a vector of syntax objects, each representing the corresponding subform of the input form.
+
+`syntax\->vector` may be defined as follows.
+
+[source,scheme,subs="quotes"]
+----
+(define syntax->vector
+  (lambda (v)
+    (syntax-case v ()
+      [\#(x ...) (apply vector (syntax->list #'(x ...)))])))
+
+#'#(a b c) ⇒ \#&lt;syntax #(a b c)&gt;
+(syntax->vector #'#(a b c)) ⇒ \#(#&lt;syntax a&gt; #&lt;syntax b&gt; #&lt;syntax c&gt;)
+----
+
+`syntax\->vector` is not required for vector structures constructed from individual pattern variable values or sequences of pattern-variable values, since such structures are already vectors. For example:
+
+[source,scheme,subs="quotes"]
+----
+(vector? (with-syntax ([x \#'a] [y #'b] [z #'c]) #'#(x y z)))) ⇒ \#t
+(vector? (with-syntax ([(x ...) #'(a b c)]) #'#(x ...))) ⇒ #t
+----
+
+[#syntax:s8]
+[horizontal]
+procedure:: `(syntax-object\->datum _obj_)`
+returns:: `_obj_` stripped of syntactic information
+libraries:: `(chezscheme)`
+
+`syntax-object\->datum` is identical to the Revised^6^ Report `syntax\->datum`.
+
+[horizontal]
+syntax:: `(datum _template_)`
+returns:: see below
+libraries:: `(chezscheme)`
+
+`(datum _template_)` is a convenient shorthand syntax for
+
+[source,scheme,subs="quotes"]
+----
+(syntax->datum (syntax _template_))
+----
+
+`_datum_` may be defined simply as follows.
+
+[source,scheme,subs="quotes"]
+----
+(define-syntax datum
+  (syntax-rules ()
+    [(_ t) (syntax->datum #'t)]))
+
+(with-syntax ((a #'(a b c))) (datum a)) ⇒ (a b c)
+----
+
+[#syntax:s10]
+[horizontal]
+procedure:: `(datum\->syntax-object _template-identifier_ _obj_)`
+returns:: a syntax object
+libraries:: `(chezscheme)`
+
+`datum\->syntax-object` is identical to the Revised^6^ Report `datum\->syntax`.
+
+[horizontal]
+syntax:: `(with-implicit (_id~0~_ _id~1~_ \...) _body~1~_ _body~2~_ \...)`
+returns:: see below
+libraries:: `(chezscheme)`
+
+This form abstracts over the common usage of `datum\->syntax` for creating implicit identifiers (see above). The form
+
+[source,scheme,subs="quotes"]
+----
+(with-implicit (_id~0~_ _id~1~_ ...)
+  _body~1~_ _body~2~_ ...)
+----
+
+is equivalent to
+
+[source,scheme,subs="quotes"]
+----
+(with-syntax ([_id~1~_ (datum->syntax #'_id~0~_ '_id~1~_)] ...)
+  _body~1~_ _body~2~_ ...)
+----
+
+`with-implicit` can be defined simply as follows.
+
+[source,scheme,subs="quotes"]
+----
+(define-syntax with-implicit
+  (syntax-rules ()
+    [(_ (tid id ...) b1 b2 ...)
+     (with-syntax ([id (datum->syntax #'tid 'id)] ...)
+       b1 b2 ...)]))
+----
+
+We can use `with-implicit` to simplify the (correct version of) `loop` above.
+
+[source,scheme,subs="quotes"]
+----
+(define-syntax loop
+  (lambda (x)
+    (syntax-case x ()
+      [(k e ...)
+       (with-implicit (k break)
+         #'(call-with-current-continuation
+             (lambda (break)
+               (let f () e ... (f)))))])))
+----
+
+[#syntax:s12]
+[horizontal]
+syntax:: `(include _path_)`
+returns:: unspecified
+libraries:: `(chezscheme)`
+
+`_path_` must be a string. `include` expands into a `begin` expression containing the forms found in the file named by `_path_`. For example, if the file `f-def.ss` contains `(define f (lambda () x))`, the expression
+
+[source,scheme,subs="quotes"]
+----
+(let ([x "okay"])
+  (include "f-def.ss")
+  (f))
+----
+
+evaluates to `"okay"`. An include form is treated as a definition if it appears within a sequence of definitions and the forms on the file named by `_path_` are all definitions, as in the above example. If the file contains expressions instead, the `include` form is treated as an expression.
+
+`include` may be defined portably as follows, although _Chez Scheme_ uses an implementation-dependent definition that allows it to capture and maintain source information for included code.
+
+[source,scheme,subs="quotes"]
+----
+(define-syntax include
+  (lambda (x)
+    (define read-file
+      (lambda (fn k)
+        (let ([p (open-input-file fn)])
+          (let f ([x (read p)])
+            (if (eof-object? x)
+                (begin (close-input-port p) '())
+                (cons (datum->syntax k x)
+                      (f (read p))))))))
+    (syntax-case x ()
+      [(k filename)
+       (let ([fn (datum filename)])
+         (with-syntax ([(exp ...) (read-file fn #'k)])
+           #'(begin exp ...)))])))
+----
+
+The definition of `include` uses `datum\->syntax` to convert the objects read from the file into syntax objects in the proper lexical context, so that identifier references and definitions within those expressions are scoped where the `include` form appears.
+
+In _Chez Scheme_'s implementation of `include`, the parameter `source-directories` (<<section_12.5.,Section 12.5>>) determines the set of directories searched for source files not identified by absolute path names.
+
+[#desc:syntax-error]
+[horizontal]
+procedure:: `(syntax-error _obj_ _string_ \...)`
+returns:: does not return
+libraries:: `(chezscheme)`
+
+Syntax errors may be reported with `syntax-error`, which produces a message by concatenating `_string_ \...` and a printed representation of `_obj_`. If no string arguments are provided, the string `"invalid syntax"` is used instead. When `_obj_` is a syntax object, the syntax-object wrapper is stripped (as with `syntax\->datum`) before the printed representation is created. If source file information is present in the syntax-object wrapper, `syntax-error` incorporates this information into the error message.
+
+`syntax-case` and `syntax-rules` call `syntax-error` automatically if the input fails to match one of the clauses.
+
+We can use `syntax-error` to precisely report the cause of the errors detected in the following definition of (unnamed) `let`.
+
+[source,scheme,subs="quotes"]
+----
+(define-syntax let
+  (lambda (x)
+    (define check-ids!
+      (lambda (ls)
+        (unless (null? ls)
+          (unless (identifier? (car ls))
+            (syntax-error (car ls) "let cannot bind non-identifier"))
+          (check-ids! (cdr ls)))))
+    (define check-unique!
+      (lambda (ls)
+        (unless (null? ls)
+          (let ([x (car ls)])
+            (when (let mem? ([ls (cdr ls)])
+                    (and (not (null? ls))
+                         (or (bound-identifier=? x (car ls))
+                             (mem? (cdr ls)))))
+              (syntax-error x "let cannot bind two occurrences of")))
+          (check-unique! (cdr ls)))))
+    (syntax-case x ()
+      [(_ ((i e) ...) b1 b2 ...)
+       (begin
+         (check-ids! #'(i ...))
+         (check-unique! #'(i ...))
+         #'((lambda (i ...) b1 b2 ...) e ...))])))
+----
+
+With this change, the expression
+
+[source,scheme,subs="quotes"]
+----
+(let ([a 3] [a 4]) (+ a a))
+----
+
+produces the error message "let cannot bind two occurrences of `a`."
+
+[horizontal]
+procedure:: `(literal-identifier=? _identifier~1~_ _identifier~2~_)`
+returns:: see below
+libraries:: `(chezscheme)`
+
+This procedure is identical to the Revised^6^ Report `free-identifier=?`, and is provided for backward compatibility only.
+
+=== Section 11.4. Compile-time Values and Properties [[section_11.4.]]
+
+When defining sets of dependent macros, it is often convenient to attach information to identifiers in the same _compile time environment_ that the expander uses to record information about variables, keywords, module names, etc. For example, a record-type definition macro, like `define-record-type`, might need to attach information to the record-type name in the compile-time environment for use in handling child record-type definitions.
+
+_Chez Scheme_ provides two mechanisms for attaching information to identifiers in the compile-time environment: compile-time values and compile-time properties. A compile-time value is a kind of transformer that can be associated with an identifier via `define-syntax`, `let-syntax`, `letrec-syntax`, and `fluid-let-syntax`. When an identifier is associated with a compile-time value, it cannot also have any other meaning, and an attempt to reference it as an ordinary identifier results in a syntax error. A compile-time property, on the other hand, is maintained alongside an existing binding, providing additional information about the binding. Properties are ignored when ordinary references to an identifier occur.
+
+The mechanisms used by a macro to obtain compile-time values and properties are similar. In both cases, the macro's transformer returns a procedure `_p_` rather than a syntax object. The expander invokes `_p_` with one argument, an environment-lookup procedure `_lookup_`, which `_p_` can then use to obtain compile-time values and properties for one or more identifiers before it constructs the macro's final output. `_lookup_` accepts one or two identifier arguments. With one argument, `_id_`, `_lookup_` returns the compile-time value of `_id_`, or `#f` if `_id_` has no compile-time value. With two arguments, `_id_` and `_key_`, `_lookup_` returns the value of ``_id_``'s `_key_` property, or `#f` if `_id_` has no `_key_` property.
+
+[horizontal]
+procedure:: `(make-compile-time-value _obj_)`
+returns:: a compile-time value
+libraries:: `(chezscheme)`
+
+A compile time value is a kind of transformer with which a keyword may be associated by any of the keyword binding constructs, e.g., `define-syntax` or `let-syntax`. The transformer encapsulates the supplied `_obj_`. The encapsulated object may be retrieved as described above.
+
+The following example illustrates how this feature might be used to define a simple syntactic record-definition mechanism where the record type descriptor is generated at expansion time.
+
+[source,scheme,subs="quotes"]
+----
+(define-syntax drt
+  (lambda (x)
+    (define construct-name
+      (lambda (template-identifier . args)
+        (datum->syntax template-identifier
+          (string->symbol
+            (apply string-append
+              (map (lambda (x)
+                     (if (string? x)
+                         x
+                         (symbol->string (syntax->datum x))))
+                   args))))))
+    (define do-drt
+      (lambda (rname fname* prtd)
+        (with-syntax ([rname rname]
+                      [rtd (make-record-type-descriptor
+                             (syntax->datum rname) prtd #f #f #f
+                             (list->vector
+                               (map (lambda (fname)
+                                      `(immutable ,(syntax->datum fname)))
+                                    fname*)))]
+                      [make-rname (construct-name rname "make-" rname)]
+                      [rname? (construct-name rname rname "?")]
+                      [(rname-fname ...)
+                       (map (lambda (fname)
+                              (construct-name fname rname "-" fname))
+                            fname*)]
+                      [(i ...) (enumerate fname*)])
+          #'(begin
+              (define-syntax rname (make-compile-time-value 'rtd))
+              (define rcd (make-record-constructor-descriptor 'rtd #f #f))
+              (define make-rname (record-constructor rcd))
+              (define rname? (record-predicate 'rtd))
+              (define rname-fname (record-accessor 'rtd i))
+              ...))))
+    (syntax-case x (parent)
+      [(_ rname (fname ...))
+       (for-all identifier? #'(rname fname ...))
+       (do-drt #'rname #'(fname ...) #f)]
+      [(_ rname pname (fname ...))
+       (for-all identifier? #'(rname pname fname ...))
+       (lambda (lookup)
+         (let ([prtd (lookup #'pname)])
+           (unless (record-type-descriptor? prtd)
+             (syntax-error #'pname "unrecognized parent record type"))
+           (do-drt #'rname #'(fname ...) prtd)))])))
+----
+
+[source,scheme,subs="quotes"]
+----
+(drt prec (x y))
+(drt crec prec (z))
+(define r (make-crec 1 2 3))
+(prec? r) ⇒ #t
+(prec-x r) ⇒ 1
+(crec-z r) ⇒ 3
+prec ⇒ _exception: invalid syntax prec_
+----
+
+[#syntax:s16]
+[horizontal]
+procedure:: `(compile-time-value? _obj_)`
+returns:: `#t` if `_obj_` is a compile-time value; `#f` otherwise
+libraries:: `(chezscheme)`
+
+[source,scheme,subs="quotes"]
+----
+(define-syntax x (make-compile-time-value "eggs"))
+(compile-time-value? (top-level-syntax 'x)) ⇒ #t
+----
+
+[#syntax:s17]
+[horizontal]
+procedure:: `(compile-time-value-value _ctv_)`
+returns:: the value of a compile-time value
+libraries:: `(chezscheme)`
+
+[source,scheme,subs="quotes"]
+----
+(define-syntax x (make-compile-time-value "eggs"))
+(compile-time-value-value (top-level-syntax 'x)) ⇒ "eggs"
+----
+
+[#syntax:s18]
+[horizontal]
+syntax:: `(define-property _id_ _key_ _expr_)`
+returns:: unspecified
+libraries:: `(chezscheme)`
+
+A `define-property` form attaches a property to an existing identifier binding without disturbing the existing meaning of the identifier in the scope of that binding. It is typically used by one macro to record information about a binding for use by another macro. Both `_id_` and `_key_` must be identifiers. The expression `_expr_` is evaluated when the `define-property` form is expanded, and a new property associating `_key_` with the value of `_expr_` is attached to the existing binding of `_id_`, which must have a visible local or top-level binding.
+
+`define-property` is a definition and can appear anywhere other definitions can appear. The scope of a property introduced by `define-property` is the entire body in which the `define-property` form appears or global if it appears at top level, except where it is replaced by a property for the same `_id_` and `_key_` or where the binding to which it is attached is shadowed. Any number of properties can be attached to the same binding with different keys. Attaching a new property with the same name as an property already attached to a binding shadows the existing property with the new property.
+
+The following example defines a macro, `get-info`, that retrieves the `info` property of a binding, defines the variable `x`, attaches an `info` property to the binding of `x`, retrieves the property via `get-info`, references `x` to show that its normal binding is still intact, and uses `get-info` again within the scope of a different binding of `x` to show that the properties are shadowed as well as the outer binding of `x`.
+
+[source,scheme,subs="quotes"]
+----
+(define info)
+(define-syntax get-info
+  (lambda (x)
+    (lambda (lookup)
+      (syntax-case x ()
+        [(_ q)
+         (let ([info-value (lookup \#'q #'info)])
+           #`'#,(datum->syntax #'* info-value))]))))
+(define x "x-value")
+(define-property x info "x-info")
+(get-info x) ⇒ "x-info"
+x ⇒ "x-value"
+(let ([x "inner-x-value"]) (get-info x)) ⇒ #f
+----
+
+For debugging, it is often useful to have a form that retrieves an arbitrary property, given an identifier and a key. The `get-property` macro below does just that.
+
+[source,scheme,subs="quotes"]
+----
+(define-syntax get-property
+  (lambda (x)
+    (lambda (r)
+      (syntax-case x ()
+        [(_ id key)
+         \#`'#,(datum->syntax #'* (r #'id #'key))]))))
+(get-property x info) ⇒ "x-info"
+----
+
+The bindings for both identifiers must be visible where `get-property` is used.
+
+The version of `drt` defined below is like the one defined using `make-compile-time-value` above, except that it defines the record name as a macro that raises an exception with a more descriptive message, while attaching the record type descriptor to the binding as a separate property. The variable `drt-key` defined along with `drt` is used only as the key for the property that `drt` attaches to a record name. Both `drt-key` and `drt` are defined within a module that exports only the latter, ensuring that the properties used by `drt` cannot be accessed or forged.
+
+[source,scheme,subs="quotes"]
+----
+(library (drt) (export drt) (import (chezscheme))
+  (define drt-key)
+  (define-syntax drt
+    (lambda (x)
+      (define construct-name
+        (lambda (template-identifier . args)
+          (datum->syntax template-identifier
+            (string->symbol
+              (apply string-append
+                (map (lambda (x)
+                       (if (string? x)
+                           x
+                           (symbol->string (syntax->datum x))))
+                     args))))))
+      (define do-drt
+        (lambda (rname fname* prtd)
+          (with-syntax ([rname rname]
+                        [rtd (make-record-type-descriptor
+                               (syntax->datum rname) prtd #f #f #f
+                               (list->vector
+                                 (map (lambda (fname)
+                                        `(immutable ,(syntax->datum fname)))
+                                      fname*)))]
+                        [make-rname (construct-name rname "make-" rname)]
+                        [rname? (construct-name rname rname "?")]
+                        [(rname-fname ...)
+                         (map (lambda (fname)
+                                (construct-name fname rname "-" fname))
+                              fname*)]
+                        [(i ...) (enumerate fname*)])
+            #'(begin
+                (define-syntax rname
+                  (lambda (x)
+                    (syntax-error x "invalid use of record name")))
+                (define rcd (make-record-constructor-descriptor 'rtd #f #f))
+                (define-property rname drt-key 'rtd)
+                (define make-rname (record-constructor rcd))
+                (define rname? (record-predicate 'rtd))
+                (define rname-fname (record-accessor 'rtd i))
+                ...))))
+      (syntax-case x (parent)
+        [(_ rname (fname ...))
+         (for-all identifier? #'(rname fname ...))
+         (do-drt #'rname #'(fname ...) #f)]
+        [(_ rname pname (fname ...))
+         (for-all identifier? #'(rname pname fname ...))
+         (lambda (lookup)
+           (let ([prtd (lookup #'pname #'drt-key)])
+             (unless prtd
+               (syntax-error #'pname "unrecognized parent record type"))
+             (do-drt #'rname #'(fname ...) prtd)))]))))
+----
+
+[source,scheme,subs="quotes"]
+----
+(import (drt))
+(drt prec (x y))
+(drt crec prec (z))
+(define r (make-crec 1 2 3))
+(prec? r) ⇒ #t
+(prec-x r) ⇒ 1
+(crec-z r) ⇒ 3
+prec ⇒ _exception: invalid use of record name prec_
+----
+
+=== Section 11.5. Modules [[section_11.5.]]
+
+Modules are used to help organize programs into separate parts that interact cleanly via declared interfaces. Although modular programming is typically used to facilitate the development of large programs possibly written by many individuals, it may also be used in _Chez Scheme_ at a "micro-modular" level, since _Chez Scheme_ module and import forms are definitions and may appear anywhere any other kind of definition may appear, including within a `lambda` body or other local scope.
+
+Modules control visibility of bindings and can be viewed as extending lexical scoping to allow more precise control over where bindings are or are not visible. Modules export identifier bindings, i.e., variable bindings, keyword bindings, or module name bindings. Modules may be _named_ or _anonymous_. Bindings exported from a named module may be made visible via an import form wherever the module's name is visible. Bindings exported from an anonymous module are implicitly imported where the module form appears. Anonymous modules are useful for hiding some of a set of bindings while allowing the remaining bindings in the set to be visible.
+
+Some of the text and examples given in this section are adapted from the paper "Extending the scope of syntactic abstraction" <<ref32>>, which describes modules and their implementation in more detail.
+
+[horizontal]
+syntax:: `(module _name_ _interface_ _defn_ \... _init_ \...)`
+syntax:: `(module _interface_ _defn_ \... _init_ \...)`
+returns:: unspecified
+libraries:: `(chezscheme)`
+
+`_name_` is an identifier, `_defn_ \...` are definitions, and `_init_ \...` are expressions. `_interface_` is a list of exports `(_export_ \...)`, where each `_export_` is either an identifier `_identifier_` or of the form `(_identifier_ _export_ \...)`.
+
+The first syntax for `module` establishes a named scope that encapsulates a set of identifier bindings. The exported bindings may be made visible via `import` or `import-only` (<<section_10.4.,Section 10.4>>) anywhere the module name is visible. The second syntax for `module` introduces an anonymous module whose bindings are implicitly imported (as if by `import` of a hidden module name) where the module form appears.
+
+A module consists of a (possibly empty) set of definitions and a (possibly empty) sequence of initialization expressions. The identifiers defined within a module are visible within the body of the module and, if exported, within the scope of an import for the module. Each identifier listed in a module's interface must be defined within or imported into that module. A `module` form is a definition and can appear anywhere other definitions can appear, including at the top level of a program, nested within the bodies of `lambda` expressions, nested within `library` and top-level program forms, and nested within other modules. Also, because module names are scoped like other identifiers, modules and libraries may export module names as well as variables and keywords.
+
+When an interface contains an export of the form `(_identifier_ _export_ \...)`, only `_identifier_` is visible in the importing context. The identifiers within `_export_ \...` are _indirect imports_, as if declared via an `indirect-export` form (<<section_10.4.,Section 10.4>>).
+
+Module names occupy the same namespace as other identifiers and follow the same scoping rules. Unless exported, identifiers defined within a module are visible only within that module.
+
+Expressions within a module can reference identifiers bound outside of the module.
+
+[source,scheme,subs="quotes"]
+----
+(let ([x 3])
+  (module m (plusx)
+    (define plusx (lambda (y) (+ x y))))
+  (import m)
+  (let ([x 4])
+    (plusx 5))) ⇒ 8
+----
+
+Similarly, `import` does not prevent access to identifiers that are visible where the import form appears, except for those variables shadowed by the imported identifiers.
+
+[source,scheme,subs="quotes"]
+----
+(module m (y) (define y 'm-y))
+(let ([x 'local-x] [y 'local-y])
+  (import m)
+  (list x y)) ⇒ (local-x m-y)
+----
+
+On the other hand, use of `import-only` within a module establishes an isolated scope in which the only visible identifiers are those exported by the imported module.
+
+[source,scheme,subs="quotes"]
+----
+(module m (y) (define y 'm-y))
+(let ([x 'local-x] [y 'local-y])
+  (import-only m)
+  x) ⇒ Error: x is not visible
+----
+
+This is sometimes desirable for static verification that no identifiers are used except those explicitly imported into a module or local scope.
+
+Unless a module imported via `import-only` exports `import` or `import-only` and the name of at least one module, subsequent imports within the scope of the `import-only` form are not possible. To create an isolated scope containing the exports of more than one module without making `import` or `import-only` visible, all of the modules to be imported must be listed in the same `import-only` form.
+
+Another solution is to create a single module that contains the exports of each of the other modules.
+
+[source,scheme,subs="quotes"]
+----
+(module m2 (y) (define y 'y))
+(module m1 (x) (define x 'x))
+(module mega-module (cons x y)
+  (import m1)
+  (import m2)
+  (import scheme))
+(let ([y 3])
+  (import-only mega-module)
+  (cons x y)) ⇒ (x . y)
+----
+
+Before it is compiled, a source program is translated into a core language program containing no syntactic abstractions, syntactic definitions, library definitions, module definitions, or import forms. Translation is performed by a _syntax expander_ that processes the forms in the source program via recursive descent.
+
+A `define-syntax` form associates a keyword with a transformer in a translation-time environment. When the expander encounters a keyword, it invokes the associated transformer and reprocesses the resulting form. A `module` form associates a module name with an interface. When the expander encounters an `import` form, it extracts the corresponding module interface from the translation-time environment and makes the exported bindings visible in the scope where the `import` form appears.
+
+Internal definitions and definitions within a `module` body are processed from left to right so that a module's definition and import may appear within the same sequence of definitions. Expressions appearing within a body and the right-hand sides of variable definitions, however, are translated only after the entire set of definitions has been processed, allowing full mutual recursion among variable and syntactic definitions.
+
+Module and import forms affect only the visibility of identifiers in the source program, not their meanings. In particular, variables are bound to locations whether defined within or outside of a module, and `import` does not introduce new locations. Local variables are renamed as necessary to preserve the scoping relationships established by both modules and syntactic abstractions. Thus, the expression:
+
+[source,scheme,subs="quotes"]
+----
+(let ([x 1])
+  (module m (x setter)
+    (define-syntax x (identifier-syntax z))
+    (define setter (lambda (x) (set! z x)))
+    (define z 5))
+  (let ([y x] [z 0])
+    (import m)
+    (setter 3)
+    (+ x y z))) ⇒ 4
+----
+
+is equivalent to the following program in which identifiers have been consistently renamed as indicated by subscripts.
+
+[source,scheme,subs="quotes"]
+----
+(let ([x~0~ 1])
+  (define-syntax x~1~ (identifier-syntax z~1~))
+  (define setter~1~ (lambda (x~2~) (set! z~1~ x~2~)))
+  (define z~1~ 5)
+  (let ([y~3~ x~0~] [z~3~ 0])
+    (setter~1~ 3)
+    (+ x~1~ y~3~ z~3~)))
+----
+
+Definitions within a top-level `begin`, `lambda`, top-level program, `library`, or `module` body are processed from left to right by the expander at expand time, and the variable definitions are evaluated from left-to-right at run time. Initialization expressions appearing within a `module` body are evaluated in sequence after the evaluation of the variable definitions.
+
+Mutually recursive modules can be defined in several ways. In the following program, `a` and `b` are mutually recursive modules exported by an anonymous module whose local scope is used to statically link the two. For example, the free variable `y` within module `a` refers to the binding for `y`, provided by importing `b`, in the enclosing module.
+
+[source,scheme,subs="quotes"]
+----
+(module (a b)
+  (module a (x) (define x (lambda () y)))
+  (module b (y) (define y (lambda () x)))
+  (import a)
+  (import b))
+----
+
+The following syntactic abstraction generalizes this pattern to permit the definition of multiple mutually recursive modules.
+
+[source,scheme,subs="quotes"]
+----
+(define-syntax rec-modules
+  (syntax-rules (module)
+    [(_ (module m (id ...) form ...) ...)
+     (module (m ...)
+       (module m (id ...) form ...) ...
+       (import m) ...)]))
+----
+
+Because a module can re-export imported bindings, it is quite easy to provide multiple views on a single module, as `s` and `t` provide for `r` below, or to combine several modules into a compound, as `r` does.
+
+[source,scheme,subs="quotes"]
+----
+(module p (x y)
+  (define x 1) (define y 2))
+(module q (y z)
+  (define y 3) (define z 4))
+(module r (a b c d)
+  (import* p (a x) (b y))
+  (import* q (c y) (d z)))
+(module s (a c) (import r))
+(module t (b d) (import r))
+----
+
+To allow interfaces to be separated from implementations, the following syntactic abstractions support the definition and use of named interfaces.
+
+[source,scheme,subs="quotes"]
+----
+(define-syntax define-interface
+  (syntax-rules ()
+    [(_ name (export ...))
+     (define-syntax name
+       (lambda (x)
+         (syntax-case x ()
+           [(_ n defs)
+            (with-implicit (n export ...)
+              #'(module n (export ...) .
+                  defs))])))]))
+
+(define-syntax define-module
+  (syntax-rules ()
+    [(_ name interface defn ...)
+     (interface name (defn ...))]))
+----
+
+`define-interface` creates an interface macro that, given a module name and a list of definitions, expands into a module definition with a concrete interface.
+
+`with-implicit` is used to ensure that the introduced `export` identifiers are visible in the same scope as the name of the module in the `define-module` form.
+
+`define-interface` and `define-module` can be used as follows.
+
+[source,scheme,subs="quotes"]
+----
+(define-interface simple (a b))
+(define-module m simple
+  (define-syntax a (identifier-syntax 1))
+  (define b (lambda () c))
+  (define c 2))
+(let () (import m) (+ a (b))) ⇒ 3
+----
+
+The abstract module facility defined below allows a module interface to be satisfied incrementally when module forms are evaluated. This permits flexibility in the separation between the interface and implementation, supports separate compilation of mutually recursive modules, and permits redefinition of module implementations.
+
+[source,scheme,subs="quotes"]
+----
+(define-syntax abstract-module
+  (syntax-rules ()
+    [(_ name (ex ...) (kwd ...) defn ...)
+     (module name (ex ... kwd ...)
+       (declare ex) ...
+       defn ...)]))
+
+(define-syntax implement
+  (syntax-rules ()
+    [(_ name form ...)
+     (module () (import name) form ...)]))
+----
+
+Within an `abstract-module` form, each of the exports in the list `_ex_ \...` must be variables. The values of these variables are supplied by one or more separate `implement` forms. Since keyword bindings must be present at compile time, they cannot be satisfied incrementally and are instead listed as separate exports and defined within the abstract module.
+
+Within an `implement` form, the sequence of forms `_form_ \...` is a sequence of zero or more definitions followed by a sequence of zero or more expressions. Since the module used in the expansion of `implement` does not export anything, the definitions are all local to the `implement` form. The expressions may be arbitrary expressions, but should include one `satisfy` form for each variable whose definition is supplied by the `implement` form. A `satisfy` form has the syntax
+
+[source,scheme,subs="quotes"]
+----
+(satisfy _variable_ _expr_)
+----
+
+`declare` and `satisfy` may simply be the equivalents of `define` and `set!`.
+
+[source,scheme,subs="quotes"]
+----
+(define-syntax declare (identifier-syntax define))
+(define-syntax satisfy (identifier-syntax set!))
+----
+
+Alternatively, `declare` can initialize the declared variable to the value of a flag known only to `declare` and `satisfy`, and `satisfy` can verify that this flag is still present to insure that only one attempt to satisfy the value of a given identifier is made.
+
+[source,scheme,subs="quotes"]
+----
+(module ((declare cookie) (satisfy cookie))
+  (define cookie "chocolate chip")
+  (define-syntax declare
+    (syntax-rules () [(_ var) (define var cookie)]))
+  (define-syntax satisfy
+    (syntax-rules ()
+      [(_ var exp)
+       (if (eq? var cookie)
+           (set! var exp)
+           (assertion-violationf 'satisfy
+             "value of variable ~s has already been satisfied"
+             'var))])))
+----
+
+Using `abstract-module` and `implement`, we can define mutually recursive and separately compilable modules as follows.
+
+[source,scheme,subs="quotes"]
+----
+(abstract-module e (even?) (pred)
+  (define-syntax pred
+    (syntax-rules () [(_ exp) (- exp 1)])))
+
+(abstract-module o (odd?) ())
+
+(implement e
+  (import o)
+  (satisfy even?
+    (lambda (x)
+      (or (zero? x) (odd? (pred x))))))
+
+(implement o
+  (import e)
+  (satisfy odd?
+    (lambda (x) (not (even? x)))))
+
+(let () (import-only e) (even? 38)) ⇒ #t
+----
+
+[#syntax:s22]
+[horizontal]
+syntax:: `only`
+syntax:: `except`
+syntax:: `add-prefix`
+syntax:: `drop-prefix`
+syntax:: `rename`
+syntax:: `alias`
+libraries:: `(chezscheme)`
+
+These identifiers are auxiliary keywords for `import` and `import-only`. It is a syntax violation to reference these identifiers except in contexts where they are recognized as auxiliary keywords.
+
+=== Section 11.6. Standalone import and export forms [[section_11.6.]]
+
+The local import and export forms described in <<section_10.4.,Section 10.4>> can be used equally well for and within modules.
+
+=== Section 11.7. Built-in Modules [[section_11.7.]]
+
+Five modules are built-in to _Chez Scheme_: `scheme`, `r5rs`, `r5rs-syntax`, `ieee`, and `$system`. Each module is immutable, i.e., the exported bindings cannot be altered.
+
+[horizontal]
+module:: `scheme`
+libraries:: `(chezscheme)`
+
+`scheme` contains all user-visible top-level bindings (variables, keywords, and module names) built into _Chez Scheme_.
+
+[horizontal]
+module:: `r5rs`
+libraries:: `(chezscheme)`
+
+`r5rs` contains all top-level bindings (variables and keywords) defined in the Revised^5^ Report on Scheme. The bindings exported from `r5rs` are precisely those that are available within an expression evaluated via `eval` with the environment specifier returned by `scheme-report-environment`.
+
+[horizontal]
+module:: `r5rs-syntax`
+libraries:: `(chezscheme)`
+
+`r5rs-syntax` contains all top-level keyword bindings defined in the Revised^5^ Report on Scheme. The bindings exported from `r5rs-syntax` are precisely those that are available within an expression evaluated via `eval` with the environment specifier returned by `null-environment`.
+
+[horizontal]
+module:: `ieee`
+libraries:: `(chezscheme)`
+
+`ieee` contains all top-level bindings (variables and keywords) defined in the ANSI/IEEE standard for Scheme. The bindings exported from `ieee` are precisely those that are available within an expression evaluated via `eval` with the environment specifier returned by `ieee-environment`.
+
+[horizontal]
+module:: `$system`
+libraries:: `(chezscheme)`
+
+`$system` contains all user-visible top-level bindings built into _Chez Scheme_ along with various undocumented system bindings.
+
+=== Section 11.8. Meta Definitions [[section_11.8.]]
+
+[horizontal]
+syntax:: `(meta . _definition_)`
+returns:: unspecified
+libraries:: `(chezscheme)`
+
+The `meta` keyword is actually a prefix that can be placed in front of any definition keyword, e.g.,
+
+[source,scheme,subs="quotes"]
+----
+(meta define x 3)
+----
+
+It tells the expander that any variable definition resulting from the definition is to be an expand-time definition available only to the right-hand sides of other meta definitions and, most importantly, transformer expressions. It is used to define expand-time helpers and other information for use by one or more `syntax-case` transformers.
+
+[source,scheme,subs="quotes"]
+----
+(module M (helper1 a b)
+  (meta define helper1
+    (lambda (---)
+      ---))
+  (meta define helper2
+    (lambda (---)
+      --- (helper2 ---) ---))
+  (define-syntax a
+    (lambda (x)
+      --- (helper1 ---) ---))
+  (define-syntax b
+    (lambda (x)
+      --- (helper1 ---) ---
+      --- (helper2 ---) ---)))
+----
+
+The right-hand-side expressions of a syntax definition or meta definition can refer only to identifiers whose values are already available in the compile-time environment. Because of the left-to-right expansion order for `library`, `module`, `lambda`, and similar bodies, this implies a semantics similar to `let*` for a sequence of meta definitions, in which each right-hand side can refer only to the variables defined earlier in the sequence. An exception is that the right-hand side of a meta definition can refer to its own name as long as the reference is not evaluated until after the value of the expression has been computed. This permits meta definitions to be self-recursive but not mutually recursive. The right-hand side of a meta definition can, however, build syntax objects containing occurrences of any identifiers defined in the body in which the meta definition appears.
+
+Meta definitions propagate through macro expansion, so one can write, for example:
+
+[source,scheme,subs="quotes"]
+----
+(module (a)
+  (meta define-record foo (x))
+  (define-syntax a
+    (let ([q (make-foo #''q)])
+      (lambda (x) (foo-x q)))))
+a ⇒ q
+----
+
+where define-record is a macro that expands into a set of defines.
+
+It is also sometimes convenient to write
+
+[source,scheme,subs="quotes"]
+----
+(meta begin defn ...)
+----
+
+or
+
+[source,scheme,subs="quotes"]
+----
+(meta module {exports} defn ...)
+----
+
+or
+
+[source,scheme,subs="quotes"]
+----
+(meta include "_path_")
+----
+
+to create groups of meta bindings.
+
+=== Section 11.9. Conditional expansion [[section_11.9.]]
+
+Expansion-time decisions can be made via `meta-cond`, which is similar to `cond` but evaluates the test expressions at expansion time and can be used in contexts where definitions are expected as well as in expression contexts.
+
+[horizontal]
+syntax:: `(meta-cond _clause~1~_ _clause~2~_ \...)`
+returns:: see below
+libraries:: `(chezscheme)`
+
+Each `_clause_` but the last must take the form:
+
+[source,scheme,subs="quotes"]
+----
+(_test_ _expr~1~_ _expr~2~_ ...)
+----
+
+The last may take the same form or be an `else` clause of the form:
+
+[source,scheme,subs="quotes"]
+----
+(_else_ _expr~1~_ _expr~2~_ ...)
+----
+
+During expansion, the `_test_` expressions are evaluated in order until one evaluates to a true value or until all of the tests have been evaluated. If a `_test_` evaluates to a true value, the `meta-cond` form expands to a `begin` form containing the corresponding expressions `_expr~1~_ _expr~2~_ \...`. If no `_test_` evaluates to a true value and an `else` clause is present, the `meta-cond` form expands to a `begin` form containing the expressions `_expr~1~_ _expr~2~_ \...` from the `else` clause. Otherwise the `meta-cond` expression expands into a call to the `void` procedure.
+
+`meta-cond` might be defined as follows.
+
+[source,scheme,subs="quotes"]
+----
+(define-syntax meta-cond
+  (syntax-rules ()
+    [(_ [a0 a1 a2 ...] [b0 b1 b2 ...] ...)
+     (let-syntax ([expr (cond
+                          [a0 (identifier-syntax (begin a1 a2 ...))]
+                          [b0 (identifier-syntax (begin b1 b2 ...))]
+                          ...)])
+       expr)]))
+----
+
+`meta-cond` is used to choose, at expansion time, from among a set of possible forms. For example, one might have safe (error-checking) and unsafe (non-error-checking) versions of a procedure and decide which to call based on the compile-time optimization level, as shown below.
+
+[source,scheme,subs="quotes"]
+----
+(meta-cond
+  [(= (optimize-level) 3) (unsafe-frob x)]
+  [else (safe-frob x)])
+----
+
+=== Section 11.10. Aliases [[section_11.10.]]
+
+[horizontal]
+syntax:: `(alias _id~1~_ _id~2~_)`
+returns:: unspecified
+libraries:: `(chezscheme)`
+
+`alias` is a definition and can appear anywhere other definitions can appear. It is used to transfer the binding from one identifier to another.
+
+[source,scheme,subs="quotes"]
+----
+(let ([x 3]) (alias y x) (set! y 4) (list x y)) ⇒ (4 4)
+
+(module lisp (if)
+  (module (scheme:if)
+    (import scheme)
+    (alias scheme:if if))
+  (define-syntax if
+    (syntax-rules ()
+      [(_ e_1 e_2 e_3)
+       (scheme:if (not (memq e_1 '(#f ()))) e_2 e_3)])))
+(define (length ls)
+  (import lisp)
+  (if ls (+ (length (cdr ls)) 1) 0))
+(length '(a b c)) ⇒ 3
+----
+
+Because of left-to-right expansion order, aliases should appear after the definition of the right-hand-side identifier, e.g.:
+
+[source,scheme,subs="quotes"]
+----
+(let ()
+  (import-only (chezscheme))
+  (define y 3)
+  (alias x y)
+  x) ⇒ 3
+----
+
+rather than:
+
+[source,scheme,subs="quotes"]
+----
+(let ()
+  (import-only (chezscheme))
+  (alias x y)
+  (define y 3)
+  x) ⇒ _exception: unbound identifier_
+----
+
+=== Section 11.11. Annotations [[section_11.11.]]
+
+When source code is read from a file by `load`, `compile-file`, or variants of these, such as `load-library`, the reader attaches _annotations_ to each object read from the file. These annotations identify the file and the position of the object within the file. Annotations are tracked through the compilation process and associated with compiled code at run time. The expander and compiler use the annotations to produce syntax errors and compiler warnings that identify the location of the offending form, and the inspector uses them to identify the locations of calls and procedure definitions. The compiler and run time also use annotations to associate source positions with profile counts.
+
+While these annotations are usually maintained "behind the scenes," the programmer can manipulate them directly via a set of routines for creating and accessing annotations.
+
+Annotations are values of a type distinct from other types and have four components: an expression, possibly with annotated subexpressions, a _source object_, a stripped version of the expression, and usage options. Annotations can be created via `make-annotation`, which has three required arguments corresponding to the first three components and an optional fourth argument corresponding to the fourth component. The second argument must be a source object, and the third argument should be a stripped version of the first argument, i.e., equivalent to the first argument with each annotation replaced by its expression component. An annotation is essentially equivalent to its stripped component as a representation of source code, with the source information attached and available to the expander or evaluator. The optional fourth argument, if present, must be an enumeration set over the symbols `debug` and `profile` and defaults to an enumeration set containing both `debug` and `profile`.
+
+Annotations marked `debug` are used for compile-time error reporting and run-time error reporting and inspection; annotations marked `profile` are used for profiling. Annotations created by the Scheme reader are always marked both `debug` and `profile`, but other readers and parsers might choose to mark some annotations only `debug` or only `profile`. In particular, it might be useful to annotate multiple expressions in the output of a parser with the same source object for debugging purposes and mark only one of them `profile` to avoid duplicate counts. It might also be useful to mark no expressions `profile` and instead introduce explicit `profile` forms (<<section_12.7.,Section 12.7>>) to identify the set of source locations to be profiled.
+
+Source objects are also values of a type distinct from other types and also have three or five components: a _source-file descriptor_ (sfd), a beginning file position (bfp), an ending file position (efp), an optional beginning line, and an optional beginning column. The sfd identifies the file from which an expression is read and the bfp and efp identify the range of character positions occupied by the object in the file, with the bfp being inclusive and the efp being exclusive. The line and column are either both numbers or both not present. A source object can be created via `make-source-object`, which takes either three or five arguments corresponding to these components. The first argument must be a source-file descriptor, the second and third must be nonnegative exact integers, the second must not be greater than the third, and the fourth and fifth (if provided) must be positive exact integers.
+
+Source-file descriptors are also values of a type distinct from all other types and have two components: the file's path, represented by a string, and a checksum, represented by a number. The path might or might not be an absolute path depending on how the file's path was specified when the source-file descriptor was created. The checksum is computed based on the file's length and contents when the file is created and checked by tools that look for the source file to make sure that the proper file has been found and has not been modified. Source-file descriptors can be created with `make-source-file-descriptor`, which accepts two arguments: a string naming the path and a binary input port, along with an optional third boolean argument, `_reset?_`, which defaults to false. `make-source-file-descriptor` computes a checksum based on the contents of the port, starting at its current position. It resets the port, using `set-port-position!`, after computing the checksum if `_reset?_` is true; otherwise, it leaves the port at end-of-file.
+
+The procedures that create, check for, and access annotations, source objects, and source-file descriptors are summarized below and described in more detail later in this section.
+
+[source,scheme,subs="quotes"]
+----
+(make-annotation _obj_ _source-object_ _obj_) ⇒ _annotation_
+(annotation? _obj_) ⇒ _boolean_
+(annotation-expression _annotation_) ⇒ _obj_
+(annotation-source _annotation_) ⇒ _source-object_
+(annotation-stripped _annotation_) ⇒ _obj_
+
+(make-source-object _sfd_ _uint_ _uint_) ⇒ _source-object_
+(make-source-object _sfd_ _uint_ _uint_ _uint_ _uint_) ⇒ _source-object_
+(source-object? _obj_) ⇒ _boolean_
+(source-object-sfd _source-object_) ⇒ _sfd_
+(source-object-bfp _source-object_) ⇒ _uint_
+(source-object-efp _source-object_) ⇒ _uint_
+(source-object-line _source-object_) ⇒ _uint_ or #f
+(source-object-column _source-object_) ⇒ _uint_ or #f
+
+(make-source-file-descriptor _string_ _binary-input-port_) ⇒ _sfd_
+(make-source-file-descriptor _string_ _binary-input-port_ _reset?_) ⇒ _sfd_
+(source-file-descriptor? _obj_) ⇒ _boolean_
+(source-file-descriptor-checksum _sfd_) ⇒ _obj_
+(source-file-descriptor-path _sfd_) ⇒ _obj_
+----
+
+A program might open a source file with `open-file-input-port`, create an sfd using `make-source-file-descriptor`, create a textual port from the binary port using transcoded-port, and create source objects and annotations for each of the objects it reads from the file. If a custom reader is not required, the Scheme reader can be used to read annotations via the `get-datum/annotations` procedure:
+
+[source,scheme,subs="quotes"]
+----
+(get-datum/annotations _textual-input-port_ _sfd_ _uint_) ⇒ _obj_, _uint_
+----
+
+`get-datum/annotations` is like `get-datum` but instead of returning a plain datum, it returns an annotation encapsulating a datum (possibly with nested annotations), a source object, and the plain (stripped) datum. It also returns a second value, the position of the first character beyond the object in the file. Character positions are accepted and returned by `get-datum/annotations` so that the textual port need not support `port-position` and need not report positions in characters if it does support `port-position`. (Positions are usually reported in bytes.) The bfp and efp positions recorded in the annotations returned by `get-datum/annotations` are correct only if the positions supplied to it are correct.
+
+Once read, an annotation can be passed to the expander, interpreter, or compiler. The procedures `eval`, `expand`, `interpret`, and `compile` all accept annotated or unannotated input.
+
+Two additional procedures complete the set of annotation-related primitives:
+
+[source,scheme,subs="quotes"]
+----
+(open-source-file _sfd_) ⇒ #f or _port_
+(syntax->annotation _obj_) ⇒ #f or _annotation_
+----
+
+[#syntax:s47]
+`open-source-file` attempts to locate and open the source file identified by `_sfd_`. It returns a textual input port, positioned at the beginning of the file, if successful, and `#f` otherwise.
+
+`syntax\->annotation` accepts a syntax object. If the syntax object's expression is annotated, it returns the annotation; otherwise, it returns `#f`. It can be used by a macro to extract source information, when available, from an input form.
+
+The procedure `datum\->syntax` accepts either an annotated or unannotated input datum.
+
+[horizontal]
+procedure:: `(make-annotation _obj_ _source-object_ _stripped-obj_)`
+procedure:: `(make-annotation _obj_ _source-object_ _stripped-obj_ _options_)`
+returns:: an annotation
+libraries:: `(chezscheme)`
+
+The annotation is formed with `_obj_` as its expression component, `_source-object_` as its source-object component, and `_stripped-obj_` as its stripped component. `_obj_` should represent an expression, possibly with embedded annotations. `_stripped-obj_` should be a stripped version of `_obj_`, i.e., equivalent to `_obj_` with each annotation replaced by its expression component. `_options_`, if present must be an enumeration set over the symbols `debug` and `profile`, and defaults to an enumeration set containing both `debug` and `profile`. Annotations marked `debug` are used for compile-time error reporting and run-time error reporting and inspection; annotations marked `profile` are used for profiling.
+
+[horizontal]
+procedure:: `(annotation? _obj_)`
+returns:: `#t` if `_obj_` is an annotation, otherwise `#f`
+libraries:: `(chezscheme)`
+
+[#syntax:s51]
+[horizontal]
+procedure:: `(annotation-expression _annotation_)`
+returns:: the expression component of `_annotation_`
+libraries:: `(chezscheme)`
+
+[#syntax:s52]
+[horizontal]
+procedure:: `(annotation-source _annotation_)`
+returns:: the source-object component of `_annotation_`
+libraries:: `(chezscheme)`
+
+[#syntax:s53]
+[horizontal]
+procedure:: `(annotation-stripped _annotation_)`
+returns:: the stripped component of `_annotation_`
+libraries:: `(chezscheme)`
+
+[#syntax:s54]
+[horizontal]
+procedure:: `(annotation-options _annotation_)`
+returns:: the options enumeration set of `_annotation_`
+libraries:: `(chezscheme)`
+
+[#syntax:s55]
+[horizontal]
+procedure:: `(make-source-object _sfd_ _bfp_ _efp_)`
+procedure:: `(make-source-object _sfd_ _bfp_ _efp_ _line_ _column_)`
+returns:: a source object
+libraries:: `(chezscheme)`
+
+`_sfd_` must be a source-file descriptor. `_bfp_` and `_efp_` must be exact nonnegative integers, and `_bfp_` should not be greater than `_efp_`. `_line_` and `_column_` must be exact positive integers.
+
+[horizontal]
+procedure:: `(source-object? _obj_)`
+returns:: `#t` if `_obj_` is a source object, otherwise `#f`
+libraries:: `(chezscheme)`
+
+[#syntax:s57]
+[horizontal]
+procedure:: `(source-object-sfd _source-object_)`
+returns:: the sfd component of `_source-object_`
+libraries:: `(chezscheme)`
+
+[#syntax:s58]
+[horizontal]
+procedure:: `(source-object-bfp _source-object_)`
+returns:: the bfp component of `_source-object_`
+libraries:: `(chezscheme)`
+
+[#syntax:s59]
+[horizontal]
+procedure:: `(source-object-efp _source-object_)`
+returns:: the efp component of `_source-object_`
+libraries:: `(chezscheme)`
+
+[#syntax:s60]
+[horizontal]
+procedure:: `(source-object-line _source-object_)`
+returns:: the line component of `_source-object_` if present, otherwise `#f`
+libraries:: `(chezscheme)`
+
+[#syntax:s61]
+[horizontal]
+procedure:: `(source-object-column _source-object_)`
+returns:: the column component of `_source-object_` if present, otherwise `#f`
+libraries:: `(chezscheme)`
+
+[#syntax:s62]
+[horizontal]
+thread parameter:: `current-make-source-object`
+libraries:: `(chezscheme)`
+
+`current-make-source-object` is used by the reader to construct a source object for an annotation. `current-make-source-object` is initially bound to `make-source-object`, and the reader always calls the function bound to the paramater with three arguments.
+
+Adjust this parameter to, for example, eagerly convert a position integer to a file-position object, instead of delaying the conversion to `locate-source`.
+
+[horizontal]
+procedure:: `(make-source-file-descriptor _string_ _binary-input-port_)`
+procedure:: `(make-source-file-descriptor _string_ _binary-input-port_ _reset?_)`
+returns:: a source-file descriptor
+libraries:: `(chezscheme)`
+
+To compute the checksum encapsulated in the source-file descriptor, this procedure must read all of the data from `_binary-input-port_`. If `_reset?_` is present and `#t`, the port is reset to its original position, as if via `port-position`. Otherwise, it is left pointing at end-of-file.
+
+[horizontal]
+procedure:: `(source-file-descriptor? _obj_)`
+returns:: `#t` if `_obj_` is a source-file descriptor, otherwise `#f`
+libraries:: `(chezscheme)`
+
+[#syntax:s65]
+[horizontal]
+procedure:: `(source-file-descriptor-checksum _sfd_)`
+returns:: the checksum component of `_sfd_`
+libraries:: `(chezscheme)`
+
+[#syntax:s66]
+[horizontal]
+procedure:: `(source-file-descriptor-path _sfd_)`
+returns:: the path component of `_sfd_`
+libraries:: `(chezscheme)`
+
+`_sfd_` must be a source-file descriptor.
+
+[horizontal]
+procedure:: `(source-file-descriptor _path_ _checksum_)`
+returns:: a new source-file-descriptor
+libraries:: `(chezscheme)`
+
+`_path_` must be a string, and `_checksum_` must be an exact nonnegative integer. This procedure can be used to construct custom source-file descriptors or to reconstitute source-file descriptors from the `_path_` and `_checksum_` components.
+
+[horizontal]
+syntax:: `(annotation-option-set _symbol_ \...)`
+returns:: an annotation-options enumeration set
+libraries:: `(chezscheme)`
+
+Annotation-options enumeration sets may be passed to `make-annotation` to control whether the annotation is used for debugging, profiling, both, or neither. Accordingly, each `_symbol_` must be either `_debug_` or `profile`.
+
+[horizontal]
+procedure:: `(syntax\->annotation _obj_)`
+returns:: an annotation or `#f`
+libraries:: `(chezscheme)`
+
+If `_obj_` is an annotation or syntax-object encapsulating an annotation, the annotation is returned.
+
+[horizontal]
+procedure:: `(get-datum/annotations _textual-input-port_ _sfd_ _bfp_)`
+returns:: see below
+libraries:: `(chezscheme)`
+
+`_sfd_` must be a source-file descriptor. `_bfp_` must be an exact nonnegative integer and should be the character position of the next character to be read from `_textual-input-port_`.
+
+This procedure returns two values: an annotated object and an ending file position. In most cases, `_bfp_` should be 0 for the first call to `get-datum/annotation` at the start of a file, and it should be the second return value of the preceding call to `get-datum/annotation` for each subsequent call. This protocol is necessary to handle files containing multiple-byte characters, since file positions do not necessarily correspond to character positions.
+
+[horizontal]
+procedure:: `(open-source-file _sfd_)`
+returns:: a port or `#f`
+libraries:: `(chezscheme)`
+
+`_sfd_` must be a source-file descriptor. This procedure attempts to locate and open the source file identified by `_sfd_`. It returns a textual input port, positioned at the beginning of the file, if successful, and `#f` otherwise. It can fail even if a file with the correct name exists in one of the source directories when the file's checksum does not match the checksum recorded in `_sfd_`.
+
+[horizontal]
+procedure:: `(locate-source _sfd_ _pos_)`
+procedure:: `(locate-source _sfd_ _pos_ _use-cache?_)`
+returns:: see below
+libraries:: `(chezscheme)`
+
+`_sfd_` must be a source-file descriptor, and `_pos_` must be an exact nonnegative integer.
+
+This procedure either uses cached information from a previous request for `_sfd_` (only when `_use-cache?_` is provided as true) or attempts to locate and open the source file identified by `_sfd_`. If successful, it returns three values: a string `_path_`, an exact nonnegative integer `_line_`, and an exact nonnegative integer `_char_` representing the absolute pathname, line, and character position within the line represented by the specified source-file descriptor and file position. If unsuccessful, it returns zero values. It can fail even if a file with the correct name exists in one of the source directories when the file's checksum does not match the checksum recorded in `_sfd_`.
+
+[horizontal]
+procedure:: `(locate-source-object-source _source-object_ _get-start?_ _use-cache?_)`
+returns:: see below
+libraries:: `(chezscheme)`
+
+This procedure is similar to `locate-source`, but instead of taking an sfd and a position, it takes a source object plus a request for either the start or end location.
+
+If `_get-start?_` is true and `_source-object_` has a line and column, this procedure returns the path in ``_source-objects_``'s sfd, ``_source-object_``'s line, and ``_source-objects_``'s column.
+
+If `_source-object_` has no line and column, then this procedure calls `locate-source` on ``_source-object_``'s sfd, either ``_source-object_``'s bfp or efp depending on `_get-start?_`, and `_use-cache?_`.
+
+[horizontal]
+thread parameter:: `current-locate-source-object-source`
+libraries:: `(chezscheme)`
+
+`current-locate-source-object-source` determines the source-location lookup function that is used by the system to report errors based on source objects. This parameter is initially bound to `locate-source-object-object`.
+
+Adjust this parameter to control the way that source locations are extracted from source objects, possibly using recorded information, caches, and the filesystem in a way different from `locate-source-object-object`.
+
+=== Section 11.12. Source Tables [[section_11.12.]]
+
+Source tables provide an efficient way to associate information with source objects both in memory and on disk, such as the coverage information saved to `.covin` files when `generate-covin-files` is set to `#t` and the profile counts associated with source objects by `with-profile-tracker` (<<section_12.7.,Section 12.7>>).
+
+Source tables are manipulated via hashtable-like accessors and setters (<<section_7.12.,Section 7.12>>, _The Scheme Programming Language, 4th Edition_ link:../../the-scheme-programming-language-4th/en/index.html#section_6.13.[Section 6.13]), e.g., `source-table-ref` and `source-table-set!`. They can be saved to files via `put-source-table` and restored via `get-source-table!`.
+
+[horizontal]
+procedure:: `(make-source-table)`
+returns:: a source table
+libraries:: `(chezscheme)`
+
+A source table contains associations between source objects and arbitrary values. For purposes of the source-table operations described below, two source objects are the same if they have the same source-file descriptor, equal beginning file positions and equal ending file positions. Two source-file descriptors are the same if they have the same path and checksum.
+
+[horizontal]
+procedure:: `(source-table? _obj_)`
+returns:: `#t` if `_obj_` is a source-table; `#f` otherwise
+libraries:: `(chezscheme)`
+
+[#syntax:s83]
+[horizontal]
+procedure:: `(source-table-set! _source-table_ _source-object_ _obj_)`
+returns:: unspecified
+libraries:: `(chezscheme)`
+
+`source-table-set!` associates `_source-object_` with `_obj_` in `_source-table_`, replacing the existing association, if any.
+
+[horizontal]
+procedure:: `(source-table-ref _source-table_ _source-object_ _default_)`
+returns:: see below
+libraries:: `(chezscheme)`
+
+`_default_` may be any Scheme value.
+
+`source-table-ref` returns the value associated with `_source-object_` in `_source-table_`. If no value is associated with `_source-object_` in `_source-table_`, `source-table-ref` returns `_default_`.
+
+[horizontal]
+procedure:: `(source-table-contains? _source-table_ _source-object_)`
+returns:: `#t` if an association for `_source-object_` exists in `_source-table_`, `#f` otherwise
+libraries:: `(chezscheme)`
+
+[#syntax:s86]
+[horizontal]
+procedure:: `(source-table-cell _source-table_ _source-object_ _default_)`
+returns:: a pair (see below)
+libraries:: `(chezscheme)`
+
+`_default_` may be any Scheme value.
+
+If no value is associated with `_source-object_` in `_source-table_`, `source-table-cell` modifies `_source-table_` to associate `_source-object_` with `_default_`. Regardless, it returns a pair whose car is `_source-object_` and whose cdr is the associated value. Changing the cdr of this pair effectively updates the table to associate `_source-object_` with a new value. The car field of the pair should not be modified.
+
+[horizontal]
+procedure:: `(source-table-delete! _source-table_ _source-object_)`
+returns:: unspecified
+libraries:: `(chezscheme)`
+
+`source-table-delete!` drops the association for `_source-object_` from `_source-table_`, if one exists.
+
+[horizontal]
+procedure:: `(source-table-size _source-table_)`
+returns:: the number of entries in `_source-table_`
+libraries:: `(chezscheme)`
+
+[#syntax:s89]
+[horizontal]
+procedure:: `(put-source-table _textual-output-port_ _source-table_)`
+returns:: unspecified
+libraries:: `(chezscheme)`
+
+This procedure writes a representation of the information stored in `_source-table_` to the port.
+
+[horizontal]
+procedure:: `(get-source-table! _textual-input-port_ _source-table_)`
+procedure:: `(get-source-table! _textual-input-port_ _source-table_ _combine_)`
+returns:: unspecified
+libraries:: `(chezscheme)`
+
+The port must be positioned at a representation of source-table information written by some previous call to `put-source-table`, which reads the information and merges it into `source-table`.
+
+If present and non-false, `_combine_` must be a procedure and should accept two arguments. It is called whenever associations for the same source object are present both in `_source-table_` and in the information read from the port. In this case, `_combine_` is passed two arguments: the associated value from `_source-table_` and the associated value from the port (in that order) and must return one value, which is recorded as the new associated value for the source object in `_source-table_`.
+
+If `_combine_` is not present, `_combine_` is `#f`, or no association for a source object read from the port already exists in `_source-table_`, the value read from the port is recorded as the associated value of the source object in `_source-table_`.
+
+[source,scheme,subs="quotes"]
+----
+(define st (make-source-table))
+(call-with-port (open-input-file "profile.out1")
+  (lambda (ip) (get-source-table! ip st)))
+(call-with-port (open-input-file "profile.out2")
+  (lambda (ip) (get-source-table! ip st +)))
+----
