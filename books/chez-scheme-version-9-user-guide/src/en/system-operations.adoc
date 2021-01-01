@@ -5,8 +5,10 @@ This chapter describes operations for handling exceptions, interrupts, environme
 
 === Section 12.1. Exceptions [[section_12.1.]]
 
+[#system:s0]
 _Chez Scheme_ provides some extensions to the Revised^6^ Report exception-handling mechanism, including mechanisms for producing formatted error messages, displaying conditions, and redefining the base exception handler. These extensions are described in this section.
 
+[#system:s1]
 [horizontal]
 procedure:: `(warning _who_ _msg_ _irritant_ \...)`
 returns:: unspecified
@@ -18,6 +20,7 @@ The continuation object with which the exception is raised also includes a `&who
 
 `_who_` must be a string, a symbol, or `#f` identifying the procedure or syntactic form reporting the warning upon whose behalf the warning is being reported. It is usually best to identify a procedure the programmer has called rather than some other procedure the programmer may not be aware is involved in carrying out the operation. `_msg_` must be a string and should describe the exceptional situation. The irritants may be any Scheme objects and should include values that may have caused or been materially involved in the exceptional situation.
 
+[#system:s2]
 [horizontal]
 procedure:: `(assertion-violationf _who_ _msg_ _irritant_ \...)`
 returns:: does not return
@@ -32,6 +35,7 @@ These procedures are like `assertion-violation`, `error`, and `warning` except t
 
 For each of these procedures, the continuation object with which the exception is raised includes a `&format` condition to signify that the string contained in the condition object's `&message` condition is a `format` string and the objects contained in the condition object's `&irritants` condition should be treated as the additional `format` arguments.
 
+[#system:s4]
 [horizontal]
 syntax:: `&format`
 procedure:: `(make-format-condition)`
@@ -97,6 +101,7 @@ libraries:: `(chezscheme)`
 
 If `_textual-output-port_` is not supplied, it defaults to the current output port. This procedure displays a message to the effect that an exception has occurred with value `_obj_`. If `_obj_` is a condition (link:../../the-scheme-programming-language-4th/en/index.html#chp_11[Chapter 11] of _The Scheme Programming Language, 4th Edition_), it displays information encapsulated within the condition, handling messages, `_who_` conditions, irritants, source information, etc., as appropriate.
 
+[#system:s8]
 [horizontal]
 procedure:: `(default-exception-handler _obj_)`
 returns:: unspecified
@@ -108,12 +113,14 @@ For serious or other non-warning conditions, it saves the condition in the param
 
 If an I/O exception occurs while attempting to display the condition, the default exception handler resets (as if by calling `reset`). The intent is to avoid an infinite regression (ultimately ending in exhaustion of memory) in which the process repeatedly recurs back to the default exception handler trying to write to a console-error port (typically stderr) that is no longer writable, e.g., due to the other end of a pipe or socket having been closed.
 
+[#system:s10]
 [horizontal]
 global parameter:: `debug-on-exception`
 libraries:: `(chezscheme)`
 
 The value of this parameter determines whether the default exception handler immediately enters the debugger immediately when it receives a serious or non-warning condition. If the `--debug-on-exception` command-line option (<<section_2.1.,Section 2.1>>) has been provided, the initial value of this parameter is `#t`. Otherwise, the initial value is `#f`.
 
+[#system:s12]
 [horizontal]
 thread parameter:: `base-exception-handler`
 libraries:: `(chezscheme)`
@@ -122,18 +129,21 @@ The value of this parameter must be a procedure, and the procedure should accept
 
 The value of this parameter is invoked whenever no exception handler established by a program has chosen to handle an exception.
 
+[#system:s13]
 [horizontal]
 thread parameter:: `debug-condition`
 libraries:: `(chezscheme)`
 
 This parameter is used by the default exception handler to hold the last serious or non-warning condition received by the handler, where it can be inspected via the `debug` procedure (<<section_3.2.,Section 3.2>>). It can also be invoked by user code to store or retrieve a condition.
 
+[#system:s14]
 [horizontal]
 thread parameter:: `current-exception-state`
 libraries:: `(chezscheme)`
 
 `current-exception-state` may be used to get or set the current exception state. When called without arguments, `current-exception-state` returns an _exception state_ comprising the current stack of handlers established by `with-exception-handler` and `guard`. When called with a single argument, which must be an exception state, `current-exception-state` sets the exception state.
 
+[#system:s15]
 [horizontal]
 procedure:: `(create-exception-state)`
 procedure:: `(create-exception-state _procedure_)`
@@ -148,12 +158,14 @@ libraries:: `(chezscheme)`
 
 === Section 12.2. Interrupts [[section_12.2.]]
 
+[#system:s16]
 _Chez Scheme_ allows programs to control the action of the Scheme system when various events occur, including an interrupt from the keyboard, the expiration of an internal timer set by `set-timer`, a breakpoint caused by a call to `break`, or a request from the storage manager to initiate a garbage collection. These mechanisms are described in this section, except for the collect request mechanism, which is described in <<section_13.1.,Section 13.1>>.
 
 Timer, keyboard, and collect-request interrupts are supported via a counter that is decremented approximately once for each call to a nonleaf procedure. (A leaf procedure is one that does not itself make any calls.) When no timer is running, this counter is set to a default value (1000 in Version 9) when a program starts or after an interrupt occurs. If a timer is set (via `set-timer`), the counter is set to the minimum of the default value and the number of ticks to which the timer is set. When the counter reaches zero, the system looks to see if the timer is set and has expired or if a keyboard or collect request interrupt has occurred. If so, the current procedure call is pended ("put on hold") while the appropriate interrupt handler is invoked to handle the interrupt. When (if) the interrupt handler returns, the pended call takes place. Thus, timer, keyboard, and collect-request interrupts effectively occur synchronously with respect to the procedure call mechanism, and keyboard and collect request interrupts may be delayed by a number of calls equal to the default timer value.
 
 Calls to the break handler occur immediately whenever `break` is called.
 
+[#system:s17]
 [horizontal]
 procedure:: `(break _who_ _msg_ _irritant_ \...)`
 procedure:: `(break _who_)`
@@ -163,6 +175,7 @@ libraries:: `(chezscheme)`
 
 The arguments to `break` follow the protocol described above for `errorf`. The default break handler (see `break-handler`) displays a message and invokes the debugger. The format string and objects may be omitted, in which case the message issued by the default break handler identifies the break using the `_who_` argument but provides no more information about the break. If the `_who_` argument is omitted as well, no message is generated. The default break handler returns normally if the debugger exits normally.
 
+[#system:s19]
 [horizontal]
 thread parameter:: `break-handler`
 libraries:: `(chezscheme)`
@@ -189,10 +202,9 @@ The value of this parameter must be a procedure. The keyboard-interrupt handler 
     (reset)))
 ----
 
-[#system:s22]
 [#desc:set-timer]
 [horizontal]
-procedure:: `(set-timer _n_)`
+procedure:: `(set-timer _n_)` [[system:s22]]
 returns:: previous current timer value
 libraries:: `(chezscheme)`
 
@@ -205,6 +217,7 @@ The value returned in either case is the value of the timer before the call to `
 
 The engine mechanism (<<section_6.4.,Section 6.4>>) is built on top of the timer interrupt so timer interrupts should not be used with engines.
 
+[#system:s24]
 [horizontal]
 thread parameter:: `timer-interrupt-handler`
 libraries:: `(chezscheme)`
@@ -212,6 +225,7 @@ libraries:: `(chezscheme)`
 [#system:s25]
 The value of this parameter must be a procedure. The timer interrupt handler is called by the system when the internal timer (set by `set-timer`) expires. The default handler raises an exception with condition type `&assertion` to say that the handler has not been defined; any program that uses the timer should redefine the handler before setting the timer.
 
+[#system:s26]
 [horizontal]
 procedure:: `(disable-interrupts)`
 procedure:: `(enable-interrupts)`
@@ -224,6 +238,7 @@ Great care should be exercised when using these procedures, since disabling inte
 
 The `with-interrupts-disabled` syntactic form should be used instead of these more primitive procedures whenever possible, since `with-interrupts-disabled` ensures that interrupts are re-enabled whenever a nonlocal exit occurs, such as when an exception is handled by the default exception handler.
 
+[#system:s27]
 [horizontal]
 syntax:: `(with-interrupts-disabled _body~1~_ _body~2~_ \...)`
 syntax:: `(critical-section _body~1~_ _body~2~_ \...)`
@@ -247,6 +262,7 @@ libraries:: `(chezscheme)`
 
 The use of `dynamic-wind` ensures that interrupts are disabled whenever the body of the `with-interrupts-disabled` expression is active and re-enabled whenever it is not. Since calls to `disable-interrupts` are counted (see the discussion under `disable-interrupts` and `enable-interrupts` above), `with-interrupts-disabled` expressions may be nested with the desired effect.
 
+[#system:s28]
 [horizontal]
 procedure:: `(register-signal-handler _sig_ _procedure_)`
 returns:: unspecified
@@ -266,6 +282,7 @@ There are several built-in environments, and new environments can be created by 
 
 Environments can be mutable or immutable. A mutable environment can be extended with new bindings, its existing bindings can be modified, and its variables can be assigned. An immutable environment cannot be modified in any of these ways.
 
+[#system:s29]
 [horizontal]
 procedure:: `(environment? _obj_)`
 returns:: `#t` if `_obj_` is an environment, otherwise `#f`
@@ -445,6 +462,7 @@ interaction environment:
 
 === Section 12.4. Compilation, Evaluation, and Loading [[section_12.4.]]
 
+[#system:s38]
 [horizontal]
 procedure:: `(eval _obj_)`
 procedure:: `(eval _obj_ _env_)`
@@ -457,6 +475,7 @@ Single-argument `eval` is a _Chez Scheme_ extension. _Chez Scheme_ also permits 
 
 In _Chez Scheme_, `eval` is actually a wrapper that simply passes its arguments to the current evaluator. (See `current-eval`.) The default evaluator is `compile`, which expands the expression via the current expander (see `current-expand`), compiles it, executes the resulting code, and returns its value. If the environment argument, `_env_`, is present, `compile` passes it along to the current expander, which is `sc-expand` by default.
 
+[#system:s39]
 [horizontal]
 thread parameter:: `current-eval`
 libraries:: `(chezscheme)`
@@ -481,6 +500,7 @@ libraries:: `(chezscheme)`
 
 `_obj_`, which can be an annotation (<<section_11.11.,Section 11.11>>) or unannotated value, is treated as a Scheme expression, expanded with the current expander (the value of `current-expand`) in the specified environment (or the interaction environment, if no environment is provided), compiled to machine code, and executed. `compile` is the default value of the `current-eval` parameter.
 
+[#system:s44]
 [horizontal]
 procedure:: `(interpret _obj_)`
 procedure:: `(interpret _obj_ _env_)`
@@ -495,6 +515,7 @@ libraries:: `(chezscheme)`
 
 `interpret` is sometimes faster than `compile` when the form to be evaluated is short running, since it avoids some of the work done by `compile` prior to evaluation.
 
+[#system:s45]
 [horizontal]
 procedure:: `(load _path_)`
 procedure:: `(load _path_ _eval-proc_)`
@@ -521,6 +542,7 @@ pretty-prints each expression before evaluating it.
 
 The parameter `source-directories` (<<section_12.5.,Section 12.5>>) determines the set of directories searched for source files not identified by absolute path names.
 
+[#system:s47]
 [horizontal]
 procedure:: `(load-library _path_)`
 procedure:: `(load-library _path_ _eval-proc_)`
@@ -529,6 +551,7 @@ libraries:: `(chezscheme)`
 
 `load-library` is identical to `load` except that it treats the input file as if it were prefixed by an implicit `\#!r6rs`. This effectively disables any non-R6RS lexical syntax except where subsequently overridden by `#!chezscheme`.
 
+[#system:s48]
 [horizontal]
 procedure:: `(load-program _path_)`
 procedure:: `(load-program _path_ _eval-proc_)`
@@ -539,6 +562,7 @@ libraries:: `(chezscheme)`
 
 The parameter `source-directories` (<<section_12.5.,Section 12.5>>) determines the set of directories searched for source files not identified by absolute path names.
 
+[#system:s50]
 [horizontal]
 procedure:: `(verify-loadability _situation_ _input_ \...)`
 returns:: unspecified
@@ -554,6 +578,7 @@ If `verify-loadabilty` finds a problem, such as a missing library dependency or 
 
 Since `verify-loadability` does not load or run any code from the files it processes, it cannot determine whether errors unrelated to missing or unreadable files or mutual compatibility will occur when the files are actually loaded.
 
+[#system:s56]
 [horizontal]
 procedure:: `(load-compiled-from-port _input-port_)`
 returns:: result of the last compiled expression
@@ -563,6 +588,7 @@ libraries:: `(chezscheme)`
 
 The return value is the value of the last expression whose compiled form is in `_input-port_`. If `_input-port_` is empty, then the result value is unspecified. The port is left at end-of-file but is not closed.
 
+[#system:s57]
 [horizontal]
 procedure:: `(visit-compiled-from-port _input-port_)`
 returns:: result of the last compiled expression processed
@@ -572,6 +598,7 @@ libraries:: `(chezscheme)`
 
 The return value is the value of the last expression whose last non-revisit compiled form is in `_input-port_`. If there are no such forms, then the result value is unspecified. The port is left at end-of-file but is not closed.
 
+[#system:s58]
 [horizontal]
 procedure:: `(revisit-compiled-from-port _input-port_)`
 returns:: result of the last compiled expression processed
@@ -581,6 +608,7 @@ libraries:: `(chezscheme)`
 
 The return value is the value of the last expression whose last non-visit compiled form is in `_input-port_`. If there are no such forms, then the result value is unspecified. The port is left at end-of-file but is not closed.
 
+[#system:s59]
 [horizontal]
 procedure:: `(visit _path_)`
 returns:: unspecified
@@ -601,6 +629,7 @@ If `t1.ss` is compiled to `t1.so`, applying `load` to `t1.so` has the effect of 
 
 The parameter `source-directories` (<<section_12.5.,Section 12.5>>) determines the set of directories searched for source files not identified by absolute path names.
 
+[#system:s61]
 [horizontal]
 procedure:: `(revisit _path_)`
 returns:: unspecified
@@ -614,6 +643,7 @@ Continuing the example given for `visit` above, applying `revisit` to the object
 
 The parameter `source-directories` (<<section_12.5.,Section 12.5>>) determines the set of directories searched for source files not identified by absolute path names.
 
+[#system:s63]
 [horizontal]
 procedure:: `(compile-file _input-filename_)`
 procedure:: `(compile-file _input-filename_ _output-filename_)`
@@ -653,6 +683,7 @@ It restores the values after the file has been compiled. This allows the program
 
 appears at the top of a source file, the optimization level is set to 3 just while the remainder of file is compiled.
 
+[#system:s66]
 [horizontal]
 procedure:: `(compile-script _input-filename_)`
 procedure:: `(compile-script _input-filename_ _output-filename_)`
@@ -665,6 +696,7 @@ libraries:: `(chezscheme)`
 
 `compile-script` permits compiled script files to be created from source script to reduce script load time. As with source-code scripts, compiled scripts may be run with the `--script` command-line option.
 
+[#system:s68]
 [horizontal]
 procedure:: `(compile-library _input-filename_)`
 procedure:: `(compile-library _input-filename_ _output-filename_)`
@@ -675,6 +707,7 @@ libraries:: `(chezscheme)`
 
 `compile-library` is identical to `compile-file` except that it treats the input file as if it were prefixed by an implicit `\#!r6rs`. This effectively disables any non-R6RS lexical syntax except where subsequently overridden by `#!chezscheme`.
 
+[#system:s69]
 [horizontal]
 procedure:: `(compile-program _input-filename_)`
 procedure:: `(compile-program _input-filename_ _output-filename_)`
@@ -691,6 +724,7 @@ A program invokes a library only if it references one or more variables exported
 
 As with source-code top-level programs, compiled top-level programs may be run with the `--program` command-line option.
 
+[#system:s71]
 [horizontal]
 procedure:: `(maybe-compile-file _input-filename_)`
 procedure:: `(maybe-compile-file _input-filename_ _output-filename_)`
@@ -705,6 +739,7 @@ These procedures are like their non-`maybe` counterparts but compile the source 
 
 When `_output-filename_` is not specified, the input and output filenames are determined in the same manner as for `compile-file`.
 
+[#system:s72]
 [horizontal]
 thread parameter:: `compile-library-handler`
 libraries:: `(chezscheme)`
@@ -713,6 +748,7 @@ This parameter must be set to a procedure, and the procedure should accept two s
 
 The value of this parameter is called by `maybe-compile-library` when the object file is out-of-date. It is also called by the expander to compile an imported library when `compile-imported-libraries` is `#t` and the expander determines the object file is out-of-date.
 
+[#system:s74]
 [horizontal]
 thread parameter:: `compile-program-handler`
 libraries:: `(chezscheme)`
@@ -721,6 +757,7 @@ This parameter must be set to a procedure, and the procedure should accept two s
 
 The value of this parameter is called by `maybe-compile-program` when the object file is out-of-date.
 
+[#system:s76]
 [horizontal]
 procedure:: `(compile-whole-program _input-filename_ _output-filename_)`
 procedure:: `(compile-whole-program _input-filename_ _output-filename_ _libs-visible?_)`
@@ -741,6 +778,7 @@ To the extent possible given the specified set of visible libraries and requirem
 
 The procedures `compile-file`, `compile-program`, `compile-library`, `compile-script`, and `compile-whole-library` produce wpo files as well as ordinary object files when the `generate-wpo-files` parameter is set to `#t` (the default is `#f`). `compile-port` and `compile-to-port` do so when passed an optional wpo port.
 
+[#system:s78]
 [horizontal]
 procedure:: `(compile-whole-library _input-filename_ _output-filename_)`
 returns:: a list of libraries left to be loaded at run time
@@ -750,6 +788,7 @@ libraries:: `(chezscheme)`
 
 The comment in the description of `compile-whole-program` about the effect of initialization-code linearization on dynamic dependencies applies to `compile-whole-library` as well.
 
+[#system:s79]
 [horizontal]
 procedure:: `(compile-port _input-port_ _output-port_)`
 procedure:: `(compile-port _input-port_ _output-port_ _sfd_)`
@@ -764,6 +803,7 @@ libraries:: `(chezscheme)`
 
 The ports are closed automatically after compilation under the assumption the program that opens the ports and invokes `compile-port` will take care of closing the ports.
 
+[#system:s80]
 [horizontal]
 procedure:: `(compile-to-port _obj-list_ _output-port_)`
 procedure:: `(compile-to-port _obj-list_ _output-port_ _sfd_)`
@@ -780,6 +820,7 @@ The ports are not closed automatically after compilation under the assumption th
 
 When `_obj-list_` contains a single list-structured element whose first-element is the symbol `top-level-program`, `compile-to-port` returns a list of the libraries the top-level program requires at run time, as with `compile-program`. Otherwise, the return value is unspecified.
 
+[#system:s81]
 [horizontal]
 procedure:: `(compile-to-file _obj-list_ _output-file_)`
 procedure:: `(compile-to-file _obj-list_ _output-file_ _sfd_)`
@@ -792,6 +833,7 @@ libraries:: `(chezscheme)`
 
 When `_obj-list_` contains a single list-structured element whose first-element is the symbol `top-level-program`, `compile-to-file` returns a list of the libraries the top-level program requires at run time, as with `compile-program`. Otherwise, the return value is unspecified.
 
+[#system:s82]
 [horizontal]
 procedure:: `(concatenate-object-files _out-file_ _in-file~1~_ _in-file~2~_ \...)`
 returns:: unspecified
@@ -801,6 +843,7 @@ libraries:: `(chezscheme)`
 
 `concatenate-object-files` combines the header information contained in the object files named by each `_in-file_`. It then writes the combined header information to the file named by `_out-file_`, followed by the remaining object code from each input file in turn.
 
+[#system:s83]
 [horizontal]
 procedure:: `(make-boot-file _output-filename_ _base-boot-list_ _input-filename_ \...)`
 returns:: unspecified
@@ -817,6 +860,7 @@ Boot files are loaded explicitly via the `--boot` or `-b` command-line options o
 
 See <<section_2.8.,Section 2.8>> for more information on boot files and the use of `make-boot-file`.
 
+[#system:s86]
 [horizontal]
 procedure:: `(make-boot-header _output-filename_ _base-boot~1~_ _base-boot~2~_...)`
 returns:: unspecified
@@ -850,6 +894,7 @@ On most platforms, the input and output paths can be the same, in which case the
 
 If `_options_` is empty, the output file is effectively equivalent to the input file, though it will not necessarily be identical.
 
+[#system:s88]
 [horizontal]
 syntax:: `(fasl-strip-options _symbol_ \...)`
 returns:: a fasl-strip-options enumeration set
@@ -869,12 +914,13 @@ Fasl-strip-options enumeration sets are passed to `strip-fasl-file` to determine
 `compile-time-information`::
     This strips compile-time information from compiled libraries, potentially reducing the size of the resulting file but making it impossible to use the file to compile dependent code. This option is useful for creating smaller object files to ship as part of a binary-only package.
 
+[#system:s89]
 [horizontal]
 procedure:: `(machine-type)`
 returns:: the current machine type
 libraries:: `(chezscheme)`
 
-Consult the release notes for the current version of _Chez Scheme_ for a list of supported machine types.
+Consult the release notes for the current version of _Chez Scheme_ for a list of supported machine types. [[system:s90]]
 
 [#desc:expand]
 [horizontal]
@@ -891,6 +937,7 @@ libraries:: `(chezscheme)`
 
 See also `expand-output` (<<desc:expand-output,page 363>>) which can be used to request that the compiler or interpreter show expander output.
 
+[#system:s92]
 [horizontal]
 thread parameter:: `current-expand`
 libraries:: `(chezscheme)`
@@ -901,13 +948,14 @@ It may be set another procedure, but since the format of expanded code expected 
 
 The first argument to the expansion procedure represents the input expression. It can be an annotation (<<section_11.11.,Section 11.11>>) or an unannotated value. the second argument is an environment. Additional arguments might be passed to the expansion procedure by the compiler, interpreter, and `expand`; their number and roles are unspecified.
 
+[#system:s95]
 [horizontal]
 procedure:: `(sc-expand _obj_)`
 procedure:: `(sc-expand _obj_ _env_)`
 returns:: the expanded form of `_obj_`
 libraries:: `(chezscheme)`
 
-The procedure `sc-expand` is used to expand programs written using `syntax-case` macros. `sc-expand` is the default expander, i.e., the initial value of `current-expand`. `_obj_` represents the program to be expanded, and `_env_` must be an environment. `_obj_` can be an annotation (<<section_11.11.,Section 11.11>>) or unannotated value. If not provided, `_env_` defaults to the environment returned by `interaction-environment`.
+The procedure `sc-expand` is used to expand programs written using `syntax-case` macros. `sc-expand` is the default expander, i.e., the initial value of `current-expand`. `_obj_` represents the program to be expanded, and `_env_` must be an environment. `_obj_` can be an annotation (<<section_11.11.,Section 11.11>>) or unannotated value. If not provided, `_env_` defaults to the environment returned by `interaction-environment`. [[system:s96]]
 
 [#desc:expand/optimize]
 [horizontal]
@@ -956,6 +1004,7 @@ libraries:: `(chezscheme)`
 [#system:s97]
 See also `expand/optimize-output` (<<desc:expand/optimize-output,page 363>>) which can be used to request that the compiler or interpreter show source-optimizer output.
 
+[#system:s98]
 [horizontal]
 syntax:: `(eval-when _situations_ _form~1~_ _form~2~_ \...)`
 returns:: see below
@@ -1103,6 +1152,7 @@ The value of the parameter `eval-syntax-expanders-when` actually determines the 
 [#eval-when-tlp]
 For RNRS top-level programs, `eval-when` is essentially ineffective. The entire program is treated as a single expression, so `eval-when` becomes a local `eval-when` for which only the `eval` situation has any relevance. As for any local `eval-when` form, the subforms are ignored if the `eval` situation is not present; otherwise, they are treated as if the `eval-when` wrapper were absent.
 
+[#system:s101]
 [horizontal]
 thread parameter:: `eval-syntax-expanders-when`
 libraries:: `(chezscheme)`
@@ -1111,6 +1161,7 @@ This parameter must be set to a list representing a set of `eval-when` situation
 
 === Section 12.5. Source Directories and Files [[section_12.5.]]
 
+[#system:s102]
 [horizontal]
 global parameter:: `source-directories`
 libraries:: `(chezscheme)`
@@ -1121,6 +1172,7 @@ The default value is the list `(".")`, which means source files will be found on
 
 This parameter is never altered by the system, with one exception. The expander temporarily adds (via `parameterize`) the directory in which a library file resides to the front of the `source-directories` list when it compiles (when `compile-imported-libraries` is true) or loads the library from source, which it does only if the library is not already defined.
 
+[#system:s103]
 [horizontal]
 procedure:: `(with-source-path _who_ _name_ _procedure_)`
 libraries:: `(chezscheme)`
@@ -1159,6 +1211,7 @@ The following examples assumes that the file "pie" exists in the directory "../s
 
 === Section 12.6. Compiler Controls [[section_12.6.]]
 
+[#system:s104]
 [horizontal]
 thread parameter:: `optimize-level`
 libraries:: `(chezscheme)`
@@ -1178,7 +1231,7 @@ One way to use optimize levels is on a per-file basis, using `eval-when` to forc
 
 at the front of a file will cause all of the forms in the file to be compiled at optimize level 3 when the file is compiled (using `compile-file`) but does not affect the optimize level used when the file is loaded from source. Since `compile-file` parameterizes `optimize-level` (see `parameterize`), the above expression does not permanently alter the optimize level in the system in which the `compile-file` is performed.
 
-The optimize level can also be set via the `--optimize-level` command-line option (<<section_2.9.,Section 2.9>>). This option is particularly useful for running RNRS top-level programs at optimize-level 3 via the `--program` command-line option, since `eval-when` is ineffective for RNRS top-level programs as described on <<eval-when-tlp,page 355>>.
+The optimize level can also be set via the `--optimize-level` command-line option (<<section_2.9.,Section 2.9>>). This option is particularly useful for running RNRS top-level programs at optimize-level 3 via the `--program` command-line option, since `eval-when` is ineffective for RNRS top-level programs as described on <<eval-when-tlp,page 355>>. [[system:s109]]
 
 [#desc:hash-primitive]
 [horizontal]
@@ -1212,6 +1265,7 @@ libraries:: `(chezscheme)`
 
 This parameter can take on one of the four values 0, 1, 2, and 3. It is used to tell the compiler how important the preservation of debugging information is, with 0 being least important and 3 being most important. The default value is 1. As of Version 9.0, it is used solely to determine whether an error-causing call encountered in nontail position is treated as if it were in tail position (thus causing the caller's frame not to appear in a stack backtrace); this occurs at debug levels below 2.
 
+[#system:s111]
 [horizontal]
 thread parameter:: `generate-interrupt-trap`
 libraries:: `(chezscheme)`
@@ -1220,11 +1274,12 @@ To support interrupts, including keyboard, timer, and collect request interrupts
 
 It is rarely a good idea to compile code without interrupt trap generation, since a tight loop in the generated code may completely prevent interrupts from being serviced, including the collect request interrupt that causes garbage collections to occur automatically. Disabling trap generation may be useful, however, for routines that act simply as "wrappers" for other routines for which code is presumably generated with interrupt trap generation enabled. It may also be useful for short performance-critical routines with embedded loops or recursions that are known to be short running and that make no other calls.
 
+[#system:s112]
 [horizontal]
 thread parameter:: `compile-interpret-simple`
 libraries:: `(chezscheme)`
 
-At all optimize levels, when the value of `compile-interpret-simple` is set to a true value (the default), `compile` interprets simple expressions. A simple expression is one that creates no procedures. This can save a significant amount of time over the course of many calls to `compile` or `eval` (with `current-eval` set to `compile`, its default value). When set to false, `compile` compiles all expressions.
+At all optimize levels, when the value of `compile-interpret-simple` is set to a true value (the default), `compile` interprets simple expressions. A simple expression is one that creates no procedures. This can save a significant amount of time over the course of many calls to `compile` or `eval` (with `current-eval` set to `compile`, its default value). When set to false, `compile` compiles all expressions. [[system:s114]]
 
 [#desc:generate-inspector-information]
 [horizontal]
@@ -1238,7 +1293,7 @@ When this parameter is set to a true value (the default), information about the 
 (eval-when (compile) (generate-inspector-information #f))
 ----
 
-is included in a file, generation of inspector information will be disabled only for the remainder of that particular file.
+is included in a file, generation of inspector information will be disabled only for the remainder of that particular file. [[system:s115]]
 
 [#desc:generate-procedure-source-information]
 [horizontal]
@@ -1247,12 +1302,14 @@ libraries:: `(chezscheme)`
 
 When `generate-inspector-information` is set to `#f` and this parameter is set to `#t`, then a source location is preserved for a procedure, even though other inspector information is not preserved. Source information provides a small amount of debugging support at a much lower cost in memory and object-file size than full inspector information. If this parameter is changed during the compilation of a file, the original value will be restored.
 
+[#system:s116]
 [horizontal]
 thread parameter:: `enable-cross-library-optimization`
 libraries:: `(chezscheme)`
 
 This parameter controls whether information is included with the object code for a compiled library to enable propagation of constants and inlining of procedures defined in the library into dependent libraries. When set to `#t` (the default), this information is included; when set to `#f`, the information is not included. Setting the parameter to `#f` potentially reduces the sizes of the resulting object files and the exposure of near-source information via the object file.
 
+[#system:s117]
 [horizontal]
 thread parameter:: `generate-wpo-files`
 libraries:: `(chezscheme)`
@@ -1260,6 +1317,7 @@ libraries:: `(chezscheme)`
 [#system:s118]
 When this parameter is set to `#t` (the default is `#f`), `compile-file`, `compile-library`, `compile-program`, and `compile-script` produce whole-program optimization (wpo) files for use by `compile-whole-program`. The name of the `wpo` file is derived from the output-file name by replacing the object-file extension (normally `.so`) with `.wpo`, or adding the extension `.wpo` if the object filename has no extension or has the extension `.wpo`.
 
+[#system:s119]
 [horizontal]
 thread parameter:: `compile-file-message`
 libraries:: `(chezscheme)`
@@ -1271,7 +1329,7 @@ When this parameter is set to true, the default, `compile-file`, `compile-librar
 compiling _input-path_ with output to _output-path_
 ----
 
-When the parameter is set to `#f`, the message is not printed.
+When the parameter is set to `#f`, the message is not printed. [[system:s120]]
 
 [#desc:run-cp0]
 [horizontal]
@@ -1382,6 +1440,7 @@ would be reduced to `3628800`, but
 
 would be left unchanged, although the optimizer may take a while to reach this decision if the effort and outer unroll limits are large.
 
+[#system:s122]
 [horizontal]
 thread parameter:: `commonization-level`
 libraries:: `(chezscheme)`
@@ -1390,6 +1449,7 @@ After running the main source optimization pass (cp0) for the last time, the com
 
 Commonization can undo some of the effects of cp0's inlining, can add run-time overhead, and can complicate debugging, particularly at higher commonization levels, which is why it is disabled by default. On the other hand, for macros or other meta programs that can generate large, mostly similar lambda expressions, enabling commonization can result in significant savings in object-code size and even reduce run-time overhead by making more efficient use of instruction caches.
 
+[#system:s123]
 [horizontal]
 thread parameter:: `undefined-variable-warnings`
 libraries:: `(chezscheme)`
@@ -1398,7 +1458,7 @@ When `undefined-variable-warnings` is set to `#t`, the compiler issues a warning
 
 Regardless of the setting of this parameter, the compiler inserts code to check for the error, except at optimize level 3. The check is fairly inexpensive and does not typically inhibit inlining or other optimizations. In code that must be carefully tuned, however, it is sometimes useful to reorder bindings or make other changes to eliminate the checks. Enabling undefined-variable warnings can facilitate this process.
 
-The checks are also visible in the output of `expand/optimize`.
+The checks are also visible in the output of `expand/optimize`. [[system:s124]]
 
 [#desc:expand-output]
 [horizontal]
@@ -1414,6 +1474,7 @@ When `expand-output` is set to a textual output port, the output of the expander
 [#system:s126]
 See also `expand` (<<desc:expand,page 349>>) and `expand-optimize` (<<desc:expand/optimize,page 350>>), which can be used to run the expander or the expander and source optimizer directly on an individual form.
 
+[#system:s127]
 [horizontal]
 syntax:: `(pariah _expr~1~_ _expr~2~_ \...)`
 returns:: the values of the last subexpression
@@ -1535,6 +1596,7 @@ As in the summary, the code is color-coded according to frequency of execution. 
 
 `profile-dump` and `profile-dump-list` may be used to generate a list of profile entries, which may then be analyzed manually or via a custom profile-viewing application.
 
+[#system:s140]
 [horizontal]
 thread parameter:: `compile-profile`
 libraries:: `(chezscheme)`
@@ -1547,12 +1609,14 @@ The code generated when `compile-profile` is non-false is larger and less effici
 
 The profile counters for code compiled when profile instrumentation is enabled are retained indefinitely, even if the code with which they are associated is reclaimed by the garbage collector. This results in more complete and accurate profile data but can lead to space leaks in programs that dynamically generate or load code. Such programs can avoid the potential space leak by releasing the counters explicitly via the procedure `profile-release-counters`.
 
+[#system:s142]
 [horizontal]
 thread parameter:: `generate-covin-files`
 libraries:: `(chezscheme)`
 
 When this parameter is set to `#t`, the compiler generates "coverage-information" (covin) files that can be used in connection with profile information to measure coverage of a source-code base by a set of tests. One covin file is created for each object file, with the object-file extension replaced by the extension `.covin`. Each covin file contains the printed representation of a source table (<<section_11.12.,Section 11.12>>), compressed using the compression format and level specified by `compress-format` and `compress-level`. This information can be read via `get-source-table!` and used as a universe of source expressions to identify source expressions that are not evaluated during the running of a set of tests.
 
+[#system:s144]
 [horizontal]
 syntax:: `(profile _source-object_)`
 returns:: unspecified
@@ -1560,12 +1624,14 @@ libraries:: `(chezscheme)`
 
 A `profile` form has the effect of accounting to the source position identified by `_source-object_` the number of times the `profile` form is executed. Profile forms are generated implicitly by the expander for source expressions in annotated input, e.g., input read by the compiler or interpreter from a Scheme source file, so this form is typically useful only when unannotated source code is produced by the front end for some language that targets Scheme.
 
+[#system:s145]
 [horizontal]
 thread parameter:: `(generate-profile-forms)`
 libraries:: `(chezscheme)`
 
 When this parameter is set to `#t`, the default, the expander implicitly introduces `profile` forms for each annotated input expression, unless the annotation has not been marked for use in profiling (<<section_11.11.,Section 11.11>>). It can be set to `#f` to inhibit the expander's implicit generation of `profile` forms, typically when explicit `profile` forms are already present for all source positions that should be profiled.
 
+[#system:s146]
 [horizontal]
 procedure:: `(profile-clear)`
 returns:: unspecified
@@ -1573,6 +1639,7 @@ libraries:: `(chezscheme)`
 
 Calling this procedure causes profile information to be cleared, i.e., the counts associated with each section of code are set to zero.
 
+[#system:s147]
 [horizontal]
 procedure:: `(profile-release-counters)`
 returns:: unspecified
@@ -1580,6 +1647,7 @@ libraries:: `(chezscheme)`
 
 Calling this procedure causes profile information associated with reclaimed code objects to be dropped.
 
+[#system:s148]
 [horizontal]
 procedure:: `(profile-dump)`
 returns:: a list of pairs of source-object and count
@@ -1591,8 +1659,10 @@ The list might contain more than one entry per source object due to macro expans
 
 The advantage of `profile-dump` over `profile-dump-list` is that `profile-dump` performs only minimal processing and preserves complete source objects, including their embedded source-file descriptors. It might be used, for example, to dump profile information to a fasl file on one machine for subsequent processing on another.
 
+[#system:s149]
 `with-profile-tracker` can be used to obtain the same set of counts as a source table.
 
+[#system:s150]
 [horizontal]
 procedure:: `(with-profile-tracker _thunk_)`
 procedure:: `(with-profile-tracker _preserve-existing?_ _thunk_)`
@@ -1607,6 +1677,7 @@ Profile data otherwise cleared by a call to `profile-clear` or `profile-release-
 
 The idiom `(with-profile-tracker #t values)` can be used to obtain the current set of profile counts as a source table.
 
+[#system:s153]
 [horizontal]
 procedure:: `(source-table-dump _source-table_)`
 returns:: a list of pairs of source objects and their associated values in `_source-table_`
@@ -1614,6 +1685,7 @@ libraries:: `(chezscheme)`
 
 This procedure can be used to convert a source-table produced by `with-profile-tracker` or some other mechanism into the form returned by `profile-dump` for use as an argument to `profile-dump-html`, `profile-dump-list`, or `profile-dump-data`.
 
+[#system:s159]
 [horizontal]
 procedure:: `(profile-dump-html)`
 procedure:: `(profile-dump-html _prefix_)`
@@ -1623,6 +1695,7 @@ libraries:: `(chezscheme)`
 
 This procedure produces one or more HTML files, including profile.html, which contains color-coded summary information, and one file `_source_`.html for each source file `_source_` containing a color-coded copy of the source code, as described in the lead-in to this section. If `_prefix_` is specified, it must be a string and is prepended to the names of the generated HTML files. For example, if `_prefix_` is `"/tmp/"`, the generated files are placed in the directory /tmp. The raw profile information is obtained from `_dump_`, which defaults to the value returned by `profile-dump`.
 
+[#system:s160]
 [horizontal]
 thread parameter:: `(profile-palette)`
 libraries:: `(chezscheme)`
@@ -1662,6 +1735,7 @@ libraries:: `(chezscheme)`
 
 This value of this parameter must be a string or `#f`. If it is a string, the string should contain an HTML cascading style sheet (CSS) color specifier. If the parameter is set to a string, `profile-dump-html` includes line numbers in its html rendering of each source file, using the specified color. If the parameter is set to `#f`, no line numbers are included.
 
+[#system:s162]
 [horizontal]
 procedure:: `(profile-dump-list)`
 procedure:: `(profile-dump-list _warn?_)`
@@ -1690,6 +1764,7 @@ The information returned by `profile-dump-list` can be used to implement a custo
 
 The advantage of `profile-dump-list` over `profile-dump` is that it attempts to determine the line number and character position for each source point and, if successful, aggregates multiple counts for the source point into a single entry.
 
+[#system:s163]
 [horizontal]
 procedure:: `(profile-dump-data _path_)`
 procedure:: `(profile-dump-data _path_ _dump_)`
@@ -1700,6 +1775,7 @@ libraries:: `(chezscheme)`
 
 This procedure writes, in a machine-readable form consumable by `profile-load-data`, profile counts represented by `_dump_` to the file named by `_path_`, replacing the file if it already exists. `_dump_` defaults to the value returned by `profile-dump`.
 
+[#system:s164]
 [horizontal]
 procedure:: `(profile-load-data _path_ \...)`
 returns:: unspecified
@@ -1711,6 +1787,7 @@ This procedure reads profile information from the files named by `_path_ \...` a
 
 The database stores a weight for each source expression or block rather than the actual count. When a single file is loaded into the database, the weight is the proportion of the actual count over the maximum count for all expressions or blocks represented in the file. When more than one file is loaded, either by one or multiple calls to `profile-load-data`, the weights are averaged.
 
+[#system:s165]
 [horizontal]
 procedure:: `(profile-query-weight _obj_)`
 returns:: ``_obj_``'s profile weight, or `#f` if `_obj_` is not in the database
@@ -1722,6 +1799,7 @@ A weight is a flonum in the range 0.0 to 1.0, inclusive, and denotes the ratio o
 
 `profile-query-weight` can be used by a macro to determine the relative frequency with which its subexpressions were executed in the run or runs that generated the information in the database. This information can be used to guide the generation of code that is likely to be more efficient. For example, the `case` macro uses profile information, when available, to order the clauses so that those whose keys matched more frequently are tested before those whose keys matched less frequently.
 
+[#system:s166]
 [horizontal]
 procedure:: `(profile-clear-database)`
 returns:: unspecified
@@ -1731,6 +1809,7 @@ This procedure clears the compiler's profile database. It has no impact on the c
 
 === Section 12.8. Waiter Customization [[section_12.8.]]
 
+[#system:s167]
 [horizontal]
 procedure:: `(new-cafe)`
 procedure:: `(new-cafe _eval-proc_)`
@@ -1768,6 +1847,7 @@ Interesting values for `_eval-proc_` include `expand`, which causes the macro ex
 
 The default waiter reader (see `waiter-prompt-and-read`) displays the current waiter prompt (see `waiter-prompt-string`) to the current value of `console-output-port` and reads from the current value of `console-input-port`. The default waiter printer (see `waiter-write`) sends output to the current value of `console-output-port`. These parameters, along with `current-eval`, can be modified to change the behavior of the waiter.
 
+[#system:s174]
 [horizontal]
 thread parameter:: `waiter-prompt-string`
 libraries:: `(chezscheme)`
@@ -1793,6 +1873,7 @@ libraries:: `(chezscheme)`
 
 `waiter-prompt-and-read` must be set to a procedure. It is used by the waiter to print a prompt and read an expression. The value of `waiter-prompt-and-read` is called by the waiter with a positive integer that indicates the café nesting level. It should return an expression to be evaluated by the current evaluator (see `new-cafe` and `current-eval`).
 
+[#system:s176]
 [horizontal]
 procedure:: `(default-prompt-and-read _level_)`
 libraries:: `(chezscheme)`
@@ -1847,12 +1928,14 @@ libraries:: `(chezscheme)`
 
 `reset` invokes the current reset handler (see `reset-handler`) without arguments.
 
+[#system:s179]
 [horizontal]
 thread parameter:: `reset-handler`
 libraries:: `(chezscheme)`
 
 The value of this parameter must be a procedure and should accept zero arguments. The current reset handler is called by `reset`. The default reset handler resets to the current café.
 
+[#system:s180]
 [horizontal]
 procedure:: `(exit _obj_ \...)`
 returns:: does not return
@@ -1860,6 +1943,7 @@ libraries:: `(chezscheme)`
 
 `exit` invokes the current exit handler (see `exit-handler`), passing along its arguments, if any.
 
+[#system:s181]
 [horizontal]
 thread parameter:: `exit-handler`
 libraries:: `(chezscheme)`
@@ -1868,6 +1952,7 @@ The value of this parameter must be a procedure and should accept any number of 
 
 The default exit handler exits from the current café, returning its arguments as the values of the call to `new-cafe` that created the current café. If the current café is the original café, or if `exit` is called from a script, `exit` exits from Scheme. In this case, the exit code for the Scheme process is 0 if no arguments were supplied or if the first argument is void, the value of the first argument cast to a C int if it is an exact integer of the host machine's bit width, and 1 otherwise.
 
+[#system:s182]
 [horizontal]
 procedure:: `(abort)`
 procedure:: `(abort _obj_)`
@@ -1876,6 +1961,7 @@ libraries:: `(chezscheme)`
 
 `abort` invokes the current abort handler (see `abort-handler`), passing along its argument, if any.
 
+[#system:s183]
 [horizontal]
 thread parameter:: `abort-handler`
 libraries:: `(chezscheme)`
@@ -1884,6 +1970,7 @@ The value of this parameter must be a procedure and should accept either zero ar
 
 The default abort handler exits the Scheme process. The exit code for the Scheme process is -1 if no arguments were supplied, 0 if the first argument is void, the value of the first argument if it is a 32-bit exact integer, and -1 otherwise.
 
+[#system:s184]
 [horizontal]
 global parameter:: `scheme-start`
 libraries:: `(chezscheme)`
@@ -1901,6 +1988,7 @@ The value of `scheme-start` is a procedure that determines the system's action u
 
 To have any effect, this parameter must be set within a boot file. (See <<chp_2,Chapter 2>>.)
 
+[#system:s185]
 [horizontal]
 global parameter:: `scheme-script`
 libraries:: `(chezscheme)`
@@ -1919,6 +2007,7 @@ The value of `scheme-script` is a procedure that determines the system's action 
 
 To have any effect, this parameter must be set within a boot file. (See <<chp_2,Chapter 2>>.)
 
+[#system:s189]
 [horizontal]
 global parameter:: `scheme-program`
 libraries:: `(chezscheme)`
@@ -1937,6 +2026,7 @@ The value of `scheme-program` is a procedure that determines the system's action
 
 To have any effect, this parameter must be set within a boot file. (See <<chp_2,Chapter 2>>.)
 
+[#system:s193]
 [horizontal]
 global parameter:: `command-line`
 libraries:: `(chezscheme)`
@@ -1944,6 +2034,7 @@ libraries:: `(chezscheme)`
 [#system:s194]
 This parameter is set by the default values of `scheme-script` and `scheme-program` to a list representing the command line, with the script name followed by the command-line arguments, when the `--script` or `--program` option is used on system startup.
 
+[#system:s195]
 [horizontal]
 global parameter:: `command-line-arguments`
 libraries:: `(chezscheme)`
@@ -1951,6 +2042,7 @@ libraries:: `(chezscheme)`
 [#system:s196]
 This parameter is set by the default values of `scheme-script` and `scheme-program` to a list of the command-line arguments when the `--script` or `--program` option is used on system startup.
 
+[#system:s197]
 [horizontal]
 global parameter:: `suppress-greeting`
 libraries:: `(chezscheme)`
@@ -1961,7 +2053,7 @@ To have any effect, this parameter must be set within a boot file. (See <<chp_2,
 
 === Section 12.9. Transcript Files [[section_12.9.]]
 
-A transcript file is a record of an interactive session. It is also useful as a "quick-and-dirty" alternative to opening an output file and using explicit output operations.
+A transcript file is a record of an interactive session. It is also useful as a "quick-and-dirty" alternative to opening an output file and using explicit output operations. [[system:s199]]
 
 [#desc:transcript-on]
 [horizontal]
@@ -1973,6 +2065,7 @@ libraries:: `(chezscheme)`
 
 `transcript-on` opens the file named by `_path_` for output, and it copies to this file all input from the current input port and all output to the current output port. An exception is raised with condition-type `i/o-filename` if the file cannot be opened for output.
 
+[#system:s200]
 [horizontal]
 procedure:: `(transcript-off)`
 returns:: unspecified
@@ -1980,6 +2073,7 @@ libraries:: `(chezscheme)`
 
 `transcript-off` ends transcription and closes the transcript file.
 
+[#system:s201]
 [horizontal]
 procedure:: `(transcript-cafe _path_)`
 libraries:: `(chezscheme)`
@@ -2019,6 +2113,7 @@ Dates are represented by date objects. A date object records the nanosecond, sec
 
 As for time objects, a nanosecond is an exact integer less than 10^9^. A date-object second is, however, an exact nonnegative integer less than 62. (The values 61 and 62 allow for leap seconds.) A minute is an exact nonnegative integer less than 60, and an hour is an exact nonnegative integer less than 24. A day is an exact nonnegative integer in ranging from 1 representing the first day of the month to _n_, where _n_ is the number of days in the date's month and year. A month is an exact nonnegative integer ranging from 1 through 12, where 1 represents January, 2 represents February, and so on. A year must be an exact integer. Years less than 1970 or greater than 2038 may not be supported depending on limitations of the underlying implementation. A time-zone offset represents the time-zone offset, in seconds, from UTC. It is an exact integer in the range -86400 to +86400, inclusive. For example, Eastern Standard Time (EST), which is 5 hours east, has offset 5 × 3600 = -18000. The offset for Eastern Daylight Time (EDT) is -14400. UTC is represented by offset zero.
 
+[#system:s202]
 [horizontal]
 procedure:: `(current-time)`
 procedure:: `(current-time _time-type_)`
@@ -2098,6 +2193,7 @@ libraries:: `(chezscheme)`
 
 Each of these procedures modifies the time object, changing one aspect while leaving the others unaffected. For example, `set-time-nanosecond!` changes the nanosecond of `_time_` without changing the second or type. In particular, no conversion of values is performed when the type of a time object is changed.
 
+[#system:s207]
 [horizontal]
 procedure:: `(time=? _time~1~_ _time~2~_)`
 procedure:: `(time<? _time~1~_ _time~2~_)`
@@ -2352,6 +2448,7 @@ libraries:: `(chezscheme)`
 
 This section documents procedures for timing computations. The `current-time` procedure described in <<section_12.10.,Section 12.10>> may also be used to time computations.
 
+[#system:s219]
 [horizontal]
 syntax:: `(time _expr_)`
 returns:: the values of `_expr_`
@@ -2378,6 +2475,7 @@ libraries:: `(chezscheme)`
 
 This procedure displays a running total of the amount of cpu time, real time, bytes allocated, and collection overhead. If `_textual-output-port_` is not supplied, it defaults to the current output port.
 
+[#system:s221]
 [horizontal]
 procedure:: `(cpu-time)`
 returns:: the amount of cpu time consumed since system start-up
@@ -2387,6 +2485,7 @@ The amount is in milliseconds. The amount includes "system" as well as "user" ti
 
 See also `current-time`, which returns more precise information.
 
+[#system:s222]
 [horizontal]
 procedure:: `(real-time)`
 returns:: the amount of real time that has elapsed since system start-up
@@ -2396,6 +2495,7 @@ The amount is in milliseconds.
 
 See also `current-time`, which returns more precise information.
 
+[#system:s223]
 [horizontal]
 procedure:: `(bytes-allocated)`
 procedure:: `(bytes-allocated _g_)`
@@ -2404,6 +2504,7 @@ libraries:: `(chezscheme)`
 
 If `_g_` is supplied, `bytes-allocated` returns the number of bytes currently allocated for Scheme objects in the specified generation. `_g_` must be a nonnegative exact integer no greater than the maximum nonstatic generation, i.e., the value returned by `collect-maximum-generation`, or the symbol `static`. If `_g_` is not supplied, `bytes-allocated` returns the total number of bytes allocated in all generations.
 
+[#system:s224]
 [horizontal]
 procedure:: `(initial-bytes-allocated)`
 returns:: the total number of bytes allocated after loading boot files
@@ -2417,6 +2518,7 @@ libraries:: `(chezscheme)`
 
 The total number of bytes allocated by the current process, whether still in use or not, can be obtained by summing `(bytes-deallocated)` and `(bytes-allocated)` and possibly subtracting `(initial-bytes-allocated)`.
 
+[#system:s226]
 [horizontal]
 procedure:: `(current-memory-bytes)`
 returns:: the total number of bytes currently allocated, including overhead
@@ -2424,6 +2526,7 @@ libraries:: `(chezscheme)`
 
 `current-memory-bytes` returns the total size of the heap in bytes, including not only the bytes occupied for Scheme objects but also various forms of overhead, including fragmentation and reserved but not currently occupied memory, and is thus an accurate measure of the amount of heap memory currently reserved from the operating system for the current process.
 
+[#system:s227]
 [horizontal]
 procedure:: `(maximum-memory-bytes)`
 returns:: the maximum number of bytes ever allocated, including overhead
@@ -2431,6 +2534,7 @@ libraries:: `(chezscheme)`
 
 `maximum-memory-bytes` returns the maximum size of the heap in bytes, i.e., the maximum value that `current-memory-bytes` returned or could have returned, since the last call to `reset-maximum-memory-bytes!` or, if there has been no such call, since the process started.
 
+[#system:s228]
 [horizontal]
 procedure:: `(reset-maximum-memory-bytes!)`
 returns:: unspecified
@@ -2438,6 +2542,7 @@ libraries:: `(chezscheme)`
 
 `reset-maximum-memory-bytes!` resets the maximum recorded size of the heap to the current size of the heap.
 
+[#system:s229]
 [horizontal]
 procedure:: `(collections)`
 returns:: the number garbage collections so far
@@ -2493,6 +2598,7 @@ libraries:: `(chezscheme)`
 
 The time arguments (`_cpu_`, `_real_`, `_gc-cpu_`, and `_gc-real_`) must be time objects. The other arguments must be exact integers.
 
+[#system:s232]
 [horizontal]
 procedure:: `(sstats? _obj_)`
 returns:: `#t` if `_obj_` is a sstats record, otherwise `#f`
@@ -2512,6 +2618,7 @@ libraries:: `(chezscheme)`
 
 `_s_` must be a sstats record.
 
+[#system:s234]
 [horizontal]
 procedure:: `(set-sstats-cpu! _s_ _new-value_)`
 procedure:: `(set-sstats-real! _s_ _new-value_)`
@@ -2525,6 +2632,7 @@ libraries:: `(chezscheme)`
 
 `_s_` must be a sstats record, the `_new-value_` arguments for the time fields (`_cpu_`, `_real_`, `_gc-cpu_`, and `_gc-real_`) must be time objects, and the other `_new-value_` arguments must be exact integers. Each procedure sets the value of the corresponding field of `_s_` to `_new-value_`.
 
+[#system:s235]
 [horizontal]
 procedure:: `(sstats-difference _s~1~_ _s~2~_)`
 returns:: a sstats record representing the difference between `_s~1~_` and `_s~2~_`
@@ -2532,6 +2640,7 @@ libraries:: `(chezscheme)`
 
 `_s~1~_` and `_s~2~_` must be sstats records. `sstats-difference` subtracts each field of `_s~2~_` from the corresponding field of `_s~1~_` to produce the resulting `sstats` record.
 
+[#system:s236]
 [horizontal]
 procedure:: `(sstats-print _s_)`
 procedure:: `(sstats-print _s_ _textual-output-port_)`
@@ -2540,6 +2649,7 @@ libraries:: `(chezscheme)`
 
 `_s_` must be a `sstats` record. If `_textual-output-port_` is not supplied, it defaults to the current output port. `sstats-print` displays the fields of `s` in a manner similar to `display-statistics` and `time`.
 
+[#system:s237]
 [horizontal]
 global parameter:: `enable-object-counts`
 libraries:: `(chezscheme)`
@@ -2550,6 +2660,7 @@ Counts for the static generation are always correct. Counts for a nonstatic gene
 
 One strategy for collecting object counts with minimal overhead is to enable object counts only while collecting the maximum nonstatic generation and to obtain the object counts immediately after that collection.
 
+[#system:s238]
 [horizontal]
 procedure:: `(object-counts)`
 returns:: see below
@@ -2586,18 +2697,21 @@ Allocation and instruction counts are tracked only for code instrumented for tha
 
 The `with-cost-center` procedure accurately tracks costs, subject to the caveats above, even when reentered with the same cost center, used simultaneously in multiple threads, and exited or reentered one or more times via continuation invocation.
 
+[#system:s239]
 [horizontal]
 thread parameter:: `generate-allocation-counts`
 libraries:: `(chezscheme)`
 
 When this parameter has a true value, the compiler inserts a short sequence of instructions at each allocation point in generated code to track the amount of allocation that occurs. This parameter is initially false.
 
+[#system:s240]
 [horizontal]
 thread parameter:: `generate-instruction-counts`
 libraries:: `(chezscheme)`
 
 When this parameter has a true value, the compiler inserts a short sequence of instructions in each block of generated code to track the number of instructions executed by that block. This parameter is initially false.
 
+[#system:s241]
 [horizontal]
 procedure:: `(make-cost-center)`
 returns:: a new cost center
@@ -2605,6 +2719,7 @@ libraries:: `(chezscheme)`
 
 The recorded costs of the new cost center are initialized to zero.
 
+[#system:s242]
 [horizontal]
 procedure:: `(cost-center? _obj_)`
 returns:: `#t` if `_obj_` is a cost center, otherwise `#f`
@@ -2621,6 +2736,7 @@ libraries:: `(chezscheme)`
 
 As described above, allocation counts are tracked only for code compiled with the parameter `generate-allocation-counts` set to true, and instruction counts are tracked only for code compiled with `generate-instruction-counts` set to true. Cpu time is tracked only if `_timed?_` is provided and not false and includes cpu time spent in instrumented, uninstrumented, and non-Scheme code.
 
+[#system:s244]
 [horizontal]
 procedure:: `(cost-center-instruction-count _cost-center_)`
 returns:: the number of instructions tracked by `_cost-center_`
@@ -2640,6 +2756,7 @@ libraries:: `(chezscheme)`
 
 The cpu time is returned as a time object with time-type `time-duration`.
 
+[#system:s247]
 [horizontal]
 procedure:: `(reset-cost-center! _cost-center_)`
 returns:: unspecified
@@ -2651,6 +2768,7 @@ This procedure resets the costs recorded by `_cost-center_` to zero.
 
 This section describes mechanisms for creating and manipulating parameters. New parameters may be created conveniently with `make-parameter`. Nothing distinguishes parameters from other procedures, however, except for their behavior. If more complicated actions must be taken when a parameter is invoked than can be accommodated easily through the `make-parameter` mechanism, the parameter may be defined directly with `case-lambda`.
 
+[#system:s248]
 [horizontal]
 procedure:: `(make-parameter _object_)`
 procedure:: `(make-parameter _object_ _procedure_)`
@@ -2701,6 +2819,7 @@ The definition of `make-parameter` is straightforward using `case-lambda`:
 
 In threaded versions of _Chez Scheme_, `make-parameter` creates global parameters. The procedure `make-thread-parameter`, described in <<section_15.7.,Section 15.7>>, may be used to make thread parameters.
 
+[#system:s250]
 [horizontal]
 syntax:: `(parameterize ((_param_ _expr_) \...) _body~1~_ _body~2~_ \...)`
 returns:: the values of the body `_body~1~_ _body~2~_ \...`
@@ -2773,6 +2892,7 @@ A more elaborate macro could dole out indices at compile time and complain when 
 
 Virtual-registers must be treated as an application-level resource, i.e., libraries intended to be used by multiple applications should generally not use virtual registers to avoid conflicts with an application's use of the registers.
 
+[#system:s251]
 [horizontal]
 procedure:: `(virtual-register-count)`
 returns:: the number of virtual registers
@@ -2780,6 +2900,7 @@ libraries:: `(chezscheme)`
 
 As of Version 9.0, the number of virtual registers is set at 16. It cannot be changed except by recompiling _Chez Scheme_ from source.
 
+[#system:s252]
 [horizontal]
 procedure:: `(set-virtual-register! _k_ _x_)`
 returns:: unspecified
@@ -2787,6 +2908,7 @@ libraries:: `(chezscheme)`
 
 `set-virtual-register!` stores `_x_` in virtual register `_k_`. `_k_` must be a nonnegative fixnum less than the value of `(virtual-register-count)`.
 
+[#system:s253]
 [horizontal]
 procedure:: `(virtual-register _k_)`
 returns:: see below
@@ -2796,6 +2918,7 @@ libraries:: `(chezscheme)`
 
 === Section 12.15. Environmental Queries and Settings [[section_12.15.]]
 
+[#system:s254]
 [horizontal]
 procedure:: `(scheme-version)`
 returns:: a version string
@@ -2817,6 +2940,7 @@ for _Chez Scheme_, and
 
 for _Petite Chez Scheme_.
 
+[#system:s255]
 [horizontal]
 procedure:: `(scheme-version-number)`
 returns:: three values: the major, minor, and sub-minor version numbers
@@ -2841,6 +2965,7 @@ libraries:: `(chezscheme)`
 
 The only difference between _Petite Chez Scheme_ and _Chez Scheme_ is that the compiler is not available in the former, so this predicate can serve as a way to determine if the compiler is available.
 
+[#system:s257]
 [horizontal]
 procedure:: `(threaded?)`
 returns:: `#t` if called in a threaded version of the system, `#f` otherwise
@@ -2854,6 +2979,7 @@ libraries:: `(chezscheme)`
 
 This predicate returns `#t` if the Scheme process's stdin and stdout are connected to a tty (Unix-based systems) or console (Windows). Otherwise, it returns `#f`.
 
+[#system:s259]
 [horizontal]
 procedure:: `(get-process-id)`
 returns:: the operating system process id if the current process
@@ -2918,6 +3044,7 @@ These routines are defined for Windows only.
 
 === Section 12.16. Subset Modes [[section_12.16.]]
 
+[#system:s263]
 [horizontal]
 thread parameter:: `subset-mode`
 libraries:: `(chezscheme)`

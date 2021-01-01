@@ -5,6 +5,7 @@ When the expression editor (expeditor) is enabled as described in <<section_2.2.
 
 These mechanisms are available through the `expression-editor` module.
 
+[#expeditor:s0]
 [horizontal]
 module:: `expression-editor`
 libraries:: `(chezscheme)`
@@ -15,46 +16,55 @@ Basic use of the expression editor is described in <<section_2.2.,Section 2.2>>.
 
 === Section 14.1. Expression Editor Parameters [[section_14.1.]]
 
+[#expeditor:s1]
 [horizontal]
 global parameter:: `ee-auto-indent`
 
 The value of `ee-auto-indent` is a boolean value that determines whether the expression editor indents expressions as they are entered. Its default value is `#t`.
 
+[#expeditor:s2]
 [horizontal]
 global parameter:: `ee-standard-indent`
 
 The value of `ee-standard-indent` is a nonnegative fixnum value that determines the amount (in single spaces) by which each expression is indented relative to the enclosing expression, if not aligned otherwise by one of the indenter's other heuristics, when `ee-auto-indent` is true or when one of the indentation commands is invoked explicitly. It's default value is `2`.
 
+[#expeditor:s3]
 [horizontal]
 global parameter:: `ee-auto-paren-balance`
 
 The value of `ee-auto-paren-balance` is a boolean value that determines whether the expression editor automatically corrects a close parenthesis or bracket, when typed, to match the corresponding open parenthesis or bracket, if any. Its default value is `#t`.
 
+[#expeditor:s4]
 [horizontal]
 global parameter:: `ee-flash-parens`
 
 The value of `ee-flash-parens` is a boolean value that determines whether the expression editor briefly moves the cursor when an open or close parenthesis or bracket is typed to the matching close or open parenthesis or bracket (if any). Its default value is `#t`.
 
+[#expeditor:s5]
 [horizontal]
 global parameter:: `ee-paren-flash-delay`
 
 The value of `ee-paren-flash-delay` is a nonnegative fixnum value that determines the amount of time (in milliseconds) that the expression editor pauses when the cursor is moved to the matching parenthesis or bracket, if any, when a parenthesis or bracket is entered. The value is ignored if the `ee-flash-parens` is false. Its default value is `100`.
 
+[#expeditor:s6]
 [horizontal]
 global parameter:: `ee-default-repeat`
 
 The value of `ee-default-repeat` is a nonnegative fixnum value that determines the number of times the next command is repeated after the `ee-command-repeat` editing command (bound to `Esc-^U` by default) is used and _not_ followed by a sequence of digits. It's default value is `4`.
 
+[#expeditor:s7]
 [horizontal]
 global parameter:: `ee-noisy`
 
 The value of `ee-noisy` is a boolean value that determines whether the expression editor emits a beep (bell) when an error occurs, such as an attempt to find the matching delimiter for a non-delimiter character. Its default value is `#f`.
 
+[#expeditor:s8]
 [horizontal]
 global parameter:: `ee-history-limit`
 
 The value of `ee-history-limit` is a nonnegative fixnum value that determines the number of history entries retained by the expression editor during and across sessions. Only the last `(ee-history-limit)` entries are retained.
 
+[#expeditor:s9]
 [horizontal]
 global parameter:: `ee-common-identifiers`
 
@@ -64,6 +74,7 @@ The value of `ee-common-identifiers` is list of symbols that are considered comm
 
 Key bindings are established via `ee-bind-key`. The default key bindings are described in <<section_14.3.,Section 14.3>>.
 
+[#expeditor:s10]
 [horizontal]
 procedure:: `(ee-bind-key _key_ _procedure_)`
 returns:: unspecified
@@ -106,12 +117,14 @@ The editing commands are grouped into sections according to usage. Each is liste
 
 *Insertion commands*
 
+[#expeditor:s13]
 [horizontal]
 command:: `ee-insert-self`
 key(s):: most printing characters
 
 Inserts the entered character into the entry.
 
+[#expeditor:s14]
 [horizontal]
 command:: `ee-insert-paren`
 key(s):: `(`, `)`, `[`, `]`
@@ -124,24 +137,28 @@ If the parameter `ee-flash-parens` is true, the editor briefly moves the cursor 
 
 The behavior of this command is undefined if used for something other than a parenthesis or bracket. parentheses and brackets.
 
+[#expeditor:s18]
 [horizontal]
 command:: `ee-newline`
 key(s):: none
 
 Inserts a newline at the cursor position, moves to the next line, and indents that line if the parameter `ee-auto-indent` is true. Does nothing if the entry is empty. See also `ee-newline/accept`.
 
+[#expeditor:s20]
 [horizontal]
 command:: `ee-open-line`
 key(s):: `^O`
 
 Inserts a newline at the cursor position and indents the next line, but does not move to the next line.
 
+[#expeditor:s21]
 [horizontal]
 command:: `ee-yank-kill-buffer`
 key(s):: `^Y`
 
 Inserts the contents of the kill buffer, which is set by the deletion commands described below.
 
+[#expeditor:s22]
 [horizontal]
 command:: `ee-yank-selection`
 key(s):: `^V`
@@ -150,102 +167,119 @@ Inserts the contents of the window system's current selection or paste buffer. W
 
 *Cursor movement commands*
 
+[#expeditor:s23]
 [horizontal]
 command:: `ee-backward-char`
 key(s):: leftarrow, `^B`
 
 Moves the cursor left one character.
 
+[#expeditor:s24]
 [horizontal]
 command:: `ee-forward-char`
 key(s):: rightarrow, `^F`
 
 Moves the cursor right one character.
 
+[#expeditor:s25]
 [horizontal]
 command:: `ee-next-line`
 key(s):: downarrow, `^N`
 
 Moves the cursor down one line (and to the left if necessary so that the cursor does not sit beyond the last possible position). If the cursor is at the end of the current entry, and the current entry has not been modified, this command behaves like `ee-history-fwd`.
 
+[#expeditor:s27]
 [horizontal]
 command:: `ee-previous-line`
 key(s):: uparrow, `^P`
 
 Moves the cursor up one line (and to the left if necessary so that the cursor does not sit beyond the last possible position). If the cursor is at the top of the current entry, and the current entry has not been modified, this command behaves like `ee-history-bwd`.
 
+[#expeditor:s29]
 [horizontal]
 command:: `ee-beginning-of-line`
 key(s):: home, `^A`
 
 Moves the cursor to the first character of the current line.
 
+[#expeditor:s30]
 [horizontal]
 command:: `ee-end-of-line`
 key(s):: end, `^E`
 
 Moves the cursor to the right of the last character of the current line.
 
+[#expeditor:s31]
 [horizontal]
 command:: `ee-beginning-of-entry`
 key(s):: escape-`<`
 
 Moves the cursor to the first character of the entry.
 
+[#expeditor:s32]
 [horizontal]
 command:: `ee-end-of-entry`
 key(s):: escape-`>`
 
 Moves the cursor to the right of the last character of the entry.
 
+[#expeditor:s33]
 [horizontal]
 command:: `ee-goto-matching-delimiter`
 key(s):: escape-`]`
 
 Moves the cursor to the matching delimiter. Has no effect if the character under the cursor is not a parenthesis or bracket or if no matching delimiter can be found.
 
+[#expeditor:s34]
 [horizontal]
 command:: `ee-flash-matching-delimiter`
 key(s):: `^]`
 
 Moves the cursor briefly to the matching delimiter, if one can be found, pausing for an amount of time controlled by the parameter `ee-paren-flash-delay`. If the matching delimiter is not presently displayed, the cursor is flashed to the upper-left or lower-left corner of the displayed portion of the entry, as appropriate.
 
+[#expeditor:s36]
 [horizontal]
 command:: `ee-exchange-point-and-mark`
 key(s):: `\^X`-`^X`
 
 Moves the cursor to the mark and leaves the mark at the old cursor position. (The mark can be set with `ee-set-mark`.)
 
+[#expeditor:s37]
 [horizontal]
 command:: `ee-forward-sexp`
 key(s):: escape-`^F`
 
 Moves the cursor to the start of the next expression.
 
+[#expeditor:s38]
 [horizontal]
 command:: `ee-backward-sexp`
 key(s):: escape-`^B`
 
 Moves the cursor to the start of the preceding expression.
 
+[#expeditor:s39]
 [horizontal]
 command:: `ee-forward-word`
 key(s):: escape-f, escape-`F`
 
 Moves the cursor to the end of the next word.
 
+[#expeditor:s40]
 [horizontal]
 command:: `ee-backward-word`
 key(s):: escape-b, escape-`B`
 
 Moves the cursor to the start of the preceding word.
 
+[#expeditor:s41]
 [horizontal]
 command:: `ee-forward-page`
 key(s):: pagedown, `^X`-`]`
 
 Moves the cursor down one screen page.
 
+[#expeditor:s42]
 [horizontal]
 command:: `ee-backward-page`
 key(s):: pageup, `^X`-`[`
@@ -254,6 +288,7 @@ Moves the cursor up one screen page.
 
 *Deletion commands*
 
+[#expeditor:s43]
 [horizontal]
 command:: `ee-delete-char`
 key(s):: delete
@@ -262,48 +297,56 @@ Deletes the character under the cursor.
 
 See also `ee-eof/delete-char`.
 
+[#expeditor:s44]
 [horizontal]
 command:: `ee-backward-delete-char`
 key(s):: backspace (rubout), `^H`
 
 Deletes the character to the left of the cursor.
 
+[#expeditor:s45]
 [horizontal]
 command:: `ee-delete-line`
 key(s):: `^U`
 
 Deletes the contents of the current line, leaving behind an empty line. When used on the first line of a multiline entry of which only the first line is displayed, i.e., immediately after history movement, `ee-delete-line` deletes the contents of the entire entry, like `ee-delete-entry` (described below).
 
+[#expeditor:s46]
 [horizontal]
 command:: `ee-delete-to-eol`
 key(s):: `^K`, escape-`K`
 
 If the cursor is at the end of a line, joins the line with the next line, otherwise deletes from the cursor position to the end of the line.
 
+[#expeditor:s47]
 [horizontal]
 command:: `ee-delete-between-point-and-mark`
 key(s):: `^W`
 
 Deletes text between the current cursor position and the mark. (The mark can be set with `ee-set-mark`.)
 
+[#expeditor:s48]
 [horizontal]
 command:: `ee-delete-entry`
 key(s):: `^G`
 
 Deletes the contents of the current entry.
 
+[#expeditor:s49]
 [horizontal]
 command:: `ee-reset-entry`
 key(s):: `^C`
 
 Deletes the contents of the current entry and moves to the end of the history.
 
+[#expeditor:s50]
 [horizontal]
 command:: `ee-delete-sexp`
 key(s):: escape-`^K`, escape-delete
 
 Deletes the expression that starts under the cursor, or if no expression starts under the cursor, deletes up to the next expression.
 
+[#expeditor:s51]
 [horizontal]
 command:: `ee-backward-delete-sexp`
 key(s):: escape-backspace (escape-rubout), escape-`^H`
@@ -314,14 +357,17 @@ Deletes the expression to the left of the cursor.
 
 These commands perform either identifier or filename completion. Identifier completion is performed outside of a string constant, and filename completion is performed within a string constant. (In determining whether the cursor is within a string constant, the expression editor looks only at the current line and so can be fooled by string constants that span multiple lines.)
 
+[#expeditor:s52]
 [horizontal]
 command:: `ee-id-completion`
 key(s):: none
 
 Inserts the common prefix of possible completions of the identifier or filename immediately to the left of the cursor. Identifier completion is based on the identifiers defined in the interaction environment. When there is exactly one possible completion, the common prefix is the completion. This command has no effect if no filename or identifier prefix is immediately the left of the cursor or if the possible completions have no common prefix. If run twice in succession, a list of possible completions is displayed.
 
+[#expeditor:s53]
 See also `ee-id-completion/indent`.
 
+[#expeditor:s54]
 [horizontal]
 command:: `ee-next-id-completion`
 key(s):: `^R`
@@ -337,6 +383,7 @@ The expression editor maintains a history of entries during each session. It als
 
 When moving from one history entry to another, only the first line of each multi-line entry is displayed. The redisplay command (which `^L` is bound to by default) can be used to display the entire entry. It is also possible to move down one line at a time to expose just part of the rest of the entry.
 
+[#expeditor:s58]
 [horizontal]
 command:: `ee-history-bwd`
 key(s):: escape-uparrow, escape-`^P`
@@ -345,6 +392,7 @@ Moves to the preceding history entry if the current entry is empty or has not be
 
 See also `ee-previous-line`.
 
+[#expeditor:s59]
 [horizontal]
 command:: `ee-history-fwd`
 key(s):: escape-downarrow, escape-`^N`
@@ -353,24 +401,28 @@ Moves to the next history entry if the current entry is empty or has not been mo
 
 See also `ee-next-line`.
 
+[#expeditor:s60]
 [horizontal]
 command:: `ee-history-bwd-prefix`
 key(s):: escape-`p`
 
 Moves to the closest previous history entry, if any, that starts with the sequence of characters that makes up the current entry. May be used multiple times to search for same prefix.
 
+[#expeditor:s61]
 [horizontal]
 command:: `ee-history-fwd-prefix`
 key(s):: escape-`n`
 
 Moves to the closest following history entry, if any, that starts with the sequence of characters that makes up the current entry. May be used multiple times to search for same prefix.
 
+[#expeditor:s62]
 [horizontal]
 command:: `ee-history-bwd-contains`
 key(s):: escape-`P`
 
 Moves to the closest previous history entry, if any, that contains within it the sequence of characters that makes up the current entry. May be used multiple times to search for same content.
 
+[#expeditor:s63]
 [horizontal]
 command:: `ee-history-fwd-contains`
 key(s):: escape-`N`
@@ -379,6 +431,7 @@ Moves to the closest following history entry, if any, that contains within it th
 
 *Indentation commands*
 
+[#expeditor:s64]
 [horizontal]
 command:: `ee-indent`
 key(s):: escape-tab
@@ -387,6 +440,7 @@ Re-indents the current line.
 
 See also `ee-next-id-completion/indent`.
 
+[#expeditor:s65]
 [horizontal]
 command:: `ee-indent-all`
 key(s):: escape-`q`, escape-`Q`, escape-`^Q`
@@ -395,6 +449,7 @@ Re-indents each line of the entire entry.
 
 *Miscellaneous commands*
 
+[#expeditor:s66]
 [horizontal]
 command:: `ee-accept`
 key(s):: `^J`
@@ -403,6 +458,7 @@ Causes the expression editor to invoke the Scheme reader on the contents of the 
 
 See also `ee-newline/accept`.
 
+[#expeditor:s67]
 [horizontal]
 command:: `ee-eof`
 key(s):: none
@@ -411,24 +467,28 @@ Causes end-of-file to be returned from the expression editor, which in turn caus
 
 See also `ee-eof/delete-char`.
 
+[#expeditor:s68]
 [horizontal]
 command:: `ee-redisplay`
 key(s):: `^L`
 
 Redisplays the current expression. If run twice in succession, clears the screen and redisplays the expression at the top of the screen.
 
+[#expeditor:s69]
 [horizontal]
 command:: `ee-suspend-process`
 key(s):: `^Z`
 
 Suspends the current process in shells that support job control.
 
+[#expeditor:s70]
 [horizontal]
 command:: `ee-set-mark`
 key(s):: `^@`, ``^``space
 
 Sets the mark to the current cursor position.
 
+[#expeditor:s71]
 [horizontal]
 command:: `ee-command-repeat`
 key(s):: escape-`^U`
@@ -437,12 +497,14 @@ Repeats the next command _n_ times. If the next character typed is a digit, _n_ 
 
 *Combination commands*
 
+[#expeditor:s73]
 [horizontal]
 command:: `ee-newline/accept`
 key(s):: enter, `^M`
 
 Behaves like `ee-accept` if run at the end (not including whitespace) of an entry that starts with a balanced expression; otherwise, behaves like `ee-newline`.
 
+[#expeditor:s74]
 [horizontal]
 command:: `ee-id-completion/indent`
 key(s):: tab
@@ -451,12 +513,14 @@ Behaves like `ee-id-completion` if an identifier (outside a string constant) or 
 
 If an existing identifier or filename, i.e., not one just typed, appears to the left of the cursor, the first use of this command behaves like `ee-newline`, the second consecutive use behaves like `ee-id-completion`, and the third behaves like a second consecutive use of `ee-id-completion`.
 
+[#expeditor:s75]
 [horizontal]
 command:: `ee-next-id-completion/indent`
 key(s):: none
 
 Behaves like `ee-next-id-completion` if an identifier (outside a string constant) or filename (within a string constant) appears just to the left of the cursor and the last character of that identifier or identifier was just entered; otherwise, behaves like `ee-indent`.
 
+[#expeditor:s76]
 [horizontal]
 command:: `ee-eof/delete-char`
 key(s):: `^D`
@@ -465,6 +529,7 @@ Behaves like `ee-delete-char` if the entry is nonempty; otherwise, behaves like 
 
 === Section 14.4. Creating New Editing Commands [[section_14.4.]]
 
+[#expeditor:s77]
 [horizontal]
 procedure:: `(ee-string-macro _string_)`
 returns:: a new editing command
@@ -481,6 +546,7 @@ Two string macros are predefined:
 
 |===
 
+[#expeditor:s78]
 [horizontal]
 procedure:: `(ee-compose _ecmd_ \...)`
 returns:: a new editing command

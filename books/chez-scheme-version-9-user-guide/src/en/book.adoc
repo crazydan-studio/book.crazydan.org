@@ -211,10 +211,6 @@ document.querySelectorAll('tbody').forEach(function(node) {
 document.querySelectorAll('a')
         .forEach(function(node) {
             var name=node.name;
-            if (node.previousSibling
-                && node.previousSibling.nodeName.toLowerCase() == '#text') {
-                return;
-            }
             if (name && name.match(/^\.\/(.+)$/)) {
                 node.outerHTML='[#'+(name.replace(/^\.\/(.+)$/, '$1'))+']&lt;br&gt;';
             }

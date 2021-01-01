@@ -7,6 +7,7 @@ This chapter describes the _Chez Scheme_ extensions to the syntax-case syntactic
 
 Keyword bindings established via the Revised^6^ Report `define-syntax`, `let-syntax`, or `letrec-syntax` forms may be rebound temporarily with `fluid-let-syntax`.
 
+[#syntax:s0]
 [horizontal]
 syntax:: `(fluid-let-syntax ((_keyword_ _expr_) \...) _form~1~_ _form~2~_ \...)`
 returns:: see explanation
@@ -75,6 +76,7 @@ _Chez Scheme_ integrate locally defined procedures automatically when it is appr
 
 _Chez Scheme_ extends `syntax-rules` to permit clause to include fenders just like those allowed within `syntax-case` clauses.
 
+[#syntax:s4]
 [horizontal]
 syntax:: `(syntax-rules (_literal_ \...) _clause_ \...)`
 returns:: a transformer
@@ -94,6 +96,7 @@ The first form is the only form supported by the Revised^6^ Report.
 
 _Chez Scheme_ provides several procedures and syntactic forms that may be used to simplify the coding of certain syntactic abstractions.
 
+[#syntax:s6]
 [horizontal]
 procedure:: `(syntax\->list _syntax-object_)`
 returns:: a list of syntax objects
@@ -160,6 +163,7 @@ libraries:: `(chezscheme)`
 
 `syntax-object\->datum` is identical to the Revised^6^ Report `syntax\->datum`.
 
+[#syntax:s9]
 [horizontal]
 syntax:: `(datum _template_)`
 returns:: see below
@@ -191,6 +195,7 @@ libraries:: `(chezscheme)`
 
 `datum\->syntax-object` is identical to the Revised^6^ Report `datum\->syntax`.
 
+[#syntax:s11]
 [horizontal]
 syntax:: `(with-implicit (_id~0~_ _id~1~_ \...) _body~1~_ _body~2~_ \...)`
 returns:: see below
@@ -277,7 +282,7 @@ evaluates to `"okay"`. An include form is treated as a definition if it appears 
 
 The definition of `include` uses `datum\->syntax` to convert the objects read from the file into syntax objects in the proper lexical context, so that identifier references and definitions within those expressions are scoped where the `include` form appears.
 
-In _Chez Scheme_'s implementation of `include`, the parameter `source-directories` (<<section_12.5.,Section 12.5>>) determines the set of directories searched for source files not identified by absolute path names.
+In _Chez Scheme_'s implementation of `include`, the parameter `source-directories` (<<section_12.5.,Section 12.5>>) determines the set of directories searched for source files not identified by absolute path names. [[syntax:s13]]
 
 [#desc:syntax-error]
 [horizontal]
@@ -328,6 +333,7 @@ With this change, the expression
 
 produces the error message "let cannot bind two occurrences of `a`."
 
+[#syntax:s14]
 [horizontal]
 procedure:: `(literal-identifier=? _identifier~1~_ _identifier~2~_)`
 returns:: see below
@@ -343,6 +349,7 @@ _Chez Scheme_ provides two mechanisms for attaching information to identifiers i
 
 The mechanisms used by a macro to obtain compile-time values and properties are similar. In both cases, the macro's transformer returns a procedure `_p_` rather than a syntax object. The expander invokes `_p_` with one argument, an environment-lookup procedure `_lookup_`, which `_p_` can then use to obtain compile-time values and properties for one or more identifiers before it constructs the macro's final output. `_lookup_` accepts one or two identifier arguments. With one argument, `_id_`, `_lookup_` returns the compile-time value of `_id_`, or `#f` if `_id_` has no compile-time value. With two arguments, `_id_` and `_key_`, `_lookup_` returns the value of ``_id_``'s `_key_` property, or `#f` if `_id_` has no `_key_` property.
 
+[#syntax:s15]
 [horizontal]
 procedure:: `(make-compile-time-value _obj_)`
 returns:: a compile-time value
@@ -552,12 +559,14 @@ prec ⇒ _exception: invalid use of record name prec_
 
 === Section 11.5. Modules [[section_11.5.]]
 
+[#syntax:s20]
 Modules are used to help organize programs into separate parts that interact cleanly via declared interfaces. Although modular programming is typically used to facilitate the development of large programs possibly written by many individuals, it may also be used in _Chez Scheme_ at a "micro-modular" level, since _Chez Scheme_ module and import forms are definitions and may appear anywhere any other kind of definition may appear, including within a `lambda` body or other local scope.
 
 Modules control visibility of bindings and can be viewed as extending lexical scoping to allow more precise control over where bindings are or are not visible. Modules export identifier bindings, i.e., variable bindings, keyword bindings, or module name bindings. Modules may be _named_ or _anonymous_. Bindings exported from a named module may be made visible via an import form wherever the module's name is visible. Bindings exported from an anonymous module are implicitly imported where the module form appears. Anonymous modules are useful for hiding some of a set of bindings while allowing the remaining bindings in the set to be visible.
 
 Some of the text and examples given in this section are adapted from the paper "Extending the scope of syntactic abstraction" <<ref32>>, which describes modules and their implementation in more detail.
 
+[#syntax:s21]
 [horizontal]
 syntax:: `(module _name_ _interface_ _defn_ \... _init_ \...)`
 syntax:: `(module _interface_ _defn_ \... _init_ \...)`
@@ -832,30 +841,35 @@ The local import and export forms described in <<section_10.4.,Section 10.4>> ca
 
 Five modules are built-in to _Chez Scheme_: `scheme`, `r5rs`, `r5rs-syntax`, `ieee`, and `$system`. Each module is immutable, i.e., the exported bindings cannot be altered.
 
+[#syntax:s28]
 [horizontal]
 module:: `scheme`
 libraries:: `(chezscheme)`
 
 `scheme` contains all user-visible top-level bindings (variables, keywords, and module names) built into _Chez Scheme_.
 
+[#syntax:s29]
 [horizontal]
 module:: `r5rs`
 libraries:: `(chezscheme)`
 
 `r5rs` contains all top-level bindings (variables and keywords) defined in the Revised^5^ Report on Scheme. The bindings exported from `r5rs` are precisely those that are available within an expression evaluated via `eval` with the environment specifier returned by `scheme-report-environment`.
 
+[#syntax:s31]
 [horizontal]
 module:: `r5rs-syntax`
 libraries:: `(chezscheme)`
 
 `r5rs-syntax` contains all top-level keyword bindings defined in the Revised^5^ Report on Scheme. The bindings exported from `r5rs-syntax` are precisely those that are available within an expression evaluated via `eval` with the environment specifier returned by `null-environment`.
 
+[#syntax:s33]
 [horizontal]
 module:: `ieee`
 libraries:: `(chezscheme)`
 
 `ieee` contains all top-level bindings (variables and keywords) defined in the ANSI/IEEE standard for Scheme. The bindings exported from `ieee` are precisely those that are available within an expression evaluated via `eval` with the environment specifier returned by `ieee-environment`.
 
+[#syntax:s35]
 [horizontal]
 module:: `$system`
 libraries:: `(chezscheme)`
@@ -864,6 +878,7 @@ libraries:: `(chezscheme)`
 
 === Section 11.8. Meta Definitions [[section_11.8.]]
 
+[#syntax:s36]
 [horizontal]
 syntax:: `(meta . _definition_)`
 returns:: unspecified
@@ -939,6 +954,7 @@ to create groups of meta bindings.
 
 Expansion-time decisions can be made via `meta-cond`, which is similar to `cond` but evaluates the test expressions at expansion time and can be used in contexts where definitions are expected as well as in expression contexts.
 
+[#syntax:s37]
 [horizontal]
 syntax:: `(meta-cond _clause~1~_ _clause~2~_ \...)`
 returns:: see below
@@ -985,6 +1001,7 @@ During expansion, the `_test_` expressions are evaluated in order until one eval
 
 === Section 11.10. Aliases [[section_11.10.]]
 
+[#syntax:s38]
 [horizontal]
 syntax:: `(alias _id~1~_ _id~2~_)`
 returns:: unspecified
@@ -1098,6 +1115,7 @@ Two additional procedures complete the set of annotation-related primitives:
 
 The procedure `datum\->syntax` accepts either an annotated or unannotated input datum.
 
+[#syntax:s49]
 [horizontal]
 procedure:: `(make-annotation _obj_ _source-object_ _stripped-obj_)`
 procedure:: `(make-annotation _obj_ _source-object_ _stripped-obj_ _options_)`
@@ -1106,6 +1124,7 @@ libraries:: `(chezscheme)`
 
 The annotation is formed with `_obj_` as its expression component, `_source-object_` as its source-object component, and `_stripped-obj_` as its stripped component. `_obj_` should represent an expression, possibly with embedded annotations. `_stripped-obj_` should be a stripped version of `_obj_`, i.e., equivalent to `_obj_` with each annotation replaced by its expression component. `_options_`, if present must be an enumeration set over the symbols `debug` and `profile`, and defaults to an enumeration set containing both `debug` and `profile`. Annotations marked `debug` are used for compile-time error reporting and run-time error reporting and inspection; annotations marked `profile` are used for profiling.
 
+[#syntax:s50]
 [horizontal]
 procedure:: `(annotation? _obj_)`
 returns:: `#t` if `_obj_` is an annotation, otherwise `#f`
@@ -1144,6 +1163,7 @@ libraries:: `(chezscheme)`
 
 `_sfd_` must be a source-file descriptor. `_bfp_` and `_efp_` must be exact nonnegative integers, and `_bfp_` should not be greater than `_efp_`. `_line_` and `_column_` must be exact positive integers.
 
+[#syntax:s56]
 [horizontal]
 procedure:: `(source-object? _obj_)`
 returns:: `#t` if `_obj_` is a source object, otherwise `#f`
@@ -1188,6 +1208,7 @@ libraries:: `(chezscheme)`
 
 Adjust this parameter to, for example, eagerly convert a position integer to a file-position object, instead of delaying the conversion to `locate-source`.
 
+[#syntax:s63]
 [horizontal]
 procedure:: `(make-source-file-descriptor _string_ _binary-input-port_)`
 procedure:: `(make-source-file-descriptor _string_ _binary-input-port_ _reset?_)`
@@ -1196,6 +1217,7 @@ libraries:: `(chezscheme)`
 
 To compute the checksum encapsulated in the source-file descriptor, this procedure must read all of the data from `_binary-input-port_`. If `_reset?_` is present and `#t`, the port is reset to its original position, as if via `port-position`. Otherwise, it is left pointing at end-of-file.
 
+[#syntax:s64]
 [horizontal]
 procedure:: `(source-file-descriptor? _obj_)`
 returns:: `#t` if `_obj_` is a source-file descriptor, otherwise `#f`
@@ -1215,6 +1237,7 @@ libraries:: `(chezscheme)`
 
 `_sfd_` must be a source-file descriptor.
 
+[#syntax:s67]
 [horizontal]
 procedure:: `(source-file-descriptor _path_ _checksum_)`
 returns:: a new source-file-descriptor
@@ -1222,6 +1245,7 @@ libraries:: `(chezscheme)`
 
 `_path_` must be a string, and `_checksum_` must be an exact nonnegative integer. This procedure can be used to construct custom source-file descriptors or to reconstitute source-file descriptors from the `_path_` and `_checksum_` components.
 
+[#syntax:s68]
 [horizontal]
 syntax:: `(annotation-option-set _symbol_ \...)`
 returns:: an annotation-options enumeration set
@@ -1229,6 +1253,7 @@ libraries:: `(chezscheme)`
 
 Annotation-options enumeration sets may be passed to `make-annotation` to control whether the annotation is used for debugging, profiling, both, or neither. Accordingly, each `_symbol_` must be either `_debug_` or `profile`.
 
+[#syntax:s69]
 [horizontal]
 procedure:: `(syntax\->annotation _obj_)`
 returns:: an annotation or `#f`
@@ -1236,6 +1261,7 @@ libraries:: `(chezscheme)`
 
 If `_obj_` is an annotation or syntax-object encapsulating an annotation, the annotation is returned.
 
+[#syntax:s70]
 [horizontal]
 procedure:: `(get-datum/annotations _textual-input-port_ _sfd_ _bfp_)`
 returns:: see below
@@ -1245,6 +1271,7 @@ libraries:: `(chezscheme)`
 
 This procedure returns two values: an annotated object and an ending file position. In most cases, `_bfp_` should be 0 for the first call to `get-datum/annotation` at the start of a file, and it should be the second return value of the preceding call to `get-datum/annotation` for each subsequent call. This protocol is necessary to handle files containing multiple-byte characters, since file positions do not necessarily correspond to character positions.
 
+[#syntax:s71]
 [horizontal]
 procedure:: `(open-source-file _sfd_)`
 returns:: a port or `#f`
@@ -1252,6 +1279,7 @@ libraries:: `(chezscheme)`
 
 `_sfd_` must be a source-file descriptor. This procedure attempts to locate and open the source file identified by `_sfd_`. It returns a textual input port, positioned at the beginning of the file, if successful, and `#f` otherwise. It can fail even if a file with the correct name exists in one of the source directories when the file's checksum does not match the checksum recorded in `_sfd_`.
 
+[#syntax:s72]
 [horizontal]
 procedure:: `(locate-source _sfd_ _pos_)`
 procedure:: `(locate-source _sfd_ _pos_ _use-cache?_)`
@@ -1262,6 +1290,7 @@ libraries:: `(chezscheme)`
 
 This procedure either uses cached information from a previous request for `_sfd_` (only when `_use-cache?_` is provided as true) or attempts to locate and open the source file identified by `_sfd_`. If successful, it returns three values: a string `_path_`, an exact nonnegative integer `_line_`, and an exact nonnegative integer `_char_` representing the absolute pathname, line, and character position within the line represented by the specified source-file descriptor and file position. If unsuccessful, it returns zero values. It can fail even if a file with the correct name exists in one of the source directories when the file's checksum does not match the checksum recorded in `_sfd_`.
 
+[#syntax:s73]
 [horizontal]
 procedure:: `(locate-source-object-source _source-object_ _get-start?_ _use-cache?_)`
 returns:: see below
@@ -1273,6 +1302,7 @@ If `_get-start?_` is true and `_source-object_` has a line and column, this proc
 
 If `_source-object_` has no line and column, then this procedure calls `locate-source` on ``_source-object_``'s sfd, either ``_source-object_``'s bfp or efp depending on `_get-start?_`, and `_use-cache?_`.
 
+[#syntax:s74]
 [horizontal]
 thread parameter:: `current-locate-source-object-source`
 libraries:: `(chezscheme)`
@@ -1287,6 +1317,7 @@ Source tables provide an efficient way to associate information with source obje
 
 Source tables are manipulated via hashtable-like accessors and setters (<<section_7.12.,Section 7.12>>, _The Scheme Programming Language, 4th Edition_ link:../../the-scheme-programming-language-4th/en/index.html#section_6.13.[Section 6.13]), e.g., `source-table-ref` and `source-table-set!`. They can be saved to files via `put-source-table` and restored via `get-source-table!`.
 
+[#syntax:s81]
 [horizontal]
 procedure:: `(make-source-table)`
 returns:: a source table
@@ -1294,6 +1325,7 @@ libraries:: `(chezscheme)`
 
 A source table contains associations between source objects and arbitrary values. For purposes of the source-table operations described below, two source objects are the same if they have the same source-file descriptor, equal beginning file positions and equal ending file positions. Two source-file descriptors are the same if they have the same path and checksum.
 
+[#syntax:s82]
 [horizontal]
 procedure:: `(source-table? _obj_)`
 returns:: `#t` if `_obj_` is a source-table; `#f` otherwise
@@ -1307,6 +1339,7 @@ libraries:: `(chezscheme)`
 
 `source-table-set!` associates `_source-object_` with `_obj_` in `_source-table_`, replacing the existing association, if any.
 
+[#syntax:s84]
 [horizontal]
 procedure:: `(source-table-ref _source-table_ _source-object_ _default_)`
 returns:: see below
@@ -1316,6 +1349,7 @@ libraries:: `(chezscheme)`
 
 `source-table-ref` returns the value associated with `_source-object_` in `_source-table_`. If no value is associated with `_source-object_` in `_source-table_`, `source-table-ref` returns `_default_`.
 
+[#syntax:s85]
 [horizontal]
 procedure:: `(source-table-contains? _source-table_ _source-object_)`
 returns:: `#t` if an association for `_source-object_` exists in `_source-table_`, `#f` otherwise
@@ -1331,6 +1365,7 @@ libraries:: `(chezscheme)`
 
 If no value is associated with `_source-object_` in `_source-table_`, `source-table-cell` modifies `_source-table_` to associate `_source-object_` with `_default_`. Regardless, it returns a pair whose car is `_source-object_` and whose cdr is the associated value. Changing the cdr of this pair effectively updates the table to associate `_source-object_` with a new value. The car field of the pair should not be modified.
 
+[#syntax:s87]
 [horizontal]
 procedure:: `(source-table-delete! _source-table_ _source-object_)`
 returns:: unspecified
@@ -1338,6 +1373,7 @@ libraries:: `(chezscheme)`
 
 `source-table-delete!` drops the association for `_source-object_` from `_source-table_`, if one exists.
 
+[#syntax:s88]
 [horizontal]
 procedure:: `(source-table-size _source-table_)`
 returns:: the number of entries in `_source-table_`
@@ -1351,6 +1387,7 @@ libraries:: `(chezscheme)`
 
 This procedure writes a representation of the information stored in `_source-table_` to the port.
 
+[#syntax:s90]
 [horizontal]
 procedure:: `(get-source-table! _textual-input-port_ _source-table_)`
 procedure:: `(get-source-table! _textual-input-port_ _source-table_ _combine_)`

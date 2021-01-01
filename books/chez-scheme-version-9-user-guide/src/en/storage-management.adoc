@@ -21,6 +21,7 @@ It is possible to make substantial adjustments in the collector's behavior by se
 
 Additional information on _Chez Scheme_'s collector can be found in the report "Don't stop the BiBOP: Flexible and efficient storage management for dynamically typed languages" <<ref13>>.
 
+[#smgmt:s9]
 [horizontal]
 procedure:: `(collect)`
 procedure:: `(collect _cg_)`
@@ -41,6 +42,7 @@ If present, `_max-tg_` must be a nonnegative fixnum or the symbol `static` and e
 
 If present, `_min-tg_` must be a nonnegative fixnum or the symbol `static` and no greater than `_max-tg_`, again treating `static` as having the value one greater than the maximum nonstatic generation. Unless `_max-cg_` is the same as `_cg_`, `_min-tg_` must also be greater than `_cg_`. If `_min-tg_` is not present (but `_cg_` is), it defaults to the same value as `_max-tg_`.
 
+[#smgmt:s10]
 [horizontal]
 procedure:: `(collect-rendezvous)`
 returns:: unspecified
@@ -50,12 +52,14 @@ Requests a garbage collection in the same way as when the system determines that
 
 Note that if the collect-request handler (see `collect-request-handler`) does not call `collect`, then `collect-rendezvous` does not actually perform a garbage collection.
 
+[#smgmt:s11]
 [horizontal]
 global parameter:: `collect-notify`
 libraries:: `(chezscheme)`
 
 If `collect-notify` is set to a true value, the collector prints a message whenever a collection is run. `collect-notify` is set to `#f` by default.
 
+[#smgmt:s12]
 [horizontal]
 global parameter:: `collect-trip-bytes`
 libraries:: `(chezscheme)`
@@ -64,6 +68,7 @@ This parameter determines the approximate amount of storage that is allowed to b
 
 _Chez Scheme_ allocates memory internally in large chunks and subdivides these chunks via inline operations for efficiency. The storage manager determines whether to request a collection only once per large chunk allocated. Furthermore, some time may elapse between when a collection is requested by the storage manager and when the collect request is honored, especially if interrupts are temporarily disabled via `with-interrupts-disabled` or `disable-interrupts`. Thus, `collect-trip-bytes` is an approximate measure only.
 
+[#smgmt:s15]
 [horizontal]
 global parameter:: `collect-generation-radix`
 libraries:: `(chezscheme)`
@@ -72,12 +77,14 @@ This parameter determines how often each generation is collected when `collect` 
 
 Setting `collect-generation-radix` to one forces all generations to be collected each time a collection occurs. Setting `collect-generation-radix` to a very large number effectively delays collection of older generations indefinitely.
 
+[#smgmt:s16]
 [horizontal]
 global parameter:: `collect-maximum-generation`
 libraries:: `(chezscheme)`
 
 This parameter determines the maximum nonstatic generation, hence the total number of generations, currently in use. Its value is an exact integer in the range 1 through 254. When set to 1, only two nonstatic generations are used; when set to 2, three nonstatic generations are used, and so on. When set to 254, 255 nonstatic generations are used, plus the single static generation for a total of 256 generations. Increasing the number of generations effectively decreases how often old objects are collected, potentially decreasing collection overhead but potentially increasing the number of inaccessible objects retained in the system and thus the total amount of memory required.
 
+[#smgmt:s17]
 [horizontal]
 global parameter:: `collect-request-handler`
 libraries:: `(chezscheme)`
@@ -97,6 +104,7 @@ Collection can also be temporarily disabled using `critical-section`, which prev
 
 In the threaded versions of _Chez Scheme_, the collect-request handler is invoked by a single thread with all other threads temporarily suspended.
 
+[#smgmt:s18]
 [horizontal]
 global parameter:: `release-minimum-generation`
 libraries:: `(chezscheme)`
@@ -107,6 +115,7 @@ As new data is allocated and collections occur, the storage-management system au
 
 When `collect-maximum-generation` is set to a new value `_g_`, `release-minimum-generation` is implicitly set to `_g_` as well if (a) the two parameters have the same value before the change, or (b) `release-minimum-generation` has a value greater than `_g_`.
 
+[#smgmt:s19]
 [horizontal]
 global parameter:: `heap-reserve-ratio`
 libraries:: `(chezscheme)`
@@ -118,8 +127,10 @@ This parameter determines the approximate amount of memory reserved (not returne
 [#smgmt:s21]
 _Weak pairs_ allow programs to maintain _weak pointers_ to objects. A weak pointer to an object does not prevent the object from being reclaimed by the storage management system, but it does remain valid as long as the object is otherwise accessible in the system.
 
+[#smgmt:s22]
 _Ephemeron pairs_ are like weak pairs, but ephemeron pairs combine two pointers where the second is retained only as long as the first is retained.
 
+[#smgmt:s23]
 _Guardians_ allow programs to protect objects from deallocation by the garbage collector and to determine when the objects would otherwise have been deallocated.
 
 Weak pairs, ephemeron pairs, and guardians allow programs to retain information about objects in separate data structures (such as hash tables) without concern that maintaining this information will cause the objects to remain indefinitely in the system. Ephemeron pairs allow such data structures to retain key-value combinations where a value may refer to its key, but the combination can be reclaimed if neither must be saved otherwise. In addition, guardians allow objects to be saved from deallocation indefinitely so that they can be reused or so that clean-up or other actions can be performed using the data stored within the objects.
@@ -128,7 +139,7 @@ The implementation of guardians and weak pairs used by _Chez Scheme_ is describe
 
 [#desc:weak-cons]
 [horizontal]
-procedure:: `(weak-cons _obj~1~_ _obj~2~_)`
+procedure:: `(weak-cons _obj~1~_ _obj~2~_)` [[smgmt:s24]]
 returns:: a new weak pair
 libraries:: `(chezscheme)`
 
@@ -158,6 +169,7 @@ Weak pairs are printed in the same manner as ordinary pairs; there is no reader 
 
 The latter example above may in fact return `(a . b)` if a garbage collection promoting the pair into an older generation occurs prior to the assignment of `x` to `*`. It may be necessary to force an older generation collection to allow the object to be reclaimed. The storage management system guarantees only that the object will be reclaimed eventually once all nonweak pointers to it are dropped, but makes no guarantees about when this will occur.
 
+[#smgmt:s25]
 [horizontal]
 procedure:: `(weak-pair? _obj_)`
 returns:: `#t` if obj is a weak pair, `#f` otherwise
@@ -172,7 +184,7 @@ libraries:: `(chezscheme)`
 
 [#desc:ephemeron-cons]
 [horizontal]
-procedure:: `(ephemeron-cons _obj~1~_ _obj~2~_)`
+procedure:: `(ephemeron-cons _obj~1~_ _obj~2~_)` [[smgmt:s26]]
 returns:: a new ephemeron pair
 libraries:: `(chezscheme)`
 
@@ -209,6 +221,7 @@ Like weak pairs and other pairs, ephemeron pairs may be altered using `set-car!`
 
 As with weak pairs, the last two expressions of the middle example above may in fact return `(a . b)` if a garbage collection promoting the pair into an older generation occurs prior to the assignment of `x` to `*`. In the last example above, however, the results of the last two expressions will always be `(a . b)`, because the cdr of a weak pair holds a non-weak reference, and that non-weak reference prevents the car field from becoming `#!bwp`.
 
+[#smgmt:s27]
 [horizontal]
 procedure:: `(ephemeron-pair? _obj_)`
 returns:: `#t` if obj is a ephemeron pair, `#f` otherwise
@@ -400,6 +413,7 @@ With a bit of refactoring, it would be possible to register the encapsulated for
 
 Guardians can also be created via `ftype-guardian`, which supports reference counting of foreign objects.
 
+[#smgmt:s31]
 [horizontal]
 procedure:: `(guardian? _obj_)`
 returns:: `#t` if obj is a guardian, `#f` otherwise
@@ -452,6 +466,7 @@ The example below assumes no collections occur except for those resulting from e
 
 All pointers from C variables or data structures to Scheme objects should generally be discarded before entry (or reentry) into Scheme. When this guideline cannot be followed, the object may be _locked_ via `lock-object` or via the equivalent C library procedure `Slock_object` (<<section_4.8.,Section 4.8>>).
 
+[#smgmt:s36]
 [horizontal]
 procedure:: `(lock-object _obj_)`
 returns:: unspecified
@@ -463,6 +478,7 @@ Locking can also lead to accidental retention of storage if objects are not unlo
 
 Locking immediate values, such as fixnums, booleans, and characters, or objects that have been made static is unnecessary but harmless.
 
+[#smgmt:s38]
 [horizontal]
 procedure:: `(unlock-object _obj_)`
 returns:: unspecified
@@ -474,6 +490,7 @@ An object contained within a locked object, such as an object in the car of a lo
 
 Unlocking immediate values, such as fixnums, booleans, and characters, or objects that have been made static is unnecessary and ineffective but harmless.
 
+[#smgmt:s39]
 [horizontal]
 procedure:: `(locked-object? _obj_)`
 returns:: `#t` if `_obj_` is locked, immediate, or static

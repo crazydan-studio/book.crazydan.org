@@ -1,8 +1,10 @@
 [#chp_10]
 == Chapter 10. Libraries and Top-level Programs
 
+[#libraries:s1]
 The Revised^6^ Report describes two units of portable code: libraries and top-level programs. A library is a named collection of bindings with a declared set of explicitly exported bindings, a declared set of imported libraries, and a body that initializes its bindings. A top-level program is a stand-alone program with a declared set of imported libraries and a body that is run when the top-level program is run. The bindings in a library are created and its initialization code run only if the library is used, directly or indirectly, by a top-level program.
 
+[#libraries:s2]
 The `import` declarations appearing within libraries and top-level programs serve two purposes: first, they cause the imported libraries to be loaded, and second, they cause the bindings of the imported libraries to become visible in the importing library or top-level program. Libraries are typically stored in the file system, with one library per file, and the library name typically identifies the file-system path to the library, possibly relative to a default or programmer-specified set of library locations. The exact mechanism by which top-level programs are run and libraries are loaded is implementation-dependent.
 
 This chapter describes the mechanisms by which libraries and programs are loaded in _Chez Scheme_ along with various features for controlling and tracking this process. It also describes the set of built-in libraries and syntactic forms for defining new libraries and top-level programs outside of a library or top-level program file.
@@ -40,6 +42,7 @@ In addition to the RNRS libraries mandated by the Revised^6^ Report:
 (rnrs unicode (6))
 ----
 
+[#libraries:s6]
 _Chez Scheme_ also provides two additional libraries: `(chezscheme)` and `(chezscheme csv7)`. The former can also be referenced as `(scheme)` and the latter can also be referenced as `(scheme csv7)`.
 
 The `(chezscheme)` library exports bindings for every identifier whose binding is described in this document, including those for keywords like `lambda`, auxiliary keywords like `else`, module names like `scheme`, and procedure names like `cons`. In most cases where an identifier exported from the `(chezscheme)` library corresponds to an identifier exported from one of the RNRS libraries, the bindings are identical. In some cases, however, the `(chezscheme)` bindings extend the `rnrs` bindings in some way. For example, the `(chezscheme)` `syntax-rules` form allows its clauses to have fenders (<<section_11.2.,Section 11.2>>), while the `(rnrs)` `syntax-rules` form does not. Similarly, the `(chezscheme)` `current-input-port` procedure accepts an optional `_port_` argument that, when specified, sets the current input port to `_port_` (<<section_9.8.,Section 9.8>>), while the `(rnrs)` `current-input-port` procedure does not. When the `(chezscheme)` library extends an RNRS binding in some way, the `(chezscheme)` library also exports the RNRS version, with the name prefixed by `r6rs:`, e.g., `r6rs:syntax-rules` or `r6rs:current-input-port`.
@@ -65,6 +68,7 @@ The interaction environment in which code outside of a library or RNRS top-level
 
 === Section 10.2. Running Top-level Programs [[section_10.2.]]
 
+[#libraries:s9]
 A top-level program must reside in its own file, which may have any name and may reside anywhere in the file system. A top-level program residing in a file is run by one of three mechanisms: the `scheme-script` command, the `--program` command-line argument, or the `load-program` procedure.
 
 The `scheme-script` command is used as follows:
@@ -131,6 +135,7 @@ In _Chez Scheme_, a library may also be defined in the REPL or placed in a file 
 
 === Section 10.3. Library and Top-level Program Forms [[section_10.3.]]
 
+[#libraries:s13]
 [horizontal]
 syntax:: `(library _name_ _exports_ _imports_ _library-body_)`
 returns:: unspecified
@@ -170,6 +175,7 @@ As with module imports (<<section_11.5.,Section 11.5>>), a library `import` may 
 
 The `import` keyword is not visible within a library body unless the library imports it from the `(chezscheme)` library.
 
+[#libraries:s14]
 [horizontal]
 syntax:: `(top-level-program _imports_ _body_)`
 returns:: unspecified
@@ -193,6 +199,7 @@ Although not required by the Revised^6^ Report, _Chez Scheme_ supports the use o
 
 Within a library or top-level program, the keywords for these forms must be imported from the `(chezscheme)` library to be available for use, since they are not defined in any of the Revised^6^ Report libraries.
 
+[#libraries:s16]
 [horizontal]
 syntax:: `(import _import-spec_ \...)`
 syntax:: `(import-only _import-spec_ \...)`
@@ -446,6 +453,7 @@ Another way to define the same library would be to define the two-armed-only `if
 
 The placement of the `export` form in the library body is irrelevant, e.g., the `export` form can appear after the definition in the examples above.
 
+[#libraries:s18]
 [horizontal]
 syntax:: `(indirect-export _id_ _indirect-id_ \...)`
 returns:: unspecified
@@ -515,6 +523,7 @@ The advantage of `(implicit-exports #t)` is that indirect exports need not be li
 
 === Section 10.5. Explicitly invoking libraries [[section_10.5.]]
 
+[#libraries:s20]
 [horizontal]
 procedure:: `(invoke-library _libref_)`
 returns:: unspecified
@@ -532,8 +541,10 @@ It is good practice to avoid externally visible side effects in library bodies s
 
 === Section 10.6. Library Parameters [[section_10.6.]]
 
+[#libraries:s22]
 The parameters described below control where `import` looks when attempting to load a library, whether it compiles the libraries it loads, and whether it displays tracking messages as it performs its search.
 
+[#libraries:s23]
 [horizontal]
 thread parameter:: `library-directories`
 thread parameter:: `library-extensions`
@@ -556,6 +567,7 @@ The initial values of these parameters are shown below.
 
 As a convenience, when either of these parameters is set, any element of the list can be specified as a single source string, in which case the object string is determined automatically. For `library-directories`, the object string is the same as the source string, effectively naming the same directory as a source- and object-code root. For `library-extensions`, the object string is the result of removing the last (or only) extension from the string and appending `".so"`. The `library-directories` and `library-extensions` parameters also accept as input strings in the format described in <<section_2.5.,Section 2.5>> for the `--libdirs` and `--libexts` command-line options.
 
+[#libraries:s26]
 [horizontal]
 thread parameter:: `compile-imported-libraries`
 libraries:: `(chezscheme)`
@@ -564,12 +576,14 @@ When the value of this parameter is `#t`, `import` automatically calls the value
 
 When `import` compiles a library via this mechanism, it does not also load the compiled library, because this would cause portions of library to be reevaluated. Because of this, run-time expressions in the file outside of a `library` form will not be evaluated. If such expressions are present and should be evaluated, the library should be loaded explicitly.
 
+[#libraries:s29]
 [horizontal]
 thread parameter:: `import-notify`
 libraries:: `(chezscheme)`
 
 When the new parameter `import-notify` is set to a true value, `import` displays messages to the console-output port as it searches for the file containing each library it needs to load. The default value of this parameter is `#f`.
 
+[#libraries:s30]
 [horizontal]
 thread parameter:: `library-search-handler`
 libraries:: `(chezscheme)`
@@ -578,6 +592,7 @@ The value of parameter must be a procedure that follows the protocol described b
 
 The value of this parameter is invoked to locate the source or object code for a library during `import`, `compile-whole-program`, or `compile-whole-library`.
 
+[#libraries:s31]
 [horizontal]
 procedure:: `(default-library-search-handler _who_ _library_ _directories_ _extensions_)`
 returns:: see below
@@ -589,6 +604,7 @@ This procedure searches the specified directories until it finds a library sourc
 
 === Section 10.7. Library Inspection [[section_10.7.]]
 
+[#libraries:s32]
 [horizontal]
 procedure:: `(library-list)`
 returns:: a list of the libraries currently defined
@@ -596,6 +612,7 @@ libraries:: `(chezscheme)`
 
 The set of libraries initially defined includes those listed in <<section_10.1.,Section 10.1>> above.
 
+[#libraries:s33]
 [horizontal]
 procedure:: `(library-version _libref_)`
 returns:: the version of the specified library

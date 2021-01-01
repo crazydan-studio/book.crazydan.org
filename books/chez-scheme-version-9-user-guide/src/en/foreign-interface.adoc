@@ -9,6 +9,7 @@ The method for static loading of C object code is dependent upon which machine y
 
 Two procedures, `system` and `process`, are used to create subprocesses. Both procedures accept a single string argument and create a subprocess to execute the shell command contained in the string. The `system` procedure waits for the process to exit before returning, however, while the `process` procedure returns immediately without waiting for the process to exit. The standard input and output files of a subprocess created by `system` may be used to communicate with the user's console. The standard input and output files of a subprocess created by `process` may be used to communicate with the Scheme process.
 
+[#foreign:s4]
 [horizontal]
 procedure:: `(system _command_)`
 returns:: see below
@@ -20,6 +21,7 @@ The `system` procedure creates a subprocess to perform the operation specified b
 
 When the subprocess exits, `system` returns the exit code for the subprocess, unless (on Unix-based systems) a signal caused the subprocess to terminate, in which case `system` returns the negation of the signal that caused the termination, e.g., -1 for `SIGHUP`.
 
+[#foreign:s5]
 [horizontal]
 procedure:: `(open-process-ports _command_)`
 procedure:: `(open-process-ports _command_ _b-mode_)`
@@ -47,6 +49,7 @@ It is sometimes necessary to force output to be sent immediately to the subproce
 
 On UNIX systems, the `_process-id_` is the process identifier for the shell created to execute `_command_`. If `_command_` is used to invoke an executable file rather than a shell command, it may be useful to prepend `_command_` with the string `"exec "`, which causes the shell to load and execute the named executable directly, without forking a new process---the shell equivalent of a tail call. This will reduce by one the number of subprocesses created and cause `_process-id_` to reflect the process identifier for the executable once the shell has transferred control.
 
+[#foreign:s7]
 [horizontal]
 procedure:: `(process _command_)`
 returns:: see explanation
@@ -64,6 +67,7 @@ Since foreign procedures operate independently of the Scheme memory management a
 
 Scheme-callable wrappers for foreign procedures can also be created via `ftype-ref` and function ftypes (<<section_4.5.,Section 4.5>>).
 
+[#foreign:s10]
 [horizontal]
 syntax:: `(foreign-procedure _conv_ \... _entry-exp_ (_param-type_ \...) _res-type_)`
 returns:: a procedure
@@ -101,190 +105,282 @@ For argument types `string`, `wstring`, `utf-8`, `utf-16le`, `utf-16be`, `utf-32
 
 Following are the valid parameter types:
 
+[#foreign:s28]
 `integer-8`: Exact integers from -2^7^ through 2^8^ - 1 are valid. Integers in the range 2^7^ through 2^8^ - 1 are treated as two's complement representations of negative numbers, e.g., `#xff` is treated as -1. The argument is passed to C as an integer of the appropriate size (usually `signed char`).
 
+[#foreign:s29]
 `unsigned-8`: Exact integers from -2^7^ to 2^8^ - 1 are valid. Integers in the range -2^7^ through -1 are treated as the positive equivalents of their two's complement representation, e.g., -1 is treated as `#xff`. The argument is passed to C as an unsigned integer of the appropriate size (usually `unsigned char`).
 
+[#foreign:s30]
 `integer-16`: Exact integers from -2^15^ through 2^16^ - 1 are valid. Integers in the range 2^15^ through 2^16^ - 1 are treated as two's complement representations of negative numbers, e.g., `#xffff` is treated as -1. The argument is passed to C as an integer of the appropriate size (usually `short`).
 
+[#foreign:s31]
 `unsigned-16`: Exact integers from -2^15^ to 2^16^ - 1 are valid. Integers in the range -2^15^ through -1 are treated as the positive equivalents of their two's complement representation, e.g., -1 is treated as `#xffff`. The argument is passed to C as an unsigned integer of the appropriate size (usually `unsigned short`).
 
+[#foreign:s32]
 `integer-32`: Exact integers from -2^31^ through 2^32^ - 1 are valid. Integers in the range 2^31^ through 2^32^ - 1 are treated as two's complement representations of negative numbers, e.g., `#xffffffff` is treated as -1. The argument is passed to C as an integer of the appropriate size (usually `int`).
 
+[#foreign:s33]
 `unsigned-32`: Exact integers from -2^31^ to 2^32^ - 1 are valid. Integers in the range -2^31^ through -1 are treated as the positive equivalents of their two's complement representation, e.g., -1 is treated as `#xffffffff`. The argument is passed to C as an unsigned integer of the appropriate size (usually `unsigned int`).
 
+[#foreign:s34]
 `integer-64`: Exact integers from -2^63^ through 2^64^ - 1 are valid. Integers in the range 2^63^ through 2^64^ - 1 are treated as two's complement representations of negative numbers. The argument is passed to C as an integer of the appropriate size (usually `long long` or, on many 64-bit platforms, `long`).
 
+[#foreign:s35]
 `unsigned-64`: Exact integers from -2^63^ through 2^64^ - 1 are valid. Integers in the range -2^63^ through -1 are treated as the positive equivalents of their two's complement representation, The argument is passed to C as an integer of the appropriate size (usually `unsigned long long` or, on many 64-bit platforms, `long`).
 
+[#foreign:s36]
 `double-float`: Only Scheme flonums are valid---other Scheme numeric types are not automatically converted. The argument is passed to C as a double float.
 
+[#foreign:s37]
 `single-float`: Only Scheme flonums are valid---other Scheme numeric types are not automatically converted. The argument is passed to C as a single float. Since _Chez Scheme_ represents flonums in double-float format, the parameter is first converted into single-float format.
 
+[#foreign:s38]
 `short`: This type is an alias for the appropriate fixed-size type above, depending on the size of a C `short`.
 
+[#foreign:s39]
 `unsigned-short`: This type is an alias for the appropriate fixed-size type above, depending on the size of a C `unsigned short`.
 
+[#foreign:s40]
 `int`: This type is an alias for the appropriate fixed-size type above, depending on the size of a C `int`.
 
+[#foreign:s41]
 `unsigned`: This type is an alias for the appropriate fixed-size type above, depending on the size of a C `unsigned`.
 
+[#foreign:s42]
 `unsigned-int`: This type is an alias `unsigned`. fixed-size type above, depending on the size of a C `unsigned`.
 
+[#foreign:s43]
 `long`: This type is an alias for the appropriate fixed-size type above, depending on the size of a C `long`.
 
+[#foreign:s44]
 `unsigned-long`: This type is an alias for the appropriate fixed-size type above, depending on the size of a C `unsigned long`.
 
+[#foreign:s45]
 `long-long`: This type is an alias for the appropriate fixed-size type above, depending on the size of the nonstandard C type `long long`.
 
+[#foreign:s46]
 `unsigned-long-long`: This type is an alias for the appropriate fixed-size type above, depending on the size of the nonstandard C type `unsigned long long`.
 
+[#foreign:s47]
 `ptrdiff_t`: This type is an alias for the appropriate fixed-size type above, depending on its definition in the host machine's `stddef.h` include file.
 
+[#foreign:s48]
 `size_t`: This type is an alias for the appropriate unsigned fixed-size type above, depending on its definition in the host machine's `stddef.h` include file.
 
+[#foreign:s49]
 `ssize_t`: This type is an alias for the appropriate signed fixed-size type above, depending on its definition in the host machine's `stddef.h` include file.
 
+[#foreign:s50]
 `iptr`: This type is an alias for the appropriate fixed-size type above, depending on the size of a C pointer.
 
+[#foreign:s51]
 `uptr`: This type is an alias for the appropriate (unsigned) fixed-size type above, depending on the size of a C pointer.
 
+[#foreign:s52]
 `void*`: This type is an alias for `uptr`.
 
+[#foreign:s53]
 `fixnum`: This type is equivalent to `iptr`, except only values in the fixnum range are valid. Transmission of fixnums is slightly faster than transmission of `iptr` values, but the fixnum range is smaller, so some `iptr` values do not have a fixnum representation.
 
+[#foreign:s54]
 `boolean`: Any Scheme object may be passed as a boolean. `#f` is converted to 0; all other objects are converted to 1. The argument is passed to C as an `int`.
 
+[#foreign:s55]
 `char`: Only Scheme characters with Unicode scalar values in the range 0 through 255 are valid `char` parameters. The character is converted to its Unicode scalar value, as with `char\->integer`, and passed to C as an `unsigned char`.
 
+[#foreign:s56]
 `wchar_t`: Only Scheme characters are valid `wchar_t` parameters. Under Windows and any other system where `wchar_t` holds only 16-bit values rather than full Unicode scalar values, only characters with 16-bit Unicode scalar values are valid. On systems where `wchar_t` is a full 32-bit value, any Scheme character is valid. The character is converted to its Unicode scalar value, as with `char\->integer`, and passed to C as a `wchar_t`.
 
+[#foreign:s57]
 `wchar`: This type is an alias for `wchar_t`.
 
+[#foreign:s58]
 `double`: This type is an alias for `double-float`.
 
+[#foreign:s59]
 `float`: This type is an alias for `single-float`.
 
+[#foreign:s60]
 `scheme-object`: The argument is passed directly to the foreign procedure; no conversion or type checking is performed. This form of parameter passing should be used with discretion. Scheme objects should not be preserved in foreign variables or data structures since the memory management system may relocate them between foreign procedure calls.
 
+[#foreign:s61]
 `ptr`: This type is an alias for `scheme-object`.
 
+[#foreign:s62]
 `u8*`: The argument must be a Scheme bytevector or `#f`. For `#f`, the null pointer (0) is passed to the foreign procedure. For a bytevector, a pointer to the first byte of the bytevector's data is passed. If the C routine to which the data is passed requires the input to be null-terminated, a null (0) byte must be included explicitly in the bytevector. The bytevector should not be retained in foreign variables or data structures, since the memory management system may relocate or discard them between foreign procedure calls, and use their storage for some other purpose.
 
+[#foreign:s63]
 `u16*`: Arguments of this type are treated just like arguments of type `u8*`. If the C routine to which the data is passed requires the input to be null-terminated, two null (0) bytes must be included explicitly in the bytevector, aligned on a 16-bit boundary.
 
+[#foreign:s64]
 `u32*`: Arguments of this type are treated just like arguments of type `u8*`. If the C routine to which the data is passed requires the input to be null-terminated, four null (0) bytes must be included explicitly in the bytevector, aligned on a 32-bit boundary.
 
+[#foreign:s65]
 `utf-8`: The argument must be a Scheme string or `#f`. For `#f`, the null pointer (0) is passed to the foreign procedure. A string is converted into a bytevector, as if via `string\->utf8`, with an added null byte, and the address of the first byte of the bytevector is passed to C. The bytevector should not be retained in foreign variables or data structures, since the memory management system may relocate or discard them between foreign procedure calls and use their storage for some other purpose. The `utf-8` argument type is not allowed for a `++__collect_safe++` foreign procedure.
 
+[#foreign:s66]
 `utf-16le`: Arguments of this type are treated like arguments of type `utf-8`, except they are converted as if via `string\->utf16` with endianness `little`, and they are extended by two null bytes rather than one.
 
+[#foreign:s67]
 `utf-16be`: Arguments of this type are treated like arguments of type `utf-8`, except they are converted as if via `string\->utf16` with endianness `big`, and they are extended by two null bytes rather than one.
 
+[#foreign:s68]
 `utf-32le`: Arguments of this type are treated like arguments of type `utf-8`, except they are converted as if via `string\->utf32` with endianness `little`, and they are extended by four null bytes rather than one.
 
+[#foreign:s69]
 `utf-32be`: Arguments of this type are treated like arguments of type `utf-8`, except they are converted as if via `string\->utf32` with endianness `big`, and they are extended by four null bytes rather than one.
 
+[#foreign:s70]
 `string`: This type is an alias for `utf-8`.
 
+[#foreign:s71]
 `wstring`: This type is an alias for `utf-16le`, `utf-16be`, `utf-32le`, or `utf-32be` as appropriate depending on the size of a C `wchar_t` and the endianness of the target machine. For example, `wstring` is equivalent to `utf-16le` under Windows running on Intel hardware.
 
+[#foreign:s72]
 `(* _ftype_)`: This type allows a pointer to a foreign type (ftype) to be passed. The argument must be an ftype pointer of type `_ftype_`, and the actual argument is the address encapsulated in the ftype pointer. See <<section_4.5.,Section 4.5>> for a description of foreign types.
 
+[#foreign:s73]
 `(& _ftype_)`: This type allows a foreign type (ftype) to be passed as a value, but represented on the Scheme side as a pointer to the foreign-type data. That is, a `(& _ftype_)` argument is represented on the Scheme side the same as a `(* _ftype_)` argument, but a `(& _ftype_)` argument is passed to the foreign procedure as the content at the foreign pointer's address instead of as the address. For example, if `_ftype_` is a `struct` type, then `(& _ftype_)` passes a struct argument instead of a struct-pointer argument. The `_ftype_` cannot refer to an array type.
 
 The result types are similar to the parameter types with the addition of a `void` type. In general, the type conversions are the inverse of the parameter type conversions. No error checking is performed on return, since the system cannot determine whether a foreign result is actually of the indicated type. Particular caution should be exercised with the result types `scheme-object`, `double-float`, `double`, `single-float`, `float`, and the types that result in the construction of bytevectors or strings, since invalid return values may lead to invalid memory references as well as incorrect computations. Following are the valid result types:
 
+[#foreign:s80]
 `void`: The result of the foreign procedure call is ignored and an unspecified Scheme object is returned. `void` should be used when foreign procedures are called for effect only.
 
+[#foreign:s81]
 `integer-8`: The result is interpreted as a signed 8-bit integer and is converted to a Scheme exact integer.
 
+[#foreign:s82]
 `unsigned-8`: The result is interpreted as an unsigned 8-bit integer and is converted to a Scheme nonnegative exact integer.
 
+[#foreign:s83]
 `integer-16`: The result is interpreted as a signed 16-bit integer and is converted to a Scheme exact integer.
 
+[#foreign:s84]
 `unsigned-16`: The result is interpreted as an unsigned 16-bit integer and is converted to a Scheme nonnegative exact integer.
 
+[#foreign:s85]
 `integer-32`: The result is interpreted as a signed 32-bit integer and is converted to a Scheme exact integer.
 
+[#foreign:s86]
 `unsigned-32`: The result is interpreted as an unsigned 32-bit integer and is converted to a Scheme nonnegative exact integer.
 
+[#foreign:s87]
 `integer-64`: The result is interpreted as a signed 64-bit integer and is converted to a Scheme exact integer.
 
+[#foreign:s88]
 `unsigned-64`: The result is interpreted as an unsigned 64-bit integer and is converted to a Scheme nonnegative exact integer.
 
+[#foreign:s89]
 `double-float`: The result is interpreted as a double float and is translated into a _Chez Scheme_ flonum.
 
+[#foreign:s90]
 `single-float`: The result is interpreted as a single float and is translated into a _Chez Scheme_ flonum. Since _Chez Scheme_ represents flonums in double-float format, the result is first converted into double-float format.
 
+[#foreign:s91]
 `short`: This type is an alias for the appropriate fixed-size type above, depending on the size of a C `short`.
 
+[#foreign:s92]
 `unsigned-short`: This type is an alias for the appropriate fixed-size type above, depending on the size of a C `unsigned short`.
 
+[#foreign:s93]
 `int`: This type is an alias for the appropriate fixed-size type above, depending on the size of a C `int`.
 
+[#foreign:s94]
 `unsigned`: This type is an alias for the appropriate fixed-size type above, depending on the size of a C `unsigned`.
 
+[#foreign:s95]
 `unsigned-int`: This type is an alias `unsigned`. fixed-size type above, depending on the size of a C `unsigned`.
 
+[#foreign:s96]
 `long`: This type is an alias for the appropriate fixed-size type above, depending on the size of a C `long`.
 
+[#foreign:s97]
 `unsigned-long`: This type is an alias for the appropriate fixed-size type above, depending on the size of a C `unsigned long`.
 
+[#foreign:s98]
 `long-long`: This type is an alias for the appropriate fixed-size type above, depending on the size of the nonstandard C type `long long`.
 
+[#foreign:s99]
 `unsigned-long-long`: This type is an alias for the appropriate fixed-size type above, depending on the size of the nonstandard C type `unsigned long long`.
 
+[#foreign:s100]
 `ptrdiff_t`: This type is an alias for the appropriate fixed-size type above, depending on its definition in the host machine's `stddef.h` include file.
 
+[#foreign:s101]
 `size_t`: This type is an alias for the appropriate unsigned fixed-size type above, depending on its definition in the host machine's `stddef.h` include file.
 
+[#foreign:s102]
 `ssize_t`: This type is an alias for the appropriate signed fixed-size type above, depending on its definition in the host machine's `stddef.h` include file.
 
+[#foreign:s103]
 `iptr`: This type is an alias for the appropriate fixed-size type above, depending on the size of a C pointer.
 
+[#foreign:s104]
 `uptr`: This type is an alias for the appropriate (unsigned) fixed-size type above, depending on the size of a C pointer.
 
+[#foreign:s105]
 `void*`: This type is an alias for `uptr`.
 
+[#foreign:s106]
 `boolean`: This type converts a C `int` return value into a Scheme boolean. 0 is converted to `#f`; all other values are converted to `#t`.
 
+[#foreign:s107]
 `char`: This type converts a C `unsigned char` return value into a Scheme character, as if via `integer\->char`.
 
+[#foreign:s108]
 `wchar_t`: This type converts a C `wchar_t` return value into a Scheme character, as if via `integer\->char`. The `wchar_t` value must be a valid Unicode scalar value.
 
+[#foreign:s109]
 `wchar`: This type is an alias for `wchar_t`.
 
+[#foreign:s110]
 `double`: This type is an alias for `double-float`.
 
+[#foreign:s111]
 `float`: This type is an alias for `single-float`.
 
+[#foreign:s112]
 `scheme-object`: The result is assumed to be a valid Scheme object, and no conversion is performed. This type is inherently dangerous, since an invalid Scheme object can corrupt the memory management system with unpredictable (but always unpleasant) results. Since Scheme objects are actually typed pointers, even integers cannot safely be returned as type `scheme-object` unless they were created by the Scheme system.
 
+[#foreign:s113]
 `ptr`: This type is an alias for `scheme-object`.
 
+[#foreign:s114]
 `u8*`: The result is interpreted as a pointer to a null-terminated sequence of 8-bit unsigned integers (bytes). If the result is a null pointer, `#f` is returned. Otherwise, the sequence of bytes is stored in a freshly allocated bytevector of the appropriate length, and the bytevector is returned to Scheme.
 
+[#foreign:s115]
 `u16*`: The result is interpreted as a pointer to a null-terminated sequence of 16-bit unsigned integers. If the result is a null pointer, `#f` is returned. Otherwise, the sequence of 16-bit integers is stored in a freshly allocated bytevector of the appropriate length, and the bytevector is returned to Scheme. The null terminator must be a properly aligned 16-bit word, i.e., two bytes of zero aligned on a 16-bit boundary.
 
+[#foreign:s116]
 `u32*`: The result is interpreted as a pointer to a null-terminated sequence of 32-bit unsigned integers. If the result is a null pointer, `#f` is returned. Otherwise, the sequence of 16-bit integers is stored in a freshly allocated bytevector of the appropriate length, and the bytevector is returned to Scheme. The null terminator must be a properly aligned 32-bit word, i.e., four bytes of zero aligned on a 32-bit boundary.
 
+[#foreign:s117]
 `utf-8`: The result is interpreted as a pointer to a null-terminated sequence of 8-bit unsigned character values. If the result is a null pointer, `#f` is returned. Otherwise, the sequence of bytes is converted into a Scheme string, as if via `utf8\->string`, and the string is returned to Scheme.
 
+[#foreign:s118]
 `utf-16le`: The result is interpreted as a pointer to a null-terminated sequence of 16-bit unsigned integers. If the result is a null pointer, `#f` is returned. Otherwise, the sequence of integers is converted into a Scheme string, as if via `utf16\->string` with endianness `little`, and the string is returned to Scheme. A byte-order mark in the sequence of integers as treated as an ordinary character value and does not affect the byte ordering.
 
+[#foreign:s119]
 `utf-16be`: The result is interpreted as a pointer to a null-terminated sequence of 16-bit unsigned integers. If the result is a null pointer, `#f` is returned. Otherwise, the sequence of integers is converted into a Scheme string, as if via `utf16\->string` with endianness `big`, and the string is returned to Scheme. A byte-order mark in the sequence of integers as treated as an ordinary character value and does not affect the byte ordering.
 
+[#foreign:s120]
 `utf-32le`: The result is interpreted as a pointer to a null-terminated sequence of 32-bit unsigned integers. If the result is a null pointer, `#f` is returned. Otherwise, the sequence of integers is converted into a Scheme string, as if via `utf32\->string` with endianness `little`, and the string is returned to Scheme. A byte-order mark in the sequence of integers as treated as an ordinary character value and does not affect the byte ordering.
 
+[#foreign:s121]
 `utf-32be`: The result is interpreted as a pointer to a null-terminated sequence of 32-bit unsigned integers. If the result is a null pointer, `#f` is returned. Otherwise, the sequence of integers is converted into a Scheme string, as if via `utf32\->string` with endianness `big`, and the string is returned to Scheme. A byte-order mark in the sequence of integers as treated as an ordinary character value and does not affect the byte ordering.
 
+[#foreign:s122]
 `string`: This type is an alias for `utf-8`.
 
+[#foreign:s123]
 `wstring`: This type is an alias for `utf-16le`, `utf-16be`, `utf-32le`, or `utf-32be` as appropriate depending on the size of a C `wchar_t` and the endianness of the target machine. For example, `wstring` is equivalent to `utf-16le` under Windows running on Intel hardware.
 
+[#foreign:s124]
 `(* _ftype_)`: The result is interpreted as the address of a foreign object whose structure is described by `_ftype_`, and a freshly allocated ftype pointer encapsulating the address is returned. See <<section_4.5.,Section 4.5>> for a description of foreign types.
 
+[#foreign:s125]
 `(& _ftype_)`: The result is interpreted as a foreign object whose structure is described by `_ftype_`, where the foreign procedure returns a `_ftype_` result, but the caller must provide an extra `(* _ftype_)` argument before all other arguments to receive the result. An unspecified Scheme object is returned when the foreign procedure is called, since the result is instead written into storage referenced by the extra argument. The `_ftype_` cannot refer to an array type.
 
 Consider a C identity procedure:
@@ -384,6 +480,7 @@ As when calling foreign procedures from Scheme, great care must be taken when sh
 
 A foreign-callable wrapper for a Scheme procedure can also be created by passing the procedure to `make-ftype-pointer` with an appropriate function ftype (<<section_4.5.,Section 4.5>>).
 
+[#foreign:s127]
 [horizontal]
 syntax:: `(foreign-callable _conv_ \... _proc-exp_ (_param-type_ \...) _res-type_)`
 returns:: a code object
@@ -497,6 +594,7 @@ Ouch! Hit by 'e'
 
 The `++__collect_safe++` declarations in this example ensure that other threads can continue working while `event-loop` blocks waiting for input. A more well-behaved version of the example would save each code object returned by `foreign-callable` and unlock it when it is no longer registered as a callback.
 
+[#foreign:s130]
 [horizontal]
 procedure:: `(foreign-callable-entry-point _code_)`
 returns:: the address of the foreign-callable entry point in `_code_`
@@ -504,6 +602,7 @@ libraries:: `(chezscheme)`
 
 `_code_` should be a code object produced by `foreign-callable`.
 
+[#foreign:s131]
 [horizontal]
 procedure:: `(foreign-callable-code-object _address_)`
 returns:: the code object corresponding to the foreign-callable entry point `_address_`
@@ -541,6 +640,7 @@ The procedures described in this section directly create and manipulate foreign 
 
 This section also describes a higher-level syntactic mechanism for manipulating foreign data, including foreign structures, unions, arrays, and bit fields. The syntactic interface is safer than the procedural interface but must still assume that the addresses it's given are appropriate for the types of object being manipulated.
 
+[#foreign:s132]
 [horizontal]
 procedure:: `(foreign-alloc _n_)`
 returns:: the address of a freshly allocated block of foreign data `_n_` bytes long
@@ -548,6 +648,7 @@ libraries:: `(chezscheme)`
 
 `_n_` must be a positive fixnum. The returned value is an exact integer and is guaranteed to be properly aligned for any type of value according to the requirements of the underlying hardware. An exception is raised with condition type `&assertion` if the block of foreign data cannot be allocated.
 
+[#foreign:s133]
 [horizontal]
 procedure:: `(foreign-free _address_)`
 returns:: unspecified
@@ -555,6 +656,7 @@ libraries:: `(chezscheme)`
 
 This procedure frees the block of storage to which `_address_` points. `_address_` must be an exact integer in the range -2^_w_-1^ through 2^_w_^ - 1, where _w_ is the width in bits of a pointer, e.g., 64 for a 64-bit machine. It should be an address returned by an earlier call to `foreign-alloc` and not subsequently passed to `foreign-free`.
 
+[#foreign:s134]
 [horizontal]
 procedure:: `(foreign-ref _type_ _address_ _offset_)`
 returns:: see below
@@ -610,6 +712,7 @@ Finally, several fixed-sized types are also supported:
 
 `_address_` must be an exact integer in the range -2^_w_-1^ through 2^_w_^ - 1, where _w_ is the width in bits of a pointer, e.g., 64 for a 64-bit machine. `_offset_` must be an exact fixnum. The sum of `_address_` and `_offset_` should address a readable block of memory large enough to hold a value of type `_type_`, within a block of storage previously returned by `foreign-alloc` and not subsequently freed by `foreign-free` or within a block of storage obtained via some other mechanism, e.g., a foreign call. For multiple-byte values, the native endianness of the machine is assumed.
 
+[#foreign:s135]
 [horizontal]
 procedure:: `(foreign-set! _type_ _address_ _offset_ _value_)`
 returns:: see below
@@ -621,12 +724,13 @@ libraries:: `(chezscheme)`
 
 `_address_` must be an exact integer in the range -2^_w_-1^ through 2^_w_^ - 1, where _w_ is the width in bits of a pointer, e.g., 64 for a 64-bit machine. `_offset_` must be an exact fixnum. The sum of `_address_` and `_offset_` should address a writable block of memory large enough to hold a value of type `_type_`, within a block of storage previously returned by `foreign-alloc` and not subsequently freed by `foreign-free` or within a block of storage obtained via some other mechanism, e.g., a foreign call. `_value_` must be an appropriate value for `_type_`, e.g., a floating-point number for the float types or an exact integer within the appropriate range for the integer types. For multiple-byte values, the native endianness of the machine is assumed.
 
+[#foreign:s136]
 [horizontal]
 procedure:: `(foreign-sizeof _type_)`
 returns:: the size in bytes of `_type_`
 libraries:: `(chezscheme)`
 
-`_type_` must be one of the symbols listed in the description of `foreign-ref` above.
+`_type_` must be one of the symbols listed in the description of `foreign-ref` above. [[foreign:s137]]
 
 [#defn:define-ftype]
 [horizontal]
@@ -827,6 +931,7 @@ This technique can be used to define arbitrary ftypes with arbitrary numbers of 
 [#foreign:s141]
 A struct ftype is an implicit subtype of the type of the first field of the struct. Similarly, an array ftype is an implicit subtype of the type of its elements. Thus, the struct or array extends the type of first field or element with additional fields or elements. This allows an instance of the struct or array to be treated as an instance of the type of its first field or element, without the need to use `ftype-&ref` to allocate a new pointer to the field or element.
 
+[#foreign:s142]
 [horizontal]
 syntax:: `(ftype-sizeof _ftype-name_)`
 returns:: the size in bytes of the ftype identified by `_ftype-name_`
@@ -855,10 +960,9 @@ The size includes the sizes of any ftypes directly embedded within the identifie
 (- (ftype-sizeof BB) (ftype-sizeof void*)) ⇒ 44
 ----
 
-[#foreign:s143]
 [#desc:make-ftype-pointer]
 [horizontal]
-syntax:: `(make-ftype-pointer _ftype-name_ _expr_)`
+syntax:: `(make-ftype-pointer _ftype-name_ _expr_)` [[foreign:s143]]
 returns:: an ftype-pointer object
 libraries:: `(chezscheme)`
 
@@ -932,6 +1036,7 @@ the two definitions of `bvcopy-ftpr` below are equivalent.
 
 A library that defines `_memcpy_` must be loaded first via `load-shared-object`, or `memcpy` must be registered via one of the methods described in Section  4.6.
 
+[#foreign:s147]
 [horizontal]
 syntax:: `(ftype-pointer? _obj_)`
 returns:: `#t` if `_obj_` is an ftype pointer, otherwise `#f`
@@ -993,6 +1098,7 @@ libraries:: `(chezscheme)`
 
 It is, however, guaranteed not to allocate bignums for the addresses even if the addresses do not fit in fixnum range.
 
+[#foreign:s150]
 [horizontal]
 syntax:: `(ftype-pointer-null? _fptr_)`
 returns:: `#t` if the address of `_fptr_` is 0, otherwise `#f`
@@ -1011,6 +1117,7 @@ libraries:: `(chezscheme)`
 
 It is, however, guaranteed not to allocate a bignum for the address even if the address does not fit in fixnum range.
 
+[#foreign:s151]
 [horizontal]
 syntax:: `(ftype-&ref _ftype-name_ (_a_ \...) _fptr-expr_)`
 syntax:: `(ftype-&ref _ftype-name_ (_a_ \...) _fptr-expr_ _index_)`
@@ -1047,7 +1154,7 @@ The examples below assume the definitions of `B` and `BB` shown above in the des
   (ftype-&ref BB (bb2 idx b2) y))
 ----
 
-With no accessors and no index, as in the first use of `ftype-&ref` above, the returned `ftype-pointer` might be `eq?` to the input. Otherwise, the `ftype-pointer` is freshly allocated.
+With no accessors and no index, as in the first use of `ftype-&ref` above, the returned `ftype-pointer` might be `eq?` to the input. Otherwise, the `ftype-pointer` is freshly allocated. [[foreign:s152]]
 
 [#defn:ftype-set!]
 [horizontal]
@@ -1130,6 +1237,7 @@ An ftype pointer can also be obtained as a return value from a C function declar
 
 Thus, `ftype-ref` with a function ftype is an alternative to `foreign-procedure` (<<section_4.2.,Section 4.2>>) for creating Scheme-callable wrappers for C functions.
 
+[#foreign:s155]
 [horizontal]
 procedure:: `(ftype-pointer-ftype _fptr_)`
 returns:: ``_fptr_``'s ftype, represented as an s-expression
@@ -1226,6 +1334,7 @@ Access to foreign procedures can be provided in several ways:
 
 - The address of an entry, i.e., a function pointer, may be passed into Scheme and used as the value of the entry expression in a foreign-procedure expression. This allows foreign entry points to be used even when they are not registered by name.
 
+[#foreign:s157]
 [horizontal]
 procedure:: `(foreign-entry? _entry-name_)`
 returns:: `#t` if `_entry-name_` is an existing foreign procedure entry point, `#f` otherwise
@@ -1434,6 +1543,7 @@ The resulting ".so" file can be loaded into Scheme and `even` and `odd` made ava
 
 The filename is given as `"./evenodd.so"` rather than simply `"evenodd.so"`, because some systems look for shared libraries in a standard set of system directories that does not include the current directory.
 
+[#foreign:s162]
 [horizontal]
 procedure:: `(remove-foreign-entry _entry-name_)`
 returns:: unspecified
@@ -1484,18 +1594,31 @@ The preprocessor macros may evaluate their arguments more than once (or not at a
 
 *Customization.*  The functions described here are used to initialize the Scheme system, build the Scheme heap, and run the Scheme system from a separate program.
 
+[#foreign:s169]
 - [func] `char* Skernel_version(void)`
+[#foreign:s170]
 - [func] `void Sscheme_init(void (*_abnormal_exit_)(void))`
+[#foreign:s171]
 - [func] `void Sset_verbose(int _v_)`
+[#foreign:s172]
 - [func] `void Sregister_boot_file(const char *_name_)`
+[#foreign:s173]
 - [func] `void Sregister_boot_file_fd(const char *_name_, int _fd_)`
+[#foreign:s174]
 - [func] `void Sbuild_heap(const char *_exec_, void (*_custom_init_)(void))`
+[#foreign:s175]
 - [func] `void Senable_expeditor(const char *_history_file_)`
+[#foreign:s176]
 - [func] `void Sretain_static_relocation(void)`
+[#foreign:s177]
 - [func] `int Sscheme_start(int _argc_, char *_argv_[])`
+[#foreign:s178]
 - [func] `int Sscheme_script(char *_scriptfile_, int _argc_, char *_argv_[])`
+[#foreign:s179]
 - [func] `int Sscheme_program(char *_programfile_, int _argc_, char *_argv_[])`
+[#foreign:s180]
 - [func] `void Scompact_heap(void)`
+[#foreign:s181]
 - [func] `void Sscheme_deinit(void)`
 
 `Skernel_version` returns a string representing the Scheme version. It should be compared against the value of the VERSION preprocessor macro before any of the initialization functions listed above are used to verify that the correct `"scheme.h"` header file has been used.
@@ -1520,81 +1643,133 @@ The preprocessor macros may evaluate their arguments more than once (or not at a
 
 *Predicates.*  The predicates described here correspond to the similarly named Scheme predicates. A trailing letter `p`, for "predicate," is used in place of the question mark that customarily appears at the end of a Scheme predicate name. Each predicate accepts a single Scheme object and returns a boolean (C integer) value.
 
+[#foreign:s182]
 - [macro] `int Sfixnump(ptr _obj_)`
+[#foreign:s183]
 - [macro] `int Scharp(ptr _obj_)`
+[#foreign:s184]
 - [macro] `int Snullp(ptr _obj_)`
+[#foreign:s185]
 - [macro] `int Seof_objectp(ptr _obj_)`
+[#foreign:s186]
 - [macro] `int Sbwp_objectp(ptr _obj_)`
+[#foreign:s187]
 - [macro] `int Sbooleanp(ptr _obj_)`
+[#foreign:s188]
 - [macro] `int Spairp(ptr _obj_)`
+[#foreign:s189]
 - [macro] `int Ssymbolp(ptr _obj_)`
+[#foreign:s190]
 - [macro] `int Sprocedurep(ptr _obj_)`
+[#foreign:s191]
 - [macro] `int Sflonump(ptr _obj_)`
+[#foreign:s192]
 - [macro] `int Svectorp(ptr _obj_)`
+[#foreign:s193]
 - [macro] `int Sbytevectorp(ptr _obj_)`
+[#foreign:s194]
 - [macro] `int Sfxvectorp(ptr _obj_)`
+[#foreign:s195]
 - [macro] `int Sstringp(ptr _obj_)`
+[#foreign:s196]
 - [macro] `int Sbignump(ptr _obj_)`
+[#foreign:s197]
 - [macro] `int Sboxp(ptr _obj_)`
+[#foreign:s198]
 - [macro] `int Sinexactnump(ptr _obj_)`
+[#foreign:s199]
 - [macro] `int Sexactnump(ptr _obj_)`
+[#foreign:s200]
 - [macro] `int Sratnump(ptr _obj_)`
+[#foreign:s201]
 - [macro] `int Sinputportp(ptr _obj_)`
+[#foreign:s202]
 - [macro] `int Soutputportp(ptr _obj_)`
+[#foreign:s203]
 - [macro] `int Srecordp(ptr _obj_)`
 
 *Accessors.*  Some of the accessors described here correspond to similarly named Scheme procedures, while others are unique to this interface. `Sfixnum_value`, `Schar_value`, `Sboolean_value`, and `Sflonum_value` return the C equivalents of the given Scheme value.
 
+[#foreign:s204]
 - [macro] `iptr` `Sfixnum_value(ptr _fixnum_)`
+[#foreign:s205]
 - [macro] `uptr` `Schar_value(ptr _character_)`
+[#foreign:s206]
 - [macro] `int Sboolean_value(ptr _obj_)`
+[#foreign:s207]
 - [macro] `double` `Sflonum_value(ptr _flonum_)`
 
 `Sinteger_value` and `Sunsigned_value` are similar to `Sfixnum_value`, except they accept not only fixnum arguments but bignum arguments in the range of C integer or unsigned values. `Sinteger_value` and `Sunsigned_value` accept the same range of Scheme integer values. They differ only in the result type, and so allow differing interpretations of negative and large unsigned values.
 
+[#foreign:s208]
 - [func] `iptr` `Sinteger_value(ptr _integer_)`
+[#foreign:s209]
 - [macro] `uptr` `Sunsigned_value(ptr _integer_)`
 
 `Sinteger32_value`, `Sunsigned32_value`, `Sinteger64_value`, and `Sunsigned64_value` accept signed or unsigned Scheme integers in the 32- or 64-bit range and return integers of the appropriate type for the machine type.
 
+[#foreign:s210]
 - [func] `<32-bit int type>` `Sinteger32_value(ptr _integer_)`
+[#foreign:s211]
 - [macro] `<32-bit unsigned type>` `Sunsigned32_value(ptr _integer_)`
+[#foreign:s212]
 - [func] `<64-bit int type>` `Sinteger64_value(ptr _integer_)`
+[#foreign:s213]
 - [macro] `<64-bit unsigned type>` `Sunsigned64_value(ptr _integer_)`
 
 `Scar`, `Scdr`, `Ssymbol_to_string` (corresponding to `symbol\->string`), and `Sunbox` are identical to their Scheme counterparts.
 
+[#foreign:s214]
 - [macro] `ptr Scar(ptr _pair_)`
+[#foreign:s215]
 - [macro] `ptr Scdr(ptr _pair_)`
+[#foreign:s216]
 - [macro] `ptr Ssymbol_to_string(ptr _sym_)`
+[#foreign:s217]
 - [macro] `ptr Sunbox(ptr _box_)`
 
 `Sstring_length`, `Svector_length`, `Sbytevector_length`, and `Sfxvector_length` each return a C integer representing the length (in elements) of the object.
 
+[#foreign:s218]
 - [macro] `iptr` `Sstring_length(ptr _str_)`
+[#foreign:s219]
 - [macro] `iptr` `Svector_length(ptr _vec_)`
+[#foreign:s220]
 - [macro] `iptr` `Sbytevector_length(ptr _bytevec_)`
+[#foreign:s221]
 - [macro] `iptr` `Sfxvector_length(ptr _fxvec_)`
 
 `Sstring_ref`, `Svector_ref`, `Sbytevector_u8_ref`, and `Sfxvector_ref` correspond to their Scheme counterparts, except that the index arguments are C integers, the return value for `Sstring_ref` is a C character, and the return value for `Sbytevector_u8_ref` is an octet (unsigned char).
 
-- [macro] `char` `Sstring_ref(ptr _str_, iptr _i_)`
+[#foreign:s222]
+- [macro] `char Sstring_ref(ptr _str_, iptr _i_)`
+[#foreign:s223]
 - [macro] `ptr Svector_ref(ptr _vec_, iptr _i_)`
-- [macro] `octet` `Sbytevector_u8_ref(ptr _fxvec_, iptr _i_)`
+[#foreign:s224]
+- [macro] `octet Sbytevector_u8_ref(ptr _fxvec_, iptr _i_)`
+[#foreign:s225]
 - [macro] `ptr Sfxvector_ref(ptr _fxvec_, iptr _i_)`
 
 A Scheme bytevector is represented as a length field followed by a sequence of octets (unsignec chars). `Sbytevector_data` returns a pointer to the start of the sequence of octets. Extreme care should be taken to stop dereferencing the pointer returned by `Sbytevector_data` or to lock the bytevector into memory (see `Slock_object` below) before any Scheme code is executed, whether by calling into Scheme or returning to a Scheme caller. The storage manager may otherwise relocate or discard the object into which the pointer points and may copy other data over the object.
 
+[#foreign:s226]
 - [macro] `octet* Sbytevector_data(ptr _bytevec_)`
 
 *Mutators.*  Changes to mutable objects that contain pointers, such as pairs and vectors, must be tracked on behalf of the storage manager, as described in one of the references <<ref13>>. The operations described here perform this tracking automatically where necessary.
 
+[#foreign:s227]
 - [func] `void Sset_box(ptr _box_, ptr _obj_)`
+[#foreign:s228]
 - [func] `void Sset_car(ptr _pair_, ptr _obj_)`
+[#foreign:s229]
 - [func] `void Sset_cdr(ptr _pair_, ptr _obj_)`
+[#foreign:s230]
 - [macro] `void Sstring_set(ptr _str_, iptr _i_, char _c_)`
+[#foreign:s231]
 - [func] `void Svector_set(ptr _vec_, iptr _i_, ptr _obj_)`
+[#foreign:s232]
 - [macro] `void Sbytevector_u8_set(ptr _bytevec_, iptr _i_, octet _n_)`
+[#foreign:s233]
 - [macro] `void Sfxvector_set(ptr _fxvec_, iptr _i_, ptr _fixnum_)`
 
 Some Scheme objects, such as procedures and numbers, are not mutable, so no operators are provided for altering the contents of those objects.
@@ -1603,21 +1778,34 @@ Some Scheme objects, such as procedures and numbers, are not mutable, so no oper
 
 `Snil`, `Strue`, `Sfalse`, `Sbwp_object`, `Seof_object`, and `Svoid` construct constant immediate values representing the empty list ( `()` ), the boolean values (`\#t` and `#f`), the broken-weak-pointer object (`#!bwp`), the eof object (`#!eof`), and the void object.
 
+[#foreign:s234]
 - [macro] `ptr Snil`
+[#foreign:s235]
 - [macro] `ptr Strue`
+[#foreign:s236]
 - [macro] `ptr Sfalse`
+[#foreign:s237]
 - [macro] `ptr Sbwp_object`
+[#foreign:s238]
 - [macro] `ptr Seof_object`
+[#foreign:s239]
 - [macro] `ptr Svoid`
 
 Fixnums, characters, booleans, flonums, and strings may be created from their C equivalents.
 
+[#foreign:s240]
 - [macro] `ptr Sfixnum(iptr _n_)`
+[#foreign:s241]
 - [macro] `ptr Schar(char _c_)`
+[#foreign:s242]
 - [macro] `ptr Sboolean(int _b_)`
+[#foreign:s243]
 - [func] `ptr Sflonum(double x)`
+[#foreign:s244]
 - [func] `ptr Sstring(const char *_s_)`
+[#foreign:s245]
 - [func] `ptr Sstring_of_length(const char *_s_, iptr _n_)`
+[#foreign:s246]
 - [func] `ptr Sstring_utf8(const char *_s_, iptr _n_)`
 
 `Sstring` creates a Scheme copy of the C string `_s_`, while `Sstring_of_length` creates a Scheme string of length `_n_` and copies the first `_n_` bytes from `_s_` into the new Scheme string.
@@ -1633,7 +1821,9 @@ It is possible to determine whether a C integer is within fixnum range by compar
 
 `Sinteger` and `Sunsigned` may be used to create Scheme integers whether they are in fixnum range or not.
 
+[#foreign:s247]
 - [func] `ptr Sinteger(iptr _n_)`
+[#foreign:s248]
 - [func] `ptr Sunsigned(uptr _n_)`
 
 `Sinteger` and `Sunsigned` differ in their treatment of negative C integer values as well as C unsigned integer values that would appear negative if cast to integers. `Sinteger` converts such values into negative Scheme values, whereas `Sunsigned` converts such values into the appropriate positive Scheme values. For example, assuming a 32-bit, two's complement representation for `iptrs`, `Sinteger(-1)` and `Sunsigned((iptr)0xffffffff)` both evaluate to the Scheme integer `-1`, whereas `Sunsigned(0xffffffff)` and `Sunsigned((uptr)-1)` both evaluate to the Scheme integer `#xffffffff` (`4294967295`).
@@ -1660,45 +1850,62 @@ Sunsigned_value(Sunsigned(_x_))
 
 `Sinteger32`, `Sunsigned32`, `Sinteger64`, and `Sunsigned64` are like the generic equivalents but restrict their arguments to the 32- or 64-bit range.
 
+[#foreign:s249]
 - [func] `ptr Sinteger32(<32-bit int type> _n_)`
+[#foreign:s250]
 - [func] `ptr Sunsigned32(<32-bit unsigned type> _n_)`
+[#foreign:s251]
 - [func] `ptr Sinteger64(<64-bit int type> _n_)`
+[#foreign:s252]
 - [func] `ptr Sunsigned64(<64-bit unsigned type> _n_)`
 
 `Scons` and `Sbox` are identical to their Scheme counterparts.
 
+[#foreign:s253]
 - [func] `ptr Scons(ptr _obj~1~_, ptr _obj~2~_)`
+[#foreign:s254]
 - [func] `ptr Sbox(ptr _obj_)`
 
 `Sstring_to_symbol` is similar to its Scheme counterpart, `string\->symbol`, except that it takes a C string (character pointer) as input.
 
+[#foreign:s255]
 - [func] `ptr Sstring_to_symbol(const char *_s_)`
 
 `Smake_string`, `Smake_vector`, `Smake_bytevector`, and `Smake_fxvector` are similar to their Scheme counterparts.
 
+[#foreign:s256]
 - [func] `ptr Smake_string(iptr _n_, int _c_)`
+[#foreign:s257]
 - [func] `ptr Smake_vector(iptr _n_, ptr _obj_)`
+[#foreign:s258]
 - [func] `ptr Smake_bytevector(iptr _n_, int _fill_)`
+[#foreign:s259]
 - [func] `ptr Smake_fxvector(iptr _n_, ptr _fixnum_)`
 
 `Smake_uninitialized_string` is similar to the one-argument `make-string`.
 
+[#foreign:s260]
 - [func] `ptr Smake_uninitialized_string(iptr _n_)`
 
 *Windows-specific helper functions.*  The following helper functions are provided on Windows only.
 
+[#foreign:s261]
 - [func] `char* Sgetenv(const char *_name_)`
 
 `Sgetenv` returns the UTF-8-encoded value of UTF-8-encoded environment variable `_name_` if found and NULL otherwise. Call `free` on the returned value when it is no longer needed.
 
+[#foreign:s262]
 - [func] `wchar_t* Sutf8_to_wide(const char *\s)`
+[#foreign:s263]
 - [func] `char* Swide_to_utf8(const wchar_t *\s)`
 
 `Sutf8_to_wide` and `Swide_to_utf8` convert between UTF-8-encoded and UTF-16LE-encoded null-terminated strings. Call `free` on the returned value when it is no longer needed.
 
 *Accessing top-level values.*  Top-level variable bindings may be accessed or assigned via `Stop_level_value` and `Sset_top_level_value`.
 
+[#foreign:s264]
 - [func] `ptr Stop_level_value(ptr _sym_)`
+[#foreign:s265]
 - [func] `void Sset_top_level_value(ptr _sym_, ptr _obj_)`
 
 These procedures give fast access to the bindings in the original interaction environment and do not reflect changes to the `interaction-environment` parameter or top-level module imports. To access the current interaction-environment binding for a symbol, it is necessary to call the Scheme `top-level-value` and `set-top-level-value!` procedures instead.
@@ -1709,18 +1916,21 @@ As a general rule, all pointers from C variables or data structures to Scheme ob
 
 In practice, the best way to ensure that C code does not retain pointers to Scheme objects is to immediately convert the Scheme objects into C equivalents, if possible. In certain cases, it is not possible to do so, yet retention of the Scheme object is essential to the design of the C portions of the program. In these cases, the object may be _locked_ via the library routine `Slock_object` (or from Scheme, the equivalent procedure `lock-object`).
 
+[#foreign:s267]
 - [func] `void Slock_object(ptr _obj_)`
 
 Locking an object prevents the storage manager from reclaiming or relocating the object. Locking should be used sparingly, as it introduces memory fragmentation and increases storage management overhead. Locking can also lead to accidental retention of storage if objects are not unlocked. Locking objects that have been made static via heap compaction (see `Scompact_heap` above) is unnecessary but harmless.
 
 Objects may be unlocked via `Sunlock_object` (`unlock-object`).
 
+[#foreign:s270]
 - [func] `void Sunlock_object(ptr _obj_)`
 
 An object may be locked more than once by successive calls to `Slock_object` or `lock-object`, in which case it must be unlocked by an equal number of calls to `Sunlock_object` or `unlock-object` before it is truly unlocked.
 
 The function `Sunlocked_objectp` can be used to determine if an object is locked.
 
+[#foreign:s271]
 - [func] `int Sunlocked_objectp(ptr _obj_)`
 
 When a foreign procedure call is made into Scheme, a return address pointing into the Scheme code object associated with the foreign procedure is passed implicitly to the C routine. The system therefore locks the code object before calls are made from C back into Scheme and unlocks it upon return from Scheme. This locking is performed automatically; user code should never need to lock such code objects.
@@ -1729,26 +1939,34 @@ An object contained within a locked object, such as an object in the car of a lo
 
 *Registering foreign entry points.*  Foreign entry points may be made visible to Scheme via `Sforeign_symbol` or `Sregister_symbol`.
 
+[#foreign:s272]
 - [func] `void Sforeign_symbol(const char *_name_, void *_addr_)`
+[#foreign:s273]
 - [func] `void Sregister_symbol(const char *_name_, void *_addr_)`
 
 External entry points in object files or shared objects loaded as a result of a call to `load-shared-object` are automatically made visible by the system. Once a foreign entry point is made visible, it may be named in a `foreign-procedure` expression to create a Scheme-callable version of the entry point. `Sforeign_symbol` and `Sregister_symbol` allow programs to register nonexternal entry points, entry points in code linked statically with _Chez Scheme_, and entry points into code loaded directly from C, i.e., without `load-shared-object`. `Sforeign_symbol` and `Sregister_symbol` differ only in that `Sforeign_symbol` raises an exception when an attempt is made to register an existing name, whereas `Sregister_symbol` permits existing names to be redefined.
 
 *Obtaining Scheme entry points.*  `Sforeign_callable_entry_point` extracts the entry point from a code object produced by `foreign-callable`, performing the same operation as its Scheme counterpart, i.e., the Scheme procedure `foreign-callable-entry-point`.
 
+[#foreign:s274]
 - [func] `(void (*) (void)) Sforeign_callable_entry_point(ptr _code_)`
 
 This can be used to avoid converting the code object into an address until just when it is needed, which may eliminate the need to lock the code object in some circumstances, assuming that the code object is not saved across any calls back into Scheme.
 
 The inverse translation can be made via `Sforeign_callable_code_object`.
 
+[#foreign:s275]
 - [func] `ptr Sforeign_callable_code_object\((void (*addr)(void)))`
 
 *Low-level support for calls into Scheme.*  Support for calling Scheme procedures from C is provided by the set of routines documented below. Calling a Scheme procedure that expects a small number of arguments (0-3) involves the use of one of the following routines.
 
+[#foreign:s276]
 - [func] `ptr Scall0(ptr _procedure_)`
+[#foreign:s277]
 - [func] `ptr Scall1(ptr _procedure_, ptr _obj~1~_)`
+[#foreign:s278]
 - [func] `ptr Scall2(ptr _procedure_, ptr _obj~1~_, ptr _obj~2~_)`
+[#foreign:s279]
 - [func] `ptr Scall3(ptr _procedure_, ptr _obj~1~_, ptr _obj~2~_, ptr _obj~3~_)`
 
 In each case, the first argument, `_procedure_`, should be a Scheme procedure. The remaining arguments, which should be Scheme objects, are passed to the procedure. The tools described earlier in this section may be used to convert C datatypes into their Scheme equivalents. A program that automatically generates conversion code from declarations that are similar to `foreign-procedure` expressions is distributed with _Chez Scheme_. It can be found in the Scheme library directory on most systems in the file `"foreign.ss"`.
@@ -1757,8 +1975,11 @@ A Scheme procedure may be obtained in a number of ways. For example, it may be r
 
 A more general interface involving the following routines is available for longer argument lists.
 
+[#foreign:s280]
 - [func] `void Sinitframe(iptr _n_)`
+[#foreign:s281]
 - [func] `void Sput_arg(iptr _i_, ptr _obj_)`
+[#foreign:s282]
 - [func] `ptr Scall(ptr _procedure_, iptr _n_)`
 
 A C procedure first calls `Sinitframe` with one argument, the number of arguments to be passed to Scheme. It then calls `Sput_arg` once for each argument (in any order), passing `Sput_arg` the argument number (starting with `1`) and the argument. Finally, it calls `Scall` to perform the call, passing it the Scheme procedure and the number of arguments (the same number as in the call to `Sinitframe`). Programmers should ensure a Scheme call initiated via `Sinitframe` is completed via `Scall` before any other calls to Scheme are made and before a return to Scheme is attempted. If for any reason the call is not completed after `Sinitframe` has been called, it may not be possible to return to Scheme.
@@ -1826,8 +2047,11 @@ Calls from C to Scheme should not be made from C interrupt handlers. When Scheme
 
 *Activating, deactivating, and destroying threads.*  Three functions are provided by the threaded versions of Scheme to allow C code to notify Scheme when a thread should be activated, deactivated, or destroyed.
 
+[#foreign:s283]
 - [func] `int Sactivate_thread(void)`
+[#foreign:s284]
 - [func] `void Sdeactivate_thread(void)`
+[#foreign:s285]
 - [func] `int Sdestroy_thread(void)`
 
 A thread created via the Scheme procedure `fork-thread` starts in the active state and need not be activated. Any thread that has been deactivated, and any thread created by some mechanism other than `fork-thread` must, however, be activated before it can access Scheme data or execute Scheme code. A foreign callable that is declared with `++__collect_safe++` can activate a calling thread. Otherwise, `Sactivate_thread` must be used to activate a thread. It returns 1 the first time the thread is activated and 0 on each subsequent call until the activation is destroyed with `Sdestroy_thread`.
@@ -1838,16 +2062,22 @@ Since active threads operating in C code prevent the storage management system f
 
 *Low-level synchronization primitives.*  The header file defines several preprocessor macros that can be used to lock memory locations in a manner identical to the corresponding ftype lock operations (sections  15.4 and 15.5).
 
+[#foreign:s286]
 - [macro] `void INITLOCK(void *_addr_)`
+[#foreign:s287]
 - [macro] `void SPINLOCK(void *_addr_)`
+[#foreign:s288]
 - [macro] `void UNLOCK(void *_addr_)`
+[#foreign:s289]
 - [macro] `void LOCKED_INCR(void *_addr_, int *_ret_)`
+[#foreign:s290]
 - [macro] `void LOCKED_DECR(void *_addr_, int *_ret_)`
 
 `LOCKED_INCR` and `LOCKED_DECR` set `_ret_` to a nonzero (true) value if the incremented or decremented value is 0. Otherwise they set `_ret_` to 0.
 
 === Section 4.9. Example: Socket Operations [[section_4.9.]]
 
+[#foreign:s291]
 This section presents a simple socket interface that employs a combination of Scheme and C code. The C code defines a set of convenient low-level operating-system interfaces that can be used in the higher-level Scheme code to open, close, read from, and write to sockets.
 
 The C code (csocket.c) is given below, followed by the Scheme code (socket.ss). The code should require little or no modification to run on most Unix systems and can be modified to work under Windows (using the Windows _WinSock_ interface).

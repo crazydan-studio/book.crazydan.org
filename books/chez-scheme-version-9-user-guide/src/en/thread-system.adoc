@@ -1,6 +1,7 @@
 [#chp_15]
 == Chapter 15. Thread System
 
+[#threads:s0]
 This chapter describes the _Chez Scheme_ thread-system procedures and syntactic forms. With the exception of locks, locked increment, and locked decrement, the features of the thread system are implemented on top of the Posix thread system (pthreads) on non-Windows-based system and directly using the Windows API on Windows-based systems. Consult the appropriate documentation on your system for basic details of thread creation and interaction.
 
 Most primitive Scheme procedures are _thread-safe_, meaning that they can be called concurrently from multiple threads. This includes allocation operations like `_cons_` and `make-string`, accessors like `car` and `vector-ref`, numeric operators like `+` and `sqrt`, and nondestructive higher-level primitive operators like `append` and `map`.
@@ -19,6 +20,7 @@ One restriction should be observed when one of multiple threads creates or loads
 
 === Section 15.1. Thread Creation [[section_15.1.]]
 
+[#threads:s2]
 [horizontal]
 procedure:: `(fork-thread _thunk_)`
 returns:: a thread object
@@ -32,6 +34,7 @@ Nothing can be done with the thread object returned by `fork-thread`, other than
 
 Threads created by foreign code using some means other than `fork-thread` must call `Sactivate_thread` (<<section_4.8.,Section 4.8>>) before touching any Scheme data or calling any Scheme procedures.
 
+[#threads:s3]
 [horizontal]
 procedure:: `(thread? _obj_)`
 returns:: `#t` if `_obj_` is a thread object, `#f` otherwise
@@ -47,6 +50,7 @@ The thread id is a thread number assigned by thread id, and has no relationship 
 
 === Section 15.2. Mutexes [[section_15.2.]]
 
+[#threads:s6]
 [horizontal]
 procedure:: `(make-mutex)`
 procedure:: `(make-mutex _name_)`
@@ -55,6 +59,7 @@ libraries:: `(chezscheme)`
 
 `_name_`, if supplied, must be a symbol which identifies the mutex, or `#f` for no name. The name is printed every time the mutex is printed, which is useful for debugging.
 
+[#threads:s7]
 [horizontal]
 procedure:: `(mutex? _obj_)`
 returns:: `#t` if `_obj_` is a mutex, `#f` otherwise
@@ -75,6 +80,7 @@ If `block?` is false and the mutex currently belongs to a different thread, the 
 
 Mutexes are _recursive_ in Posix threads terminology, which means that the calling thread can use `mutex-acquire` to (re)acquire a mutex it already has. In this case, an equal number of `mutex-release` calls is necessary to release the mutex.
 
+[#threads:s9]
 [horizontal]
 procedure:: `(mutex-release _mutex_)`
 returns:: unspecified
@@ -84,6 +90,7 @@ libraries:: `(chezscheme)`
 
 `mutex-release` releases the mutex identified by `_mutex_`. Unpredictable behavior results if the mutex is not owned by the calling thread.
 
+[#threads:s10]
 [horizontal]
 syntax:: `(with-mutex _mutex_ _body~1~_ _body~2~_ \...)`
 returns:: the values of the body `_body~1~_ _body~2~_ \...`
@@ -93,6 +100,7 @@ libraries:: `(chezscheme)`
 
 Using `with-mutex` is generally more convenient and safer than using `mutex-acquire` and `mutex-release` directly.
 
+[#threads:s11]
 [horizontal]
 procedure:: `(mutex-name _mutex_)`
 returns:: the name associated with `_mutex_`, if any; otherwise `#f`
@@ -102,6 +110,7 @@ libraries:: `(chezscheme)`
 
 === Section 15.3. Conditions [[section_15.3.]]
 
+[#threads:s12]
 [horizontal]
 procedure:: `(make-condition)`
 procedure:: `(make-condition _name_)`
@@ -110,6 +119,7 @@ libraries:: `(chezscheme)`
 
 `_name_`, if supplied, must be a symbol which identifies the condition object, or `#f` for no name. The name is printed every time the condition is printed, which is useful for debugging.
 
+[#threads:s13]
 [horizontal]
 procedure:: `(thread-condition? _obj_)`
 returns:: `#t` if `_obj_` is a condition object, `#f` otherwise
@@ -126,6 +136,7 @@ libraries:: `(chezscheme)`
 
 `condition-wait` waits up to the specified `_timeout_` for the condition identified by the condition object `_cond_`. The calling thread must have acquired the mutex identified by the mutex `_mutex_` at the time `condition-wait` is called. `_mutex_` is released as a side effect of the call to `condition-wait`. When a thread is later released from the condition variable by one of the procedures described below or the timeout expires, `_mutex_` is reacquired and `condition-wait` returns.
 
+[#threads:s15]
 [horizontal]
 procedure:: `(condition-signal _cond_)`
 returns:: unspecified
@@ -135,6 +146,7 @@ libraries:: `(chezscheme)`
 
 `condition-signal` releases one of the threads waiting for the condition identified by `_cond_`.
 
+[#threads:s16]
 [horizontal]
 procedure:: `(condition-broadcast _cond_)`
 returns:: unspecified
@@ -144,6 +156,7 @@ libraries:: `(chezscheme)`
 
 `condition-broadcast` releases all of the threads waiting for the condition identified by `_cond_`.
 
+[#threads:s17]
 [horizontal]
 procedure:: `(condition-name _condition_)`
 returns:: the name associated with `_condition_`, if any; otherwise `#f`
@@ -153,6 +166,7 @@ libraries:: `(chezscheme)`
 
 === Section 15.4. Locks [[section_15.4.]]
 
+[#threads:s18]
 Locks are more primitive but more flexible and efficient than mutexes and can be used in situations where the added mutex functionality is not needed or desired. They can also be used independently of the thread system (including in nonthreaded versions of _Chez Scheme_) to synchronize operations running in separate Scheme processes as long as the lock is allocated in memory shared by the processes.
 
 A lock is simply a word-sized integer, i.e., an `iptr` or `uptr` foreign type (<<section_4.5.,Section 4.5>>) with the native endiannes of the target machine, possibly part of a larger structure defined using `define-ftype` (<<defn:define-ftype,page 77>>). It must be explicitly allocated in memory that resides outside the Scheme heap and, when appropriate, explicitly deallocated. When just threads are involved (i.e., when multiple processes are not involved), the memory can be allocated via `foreign-alloc`. When multiple processes are involved, the lock should be allocated in some area shared by the processes that will interact with the lock.
@@ -206,6 +220,7 @@ Each of these has a syntax like and behaves similarly to `ftype-set!` (<<defn:ft
 
 The locked operations described here can be used when just an atomic increment or decrement is required.
 
+[#threads:s20]
 [horizontal]
 syntax:: `(ftype-locked-incr! _ftype-name_ (_a_ \...) _fptr-expr_)`
 syntax:: `(ftype-locked-incr! _ftype-name_ (_a_ \...) _fptr-expr_ _index_)`
@@ -221,10 +236,12 @@ Each of these has a syntax like and behaves similarly to `ftype-set!` (<<defn:ft
 
 === Section 15.6. Reference counting with ftype guardians [[section_15.6.]]
 
+[#threads:s21]
 Applications that manage memory outside the Scheme heap can leverage the Scheme storage management system to help perform reference counting via _ftype guardians_. In a reference-counted memory management system, each object holds a count of pointers to it. The count is incremented when a new pointer is created and decremented when a pointer is dropped. When the count reaches zero, the object is no longer needed and the memory it formerly occupied can be made available for some other purpose.
 
 Ftype guardians are similar to guardians created by `make-guardian` (<<section_13.2.,Section 13.2>>). The `guardian?` procedure returns true for both, and the `unregister-guardian` procedure can be used to unregister objects registered with either.
 
+[#threads:s25]
 [horizontal]
 syntax:: `(ftype-guardian _ftype-name_)`
 returns:: a new ftype guardian
@@ -290,6 +307,7 @@ Objects guarded by an ftype guardian might contain pointers to other objects who
 
 === Section 15.7. Thread Parameters [[section_15.7.]]
 
+[#threads:s30]
 [horizontal]
 procedure:: `(make-thread-parameter _object_)`
 procedure:: `(make-thread-parameter _object_ _procedure_)`

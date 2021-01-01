@@ -11,6 +11,7 @@ Tracing is one of the most useful mechanisms for debugging Scheme programs. _Che
 
 This section covers the mechanisms for tracing procedures and controlling trace output.
 
+[#debug:s0]
 [horizontal]
 syntax:: `(trace-lambda _name_ _formals_ _body~1~_ _body~2~_ \...)`
 returns:: a traced procedure
@@ -48,6 +49,7 @@ A trace of the call `(half 5)`, which returns 2, is shown below.
 
 This example highlights the proper treatment of tail and nontail calls by the trace package. Since `half` tail calls itself when its argument is odd, the call `(half 4)` appears at the same level of indentation as the call `(half 5)`. Furthermore, since the return values of `(half 5)` and `(half 4)` are necessarily the same, only one return value is shown for both calls.
 
+[#debug:s3]
 [horizontal]
 syntax:: `(trace-case-lambda _name_ _clause_ \...)`
 returns:: a traced procedure
@@ -56,6 +58,7 @@ libraries:: `(chezscheme)`
 [#debug:s4]
 A `trace-case-lambda` expression is equivalent to a `case-lambda` expression with the same clauses except that trace information is printed to the trace output port whenever the procedure is invoked, using `_name_` to identify the procedure. The trace information shows the value of the arguments passed to the procedure and the values returned by the procedure, with indentation to show the nesting of calls.
 
+[#debug:s5]
 [horizontal]
 syntax:: `(trace-let _name_ ((_var_ _expr_) \...) _body~1~_ _body~2~_ \...)`
 returns:: the values of the body `_body~1~_ _body~2~_ \...`
@@ -144,6 +147,7 @@ produces the trace
 
 and returns `(c b a)`.
 
+[#debug:s9]
 [horizontal]
 syntax:: `(trace _var~1~_ _var~2~_ \...)`
 returns:: a list of `_var~1~_ _var~2~_ \...`
@@ -255,12 +259,14 @@ The following transcript demonstrates the use of `trace` and `untrace` in an int
 
 The first call to `square-minus-one` indicates there is an error, the second (traced) call indicates the step at which the error occurs, the third call demonstrates that the fix works, and the fourth call demonstrates that `untrace` does not wipe out the fix.
 
+[#debug:s11]
 [horizontal]
 thread parameter:: `trace-output-port`
 libraries:: `(chezscheme)`
 
 `trace-output-port` is a parameter that determines the output port to which tracing information is sent. When called with no arguments, `trace-output-port` returns the current trace output port. When called with one argument, which must be a textual output port, `trace-output-port` changes the value of the current trace output port.
 
+[#debug:s12]
 [horizontal]
 thread parameter:: `trace-print`
 libraries:: `(chezscheme)`
@@ -269,6 +275,7 @@ The value of `trace-print` must be a procedure of two arguments, an object and a
 
 The trace package sets `pretty-initial-indent` to an appropriate value for the current nesting level before calling the value of `trace-print` so that multiline output can be indented properly.
 
+[#debug:s14]
 [horizontal]
 syntax:: `(trace-define _var_ _expr_)`
 syntax:: `(trace-define (_var_ . _idspec_) _body~1~_ _body~2~_ \...)`
@@ -374,6 +381,7 @@ A variant of the interactive debugger, the break handler, is entered as the resu
 
 It is also usually possible to exit from the debugger or break handler by typing the end-of-file character ("control-D" under Unix, "control-Z" under Windows).
 
+[#debug:s16]
 [horizontal]
 procedure:: `(debug)`
 returns:: does not return
@@ -391,6 +399,7 @@ The primary intent of the inspector is examination, not alteration, of objects. 
 
 The user is presented with a prompt line that includes a printed representation of the current object, abbreviated if necessary to fit on the line. Various commands are provided for displaying objects and moving around inside of objects. On-line descriptions of the command options are provided. The command "?" displays commands that apply specifically to the current object. The command "??" displays commands that are always applicable. The command "h" provides a brief description of how to use the inspector. The end-of-file character or the command "q" exits the inspector.
 
+[#debug:s22]
 [horizontal]
 procedure:: `(inspect _obj_)`
 returns:: unspecified
@@ -590,6 +599,7 @@ If a file by the same name as but different contents from the original source fi
 
 A facility for noninteractive inspection is also provided to allow construction of different inspection interfaces. Like the interactive facility, it allows objects to be examined in ways not ordinarily possible. The noninteractive system follows a simple, object-oriented protocol. Ordinary Scheme objects are encapsulated in procedures, or inspector objects, that take symbolic messages and return either information about the encapsulated object or new inspector objects that encapsulate pieces of the object.
 
+[#debug:s25]
 [horizontal]
 procedure:: `(inspect/object _object_)`
 returns:: an inspector object procedure
@@ -776,6 +786,7 @@ All inspector objects except for variable inspector objects accept the message `
 
 === Section 3.5. Locating objects [[section_3.5.]]
 
+[#debug:s26]
 [horizontal]
 procedure:: `(make-object-finder _pred_)`
 procedure:: `(make-object-finder _pred_ _g_)`
@@ -803,6 +814,7 @@ Objects sometimes point to a great deal more than one might expect. For example,
 
 Relocation tables for static code objects are discarded by default, which prevents these procedures from providing accurate results when static code objects are involved. That is, they will not find any objects pointed to directly from a code object that has been promoted to the static generation. If accurate sizes and compositions for static code objects are required, the command-line argument `--retain-static-relocation` can be used to prevent the relocation tables from being discarded.
 
+[#debug:s30]
 [horizontal]
 procedure:: `(compute-size _object_)`
 procedure:: `(compute-size _object_ _generation_)`

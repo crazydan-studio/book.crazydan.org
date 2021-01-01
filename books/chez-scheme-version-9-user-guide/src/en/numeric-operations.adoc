@@ -47,6 +47,7 @@ The first section of this chapter describes type-specific numeric type predicate
 
 The Revised^6^ Report distinguishes two types of special numeric objects: fixnums and flonums. _Chez Scheme_ additionally distinguishes _bignums_ (exact integers outside of the fixnum range) and _ratnums_ (ratios of exact integers). It also provides a predicate for recognizing _cflonums_, which are flonums or inexact complex numbers.
 
+[#numeric:s11]
 [horizontal]
 procedure:: `(bignum? _obj_)`
 returns:: `#t` if `_obj_` is a bignum, otherwise `#f`
@@ -98,6 +99,7 @@ libraries:: `(chezscheme)`
 
 Fixnum-specific procedures normally check their inputs and outputs (where appropriate), but at optimization level 3 the compiler generates, in most cases, code that does not perform these checks.
 
+[#numeric:s14]
 [horizontal]
 procedure:: `(most-positive-fixnum)`
 returns:: the most positive fixnum supported by the system
@@ -107,6 +109,7 @@ libraries:: `(chezscheme)`
 
 These procedures are identical to the Revised^6^ Report `greatest-fixnum` and `least-fixnum` procedures.
 
+[#numeric:s15]
 [horizontal]
 procedure:: `(fx= _fixnum~1~_ _fixnum~2~_ \...)`
 procedure:: `(fx< _fixnum~1~_ _fixnum~2~_ \...)`
@@ -253,6 +256,7 @@ libraries:: `(chezscheme)`
 
 `fxquotient` is identical to `fx/`. See the description of `fx/` above.
 
+[#numeric:s23]
 [horizontal]
 procedure:: `(fxremainder _fixnum~1~_ _fixnum~2~_)`
 returns:: the fixnum remainder of `_fixnum~1~_` divided by `_fixnum~2~_`
@@ -305,6 +309,7 @@ Inexact real numbers are normally represented by `_flonums_`. A flonum is a sing
 
 Inexact real numbers may also be represented by inexact complexnums with imaginary parts equal to zero, which cannot be used as input to the flonum-specific operators. Such numbers are produced, however, only from operations involving complex numbers with nonzero imaginary parts, by explicit calls to `fl-make-rectangular`, `make-rectangular`, or `make-polar`, or by numeric input in either polar or rectangular format.
 
+[#numeric:s26]
 [horizontal]
 procedure:: `(flonum\->fixnum _flonum_)`
 returns:: the fixnum representation of `_flonum_`, truncated
@@ -436,6 +441,7 @@ The procedures described in this section provide mechanisms for creating and ope
 
 In most cases, the operations are performed with minimal type checking at optimize-level 3; full type checking is performed at lower optimize levels. Inexact complex procedure names begin with the prefix ++"++`cfl`++"++ to set them apart from their generic counterparts.
 
+[#numeric:s35]
 [horizontal]
 procedure:: `(fl-make-rectangular _flonum~1~_ _flonum~2~_)`
 returns:: an inexact complexnum
@@ -548,6 +554,7 @@ Fixnum equivalents of the logical operators are provided, as `fxlogand`, `fxlogi
 
 Logical shifts do not make sense for arbitrary-precision integers, since these have no "left end" into which bits must be shifted.
 
+[#numeric:s44]
 [horizontal]
 procedure:: `(logand _int_ \...)`
 returns:: the logical "and" of the arguments `_int_ \...`
@@ -989,6 +996,7 @@ libraries:: `(chezscheme)`
 
 === Section 8.6. Random Number Generation [[section_8.6.]]
 
+[#numeric:s64]
 [horizontal]
 procedure:: `(random _real_)`
 returns:: a nonnegative pseudo-random number less than `_real_`
@@ -1022,6 +1030,7 @@ When called without arguments, `random-seed` returns the current random seed. Wh
 
 === Section 8.7. Miscellaneous Numeric Operations [[section_8.7.]]
 
+[#numeric:s67]
 [horizontal]
 procedure:: `(= _num~1~_ _num~2~_ _num~3~_ \...)`
 procedure:: `(< _real~1~_ _real~2~_ _real~3~_ \...)`

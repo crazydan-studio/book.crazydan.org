@@ -13,6 +13,7 @@ This chapter describes several items that are included with current versions of 
 
 The hash table procedures here are obviated by the new hash table procedures listed in <<section_7.12.,Section 7.12>>.
 
+[#compat:s0]
 [horizontal]
 procedure:: `(make-hash-table)`
 procedure:: `(make-hash-table _weak?_)`
@@ -21,6 +22,7 @@ libraries:: `(chezscheme)`
 
 If `_weak?_` is provided and is non-false, the hash table is a weak hash table, which means that it does not protect keys from the garbage collector. Keys reclaimed by the garbage collector are removed from the table, and their associated values are dropped the next time the table is modified, if not sooner.
 
+[#compat:s1]
 [horizontal]
 procedure:: `(hash-table? _obj_)`
 returns:: `#t` if `_obj_` is a hash table, otherwise `#f`
@@ -36,6 +38,7 @@ libraries:: `(chezscheme)`
 
 `put-hash-table!` associates the value `_v_` with the key `_k_` in `_ht_`.
 
+[#compat:s3]
 [horizontal]
 procedure:: `(get-hash-table _ht_ _k_ _d_)`
 returns:: see below
@@ -47,6 +50,7 @@ Key comparisons are performed with `_eq?_`.
 
 Because objects may be moved by the garbage collector, `get-hash-table` may need to rehash some objects and therefore cause side effects in the hash table. Thus, it is not safe to perform concurrent accesses of the same hash table from multiple threads using `get-hash-table`.
 
+[#compat:s4]
 [horizontal]
 procedure:: `(remove-hash-table! _ht_ _k_)`
 returns:: unspecified
@@ -54,6 +58,7 @@ libraries:: `(chezscheme)`
 
 `remove-hash-table!` drops any association for `_k_` from `_ht_`.
 
+[#compat:s5]
 [horizontal]
 procedure:: `(hash-table-map _ht_ _p_)`
 returns:: see below
@@ -61,6 +66,7 @@ libraries:: `(chezscheme)`
 
 `hash-table-map` applies `_p_` to each key, value association in `_ht_`, in no particular order, and returns a list of the resulting values, again in no particular order. `_p_` should accept two arguments, a key and a value.
 
+[#compat:s6]
 [horizontal]
 procedure:: `(hash-table-for-each _ht_ _p_)`
 returns:: unspecified
@@ -74,6 +80,7 @@ This section describes `extend-syntax`, a powerful yet easy to use syntactic ext
 
 It is not typically possible to mix syntactic abstractions written using `syntax-case` with those written using `extend-syntax` seamlessly; it is generally preferable to use one or the other wherever possible. Support for `extend-syntax` within the `syntax-case` expander is provided only as an aid to migrating to `syntax-case`.
 
+[#compat:s8]
 [horizontal]
 syntax:: `(extend-syntax (_name_ _key_ \...) (_pat_ _fender_ _template_) \...)`
 returns:: unspecified
@@ -171,6 +178,7 @@ The `andmap` of `symbol?` over `'(x \...)` assures that each bound identifier is
 
 `extend-syntax` typically handles everything you need it for, but some syntactic extension definitions require the ability to include the result of evaluating an arbitrary Scheme expression. This ability is provided by `with`.
 
+[#compat:s20]
 [horizontal]
 syntax:: `(with ((_pat_ _expr_) \...) _template_)`
 returns:: processed `_template_`
@@ -305,6 +313,7 @@ Structures are created via `define-structure`. Each structure definition defines
 
 `define-structure` is simple yet powerful enough for most applications, and it is easily extended to handle many applications for which it is not sufficient. The definition of `define-structure` given at the end of this section can serve as a starting point for more complicated variants.
 
+[#compat:s25]
 [horizontal]
 syntax:: `(define-structure (_name_ _id~1~_ \...) \((_id~2~_ _expr_) \...))`
 returns:: unspecified

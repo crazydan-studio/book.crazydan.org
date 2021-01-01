@@ -5,6 +5,7 @@ This chapter describes _Chez Scheme_ extensions to the set of standard control s
 
 === Section 6.1. Conditionals [[section_6.1.]]
 
+[#control:s0]
 [horizontal]
 syntax:: `(exclusive-cond _clause~1~_ _clause~2~_ \...)`
 returns:: see below
@@ -14,6 +15,7 @@ libraries:: `(chezscheme)`
 
 The `(_test_)` form of clause is not supported. The order chosen when profiling information is available is based on the relative numbers of times the RHS of each clause is executed, and `(_test_)` has no RHS. `(_test_ \=> values)` is equivalent, abeit less concise.
 
+[#control:s1]
 [horizontal]
 syntax:: `(case _expr~0~_ _clause~1~_ _clause~2~_ \...)`
 returns:: see below
@@ -115,6 +117,7 @@ If none of the clauses contains a matching key and no `else` clause is present, 
 
 === Section 6.2. Mapping and Folding [[section_6.2.]]
 
+[#control:s7]
 [horizontal]
 procedure:: `(ormap _procedure_ _list~1~_ _list~2~_ \...)`
 returns:: see explanation
@@ -122,6 +125,7 @@ libraries:: `(chezscheme)`
 
 `ormap` is identical to the Revised^6^ Report `exists`.
 
+[#control:s8]
 [horizontal]
 procedure:: `(andmap _procedure_ _list~1~_ _list~2~_ \...)`
 returns:: see explanation
@@ -133,6 +137,7 @@ libraries:: `(chezscheme)`
 
 _Chez Scheme_ supports one-shot continuations as well as the standard multi-shot continuations obtainable via `call/cc`. One-shot continuations are continuations that may be invoked at most once, whether explicitly or implicitly. They are obtained with `call/1cc`.
 
+[#control:s9]
 [horizontal]
 procedure:: `(call/1cc _procedure_)`
 returns:: see below
@@ -172,10 +177,9 @@ The following examples highlight the similarities and differences between one-sh
   (k (lambda (x) 0))) ⇒ _exception_
 ----
 
-[#control:s11]
 [#dynamic-wind]
 [horizontal]
-procedure:: `(dynamic-wind _in_ _body_ _out_)`
+procedure:: `(dynamic-wind _in_ _body_ _out_)` [[control:s11]]
 procedure:: `(dynamic-wind _critical?_ _in_ _body_ _out_)`
 returns:: values resulting from the application of `_body_`
 libraries:: `(chezscheme)`
@@ -186,6 +190,7 @@ The first form is identical to the Revised^6^ Report `dynamic-wind`. When the op
 
 Engines are a high-level process abstraction supporting _timed preemption_ (<<ref15>>,<<ref24>>). Engines may be used to simulate multiprocessing, implement operating system kernels, and perform nondeterministic computations.
 
+[#control:s16]
 [horizontal]
 procedure:: `(make-engine _thunk_)`
 returns:: an engine
@@ -193,12 +198,15 @@ libraries:: `(chezscheme)`
 
 An engine is created by passing a thunk (no argument procedure) to `make-engine`. The body of the thunk is the computation to be performed by the engine. An engine itself is a procedure of three arguments:
 
+[#control:s17]
 `_ticks_`::
     a positive integer that specifies the amount of _fuel_ to be given to the engine. An engine executes until this fuel runs out or until its computation finishes.
 
+[#control:s18]
 `_complete_`::
     a procedure of one or more arguments that specifies what to do if the computation finishes. Its arguments are the amount of fuel left over and the values produced by the computation.
 
+[#control:s19]
 `_expire_`::
     a procedure of one argument that specifies what to do if the fuel runs out before the computation finishes. Its argument is a new engine capable of continuing the computation from the point of interruption.
 
@@ -390,6 +398,7 @@ Furthermore, even if one of the expressions is an infinite loop, `por` still fin
 
 With `engine-return` and `engine-block`, it is possible to terminate an engine explicitly. `engine-return` causes the engine to complete, as if the computation had finished. Its arguments are passed to the `_complete_` procedure along with the number of ticks remaining. It is essentially a nonlocal exit from the engine. Similarly, `engine-block` causes the engine to expire, as if the timer had run out. A new engine is made from the continuation of the call to `engine-block` and passed to the `_expire_` procedure.
 
+[#control:s27]
 [horizontal]
 procedure:: `(engine-block)`
 returns:: does not return
