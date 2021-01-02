@@ -20,7 +20,7 @@ Illustrations by Jean-Pierre Hébert
 ifdef::backend-pdf[]
 :title-logo-image: image::images/cover.png[align=center]
 endif::[]
-:footer-copyright: R. Kent Dybvig / The Scheme Programming Language, Fourth Edition + \
+:footer-copyright: R. Kent Dybvig / https://www.scheme.com/tspl4/[The Scheme Programming Language, Fourth Edition] + \
                     Copyright (C) 2009 https://mitpress.mit.edu/books/scheme-programming-language-fourth-edition[The MIT Press]. \
                     Electronically reproduced by permission. + \
                     Illustrations (C) 2009 http://hebert.kitp.ucsb.edu/[Jean-Pierre Hébert] + \
