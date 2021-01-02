@@ -5,6 +5,7 @@ This chapter describes operations specific to _Chez Scheme_ on nonnumeric object
 
 === Section 7.1. Missing R6RS Type Predicates [[section_7.1.]]
 
+[#objects:s0]
 [horizontal]
 procedure:: `(enum-set? _obj_)`
 returns:: `#t` if `_obj_` is an enum set, `#f` otherwise
@@ -12,6 +13,7 @@ libraries:: `(chezscheme)`
 
 This predicate is not defined by the Revised^6^ Report, but should be.
 
+[#objects:s1]
 [horizontal]
 procedure:: `(record-constructor-descriptor? _obj_)`
 returns:: `#t` if `_obj_` is a record constructor descriptor, `#f` otherwise
@@ -21,6 +23,7 @@ This predicate is not defined by the Revised^6^ Report, but should be.
 
 === Section 7.2. Pairs and Lists [[section_7.2.]]
 
+[#objects:s2]
 [horizontal]
 procedure:: `(atom? _obj_)`
 returns:: `#t` if `_obj_` is not a pair, `#f` otherwise
@@ -108,6 +111,7 @@ libraries:: `(chezscheme)`
 
 `list*` is identical to the Revised^6^ Report `cons*`.
 
+[#objects:s7]
 [horizontal]
 procedure:: `(make-list _n_)`
 procedure:: `(make-list _n_ _obj_)`
@@ -249,6 +253,7 @@ _Chez Scheme_ extends the syntax of characters in two ways. First, a `\#\` prefi
 
 These extensions are disabled in an input stream after `\#!r6rs` has been seen by the reader, unless `#!chezscheme` has been seen more recently.
 
+[#objects:s15]
 [horizontal]
 procedure:: `(char=? _char~1~_ _char~2~_ \...)`
 procedure:: `(char<? _char~1~_ _char~2~_ \...)`
@@ -317,6 +322,7 @@ All strings are mutable by default, including constants. A program can create im
 
 The length and indices of a string in _Chez Scheme_ are always fixnums.
 
+[#objects:s20]
 [horizontal]
 procedure:: `(string=? _string~1~_ _string~2~_ _string~3~_ \...)`
 procedure:: `(string<? _string~1~_ _string~2~_ _string~3~_ \...)`
@@ -439,6 +445,7 @@ The length and indices of a vector in _Chez Scheme_ are always fixnums.
 [#objects:s29]
 All vectors are mutable by default, including constants. A program can create immutable vectors via `vector\->immutable-vector`. Any attempt to modify an immutable vector causes an exception to be raised.
 
+[#objects:s31]
 [horizontal]
 procedure:: `(vector-copy _vector_)`
 returns:: a copy of `_vector_`
@@ -536,6 +543,7 @@ All fxvectors are mutable by default, including constants. A program can create 
 
 See also `vector-set-fixnum!` above.
 
+[#objects:s42]
 [horizontal]
 procedure:: `(fxvector? _obj_)`
 returns:: `#t` if `_obj_` is an fxvector, `#f` otherwise
@@ -732,6 +740,7 @@ The length and indices of a bytevector in _Chez Scheme_ are always fixnums.
 [#objects:s57]
 All bytevectors are mutable by default, including constants. A program can create immutable bytevectors via `bytevector\->immutable-bytevector`. Any attempt to modify an immutable bytevector causes an exception to be raised.
 
+[#objects:s59]
 [horizontal]
 procedure:: `(bytevector _fill_ \...)`
 returns:: a new bytevector containing `_fill_ \...`
@@ -822,6 +831,7 @@ libraries:: `(chezscheme)`
 
 The return value is an exact integer in the appropriate range for the number of bytes occupied by the value. Signed values are the equivalent of the stored value treated as a two's complement value.
 
+[#objects:s64]
 [horizontal]
 procedure:: `(bytevector-u24-set! _bytevector_ _n_ _u24_ _eness_)`
 procedure:: `(bytevector-s24-set! _bytevector_ _n_ _s24_ _eness_)`
@@ -838,6 +848,7 @@ libraries:: `(chezscheme)`
 
 These procedures store the given value in the 3, 5, 6, or 7 bytes starting at index `_n_` (zero-based) of `_bytevector_`. Negative values are stored as their two's complement equivalent.
 
+[#objects:s65]
 [horizontal]
 procedure:: `(mutable-bytevector? _obj_)`
 returns:: `#t` if `_obj_` is a mutable bytevector, `#f` otherwise
@@ -880,6 +891,7 @@ libraries:: `(chezscheme)`
 
 The result is the raw compressed data with a minimal header to record the uncompressed size and the compression mode. The result does not include the header that is written by port-based compression using the `compressed` option. The compression format is determined by the `compress-format` parameter, and the compression level is determined by the `compress-level` parameter.
 
+[#objects:s72]
 [horizontal]
 procedure:: `(bytevector-uncompress _bytevector_)`
 returns:: a bytevector containing uncompressed content of `_bytevector_`
@@ -896,6 +908,7 @@ Boxes are written with the prefix `\#&` (pronounced "hash-ampersand"). For examp
 [#objects:s79]
 All boxes are mutable by default, including constants. A program can create immutable boxes via `box-immutable`. Any attempt to modify an immutable box causes an exception to be raised.
 
+[#objects:s81]
 [horizontal]
 procedure:: `(box? _obj_)`
 returns:: `#t` if `_obj_` is a box, `#f` otherwise
@@ -1023,7 +1036,7 @@ The printer always prints symbols using the standard R6RS syntax, so that, e.g.,
 
 Gensyms are printed `\#{` and `}` brackets that enclose both the "pretty" and "unique" names, e.g., `#{g1426 e5g1c94g642dssw-a}`. They may also be printed using the pretty name only with the prefix `\#:`, e.g., `#:g1426`.
 
-These extensions are disabled in an input stream after `\#!r6rs` has been seen by the reader, unless `#!chezscheme` has been seen more recently.
+These extensions are disabled in an input stream after `\#!r6rs` has been seen by the reader, unless `#!chezscheme` has been seen more recently. [[objects:s92]]
 
 [#desc:gensym]
 [horizontal]
@@ -1082,6 +1095,7 @@ x                         ⇒ #{g2 bcsfg5eq4e9b3h9o-c}
 
 Gensyms subsume the notion of _uninterned symbols_ supported by earlier versions of _Chez Scheme_. Similarly, the predicate `uninterned-symbol?` has been replaced by `gensym?`.
 
+[#objects:s100]
 [horizontal]
 thread parameter:: `gensym-prefix`
 thread parameter:: `gensym-count`
@@ -1133,10 +1147,9 @@ libraries:: `(chezscheme)`
 (gensym? '#{g2 bcsfg5eq4e9b3h9o-c}) ⇒ #t
 ----
 
-[#objects:s104]
 [#property-lists]
 [horizontal]
-procedure:: `(putprop _symbol_ _key_ _value_)`
+procedure:: `(putprop _symbol_ _key_ _value_)` [[objects:s104]]
 returns:: unspecified
 libraries:: `(chezscheme)`
 
@@ -1148,6 +1161,7 @@ _Chez Scheme_ associates a _property list_ with each symbol, allowing multiple `
 
 See the examples under `getprop` below.
 
+[#objects:s106]
 [horizontal]
 procedure:: `(getprop _symbol_ _key_)`
 procedure:: `(getprop _symbol_ _key_ _default_)`
@@ -1204,10 +1218,9 @@ A property list is a list of alternating keys and values, i.e., `(_key_ _value_ 
 (property-list 'fred) ⇒ (colors (black white) species snurd)
 ----
 
-[#objects:s111]
 [#desc:oblist]
 [horizontal]
-procedure:: `(oblist)`
+procedure:: `(oblist)` [[objects:s111]]
 returns:: a list of interned symbols
 libraries:: `(chezscheme)`
 
@@ -1228,6 +1241,7 @@ The first example above follows from the property that all interned symbols are 
 
 Many Scheme operations return an unspecified result. _Chez Scheme_ typically returns a special _void_ object when the value returned by an operation is unspecified. The _Chez Scheme_ void object is not meant to be used as a datum, and consequently does not have a reader syntax. As for other objects without a reader syntax, such as procedures and ports, _Chez Scheme_ output procedures print the void object using a nonreadable representation, i.e., `#<void>`. Since the void object should be returned only by operations that do not have "interesting" values, the default waiter printer (see `waiter-write`) suppresses the printing of the void object. `set!`, `set-car!`, `load`, and `write` are examples of _Chez Scheme_ operations that return the void object.
 
+[#objects:s112]
 [horizontal]
 procedure:: `(void)`
 returns:: the void object
@@ -1248,6 +1262,7 @@ The default waiter printer suppresses the void object; that is, nothing is print
 
 === Section 7.11. Sorting [[section_7.11.]]
 
+[#objects:s113]
 [horizontal]
 procedure:: `(sort _predicate_ _list_)`
 procedure:: `(sort! _predicate_ _list_)`
@@ -1287,6 +1302,7 @@ libraries:: `(chezscheme)`
 
 _Chez Scheme_ provides several extensions to the hashtable mechanism, including a mechanism for directly accessing a key, value pair in a hashtable, support for weak eq and eqv hashtables, and a set of procedures specialized to eq and symbol hashtables.
 
+[#objects:s115]
 [horizontal]
 procedure:: `(hashtable-cell _hashtable_ _key_ _default_)`
 returns:: a pair (see below)
@@ -1349,6 +1365,7 @@ Each value is the value of one of the keys in `_hashtable_`. Duplicate values ar
 
 This procedure is equivalent to calling `hashtable-entries` and returning only the second result, but it is more efficient since the separate vector of keys need not be created.
 
+[#objects:s118]
 [horizontal]
 procedure:: `(hashtable-entries _hashtable_)`
 procedure:: `(hashtable-entries _hashtable_ _size_)`
@@ -1783,6 +1800,7 @@ Chez Scheme extends the Revised^6^ Report's `define-record-type` syntax in one w
 
 This can be used in conjunction with the parameter `require-nongenerative-clause` to catch the accidental use of generative record types while avoiding spurious errors for record types that must be generative. Generative record types are rarely needed and are generally less efficient since a run-time representation of the type is created each time the `define-record-clause` is evaluated, rather than once at compile (expansion) time.
 
+[#objects:s142]
 [horizontal]
 thread parameter:: `require-nongenerative-clause`
 libraries:: `(chezscheme)`
@@ -1895,6 +1913,7 @@ In the second form, `record-type-equal-procedure` returns the equality procedure
 
 When changing a record type's equality procedure, the record type's hash procedure, if any, should be updated if necessary to maintain the property that it produces the same hash value for any two instances the equality procedure considers equal.
 
+[#objects:s157]
 [horizontal]
 procedure:: `(record-equal-procedure _record~1~_ _record~2~_)`
 returns:: the shared equality procedure for `_record~1~_` and `_record~2~_`, if there is one, otherwise `#f`
@@ -1902,6 +1921,7 @@ libraries:: `(chezscheme)`
 
 `record-equal-procedure` traverses the inheritance chains for both record instances in an attempt to find the most specific type for each that is associated with an equality procedure, if any. If such type is found and is the same for both instances, the equality procedure associated with the type is returned. Otherwise, `#f` is returned.
 
+[#objects:s158]
 [horizontal]
 procedure:: `(record-type-hash-procedure _rtd_ _hash-proc_)`
 returns:: unspecified
@@ -1915,6 +1935,7 @@ In the second form, `record-type-hash-procedure` returns the hash procedure asso
 
 The procedure `_hash-proc_` should accept two arguments, the instance for which it should compute a hash value and a hash procedure to use to compute hash values for arbitrary fields of the instance, and it return a nonnegative exact integer. A record type's hash procedure should produce the same hash value for any two instances the record type's equality procedure considers equal.
 
+[#objects:s159]
 [horizontal]
 procedure:: `(record-hash-procedure _record_)`
 returns:: the hash procedure for `_record_`, if there is one, otherwise `#f`
@@ -1922,12 +1943,14 @@ libraries:: `(chezscheme)`
 
 `record-hash-procedure` traverses the inheritance chain for the record instance in an attempt to find the most specific type that is associated with a hash procedure, if any. If such type is found, the hash procedure associated with the type is returned. Otherwise, `#f` is returned.
 
+[#objects:s160]
 [horizontal]
 thread parameter:: `default-record-equal-procedure`
 libraries:: `(chezscheme)`
 
 This parameter determines how two record instances are compared by `equal?` if neither has a type-specific equality procedure. When the parameter has the value `#f` (the default), `equal?` compares the instances with `eq?`, i.e., there is no attempt at determining structural equivalence. Otherwise, the parameter's value must be a procedure, and `equal?` invokes that procedure to compare the instances, passing it three arguments: the two instances and a procedure that should be used to recursively compare arbitrary values within the instances.
 
+[#objects:s161]
 [horizontal]
 thread parameter:: `default-record-hash-procedure`
 libraries:: `(chezscheme)`
@@ -1936,7 +1959,6 @@ This parameter determines the hash procedure used when `equal-hash` is called on
 
 === Section 7.15. Legacy Record Types [[section_7.15.]]
 
-[#objects:s163]
 [#objects:s164]
 In addition to the Revised^6^ Report record-type creation and definition mechanisms, which are described in link:../../the-scheme-programming-language-4th/en/index.html#chp_9[Chapter 9] of _The Scheme Programming Language, 4th Edition_, _Chez Scheme_ continues to support pre-R6RS mechanisms for creating new data types, or _record types_, with fixed sets of named fields. Many of the procedures described in this section are available only when imported from the `(chezscheme csv7)` library.
 
@@ -2020,6 +2042,7 @@ When the parameter `print-record` is set to `#f`, records are printed using the 
 
 where `_name_` is the "pretty" name of the record (not the full gensym) or the reader name first assigned to the record type.
 
+[#objects:s172]
 [horizontal]
 syntax:: `(define-record _name_ (_fld~1~_ \...) \((_fld~2~_ _init_) \...) (_opt_ \...))`
 syntax:: `(define-record _name_ _parent_ (_fld~1~_ \...) \((_fld~2~_ _init_) \...) (_opt_ \...))`
@@ -2041,6 +2064,7 @@ Each `_fld_` must be an identifier `_field-name_`, or it must take the form
 
 where `_class_` and `_type_` are optional and `_field-name_` is an identifier. `_class_`, if present, must be the keyword `immutable` or the keyword `mutable`. If the `immutable` class specifier is present, the field is immutable; otherwise, the field is mutable. `_type_`, if present, specifies how the field is represented, as described below.
 
+[#record-field-types]
 [%autowidth,grid=none,frame=none]
 |===
 
@@ -2242,6 +2266,7 @@ The following example demonstrates the use of nongenerative record definitions.
 
 This works even if the different program components are loaded from different source files or are compiled separately and loaded from different object files.
 
+[#objects:s176]
 [horizontal]
 syntax:: `predicate`
 syntax:: `prefix`
@@ -2252,6 +2277,7 @@ libraries:: `(chezscheme)`
 [#objects:s178]
 These identifiers are auxiliary keywords for `define-record`. It is a syntax violation to reference these identifiers except in contexts where they are recognized as auxiliary keywords. `mutable` and `immutable` are also auxiliary keywords for `define-record`, shared with the Revised^6^ Report `define-record-type`.
 
+[#objects:s179]
 [horizontal]
 syntax:: `(type-descriptor _name_)`
 returns:: the record-type descriptor associated with `_name_`
@@ -2404,6 +2430,7 @@ libraries:: `(chezscheme)`
 
 This parameter controls the printing of records. If set to true (the default) the record writer associated with a record type is used to print records of that type. If set to false, all records are printed with the syntax `#<record of type _name_>`, where `_name_` is the name of the record type as returned by `record-type-name`.
 
+[#objects:s186]
 [horizontal]
 procedure:: `(make-record-type _type-name_ _fields_)`
 procedure:: `(make-record-type _parent-rtd_ _type-name_ _fields_)`
@@ -2497,6 +2524,7 @@ libraries:: `(chezscheme)`
 
 Like the Revised^6^ Report version of this procedure, this procedure may be passed a record-constructor descriptor, `_rcd_`, which determines the behavior of the constructor. It may also be passed a record-type descriptor, `_rtd_`, in which case the constructor accepts as many arguments as there are fields in the record; these arguments are the initial values of the fields in the order given when the record-type descriptor was created.
 
+[#objects:s190]
 [horizontal]
 procedure:: `(record-field-accessor _rtd_ _field-id_)`
 returns:: an accessor for the identified field
@@ -2506,6 +2534,7 @@ libraries:: `(chezscheme csv7)`
 
 The generated accessor expects one argument, which must be a record of the type represented by `_rtd_`. It returns the contents of the specified field of the record.
 
+[#objects:s191]
 [horizontal]
 procedure:: `(record-field-accessible? _rtd_ _field-id_)`
 returns:: `#t` if the specified field is accessible, otherwise `#f`
@@ -2515,6 +2544,7 @@ libraries:: `(chezscheme csv7)`
 
 The compiler is free to eliminate a record field if it can prove that the field is not accessed. In making this determination, the compiler is free to ignore the possibility that an accessor might be created from a record-type descriptor obtained by calling `record-type-descriptor` on an instance of the record type.
 
+[#objects:s192]
 [horizontal]
 procedure:: `(record-field-mutator _rtd_ _field-id_)`
 returns:: a mutator for the identified field
@@ -2524,6 +2554,7 @@ libraries:: `(chezscheme csv7)`
 
 The mutator expects two arguments, `_r_` and `_obj_`. `_r_` must be a record of the type represented by `_rtd_`. `_obj_` must be a value that is compatible with the type declared for the specified field when the record-type descriptor was created. `_obj_` is stored in the specified field of the record.
 
+[#objects:s193]
 [horizontal]
 procedure:: `(record-field-mutable? _rtd_ _field-id_)`
 returns:: `#t` if the specified field is mutable, otherwise `#f`
@@ -2533,6 +2564,7 @@ libraries:: `(chezscheme csv7)`
 
 Any field declared immutable is immutable. In addition, the compiler is free to treat a field as immutable if it can prove that the field is never assigned. In making this determination, the compiler is free to ignore the possibility that a mutator might be created from a record-type descriptor obtained by calling `record-type-descriptor` on an instance of the record type.
 
+[#objects:s194]
 [horizontal]
 procedure:: `(record-type-name _rtd_)`
 returns:: the name of the record-type represented by `_rtd_`
@@ -2647,6 +2679,7 @@ rtd ⇒ #&lt;record type frob&gt;
 
 === Section 7.16. Procedures [[section_7.16.]]
 
+[#objects:s200]
 [horizontal]
 procedure:: `(procedure-arity-mask _proc_)`
 returns:: an exact integer bitmask identifying the accepted argument counts of `_proc_`

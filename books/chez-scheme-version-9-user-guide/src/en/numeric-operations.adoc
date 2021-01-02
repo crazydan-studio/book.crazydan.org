@@ -1,4 +1,1260 @@
 [#chp_8]
 == Chapter 8. Numeric Operations
 
+This chapter describes _Chez Scheme_ extensions to the standard set of operations on numbers. See link:../../the-scheme-programming-language-4th/en/index.html#chp_6[Chapter 6] of _The Scheme Programming Language, 4th Edition_ or the Revised^6^ Report on Scheme for a description of standard operations on numbers.
 
+_Chez Scheme_ supports the full set of Scheme numeric datatypes, including exact and inexact integer, rational, real, and complex numbers. A variety of representations are used to support these datatypes:
+
+[#numeric:s0]
+Fixnums:: represent exact integers in the fixnum range (see `most-negative-fixnum` and `most-positive-fixnum`). The length of a string, vector, or fxvector is constrained to be a fixnum.
+
+[#numeric:s1]
+Bignums:: represent arbitrary-precision exact integers outside of the fixnum range.
+
+[#numeric:s2]
+Ratnums:: represent arbitrary-precision exact rational numbers. Each ratnum contains an exact integer (fixnum or bignum) numerator and an exact integer denominator. Ratios are always reduced to lowest terms and never have a denominator of one or a numerator of zero.
+
+[#numeric:s3]
+Flonums:: represent inexact real numbers. Flonums are IEEE 64-bit floating-point numbers. (Since flonums cannot represent irrational numbers, all inexact real numbers are actually rational, although they may approximate irrational quantities.)
+
+[#numeric:s4]
+Exact complexnums:: represent exact complex numbers. Each exact complexnum contains an exact rational (fixnum, bignum, or ratnum) real part and an exact rational imaginary part.
+
+[#numeric:s5]
+Inexact complexnums:: represent inexact complex numbers. Each inexact complexnum contains a flonum real part and a flonum imaginary part.
+
+Most numbers can be represented in only one way; however, real numbers are sometimes represented as inexact complex numbers with imaginary component equal to zero.
+
+_Chez Scheme_ extends the syntax of numbers with arbitrary radixes from two through 36, nondecimal floating-point and scientific notation, and printed representations for IEEE infinities and NANs. (NAN stands for "not-a-number.")
+
+Arbitrary radixes are specified with the prefix `#__n__r`, where `_n_` ranges from 2 through 36. Digits beyond 9 are specified with the letters (in either upper or lower case) `a` through `z`. For example, `#2r101` is 5~10~, and `#36rZ` is 35~10~.
+
+For higher radixes, an ambiguity arises between the interpretation of certain letters, e.g., `e`, as digits or exponent specifiers; in such cases, the letter is assumed to be a digit. For example, the `e` in `#x3.2e5` is interpreted as a digit, not as an exponent marker, whereas in `3.2e5` it is treated as an exponent marker.
+
+IEEE infinities are printed as `+inf.0` and `-inf.0`, while IEEE NANs are printed as `+nan.0` or `-nan.0`. (+nan.0 is used on output for all NANs.)
+
+[source,scheme,subs="quotes"]
+----
+(/ 1.0 0.0) ⇒ +inf.0
+(/ 1.0 -0.0) ⇒ -inf.0
+(/ 0.0 0.0) ⇒ +nan.0
+(/ +inf.0 -inf.0) ⇒ +nan.0
+----
+
+The first section of this chapter describes type-specific numeric type predicates. Sections <<section_8.2.,8.2>> through <<section_8.4.,8.4>> describe fast, type-specific numeric operations on fixnums, flonums, and inexact complex numbers (flonums and/or inexact complexnums). The fixnum-specific versions should be used only when the programmer is certain that the operands and results (where appropriate) will be fixnums, i.e., integers in the range `(most-negative-fixnum)` to `(most-positive-fixnum)`, inclusive. The flonum-specific versions should be used only when the inputs and outputs (where appropriate) are certain to be flonums. The mixed flonum/complexnum versions should be used only when the inputs are certain to be either flonums or inexact complexnums. <<section_8.5.,Section 8.5>> describes operations, both arbitrary precision and fixnum-specific, that allow exact integers to be treated as sets or sequences of bits. Random number generation is covered <<section_8.6.,Section 8.6>>, and miscellaneous numeric operations are covered in the <<section_8.7.,Section 8.7>>.
+
+=== Section 8.1. Numeric Type Predicates [[section_8.1.]]
+
+The Revised^6^ Report distinguishes two types of special numeric objects: fixnums and flonums. _Chez Scheme_ additionally distinguishes _bignums_ (exact integers outside of the fixnum range) and _ratnums_ (ratios of exact integers). It also provides a predicate for recognizing _cflonums_, which are flonums or inexact complex numbers.
+
+[#numeric:s11]
+[horizontal]
+procedure:: `(bignum? _obj_)`
+returns:: `#t` if `_obj_` is a bignum, otherwise `#f`
+libraries:: `(chezscheme)`
+
+[source,scheme,subs="quotes"]
+----
+(bignum? 0) ⇒ #f
+(bignum? (most-positive-fixnum)) ⇒ #f
+(bignum? (most-negative-fixnum)) ⇒ #f
+(bignum? (* (most-positive-fixnum) 2)) ⇒ #t
+(bignum? 3/4) ⇒ #f
+(bignum? 'a) ⇒ #f
+----
+
+[#numeric:s12]
+[horizontal]
+procedure:: `(ratnum? _obj_)`
+returns:: `#t` if `_obj_` is a ratnum, otherwise `#f`
+libraries:: `(chezscheme)`
+
+[source,scheme,subs="quotes"]
+----
+(ratnum? 0) ⇒ #f
+(ratnum? (* (most-positive-fixnum) 2)) ⇒ #f
+(ratnum? 3/4) ⇒ #t
+(ratnum? -10/2) ⇒ #f
+(ratnum? -11/2) ⇒ #t
+(ratnum? 'a) ⇒ #f
+----
+
+[#numeric:s13]
+[horizontal]
+procedure:: `(cflonum? _obj_)`
+returns:: `#t` if `_obj_` is an inexact complexnum or flonum, otherwise `#f`
+libraries:: `(chezscheme)`
+
+[source,scheme,subs="quotes"]
+----
+(cflonum? 0) ⇒ #f
+(cflonum? 0.0) ⇒ #t
+(cflonum? 3+4i) ⇒ #f
+(cflonum? 3.0+4i) ⇒ #t
+(cflonum? +i) ⇒ #f
+(cflonum? +1.0i) ⇒ #t
+----
+
+=== Section 8.2. Fixnum Operations [[section_8.2.]]
+
+Fixnum-specific procedures normally check their inputs and outputs (where appropriate), but at optimization level 3 the compiler generates, in most cases, code that does not perform these checks.
+
+[#numeric:s14]
+[horizontal]
+procedure:: `(most-positive-fixnum)`
+returns:: the most positive fixnum supported by the system
+procedure:: `(most-negative-fixnum)`
+returns:: the most negative fixnum supported by the system
+libraries:: `(chezscheme)`
+
+These procedures are identical to the Revised^6^ Report `greatest-fixnum` and `least-fixnum` procedures.
+
+[#numeric:s15]
+[horizontal]
+procedure:: `(fx= _fixnum~1~_ _fixnum~2~_ \...)`
+procedure:: `(fx< _fixnum~1~_ _fixnum~2~_ \...)`
+procedure:: `(fx> _fixnum~1~_ _fixnum~2~_ \...)`
+procedure:: `(fx\<= _fixnum~1~_ _fixnum~2~_ \...)`
+procedure:: `(fx>= _fixnum~1~_ _fixnum~2~_ \...)`
+returns:: `#t` if the relation holds, `#f` otherwise
+libraries:: `(chezscheme)`
+
+The predicate `fx=` returns `#t` if its arguments are equal. The predicate `fx<` returns `#t` if its arguments are monotonically increasing, i.e., each argument is greater than the preceding ones, while `fx>` returns `#t` if its arguments are monotonically decreasing. The predicate `fx\<=` returns `#t` if its arguments are monotonically nondecreasing, i.e., each argument is not less than the preceding ones, while `fx>=` returns `#t` if its arguments are monotonically nonincreasing. When passed only one argument, each of these predicates returns `#t`.
+
+These procedures are similar to the Revised^6^ Report procedures `fx=?`, `fx<?`, `fx>?`, `fx\<=?`, and `fx>=?` except that the Revised^6^ Report procedures require two or more arguments, and their names have the "`?`" suffix.
+
+[source,scheme,subs="quotes"]
+----
+(fx= 0) ⇒ #t
+(fx= 0 0) ⇒ #t
+(fx< (most-negative-fixnum) 0 (most-positive-fixnum)) ⇒ #t
+(let ([x 3]) (fx<= 0 x 9)) ⇒ #t
+(fx<= 0 3 3) ⇒ #t
+(fx>= 0 0 (most-negative-fixnum)) ⇒ #t
+----
+
+[#numeric:s16]
+[horizontal]
+procedure:: `(fxnonpositive? _fixnum_)`
+returns:: `#t` if `_fixnum_` is not greater than zero, `#f` otherwise
+procedure:: `(fxnonnegative? _fixnum_)`
+returns:: `#t` if `_fixnum_` is not less than zero, `#f` otherwise
+libraries:: `(chezscheme)`
+
+`fxnonpositive?` is equivalent to `(lambda (x) (fx\<= x 0))`, and `fxnonnegative?` is equivalent to `(lambda (x) (fx>= x 0))`.
+
+[source,scheme,subs="quotes"]
+----
+(fxnonpositive? 128) ⇒ #f
+(fxnonpositive? 0) ⇒ #t
+(fxnonpositive? -1) ⇒ #t
+
+(fxnonnegative? -65) ⇒ #f
+(fxnonnegative? 0) ⇒ #t
+(fxnonnegative? 1) ⇒ #t
+----
+
+[#numeric:s17]
+[horizontal]
+procedure:: `(fx+ _fixnum_ \...)`
+returns:: the sum of the arguments `_fixnum_ \...`
+libraries:: `(chezscheme)`
+
+When called with no arguments, `fx+` returns `0`.
+
+[source,scheme,subs="quotes"]
+----
+(fx+) ⇒ 0
+(fx+ 1 2) ⇒ 3
+(fx+ 3 4 5) ⇒ 12
+(apply fx+ '(1 2 3 4 5)) ⇒ 15
+----
+
+[#numeric:s18]
+[horizontal]
+procedure:: `(fx- _fixnum~1~_ _fixnum~2~_ \...)`
+returns:: a fixnum
+libraries:: `(chezscheme)`
+
+When called with one argument, `fx-` returns the negative of `_fixnum~1~_`. Thus, `(fx- _fixnum~1~_)` is an idiom for `(fx- 0 _fixnum~1~_)`.
+
+When called with two or more arguments, `fx-` returns the result of subtracting the sum of the numbers `_fixnum~2~_ \...` from `_fixnum~1~_`.
+
+[source,scheme,subs="quotes"]
+----
+(fx- 3) ⇒ -3
+(fx- 4 3) ⇒ 1
+(fx- 4 3 2 1) ⇒ -2
+----
+
+[#numeric:s19]
+[horizontal]
+procedure:: `(fx* _fixnum_ \...)`
+returns:: the product of the arguments `_fixnum_ \...`
+libraries:: `(chezscheme)`
+
+When called with no arguments, `fx*` returns `1`.
+
+[source,scheme,subs="quotes"]
+----
+(fx*) ⇒ 1
+(fx* 1 2) ⇒ 2
+(fx* 3 -4 5) ⇒ -60
+(apply fx* '(1 -2 3 -4 5)) ⇒ 120
+----
+
+[#numeric:s20]
+[horizontal]
+procedure:: `(fx/ _fixnum~1~_ _fixnum~2~_ \...)`
+returns:: see explanation
+libraries:: `(chezscheme)`
+
+When called with one argument, `fx/` returns the reciprocal of `_fixnum~1~_`. That is, `(fx/ _fixnum~1~_)` is an idiom for `(fx/ 1 _fixnum~1~_)`.
+
+When called with two or more arguments, `fx/` returns the result of dividing `_fixnum~1~_` by the product of the remaining arguments `_fixnum~2~_ \...`.
+
+[source,scheme,subs="quotes"]
+----
+(fx/ 1) ⇒ 1
+(fx/ -17) ⇒ 0
+(fx/ 8 -2) ⇒ -4
+(fx/ -9 2) ⇒ -4
+(fx/ 60 5 3 2) ⇒ 2
+----
+
+[#numeric:s21]
+[horizontal]
+procedure:: `(fx1+ _fixnum_)`
+procedure:: `(fx1- _fixnum_)`
+returns:: `_fixnum_` plus 1 or `_fixnum_` minus 1
+libraries:: `(chezscheme)`
+
+[source,scheme,subs="quotes"]
+----
+(define fxplus
+  (lambda (x y)
+    (if (fxzero? x)
+        y
+        (fxplus (fx1- x) (fx1+ y)))))
+
+(fxplus 7 8) ⇒ 15
+----
+
+`fx1+` and `fx1-` can be defined as follows:
+
+[source,scheme,subs="quotes"]
+----
+(define fx1+ (lambda (x) (fx+ x 1)))
+(define fx1- (lambda (x) (fx- x 1)))
+----
+
+[#numeric:s22]
+[horizontal]
+procedure:: `(fxquotient _fixnum~1~_ _fixnum~2~_ \...)`
+returns:: see explanation
+libraries:: `(chezscheme)`
+
+`fxquotient` is identical to `fx/`. See the description of `fx/` above.
+
+[#numeric:s23]
+[horizontal]
+procedure:: `(fxremainder _fixnum~1~_ _fixnum~2~_)`
+returns:: the fixnum remainder of `_fixnum~1~_` divided by `_fixnum~2~_`
+libraries:: `(chezscheme)`
+
+The result of `fxremainder` has the same sign as `_fixnum~1~_`.
+
+[source,scheme,subs="quotes"]
+----
+(fxremainder 16 4) ⇒ 0
+(fxremainder 5 2) ⇒ 1
+(fxremainder -45 7) ⇒ -3
+(fxremainder 10 -3) ⇒ 1
+(fxremainder -17 -9) ⇒ -8
+----
+
+[#numeric:s24]
+[horizontal]
+procedure:: `(fxmodulo _fixnum~1~_ _fixnum~2~_)`
+returns:: the fixnum modulus of `_fixnum~1~_` and `_fixnum~2~_`
+libraries:: `(chezscheme)`
+
+The result of `fxmodulo` has the same sign as `_fixnum~2~_`.
+
+[source,scheme,subs="quotes"]
+----
+(fxmodulo 16 4) ⇒ 0
+(fxmodulo 5 2) ⇒ 1
+(fxmodulo -45 7) ⇒ 4
+(fxmodulo 10 -3) ⇒ -2
+(fxmodulo -17 -9) ⇒ -8
+----
+
+[#numeric:s25]
+[horizontal]
+procedure:: `(fxabs _fixnum_)`
+returns:: the absolute value of `_fixnum_`
+libraries:: `(chezscheme)`
+
+[source,scheme,subs="quotes"]
+----
+(fxabs 1) ⇒ 1
+(fxabs -1) ⇒ 1
+(fxabs 0) ⇒ 0
+----
+
+=== Section 8.3. Flonum Operations [[section_8.3.]]
+
+Inexact real numbers are normally represented by `_flonums_`. A flonum is a single 64-bit double-precision floating point number. This section describes operations on flonums, most of which accept flonum arguments and return flonum values. In most cases, the operations are inline-coded or coded as machine language subroutines at optimize-level 3 with no argument type checking; full type checking is performed at lower optimize levels. Flonum-specific procedure names begin with the prefix "`fl`" to set them apart from their generic counterparts.
+
+Inexact real numbers may also be represented by inexact complexnums with imaginary parts equal to zero, which cannot be used as input to the flonum-specific operators. Such numbers are produced, however, only from operations involving complex numbers with nonzero imaginary parts, by explicit calls to `fl-make-rectangular`, `make-rectangular`, or `make-polar`, or by numeric input in either polar or rectangular format.
+
+[#numeric:s26]
+[horizontal]
+procedure:: `(flonum\->fixnum _flonum_)`
+returns:: the fixnum representation of `_flonum_`, truncated
+libraries:: `(chezscheme)`
+
+The truncated value of `_flonum_` must fall within the fixnum range. `flonum\->fixnum` is a restricted version of `exact`, which converts any numeric representation to its exact equivalent.
+
+[source,scheme,subs="quotes"]
+----
+(flonum->fixnum 0.0) ⇒ 0
+(flonum->fixnum 3.9) ⇒ 3
+(flonum->fixnum -2.2) ⇒ -2
+----
+
+[#numeric:s28]
+[horizontal]
+procedure:: `(fl= _flonum~1~_ _flonum~2~_ \...)`
+procedure:: `(fl< _flonum~1~_ _flonum~2~_ \...)`
+procedure:: `(fl> _flonum~1~_ _flonum~2~_ \...)`
+procedure:: `(fl\<= _flonum~1~_ _flonum~2~_ \...)`
+procedure:: `(fl>= _flonum~1~_ _flonum~2~_ \...)`
+returns:: `#t` if the relation holds, `#f` otherwise
+libraries:: `(chezscheme)`
+
+The predicate `fl=` returns `#t` if its arguments are equal. The predicate `fl<` returns `#t` if its arguments are monotonically increasing, i.e., each argument is greater than the preceding ones, while `fl>` returns `#t` if its arguments are monotonically decreasing. The predicate `fl\<=` returns `#t` if its arguments are monotonically nondecreasing, i.e., each argument is not less than the preceding ones, while `fl>=` returns `#t` if its arguments are monotonically nonincreasing. When passed only one argument, each of these predicates returns `#t`.
+
+IEEE NANs are not comparable, i.e., comparisons involving NANs always return `#f`.
+
+These procedures are similar to the Revised^6^ Report procedures `fl=?`, `fl<?`, `fl>?`, `fl\<=?`, and `fl>=?` except that the Revised^6^ Report procedures require two or more arguments, and their names have the "`?`" suffix.
+
+[source,scheme,subs="quotes"]
+----
+(fl= 0.0) ⇒ #t
+(fl= 0.0 0.0) ⇒ #t
+(fl< -1.0 0.0 1.0) ⇒ #t
+(fl> -1.0 0.0 1.0) ⇒ #f
+(fl<= 0.0 3.0 3.0) ⇒ #t
+(fl>= 4.0 3.0 3.0) ⇒ #t
+(fl< 7.0 +inf.0) ⇒ #t
+(fl= +nan.0 0.0) ⇒ #f
+(fl= +nan.0 +nan.0) ⇒ #f
+(fl< +nan.0 +nan.0) ⇒ #f
+(fl> +nan.0 +nan.0) ⇒ #f
+----
+
+[#numeric:s29]
+[horizontal]
+procedure:: `(flnonpositive? _fl_)`
+returns:: `#t` if `_fl_` is not greater than zero, `#f` otherwise
+procedure:: `(flnonnegative? _fl_)`
+returns:: `#t` if `_fl_` is not less than zero, `#f` otherwise
+libraries:: `(chezscheme)`
+
+`flnonpositive?` is equivalent to `(lambda (x) (fl\<= x 0.0))`, and `flnonnegative?` is equivalent to `(lambda (x) (fl>= x 0.0))`.
+
+Even if the flonum representation distinguishes -0.0 from +0.0, both are considered nonpositive and nonnegative.
+
+[source,scheme,subs="quotes"]
+----
+(flnonpositive? 128.0) ⇒ #f
+(flnonpositive? 0.0) ⇒ #t
+(flnonpositive? -0.0) ⇒ #t
+(flnonpositive? -1.0) ⇒ #t
+
+(flnonnegative? -65.0) ⇒ #f
+(flnonnegative? 0.0) ⇒ #t
+(flnonnegative? -0.0) ⇒ #t
+(flnonnegative? 1.0) ⇒ #t
+
+(flnonnegative? +nan.0) ⇒ #f
+(flnonpositive? +nan.0) ⇒ #f
+
+(flnonnegative? +inf.0) ⇒ #t
+(flnonnegative? -inf.0) ⇒ #f
+----
+
+[#numeric:s30]
+[horizontal]
+procedure:: `(decode-float _x_)`
+returns:: see below
+libraries:: `(chezscheme)`
+
+`_x_` must be a flonum. `decode-float` returns a vector with three integer elements, `_m_`, `_e_`, and `_s_`, such that _x_ = __sm__2^e^. It is useful primarily in the printing of floating-point numbers.
+
+[source,scheme,subs="quotes"]
+----
+(decode-float 1.0) ⇒ #(4503599627370496 -52 1)
+(decode-float -1.0) ⇒ #(4503599627370496 -52 -1)
+
+(define slow-identity
+  (lambda (x)
+    (inexact
+      (let ([v (decode-float x)])
+        (let ([m (vector-ref v 0)]
+              [e (vector-ref v 1)]
+              [s (vector-ref v 2)])
+          (* s m (expt 2 e)))))))
+
+(slow-identity 1.0) ⇒ 1.0
+(slow-identity -1e20) ⇒ -1e20
+----
+
+[#numeric:s31]
+[horizontal]
+procedure:: `(fllp _flonum_)`
+returns:: see below
+libraries:: `(chezscheme)`
+
+`fllp` returns the 12-bit integer consisting of the exponent plus highest order represented bit of a flonum (ieee 64-bit floating-point number). It can be used to compute a fast approximation of the logarithm of the number.
+
+[source,scheme,subs="quotes"]
+----
+(fllp 0.0) ⇒ 0
+(fllp 1.0) ⇒ 2046
+(fllp -1.0) ⇒ 2046
+
+(fllp 1.5) ⇒ 2047
+
+(fllp +inf.0) ⇒ 4094
+(fllp -inf.0) ⇒ 4094
+
+(fllp #b1.0e-1111111111) ⇒ 1
+(fllp #b1.0e-10000000000) ⇒ 0
+----
+
+=== Section 8.4. Inexact Complex Operations [[section_8.4.]]
+
+The procedures described in this section provide mechanisms for creating and operating on inexact complex numbers. Inexact complex numbers with nonzero imaginary parts are represented as _inexact complexnums_. An inexact complexnum contains two 64-bit double-precision floating point numbers. Inexact complex numbers with imaginary parts equal to zero (in other words, inexact real numbers) may be represented as either inexact complexnums or flonums. The operations described in this section accept any mix of inexact complexnum and flonum arguments (collectively, "cflonums").
+
+In most cases, the operations are performed with minimal type checking at optimize-level 3; full type checking is performed at lower optimize levels. Inexact complex procedure names begin with the prefix ++"++`cfl`++"++ to set them apart from their generic counterparts.
+
+[#numeric:s35]
+[horizontal]
+procedure:: `(fl-make-rectangular _flonum~1~_ _flonum~2~_)`
+returns:: an inexact complexnum
+libraries:: `(chezscheme)`
+
+The inexact complexnum produced by fl-make-rectangular has real part equal to `_flonum~1~_` and imaginary part equal to `_flonum~2~_`.
+
+[source,scheme,subs="quotes"]
+----
+(fl-make-rectangular 2.0 -3.0) ⇒ 2.0-3.0i
+(fl-make-rectangular 2.0 0.0) ⇒ 2.0+0.0i
+(fl-make-rectangular 2.0 -0.0) ⇒ 2.0-0.0i
+----
+
+[#numeric:s36]
+[horizontal]
+procedure:: `(cfl-real-part _cflonum_)`
+returns:: the real part of `_cflonum_`
+procedure:: `(cfl-imag-part _cflonum_)`
+returns:: the imaginary part of `_cflonum_`
+libraries:: `(chezscheme)`
+
+[source,scheme,subs="quotes"]
+----
+(cfl-real-part 2.0-3.0i) ⇒ 2.0
+(cfl-imag-part 2.0-3.0i) ⇒ -3.0
+(cfl-imag-part 2.0-0.0i) ⇒ -0.0
+(cfl-imag-part 2.0-inf.0i) ⇒ -inf.0
+----
+
+[#numeric:s37]
+[horizontal]
+procedure:: `(cfl= _cflonum_ \...)`
+returns:: `#t` if its arguments are equal, `#f` otherwise
+libraries:: `(chezscheme)`
+
+[source,scheme,subs="quotes"]
+----
+(cfl= 7.0+0.0i 7.0) ⇒ #t
+(cfl= 1.0+2.0i 1.0+2.0i) ⇒ #t
+(cfl= 1.0+2.0i 1.0-2.0i) ⇒ #f
+----
+
+[#numeric:s38]
+[horizontal]
+procedure:: `(cfl+ _cflonum_ \...)`
+procedure:: `(cfl* _cflonum_ \...)`
+procedure:: `(cfl- _cflonum~1~_ _cflonum~2~_ \...)`
+procedure:: `(cfl/ _cflonum~1~_ _cflonum~2~_ \...)`
+returns:: a cflonum
+libraries:: `(chezscheme)`
+
+These procedures compute the sum, difference, product, or quotient of inexact complex quantities, whether these quantities are represented by flonums or inexact complexnums. For example, if `cfl+` receives two flonum arguments _a_ and _b_, it returns the sum _a_ + _b_; in this case, it behaves the same as `fl+`. With two inexact complexnum arguments _a_ + _bi_ and _c_ + _di_, it returns the sum (_a_ + _c_) + (_b_ + _d_)_i_. If one argument is a flonum _a_ and the other an inexact complexnum _c_ + _di_, `cfl+` returns (_a_ + _c_) + _di_.
+
+When passed zero arguments, `cfl+` returns 0.0 and `cfl*` returns 1.0. When passed one argument, `cfl-` returns the additive inverse of the argument, and `cfl/` returns the multiplicative inverse of the argument. When passed three or more arguments, `cfl-` returns the difference between its first and the sum of its remaining arguments, and `cfl/` returns the quotient of its first and the product of its remaining arguments.
+
+[source,scheme,subs="quotes"]
+----
+(cfl+) ⇒ 0.0
+(cfl*) ⇒ 1.0
+(cfl- 5.0+1.0i) ⇒ -5.0-1.0i
+(cfl/ 2.0+2.0i) ⇒ 0.25-0.25i
+
+(cfl+ 1.0+2.2i -3.7+5.3i) ⇒ -2.7+7.5i
+(cfl+ 1.0 -5.3) ⇒ -4.3
+(cfl+ 1.0 2.0 -5.3i) ⇒ 3.0-5.3i
+(cfl- 1.0+2.5i -3.7) ⇒ 4.7+2.5i
+(cfl* 1.0+2.0i 3.0+4.0i) ⇒ -5.0+10.0i
+(cfl/ -5.0+10.0i 1.0+2.0i 2.0) ⇒ 1.5+2.0i
+----
+
+[#numeric:s39]
+[horizontal]
+procedure:: `(cfl-conjugate _cflonum_)`
+returns:: complex conjugate of `_cflonum_`
+libraries:: `(chezscheme)`
+
+The procedure `cfl-conjugate`, when passed an inexact complex argument _a_ + _bi_, returns its complex conjugate _a_ + (-_b_)_i_.
+
+See also `conjugate`, which is a generic version of this operator that returns the complex conjugate of any valid representation for a complex number.
+
+[source,scheme,subs="quotes"]
+----
+(cfl-conjugate 3.0) ⇒ 3.0
+(cfl-conjugate 3.0+4.0i) ⇒ 3.0-4.0i
+(cfl-conjugate 1e-20-2e-30i) ⇒ 1e-20+2e-30i
+----
+
+[#numeric:s41]
+[horizontal]
+procedure:: `(cfl-magnitude-squared _cflonum_)`
+returns:: magnitude of `_cflonum_` squared
+libraries:: `(chezscheme)`
+
+The procedure `cfl-magnitude-squared`, when passed an inexact complex argument _a_ + _bi_ returns a flonum representing the magnitude of the argument squared, i.e., _a_^2^ + _b_^2^.
+
+See also `magnitude-squared`, which is a generic version of this operator that returns the magnitude squared of any valid representation for a complex number. Both operations are similar to the `magnitude` procedure, which returns the magnitude, _sqrt_(_a_^2^ + _b_^2^), of its generic complex argument.
+
+[source,scheme,subs="quotes"]
+----
+(cfl-magnitude-squared 3.0) ⇒ 9.0
+(cfl-magnitude-squared 3.0-4.0i) ⇒ 25.0
+----
+
+=== Section 8.5. Bitwise and Logical Operators [[section_8.5.]]
+
+_Chez Scheme_ provides a set of logical operators that allow exact integers (fixnums and bignums) to be treated as sets or sequences of bits. These operators include `logand` (bitwise logical `and`), `logior` (bitwise logical `or`), `logxor` (bitwise logical exclusive `or`), `lognot` (bitwise logical `not`), `logtest` (test multiple bits), `logbit?` (test single bit), `logbit0` (reset single bit), `logbit1` (set single bit), and `ash` (arithmetic shift). Each of these operators treats its arguments as two's complement integers, regardless of the underlying representation. This treatment can be exploited to represent infinite sets: a negative number represents an infinite number of one bits beyond the leftmost zero, and a nonnegative number represents an infinite number of zero bits beyond the leftmost one bit.
+
+Fixnum equivalents of the logical operators are provided, as `fxlogand`, `fxlogior`, `fxlogxor`, `fxlognot`, `fxlogtest`, `fxlogbit?`, `fxlogbit0`, and `fxlogbit1`. Three separate fixnum operators are provided for shifting: `fxsll` (shift-left logical), `fxsrl` (shift-right logical), `fxsra` (shift-right arithmetic). Logical and arithmetic shifts differ only for right shifts. Shift-right logical shifts in zero bits on the left end, and shift-right arithmetic replicates the sign bit.
+
+Logical shifts do not make sense for arbitrary-precision integers, since these have no "left end" into which bits must be shifted.
+
+[#numeric:s44]
+[horizontal]
+procedure:: `(logand _int_ \...)`
+returns:: the logical "and" of the arguments `_int_ \...`
+libraries:: `(chezscheme)`
+
+The arguments must be exact integers (fixnums or bignums) and are treated as two's complement integers, regardless of the underlying representation. With no arguments, `logand` returns -1, i.e., all bits set.
+
+[source,scheme,subs="quotes"]
+----
+(logand) ⇒ -1
+(logand 15) ⇒ 15
+(logand -1 -1) ⇒ -1
+(logand -1 0) ⇒ 0
+(logand 5 3) ⇒ 1
+(logand #x173C8D95 7) ⇒ 5
+(logand #x173C8D95 -8) ⇒ #x173C8D90
+(logand #b1100 #b1111 #b1101) ⇒ #b1100
+----
+
+[#numeric:s45]
+[horizontal]
+procedure:: `(logior _int_ \...)`
+procedure:: `(logor _int_ \...)`
+returns:: the logical "or" of the arguments `_int_ \...`
+libraries:: `(chezscheme)`
+
+The arguments must be exact integers (fixnums or bignums) and are treated as two's complement integers, regardless of the underlying representation. With no arguments, `logior` returns 0, i.e., all bits reset.
+
+[source,scheme,subs="quotes"]
+----
+(logior) ⇒ 0
+(logior 15) ⇒ 15
+(logior -1 -1) ⇒ -1
+(logior -1 0) ⇒ -1
+(logior 5 3) ⇒ 7
+(logior #b111000 #b101010) ⇒ #b111010
+(logior #b1000 #b0100 #b0010) ⇒ #b1110
+(apply logior '(1 2 4 8 16)) ⇒ 31
+----
+
+[#numeric:s46]
+[horizontal]
+procedure:: `(logxor _int_ \...)`
+returns:: the logical "exclusive or" of the arguments `_int_ \...`
+libraries:: `(chezscheme)`
+
+The arguments must be exact integers (fixnums or bignums) and are treated as two's complement integers, regardless of the underlying representation. With no arguments, `logxor` returns 0, i.e., all bits reset.
+
+[source,scheme,subs="quotes"]
+----
+(logxor) ⇒ 0
+(logxor 15) ⇒ 15
+(logxor -1 -1) ⇒ 0
+(logxor -1 0) ⇒ -1
+(logxor 5 3) ⇒ 6
+(logxor #b111000 #b101010) ⇒ #b010010
+(logxor #b1100 #b0100 #b0110) ⇒ #b1110
+----
+
+[#numeric:s47]
+[horizontal]
+procedure:: `(lognot _int_)`
+returns:: the logical "not" of `_int_`
+libraries:: `(chezscheme)`
+
+The argument must be an exact integer (fixnum or bignum) and is treated as a two's complement integer, regardless of the underlying representation.
+
+[source,scheme,subs="quotes"]
+----
+(lognot -1) ⇒ 0
+(lognot 0) ⇒ -1
+(lognot 7) ⇒ -8
+(lognot -8) ⇒ 7
+----
+
+[#numeric:s48]
+[horizontal]
+procedure:: `(logbit? _index_ _int_)`
+returns:: `#t` if the specified bit is set, otherwise `#f`
+libraries:: `(chezscheme)`
+
+`_index_` must be a nonnegative exact integer. `_int_` must be an exact integer (fixnum or bignum) and is treated as a two's complement integer, regardless of the underlying representation.
+
+`logbit?` returns `#t` if the bit at index `_index_` of `_int_` is set (one) and `#f` otherwise. The index is zero-based, counting from the lowest-order toward higher-order bits. There is no upper limit on the index; for nonnegative values of `_int_`, the bits above the highest order set bit are all considered to be zero, and for negative values, the bits above the highest order reset bit are all considered to be one.
+
+`logbit?` is equivalent to
+
+[source,scheme,subs="quotes"]
+----
+(lambda (k n) (not (zero? (logand n (ash 1 k)))))
+----
+
+but more efficient.
+
+[source,scheme,subs="quotes"]
+----
+(logbit? 0 #b1110) ⇒ #f
+(logbit? 1 #b1110) ⇒ #t
+(logbit? 2 #b1110) ⇒ #t
+(logbit? 3 #b1110) ⇒ #t
+(logbit? 4 #b1110) ⇒ #f
+(logbit? 100 #b1110) ⇒ #f
+
+(logbit? 0 -6) ⇒ #f  ; _the two's complement of_ -6 _is_ 1...1010
+(logbit? 1 -6) ⇒ #t
+(logbit? 2 -6) ⇒ #f
+(logbit? 3 -6) ⇒ #t
+(logbit? 100 -6) ⇒ #t
+
+(logbit? (random 1000000) 0) ⇒ #f
+(logbit? (random 1000000) -1) ⇒ #t
+
+(logbit? 20000 (ash 1 20000)) ⇒ #t
+----
+
+[#numeric:s49]
+[horizontal]
+procedure:: `(logtest _int~1~_ _int~2~_)`
+returns:: `#t` if any common bits are set, otherwise `#f`
+libraries:: `(chezscheme)`
+
+The arguments must be exact integers (fixnums or bignums) and are treated as two's complement integers, regardless of the underlying representation.
+
+`logtest` returns `#t` if any bit set in one argument is also set in the other. It returns `#f` if the two arguments have no set bits in common.
+
+`logtest` is equivalent to
+
+[source,scheme,subs="quotes"]
+----
+(lambda (n1 n2) (not (zero? (logand n1 n2))))
+----
+
+but more efficient.
+
+[source,scheme,subs="quotes"]
+----
+(logtest #b10001 #b1110) ⇒ #f
+(logtest #b10101 #b1110) ⇒ #t
+(logtest #b111000 #b110111) ⇒ #t
+
+(logtest #b101 -6) ⇒ #f  ; _the two's complement of_ -6 _is_ 1...1010
+(logtest #b1000 -6) ⇒ #t
+(logtest 100 -6) ⇒ #t
+
+(logtest (+ (random 1000000) 1) 0) ⇒ #f
+(logtest (+ (random 1000000) 1) -1) ⇒ #t
+
+(logtest (ash #b101 20000) (ash #b111 20000)) ⇒ #t
+----
+
+[#numeric:s50]
+[horizontal]
+procedure:: `(logbit0 _index_ _int_)`
+returns:: the result of clearing bit `_index_` of `_int_`
+libraries:: `(chezscheme)`
+
+`_index_` must be a nonnegative exact integer. `_int_` must be an exact integer (fixnum or bignum) and is treated as a two's complement integer, regardless of the underlying representation.
+
+The index is zero-based, counting from the lowest-order toward higher-order bits. As with `logbit?`, there is no upper limit on the index.
+
+`logbit0` is equivalent to
+
+[source,scheme,subs="quotes"]
+----
+(lambda (i n) (logand (lognot (ash 1 i)) n))
+----
+
+but more efficient.
+
+[source,scheme,subs="quotes"]
+----
+(logbit0 3 #b10101010) ⇒ #b10100010
+(logbit0 4 #b10101010) ⇒ #b10101010
+(logbit0 0 -1) ⇒ -2
+----
+
+[#numeric:s51]
+[horizontal]
+procedure:: `(logbit1 _index_ _int_)`
+returns:: the result of setting bit `_index_` of `_int_`
+libraries:: `(chezscheme)`
+
+`_index_` must be a nonnegative exact integer. `_int_` must be an exact integer (fixnum or bignum) and is treated as a two's complement integer, regardless of the underlying representation.
+
+The index is zero-based, counting from the lowest-order toward higher-order bits. As with `logbit?`, there is no upper limit on the index.
+
+`logbit1` is equivalent to
+
+[source,scheme,subs="quotes"]
+----
+(lambda (i n) (logor (ash 1 i) n))
+----
+
+but more efficient.
+
+[source,scheme,subs="quotes"]
+----
+(logbit1 3 #b10101010) ⇒ #b10101010
+(logbit1 4 #b10101010) ⇒ #b10111010
+(logbit1 4 0) ⇒ #b10000
+(logbit1 0 -2) ⇒ -1
+----
+
+[#numeric:s52]
+[horizontal]
+procedure:: `(ash _int_ _count_)`
+returns:: `_int_` shifted left arithmetically by `_count_`.
+libraries:: `(chezscheme)`
+
+Both arguments must be exact integers. The first argument is treated as a two's complement integer, regardless of the underlying representation. If `_count_` is negative, `_int_` is shifted right by -`_count_` bits.
+
+[source,scheme,subs="quotes"]
+----
+(ash 8 0) ⇒ 8
+(ash 8 2) ⇒ 32
+(ash 8 -2) ⇒ 2
+(ash -1 2) ⇒ -4
+(ash -1 -2) ⇒ -1
+----
+
+[#numeric:s53]
+[horizontal]
+procedure:: `(fxlogand _fixnum_ \...)`
+returns:: the logical "and" of the arguments `_fixnum_ \...`
+libraries:: `(chezscheme)`
+
+The arguments are treated as two's complement integers, regardless of the underlying representation. With no arguments, `fxlogand` returns -1, i.e., all bits set.
+
+[source,scheme,subs="quotes"]
+----
+(fxlogand) ⇒ -1
+(fxlogand 15) ⇒ 15
+(fxlogand -1 -1) ⇒ -1
+(fxlogand -1 0) ⇒ 0
+(fxlogand 5 3) ⇒ 1
+(fxlogand #b111000 #b101010) ⇒ #b101000
+(fxlogand #b1100 #b1111 #b1101) ⇒ #b1100
+----
+
+[#numeric:s54]
+[horizontal]
+procedure:: `(fxlogior _fixnum_ \...)`
+procedure:: `(fxlogor _fixnum_ \...)`
+returns:: the logical "or" of the arguments `_fixnum_ \...`
+libraries:: `(chezscheme)`
+
+The arguments are treated as two's complement integers, regardless of the underlying representation. With no arguments, `fxlogior` returns 0, i.e., all bits reset.
+
+[source,scheme,subs="quotes"]
+----
+(fxlogior) ⇒ 0
+(fxlogior 15) ⇒ 15
+(fxlogior -1 -1) ⇒ -1
+(fxlogior -1 0) ⇒ -1
+(fxlogior #b111000 #b101010) ⇒ #b111010
+(fxlogior #b1000 #b0100 #b0010) ⇒ #b1110
+(apply fxlogior '(1 2 4 8 16)) ⇒ 31
+----
+
+[#numeric:s55]
+[horizontal]
+procedure:: `(fxlogxor _fixnum_ \...)`
+returns:: the logical "exclusive or" of the arguments `_fixnum_ \...`
+libraries:: `(chezscheme)`
+
+The arguments are treated as two's complement integers, regardless of the underlying representation. With no arguments, `fxlogxor` returns 0, i.e., all bits reset.
+
+[source,scheme,subs="quotes"]
+----
+(fxlogxor) ⇒ 0
+(fxlogxor 15) ⇒ 15
+(fxlogxor -1 -1) ⇒ 0
+(fxlogxor -1 0) ⇒ -1
+(fxlogxor 5 3) ⇒ 6
+(fxlogxor #b111000 #b101010) ⇒ #b010010
+(fxlogxor #b1100 #b0100 #b0110) ⇒ #b1110
+----
+
+[#numeric:s56]
+[horizontal]
+procedure:: `(fxlognot _fixnum_)`
+returns:: the logical "not" of `_fixnum_`
+libraries:: `(chezscheme)`
+
+The argument is treated as a two's complement integer, regardless of the underlying representation.
+
+[source,scheme,subs="quotes"]
+----
+(fxlognot -1) ⇒ 0
+(fxlognot 0) ⇒ -1
+(fxlognot 1) ⇒ -2
+(fxlognot -2) ⇒ 1
+----
+
+[#numeric:s57]
+[horizontal]
+procedure:: `(fxlogbit? _index_ _fixnum_)`
+returns:: `#t` if the specified bit is set, otherwise `#f`
+libraries:: `(chezscheme)`
+
+`_index_` must be a nonnegative fixnum. `_fixnum_` is treated as a two's complement integer, regardless of the underlying representation.
+
+`fxlogbit?` returns `#t` if the bit at index `_index_` of `_fixnum_` is set (one) and `#f` otherwise. The index is zero-based, counting from the lowest-order toward higher-order bits. The index is limited only by the fixnum range; for nonnegative values of `_fixnum_`, the bits above the highest order set bit are all considered to be zero, and for negative values, the bits above the highest order reset bit are all considered to be one.
+
+[source,scheme,subs="quotes"]
+----
+(fxlogbit? 0 #b1110) ⇒ #f
+(fxlogbit? 1 #b1110) ⇒ #t
+(fxlogbit? 2 #b1110) ⇒ #t
+(fxlogbit? 3 #b1110) ⇒ #t
+(fxlogbit? 4 #b1110) ⇒ #f
+(fxlogbit? 100 #b1110) ⇒ #f
+
+(fxlogbit? 0 -6) ⇒ #f  ; _the two's complement of_ -6 _is_ 1...1010
+(fxlogbit? 1 -6) ⇒ #t
+(fxlogbit? 2 -6) ⇒ #f
+(fxlogbit? 3 -6) ⇒ #t
+(fxlogbit? 100 -6) ⇒ #t
+
+(fxlogbit? (random 1000000) 0) ⇒ #f
+(fxlogbit? (random 1000000) -1) ⇒ #t
+----
+
+[#numeric:s58]
+[horizontal]
+procedure:: `(fxlogtest _fixnum~1~_ _fixnum~2~_)`
+returns:: `#t` if any common bits are set, otherwise `#f`
+libraries:: `(chezscheme)`
+
+The arguments are treated as two's complement integers, regardless of the underlying representation.
+
+`fxlogtest` returns `#t` if any bit set in one argument is also set in the other. It returns `#f` if the two arguments have no set bits in common.
+
+[source,scheme,subs="quotes"]
+----
+(fxlogtest #b10001 #b1110) ⇒ #f
+(fxlogtest #b10101 #b1110) ⇒ #t
+(fxlogtest #b111000 #b110111) ⇒ #t
+
+(fxlogtest #b101 -6) ⇒ #f  ; _the two's complement of_ -6 _is_ 1...1010
+(fxlogtest #b1000 -6) ⇒ #t
+(fxlogtest 100 -6) ⇒ #t
+
+(fxlogtest (+ (random 1000000) 1) 0) ⇒ #f
+(fxlogtest (+ (random 1000000) 1) -1) ⇒ #t
+----
+
+[#numeric:s59]
+[horizontal]
+procedure:: `(fxlogbit0 _index_ _fixnum_)`
+returns:: the result of clearing bit `_index_` of `_fixnum_`
+libraries:: `(chezscheme)`
+
+`_fixnum_` is treated as a two's complement integer, regardless of the underlying representation. `_index_` must be nonnegative and less than the number of bits in a fixnum, excluding the sign bit, i.e., less than `(integer-length (most-positive-fixnum))`. The index is zero-based, counting from the lowest-order toward higher-order bits.
+
+`fxlogbit0` is equivalent to
+
+[source,scheme,subs="quotes"]
+----
+(lambda (i n) (fxlogand (fxlognot (fxsll 1 i)) n))
+----
+
+but more efficient.
+
+[source,scheme,subs="quotes"]
+----
+(fxlogbit0 3 #b10101010) ⇒ #b10100010
+(fxlogbit0 4 #b10101010) ⇒ #b10101010
+(fxlogbit0 0 -1) ⇒ -2
+----
+
+[#numeric:s60]
+[horizontal]
+procedure:: `(fxlogbit1 _index_ _fixnum_)`
+returns:: the result of setting bit `_index_` of `_fixnum_`
+libraries:: `(chezscheme)`
+
+`_fixnum_` is treated as a two's complement integer, regardless of the underlying representation. `_index_` must be nonnegative and less than the number of bits in a fixnum, excluding the sign bit, i.e., less than `(integer-length (most-positive-fixnum))`. The index is zero-based, counting from the lowest-order toward higher-order bits.
+
+`fxlogbit1` is equivalent to
+
+[source,scheme,subs="quotes"]
+----
+(lambda (i n) (fxlogor (fxsll 1 i) n))
+----
+
+but more efficient.
+
+[source,scheme,subs="quotes"]
+----
+(fxlogbit1 3 #b10101010) ⇒ #b10101010
+(fxlogbit1 4 #b10101010) ⇒ #b10111010
+(fxlogbit1 4 0) ⇒ #b10000
+(fxlogbit1 0 -2) ⇒ -1
+----
+
+[#numeric:s61]
+[horizontal]
+procedure:: `(fxsll _fixnum_ _count_)`
+returns:: `_fixnum_` shifted left by `_count_`
+libraries:: `(chezscheme)`
+
+`_fixnum_` is treated as a two's complement integer, regardless of the underlying representation. `_count_` must be nonnegative and not more than the number of bits in a fixnum, i.e., `(+ (integer-length (most-positive-fixnum)) 1)`. An exception is raised with condition-type `&implementation-restriction` if the result cannot be represented as a fixnum.
+
+[source,scheme,subs="quotes"]
+----
+(fxsll 1 2) ⇒ 4
+(fxsll -1 2) ⇒ -4
+----
+
+[#numeric:s62]
+[horizontal]
+procedure:: `(fxsrl _fixnum_ _count_)`
+returns:: `_fixnum_` logically shifted right by `_count_`
+libraries:: `(chezscheme)`
+
+`_fixnum_` is treated as a two's complement integer, regardless of the underlying representation. `_count_` must be nonnegative and not more than the number of bits in a fixnum, i.e., `(+ (integer-length (most-positive-fixnum)) 1)`.
+
+[source,scheme,subs="quotes"]
+----
+(fxsrl 4 2) ⇒ 1
+(= (fxsrl -1 1) (most-positive-fixnum)) ⇒ #t
+----
+
+[#numeric:s63]
+[horizontal]
+procedure:: `(fxsra _fixnum_ _count_)`
+returns:: `_fixnum_` arithmetically shifted right by `_count_`
+libraries:: `(chezscheme)`
+
+`_fixnum_` is treated as a two's complement integer, regardless of the underlying representation. `_count_` must be nonnegative and not more than the number of bits in a fixnum, i.e., `(+ (integer-length (most-positive-fixnum)) 1)`.
+
+[source,scheme,subs="quotes"]
+----
+(fxsra 64 3) ⇒ 8
+(fxsra -1 1) ⇒ -1
+(fxsra -64 3) ⇒ -8
+----
+
+=== Section 8.6. Random Number Generation [[section_8.6.]]
+
+[#numeric:s64]
+[horizontal]
+procedure:: `(random _real_)`
+returns:: a nonnegative pseudo-random number less than `_real_`
+libraries:: `(chezscheme)`
+
+`_real_` must be a positive integer or positive inexact real number.
+
+[source,scheme,subs="quotes"]
+----
+(random 1) ⇒ 0
+(random 1029384535235) ⇒ 1029384535001, _every_ _now_ _and_ _then_
+(random 1.0) ⇒ 0.5, _every_ _now_ _and_ _then_
+----
+
+[#numeric:s65]
+[horizontal]
+thread parameter:: `random-seed`
+libraries:: `(chezscheme)`
+
+The random number generator allows the current random seed to be obtained and modified via the parameter `random-seed`.
+
+When called without arguments, `random-seed` returns the current random seed. When called with one argument, which must be a nonnegative exact integer ranging from 1 through 2^32^ - 1, `random-seed` sets the current random seed to the argument.
+
+[source,scheme,subs="quotes"]
+----
+(let ([s (random-seed)])
+  (let ([r1 (random 1.0)])
+    (random-seed s)
+    (eqv? (random 1.0) r1))) ⇒ #t
+----
+
+=== Section 8.7. Miscellaneous Numeric Operations [[section_8.7.]]
+
+[#numeric:s67]
+[horizontal]
+procedure:: `(= _num~1~_ _num~2~_ _num~3~_ \...)`
+procedure:: `(< _real~1~_ _real~2~_ _real~3~_ \...)`
+procedure:: `(> _real~1~_ _real~2~_ _real~3~_ \...)`
+procedure:: `(\<= _real~1~_ _real~2~_ _real~3~_ \...)`
+procedure:: `(>= _real~1~_ _real~2~_ _real~3~_ \...)`
+returns:: `#t` if the relation holds, `#f` otherwise
+libraries:: `(chezscheme)`
+
+These predicates are identical to the Revised^6^ Report counterparts, except they are extended to accept one or more rather than two or more arguments. When passed one argument, each of these predicates returns `#t`.
+
+[source,scheme,subs="quotes"]
+----
+(> 3/4) ⇒ #t
+(< 3/4) ⇒ #t
+(= 3/4) ⇒ #t
+----
+
+[#numeric:s68]
+[horizontal]
+procedure:: `(1+ _num_)`
+procedure:: `(add1 _num_)`
+procedure:: `(1- _num_)`
+procedure:: `(-1+ _num_)`
+procedure:: `(sub1 _num_)`
+returns:: `_num_` plus 1 or `_num_` minus 1
+libraries:: `(chezscheme)`
+
+`1+` and `add1` are equivalent to `(lambda (x) (+ x 1))`; `1-`, `-1+`, and `sub1` are equivalent to `(lambda (x) (- x 1))`.
+
+[source,scheme,subs="quotes"]
+----
+(define plus
+ ; x should be a nonnegative integer
+  (lambda (x y)
+    (if (zero? x)
+        y
+        (plus (1- x) (1+ y)))))
+
+(plus 7 8) ⇒ 15
+
+(define double
+ ; x should be a nonnegative integer
+  (lambda (x)
+    (if (zero? x)
+        0
+        (add1 (add1 (double (sub1 x)))))))
+
+(double 7) ⇒ 14
+----
+
+[#numeric:s69]
+[horizontal]
+procedure:: `(expt-mod _int~1~_ _int~2~_ _int~3~_)`
+returns:: `_int~1~_` raised to the `_int~2~_` power, modulo `_int~3~_`
+libraries:: `(chezscheme)`
+
+`_int~1~_`, `_int~2~_` and `_int~3~_` must be nonnegative integers. `expt-mod` performs its computation in such a way that the intermediate results are never much larger than `_int~3~_`. This means that when `_int~2~_` is large, `expt-mod` is more efficient than the equivalent procedure `(lambda (x y z) (modulo (expt x y) z))`.
+
+[source,scheme,subs="quotes"]
+----
+(expt-mod 2 4 3) ⇒ 1
+(expt-mod 2 76543 76543) ⇒ 2
+----
+
+[#numeric:s70]
+[horizontal]
+procedure:: `(isqrt _n_)`
+returns:: the integer square root of `_n_`
+libraries:: `(chezscheme)`
+
+`_n_` must be a nonnegative integer. The integer square root of _n_ is defined to be stem:[\lfloor \sqrt{n} \rfloor].
+
+[source,scheme,subs="quotes"]
+----
+(isqrt 0) ⇒ 0
+(isqrt 16) ⇒ 4
+(isqrt 16.0) ⇒ 4.0
+(isqrt 20) ⇒ 4
+(isqrt 20.0) ⇒ 4.0
+(isqrt (* 2 (expt 10 20))) ⇒ 14142135623
+----
+
+[#numeric:s71]
+[horizontal]
+procedure:: `(integer-length _n_)`
+returns:: see below
+libraries:: `(chezscheme)`
+
+The procedure `integer-length` returns the length in bits of the smallest two's complement representation for `_n_`, with an assumed leading 1 (sign) bit for negative numbers. For zero, `integer-length` returns 0.
+
+[source,scheme,subs="quotes"]
+----
+(integer-length 0) ⇒ 0
+(integer-length 1) ⇒ 1
+(integer-length 2) ⇒ 2
+(integer-length 3) ⇒ 2
+(integer-length 4) ⇒ 3
+(integer-length #b10000000) ⇒ 8
+(integer-length #b11111111) ⇒ 8
+(integer-length -1) ⇒ 0
+(integer-length -2) ⇒ 1
+(integer-length -3) ⇒ 2
+(integer-length -4) ⇒ 2
+----
+
+[#numeric:s72]
+[horizontal]
+procedure:: `(nonpositive? _real_)`
+returns:: `#t` if `_real_` is not greater than zero, `#f` otherwise
+libraries:: `(chezscheme)`
+
+`nonpositive?` is equivalent to `(lambda (x) (\<= x 0))`.
+
+[source,scheme,subs="quotes"]
+----
+(nonpositive? 128) ⇒ #f
+(nonpositive? 0.0) ⇒ #t
+(nonpositive? 1.8e-15) ⇒ #f
+(nonpositive? -2/3) ⇒ #t
+----
+
+[#numeric:s73]
+[horizontal]
+procedure:: `(nonnegative? _real_)`
+returns:: `#t` if `_real_` is not less than zero, `#f` otherwise
+libraries:: `(chezscheme)`
+
+`nonnegative?` is equivalent to `(lambda (x) (>= x 0))`.
+
+[source,scheme,subs="quotes"]
+----
+(nonnegative? -65) ⇒ #f
+(nonnegative? 0) ⇒ #t
+(nonnegative? -0.0121) ⇒ #f
+(nonnegative? 15/16) ⇒ #t
+----
+
+[#numeric:s74]
+[horizontal]
+procedure:: `(conjugate _num_)`
+returns:: complex conjugate of `_num_`
+libraries:: `(chezscheme)`
+
+The procedure `conjugate`, when passed a complex argument _a_ + _bi_, returns its complex conjugate _a_ + (-_b_)_i_.
+
+[source,scheme,subs="quotes"]
+----
+(conjugate 3.0+4.0i) ⇒ 3.0-4.0i
+(conjugate 1e-20-2e-30i) ⇒ 1e-20+2e-30i
+(conjugate 3) ⇒ 3
+----
+
+[#numeric:s75]
+[horizontal]
+procedure:: `(magnitude-squared _num_)`
+returns:: magnitude of `_num_` squared
+libraries:: `(chezscheme)`
+
+The procedure `magnitude-squared`, when passed a complex argument _a_ + _bi_ returns its magnitude squared, i.e., _a_^2^ + _b_^2^.
+
+[source,scheme,subs="quotes"]
+----
+(magnitude-squared 3.0-4.0i) ⇒ 25.0
+(magnitude-squared 3.0) ⇒ 9.0
+----
+
+[#numeric:s76]
+[horizontal]
+procedure:: `(sinh _num_)`
+procedure:: `(cosh _num_)`
+procedure:: `(tanh _num_)`
+returns:: the hyperbolic sine, cosine, or tangent of `_num_`
+libraries:: `(chezscheme)`
+
+[source,scheme,subs="quotes"]
+----
+(sinh 0.0) ⇒ 0.0
+(cosh 0.0) ⇒ 1.0
+(tanh -0.0) ⇒ -0.0
+----
+
+[#numeric:s77]
+[horizontal]
+procedure:: `(asinh _num_)`
+procedure:: `(acosh _num_)`
+procedure:: `(atanh _num_)`
+returns:: the hyperbolic arc sine, arc cosine, or arc tangent of `_num_`
+libraries:: `(chezscheme)`
+
+[source,scheme,subs="quotes"]
+----
+(acosh 0.0) ⇒ 0.0+1.5707963267948966i
+(acosh 1.0) ⇒ 0.0
+(atanh -1.0) ⇒ -inf.0
+----
+
+[#numeric:s78]
+[horizontal]
+procedure:: `(string\->number _string_)`
+procedure:: `(string\->number _string_ _radix_)`
+returns:: the number represented by `_string_`, or `#f`
+libraries:: `(chezscheme)`
+
+This procedure is identical to the Revised^6^ Report version except that `radix` may be any exact integer between 2 and 36, inclusive. The Revised^6^ Report version requires radix to be in the set {2,8,10,16}.
+
+[source,scheme,subs="quotes"]
+----
+(string->number "211012" 3) ⇒ 559
+(string->number "tobeornottobe" 36) ⇒ 140613689159812836698
+----
+
+[#numeric:s79]
+[horizontal]
+procedure:: `(number\->string _num_)`
+procedure:: `(number\->string _num_ _radix_)`
+procedure:: `(number\->string _num_ _radix_ _precision_)`
+returns:: an external representation of `_num_` as a string
+libraries:: `(chezscheme)`
+
+This procedure is identical to the Revised^6^ Report version except that `radix` may be any exact integer between 2 and 36, inclusive. The Revised^6^ Report version requires radix to be in the set {2,8,10,16}.
+
+[source,scheme,subs="quotes"]
+----
+(number->string 10000 4) ⇒ "2130100"
+(number->string 10000 27) ⇒ "DJA"
+----

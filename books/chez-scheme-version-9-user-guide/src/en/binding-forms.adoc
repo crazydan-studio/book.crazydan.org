@@ -59,6 +59,7 @@ are equivalent.
 
 The Revised^6^ Report specifies that internal variable definitions be treated like `letrec*`, while earlier reports required internal variable definitions to be treated like `letrec`. By default, _Chez Scheme_ implements the Revised^6^ Report semantics for internal variable definitions, as for all other things, but this behavior may be overridden via the `internal-defines-as-letrec*` parameter.
 
+[#binding:s15]
 [horizontal]
 thread parameter:: `internal-defines-as-letrec*`
 libraries:: `(chezscheme)`
@@ -66,8 +67,9 @@ libraries:: `(chezscheme)`
 When this parameter is set to `#t` (the default), internal variable definitions are evaluated using `letrec*` semantics. It may be set to `#f` to revert to the `letrec` semantics for internal variable definitions, for backward compatibility.
 
 === Section 5.2. Multiple-value Definitions [[section_5.2.]]
-[horizontal]
 
+[#binding:s16]
+[horizontal]
 syntax:: `(define-values _formals_ _expr_)`
 libraries:: `(chezscheme)`
 
@@ -86,8 +88,9 @@ A `define-values` form is a definition and can appear anywhere other definitions
 A `define-values` form expands into a sequence of definitions, the first for a hidden temporary bound to a data structure holding the values returned by `_expr_` and the remainder binding each of the formals to the corresponding value or list of values, extracted from the data structure via a reference to the temporary. Because the temporary must be defined before the other variables are defined, this works for internal `define-values` forms only if `internal-defines-as-letrec*` is set to the default value `#t`.
 
 === Section 5.3. Recursive Bindings [[section_5.3.]]
-[horizontal]
 
+[#binding:s17]
+[horizontal]
 syntax:: `(rec _var_ _expr_)`
 returns:: value of `_expr_`
 libraries:: `(chezscheme)`
@@ -122,8 +125,9 @@ The definition below expands `rec` in terms of `letrec`.
 ----
 
 === Section 5.4. Fluid Bindings [[section_5.4.]]
-[horizontal]
 
+[#binding:s19]
+[horizontal]
 syntax:: `(fluid-let ((_var_ _expr_) \...) _body~1~_ _body~2~_ \...)`
 returns:: the values of the body `_body~1~_ _body~2~_ \...`
 libraries:: `(chezscheme)`
@@ -136,6 +140,7 @@ Although it is similar in appearance to `let`, its operation is more like that o
 
 Fluid bindings are most useful for maintaining variables that must be shared by a group of procedures. Upon entry to the group of procedures, the shared variables are fluidly bound to a new set of initial values so that on exit the original values are restored automatically. In this way, the group of procedures itself can be reentrant; it may call itself directly or indirectly without affecting the values of its shared variables.
 
+[#binding:s22]
 Fluid bindings are similar to _special_ bindings in Common Lisp <<ref30>>, except that (1) there is a single namespace for both lexical and fluid bindings, and (2) the scope of a fluidly bound variable is not necessarily global.
 
 [source,scheme,subs="quotes"]
@@ -161,6 +166,7 @@ Fluid bindings are similar to _special_ bindings in Common Lisp <<ref30>>, excep
 
 `fluid-let` may be defined in terms of `dynamic-wind` as follows.
 
+[#defn:fluid-let]
 [source,scheme,subs="quotes"]
 ----
 (define-syntax fluid-let
@@ -181,6 +187,7 @@ Fluid bindings are similar to _special_ bindings in Common Lisp <<ref30>>, excep
 
 The procedures described in this section allow the direct manipulation of top-level bindings for variables and keywords. They are intended primarily to support the definition of interpreters or compilers for Scheme in Scheme but may be used to access or alter top-level bindings anywhere within a program whether at top level or not.
 
+[#binding:s24]
 [horizontal]
 procedure:: `(define-top-level-value _symbol_ _obj_)`
 procedure:: `(define-top-level-value _symbol_ _obj_ _env_)`
@@ -323,6 +330,7 @@ A call to `define-top-level-syntax` is similar to a top-level `define-syntax` fo
 
 `define-top-level-syntax` can also be used to attach to an identifier arbitrary compile-time bindings obtained via `top-level-syntax`.
 
+[#binding:s34]
 [horizontal]
 procedure:: `(top-level-syntax _symbol_)`
 procedure:: `(top-level-syntax _symbol_ _env_)`
