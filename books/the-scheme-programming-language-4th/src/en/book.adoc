@@ -98,6 +98,7 @@ include::summary-of-forms.adoc[]
 include::index.adoc[]
 
 
+[#appendix_a]
 [appendix]
 == Book Converting Tools
 
@@ -106,6 +107,7 @@ include::index.adoc[]
 - link:https://math.meta.stackexchange.com/questions/5020/mathjax-basic-tutorial-and-quick-reference[MathJax basic tutorial and quick reference]
 - link:https://www.whatsmyip.org/html-characters/[HTML Entities & Special Characters]
 
+[#appendix_b]
 [appendix]
 == Format Javascript and Replacement Regex for The Original Book
 
