@@ -15,3 +15,9 @@ bash build/asciidoctor-book.sh /path/to/book/dir
 ```bash
 bash build/asciidoctor.sh
 ```
+
+## Deploy Book
+
+```bash
+bash build/deploy.sh
+```
