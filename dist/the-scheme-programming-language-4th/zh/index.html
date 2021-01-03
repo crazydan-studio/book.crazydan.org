@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="Asciidoctor 2.0.10">
+<meta name="author" content="R. Kent Dybvig">
+<link rel="icon" type="image/png" href="images/icon.png">
+<title>Scheme 编程语言（第四版）</title>
+<link rel="stylesheet" href="../../theme/default/asciidoctor.css">
+</head>
+<body class="book toc2 toc-left">
+<div id="header">
+<h1>Scheme 编程语言（第四版）</h1>
+<div class="details">
+<span id="author" class="author">R. Kent Dybvig</span><br>
+<span id="revdate">插画作者 Jean-Pierre Hébert</span>
+</div>
+<div id="toc" class="toc2">
+<div id="toctitle">章节目录</div>
+<ul class="sectlevel1">
+<li><a href="#preface">序言</a></li>
+<li><a href="#appendix_a">附录 A: 本书转换工具</a></li>
+</ul>
+</div>
+</div>
+<div id="content">
+<div id="preamble">
+<div class="sectionbody">
+<div class="imageblock text-center">
+<div class="content">
+<img src="images/cover.png" alt="cover">
+</div>
+</div>
+<div class="paragraph">
+<p>本译作采用许可协议 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">署名-非商业性使用-相同方式共享 4.0 国际 (CC BY-NC-SA 4.0)</a> 进行授权和传播，
+转载需注明译文来源，且不得将本译作内容用于商业用途！</p>
+</div>
+<div class="paragraph">
+<p>本书由 flytreeleft (<a href="mailto:flytreeleft@crazydan.org">flytreeleft@crazydan.org</a>) 翻译并校对。</p>
+</div>
+<div class="paragraph">
+<p>R. Kent Dybvig / <a href="https://www.scheme.com/tspl4/">Scheme 编程语言（第四版）</a><br>
+版权 &#169; 2009 <a href="https://mitpress.mit.edu/books/scheme-programming-language-fourth-edition">MIT 出版社</a>。 经许可以电子方式复制。<br>
+插画 &#169; 2009 <a href="http://hebert.kitp.ucsb.edu/">Jean-Pierre Hébert</a><br>
+ISBN 978-0-262-51298-5 / LOC QA76.73.S34D93<br>
+<a href="https://mitpress.mit.edu/books/scheme-programming-language-fourth-edition">订购此书</a> / <a href="https://www.scheme.com/tspl4/canned/about.html">关于此书</a><br>
+&nbsp;<br>
+<a href="https://www.scheme.com" class="bare">https://www.scheme.com</a></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="preface">序言</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Scheme was introduced in 1975 by Gerald J. Sussman and Guy L. Steele Jr. (<a href="#ref28">[ref28]</a>,<a href="#ref29">[ref29]</a>),
+and was the first dialect of Lisp to fully support lexical scoping, first-class procedures, and continuations.
+In its earliest form it was a small language intended primarily for research and teaching,
+supporting only a handful of predefined syntactic forms and procedures.
+Scheme is now a complete general-purpose programming language,
+though it still derives its power from a small set of key concepts.
+Early implementations of the language were interpreter-based and slow,
+but some current Scheme implementations boast sophisticated compilers
+that generate code
+on par with code generated
+by the best optimizing compilers
+for lower-level languages
+such as C and Fortran.</p>
+</div>
+<div class="paragraph">
+<p>Scheme 是由 Gerald J. Sussman 和 Guy L. Steele Jr. 于 1975 年提出的（<a href="#ref28">[ref28]</a>、<a href="#ref29">[ref29]</a>），
+并且是首个完全支持 <em>词法作用域</em>、<em>处理过程优先</em> 和 <em>延续</em> 的 Lisp 方言。
+在最早的版本中，它只是一门小型语言，主要用于研究和教学，仅支持少数预定义的 <em>语法形式</em> 和 <em>处理过程</em>。
+但 Scheme 现在已经是一门完整的、通用的编程语言了，尽管它的强大仍然来自于一小部分关键概念。
+该语言的早期实现是基于解释器的，运行缓慢，而当前的一些 Scheme 实现已拥有复杂的编译器，
+它们生成的代码与针对较低级语言（如 C 和 Fortran ）所做的最佳优化的编译器生成的代码相当。</p>
+</div>
+<div class="paragraph">
+<p>This book is intended to
+provide an introduction to the Scheme programming language
+but not an introduction to programming in general.
+The reader is expected to
+have had some experience programming
+and to be familiar with terms
+commonly associated with computers and programming languages.
+Readers unfamiliar with Scheme or Lisp
+should also consider reading <em>The Little Schemer</em> <a href="#ref13">[ref13]</a>
+to become familiar with the concepts of list processing and recursion.
+Readers new to programming
+should begin with an introductory text on programming.</p>
+</div>
+<div class="paragraph">
+<p>本书旨在介绍 Scheme 编程语言，而不是一般的编程入门。
+读者需具备一定的编程经验，并且熟悉与计算机和编程语言相关的常用术语。
+对 Scheme 或 Lisp 不熟悉的读者，应该读一读 <em>The Little Schemer</em> <a href="#ref13">[ref13]</a> 以熟悉 <em>列表处理</em> 和 <em>递归</em> 这些概念。
+而对于初学编程的读者，则应该先阅读一些编程的入门内容。</p>
+</div>
+<div class="paragraph">
+<p>Scheme has been standardized both formally and informally.
+The <em>IEEE Standard for the Scheme Programming Language</em> <a href="#ref18">[ref18]</a>,
+describes a formal ANSI/IEEE Standard for Scheme
+but dates back to 1991.
+A related series of reports,
+the "Revised Reports on the Algorithmic Language Scheme,"
+document an evolving informal standard
+that most implementations support.
+The current report in this series
+is the "Revised<sup>6</sup> Report on the Algorithmic Language Scheme" <a href="#ref24">[ref24]</a>,
+which was completed in 2007.</p>
+</div>
+<div class="paragraph">
+<p>Scheme 已经被正式和非正式地标准化了。
+<em>《Scheme 编程语言 IEEE 标准》</em><a href="#ref18">[ref18]</a> 描述了一个正式的 ANSI/IEEE Scheme 标准，但得追溯到1991年。
+相关系列的报告《算法语言 Scheme 修订报告》记录了大多数实现所支持的不断演进的非正式标准。
+本系列的最新报告是《算法语言 Scheme 修订报告<sup>6</sup>》<a href="#ref24">[ref24]</a> ，于2007年完成。</p>
+</div>
+<div class="paragraph">
+<p>This book covers the language of the Revised<sup>6</sup> Report.
+It is not intended to supplant the Revised<sup>6</sup> Report
+but rather to
+provide a more comprehensive introduction and reference manual for the language,
+with more explanatory text and examples,
+suitable more for users than for implementors.
+Features specific to particular implementations of Scheme
+are not included.
+In particular, features specific to the author&#8217;s Chez Scheme and Petite Chez Scheme implementations
+are described separately in the <em>Chez Scheme User&#8217;s Guide</em> <a href="#ref9">[ref9]</a>.
+On the other hand, no book on Scheme would be complete
+without some coverage of the interactive top level,
+since nearly every Scheme system
+supports interactive use in one form or another,
+even though the behavior is not standardized by the Revised<sup>6</sup> Report.
+Chapters <a href="#chp_2">2</a> and <a href="#chp_3">3</a> are thus written
+assuming that the reader has available a Scheme implementation
+that supports an interactive top level,
+with behavior consistent with
+the description of the top-level environment
+in earlier reports and the IEEE/ANSI standard.</p>
+</div>
+<div class="paragraph">
+<p>本书涵盖了《修订报告<sup>6</sup>》的语言。但它并不是要取代《修订报告<sup>6</sup>》，而是通过更多的说明性文字和示例，
+为该语言提供更全面的介绍，并作为参考手册使用。所以，比起实现者，本书更适合该语言的使用者。
+特定于 Scheme 实现的特性不包含在本书内，特别是那些针对作者的 Chez Scheme 和 Petite Chez Scheme 实现的特性，
+则会在《Chez Scheme 用户指南》<a href="#ref9">[ref9]</a>
+（译注：该书第九版译作在 <a href="../../chez-scheme-version-9-user-guide/zh/index.html">这里</a>）中单独描述。
+另外，若是没有涵盖 <em>交互式顶层</em>，那么，任何关于 Scheme 的书都是不完整的，因为，即使《修订报告<sup>6</sup>》没有对交互行为进行标准化，
+但几乎每个 Scheme 系统都会以这种或那种形式支持交互操作。
+因此，在撰写 <a href="#chp_2">第二</a> 和 <a href="#chp_3">第三</a> 章时，便假定读者已经拥有一个支持 <em>交互式顶层</em> 的 Scheme 实现，
+并且其行为与早期报告和 IEEE/ANSI 标准中对 <em>顶层环境</em> 的描述一致。</p>
+</div>
+<div class="paragraph">
+<p>A large number of small- to medium-sized examples
+are spread throughout the text,
+and one entire chapter is dedicated to
+the presentation of a set of longer examples.
+Many of the examples
+show how a standard Scheme syntactic form or procedure
+might be implemented;
+others implement useful extensions.
+All of the examples
+can be entered directly
+from the keyboard into an interactive Scheme session.</p>
+</div>
+<div class="paragraph">
+<p>本书全文中散布了大量中小型示例，并且一个完整的篇章会专门介绍一组较长的例子。
+许多示例展示了如何实现标准的 Scheme <em>语法形式</em> 和 <em>处理过程</em>，以及其他实现的有用扩展。
+所有示例都可以直接从键盘输入到交互式 Scheme 会话中。</p>
+</div>
+<div class="paragraph">
+<p>This book is organized into twelve chapters, plus back matter.
+<a href="#chp_1">Chapter 1</a> describes the properties and features of Scheme
+that make it a useful and enjoyable language to use.
+<a href="#chp_1">Chapter 1</a> also describes
+Scheme&#8217;s notational conventions and the typographical conventions
+employed in this book.</p>
+</div>
+<div class="paragraph">
+<p>本书加上补充资料，共分为十二章。
+<a href="#chp_1">第一章</a> 描述了那些使得 Scheme 成为一门有用且好用的语言的特征和特性。
+<a href="#chp_1">第一章</a> 还介绍了本书采用的 Scheme 符号约定和排版约定。</p>
+</div>
+<div class="paragraph">
+<p><a href="#chp_2">Chapter 2</a> is an introduction to Scheme programming
+for the novice Scheme programmer
+that leads the reader
+through a series of examples,
+beginning with simple Scheme expressions
+and working toward progressively more difficult ones.
+Each section of <a href="#chp_2">Chapter 2</a> introduces
+a small set of related features,
+and the end of each section contains
+a set of exercises for further practice.
+The reader will learn the most
+from <a href="#chp_2">Chapter 2</a>
+by sitting at the keyboard
+and typing in the examples
+and trying the exercises.</p>
+</div>
+<div class="paragraph">
+<p><a href="#chp_2">第二章</a> 是针对 Scheme 新手程序员的 Scheme 编程简介，
+它从简单的 Scheme 表达式开始，引导读者接触一系列示例，并逐步深入更难的表达式。
+<a href="#chp_2">第二章</a> 的每个章节都会介绍一小部分相关的特性，并在每个章节的末尾安排一组习题，以供进一步练习。
+通过在键盘上输入示例并做习题练习，读者将从 <a href="#chp_2">第二章</a> 中获益匪浅。</p>
+</div>
+<div class="paragraph">
+<p><a href="#chp_3">Chapter 3</a> continues the introduction
+but covers more advanced features and concepts.
+Even readers with prior Scheme experience
+may wish to work through the examples and exercises found there.</p>
+</div>
+<div class="paragraph">
+<p><a href="#chp_3">第三章</a> 会继续介绍 Scheme，但涵盖了更高级的特性和概念。
+即使是先前已经有 Scheme 经验的读者，也可能会希望研究里面的示例和习题。</p>
+</div>
+<div class="paragraph">
+<p><a href="#chp_4">Chapter 4</a> through <a href="#chp_11">11</a> make up the reference portion of the text.
+They present each of Scheme&#8217;s primitive procedures and syntactic forms in turn,
+grouping them into short sections
+of related procedures and forms.
+<a href="#chp_4">Chapter 4</a> describes operations for creating procedures and variable bindings;
+<a href="#chp_5">Chapter 5</a>, program control operations;
+<a href="#chp_6">Chapter 6</a>, operations on the various object types (including lists, numbers, and strings);
+<a href="#chp_7">Chapter 7</a>, input and output operations;
+<a href="#chp_8">Chapter 8</a>, syntactic extension;
+<a href="#chp_9">Chapter 9</a>, record-type definitions;
+<a href="#chp_10">Chapter 10</a>, libraries and top-level programs;
+and <a href="#chp_11">Chapter 11</a>, exceptions and conditions.</p>
+</div>
+<div class="paragraph">
+<p>第 <a href="#chp_4">四章</a> 到 <a href="#chp_11">十一章</a> 构成了本文的参考部分。
+他们依次介绍了 Scheme 的每个原始（Primitive）的 <em>处理过程</em> 和 <em>语法形式</em>，
+并将它们组织在与处理过程和语法形式相关的较短的章节中。
+<a href="#chp_4">第四章</a> 描述的是创建 <em>处理过程</em> 和 <em>变量绑定</em> 的操作；
+<a href="#chp_5">第五章</a> 是程序控制操作；
+<a href="#chp_6">第六章</a> 是在各种对象类型（包括 <em>列表</em>、<em>数字</em>、<em>字符串</em>）上的操作；
+<a href="#chp_7">第七章</a> 是输入和输出的操作；
+<a href="#chp_8">第八章</a> 是扩展语法；
+<a href="#chp_9">第九章</a> 是 <em>记录类型</em> 的定义；
+<a href="#chp_10">第十章</a> 是库和高级程序；
+<a href="#chp_11">第十一章</a> 则是异常和条件；</p>
+</div>
+<div class="paragraph">
+<p><a href="#chp_12">Chapter 12</a> contains a collection of example procedures, libraries, and programs,
+each with a short overview, some examples of its use,
+the implementation with brief explanation,
+and a set of exercises for further work.
+Each of these programs demonstrates a particular set of features,
+and together they illustrate an appropriate style for programming in Scheme.</p>
+</div>
+<div class="paragraph">
+<p><a href="#chp_12">第十二章</a> 包含一组处理过程、库和程序的示例，
+每一个都有一个简短的概述、一些用法示例、简要的实现说明，以及一系列用于进一步展开的习题。
+这些程序中的每一个都演示了一组特定的特性，并一起展示了 Scheme 中一种适合的编程风格。</p>
+</div>
+<div class="paragraph">
+<p>Following <a href="#chp_12">Chapter 12</a> are
+bibliographical references, answers to selected exercises,
+a detailed description of the formal syntax of Scheme programs and data,
+a concise summary of Scheme syntactic forms and procedures,
+and the index.
+The summary of forms and procedures
+is a useful first stop
+for programmers
+unsure of the structure of a syntactic form
+or the arguments expected by a primitive procedure.
+The page numbers
+appearing in the summary of forms and procedures
+and the italicized page numbers appearing in the index
+indicate the locations in the text
+where forms and procedures are defined.</p>
+</div>
+<div class="paragraph">
+<p>在 <a href="#chp_12">第十二章</a> 后面的是参考文献、习题答案、对 Scheme 程序和数据的 <em>形式化语法</em> 的详细描述、
+对 Scheme <em>语法形式</em> 和 <em>处理过程</em> 的简要总结，以及索引。
+对 <em>语法形式</em> 和 <em>处理过程</em> 的总结，对于不确定 <em>语法形式</em> 的结构或原始 <em>处理过程</em> 所预期的参数的程序员来说，
+是一个有用的开始。在“语法形式和处理过程的总结”中出现的页码，和在“索引”中出现的斜体页码，
+指示了 <em>语法形式</em> 和 <em>处理过程</em> 在本文中所定义的位置。</p>
+</div>
+<div class="paragraph">
+<p>Because the reference portion describes
+a number of aspects of the language
+not covered by the introductory chapters
+along with a number of interesting short examples,
+most readers will find it profitable
+to read through most of the material
+to become familiar
+with each feature and how it relates to other features.
+<a href="#chp_6">Chapter 6</a> is lengthy, however, and may be skimmed and later referenced as needed.</p>
+</div>
+<div class="paragraph">
+<p>因为，参考部分描述了入门章节未涵盖的语言的许多方面以及一些有趣的简短示例，
+所以，大多数读者会发现通读大多数材料以熟悉每个特性及其与其他特性之间的关系是有好处的。
+但是，<a href="#chp_6">第六章</a> 的篇幅很长，可以略读一下，以后再根据需要查阅。</p>
+</div>
+<div class="paragraph">
+<p>An online version of this book is available at <a href="http://www.scheme.com/tspl/" class="bare">http://www.scheme.com/tspl/</a>.
+The summary of forms and index in the online edition
+include page numbers for the printed version
+and are thus useful as searchable indexes.</p>
+</div>
+<div class="paragraph">
+<p>本书的在线版本可从 <a href="http://www.scheme.com/tspl/" class="bare">http://www.scheme.com/tspl/</a> 获得。
+在线版本中的形式和索引摘要包含印刷版的页码，因此可用作可查询的索引使用。</p>
+</div>
+<div class="paragraph">
+<p><em>About the illustrations</em>:
+The cover illustration and
+the illustration at the front of each chapter
+are algorithmic line fields
+created by artist Jean-Pierre Hébert,
+based on an idea inspired by the writings of John Cage.
+Each line field is created by the composition
+of any number of grids of parallel lines.
+The grids are regular, but they are not.
+For instance, the lines are of irregular length, which creates ragged edges.
+Their tone and thickness vary slightly.
+They are not exactly equidistant.
+They intersect with each other at a certain angle.
+When this angle is small, patterns of interference develop.
+The lines are first steeped into various scalar fields
+that perturb their original straight shape,
+then projected on the plane of the paper.
+Masks introduce holes in some layers.
+For the cover illustration, the grids are colored in different hues.</p>
+</div>
+<div class="paragraph">
+<p><em>关于插图</em> :
+封面插图和每章开头的插图是艺术家 Jean-Pierre Hébert 受 John Cage 的著作启发而创建的算法线场。
+每条线场都是由任意数量的平行线网格组成的。网格是规则的，但线场不是。
+例如，线条的长度不规则，这会产生参差不齐的边缘。
+它们的色调和宽度略有不同。它们不是完全等距的。
+它们以一定角度彼此相交。当该角度小时，会产生干涉图样。
+这些线条首先浸入各种标量场，这些标量场会扰乱其原始的笔直形状，然后投射到纸张平面上。
+遮罩会在某些层中引入空洞。对于封面插图，网格以不同的颜色着色。</p>
+</div>
+<div class="paragraph">
+<p>All the images are created by a single Scheme program
+that makes most of the decisions, based heavily on chance.
+The artist controls only canvas size, aspect ratio, the overall palette of colors,
+and levels of chance and fuzziness.
+The task of the artist is
+to introduce just enough chance at the right place
+so that the results are at the same time surprising, interesting,
+and in line with the artist&#8217;s sense of aesthetics.
+This is a game of uncertainty, chaos, and harmony.</p>
+</div>
+<div class="paragraph">
+<p>所有图像都是由单个 Scheme 程序创建的，该程序在很大程度上基于偶然性来做出大多数决策。
+艺术家仅控制画布的大小、宽高比、整体色彩以及偶然性和模糊性的水平。
+艺术家的任务是在适当的地方引入足够的偶然性，以使结果同时令人惊讶、有趣并符合艺术家的审美观。
+这是一个充满不确定性的、混乱的且和谐的游戏。</p>
+</div>
+<div class="paragraph">
+<p><em>Acknowledgments</em>:
+Many individuals contributed in one way or another
+to the preparation of one or more editions of this book,
+including Bruce Smith, Eugene Kohlbecker, Matthias Felleisen,
+Dan Friedman, Bruce Duba, Phil Dybvig, Guy Steele, Bob Hieb,
+Chris Haynes, Dave Plaisted, Joan Curry, Frank Silbermann,
+Pavel Curtis, John Wait, Carl Bruggeman, Sam Daniel, Oscar Waddell,
+Mike Ashley, John LaLonde, John Zuckerman, John Simmons,
+Bob Prior, Bob Burger, and Aziz Ghuloum.
+Many others have offered minor corrections and suggestions.
+Oscar Waddell helped create the typesetting system
+used to format the printed and online versions of this book.
+A small amount of text and a few examples
+have been adapted from the Revised<sup>6</sup> Report for this book,
+for which credit goes to
+the editors of that report
+and many others who contributed to it.
+Finally and most importantly, my wife, Susan Dybvig,
+suggested that I write this book in the first place
+and lent her expertise and assistance
+to the production and publication of this and the previous editions.</p>
+</div>
+<div class="paragraph">
+<p><em>致谢</em> :
+许多人以一种或另一种方式为本书的一个或多个版本的编写做出了贡献，包括
+Bruce Smith、Eugene Kohlbecker、Matthias Felleisen、Dan Friedman、Bruce Duba、Phil Dybvig、
+Guy Steele、Bob Hieb、Chris Haynes、Dave Plaisted、Joan Curry、Frank Silbermann、Pavel Curtis、
+John Wait、Carl Bruggeman、Sam Daniel、Oscar Waddell、Mike Ashley、John LaLonde、John Zuckerman、
+John Simmons、Bob Prior、Bob Burger 和 Aziz Ghuloum。
+许多其他人提出了一些小的更正和建议。
+Oscar Waddell 帮助创建了用于对本书的印刷版和在线版进行格式化的排版系统。
+本书改编了《修订报告<sup>6</sup>》中的少量文本和一些示例，该报告的编辑和许多对此做出贡献的人都对此表示赞赏。
+最后也是最重要的一点是，是我的妻子 Susan Dybvig 建议我首先写这本书，
+并借用她的专业知识和帮助来制作和发行了此版本以及以前的版本。</p>
+</div>
+<div class="paragraph">
+<p>Unresolved directive in book.adoc - include::introduction.adoc[]</p>
+</div>
+<div class="paragraph">
+<p>Unresolved directive in book.adoc - include::getting-started.adoc[]</p>
+</div>
+<div class="paragraph">
+<p>Unresolved directive in book.adoc - include::going-further.adoc[]</p>
+</div>
+<div class="paragraph">
+<p>Unresolved directive in book.adoc - include::procedures-and-variable-bindings.adoc[]</p>
+</div>
+<div class="paragraph">
+<p>Unresolved directive in book.adoc - include::control-operations.adoc[]</p>
+</div>
+<div class="paragraph">
+<p>Unresolved directive in book.adoc - include::operations-on-objects.adoc[]</p>
+</div>
+<div class="paragraph">
+<p>Unresolved directive in book.adoc - include::input-and-output.adoc[]</p>
+</div>
+<div class="paragraph">
+<p>Unresolved directive in book.adoc - include::syntactic-extension.adoc[]</p>
+</div>
+<div class="paragraph">
+<p>Unresolved directive in book.adoc - include::records.adoc[]</p>
+</div>
+<div class="paragraph">
+<p>Unresolved directive in book.adoc - include::libraries-and-top-level-programs.adoc[]</p>
+</div>
+<div class="paragraph">
+<p>Unresolved directive in book.adoc - include::exceptions-and-conditions.adoc[]</p>
+</div>
+<div class="paragraph">
+<p>Unresolved directive in book.adoc - include::extended-examples.adoc[]</p>
+</div>
+<div class="paragraph">
+<p>Unresolved directive in book.adoc - include::references.adoc[]</p>
+</div>
+<div class="paragraph">
+<p>Unresolved directive in book.adoc - include::answers-to-selected-exercises.adoc[]</p>
+</div>
+<div class="paragraph">
+<p>Unresolved directive in book.adoc - include::formal-syntax.adoc[]</p>
+</div>
+<div class="paragraph">
+<p>Unresolved directive in book.adoc - include::summary-of-forms.adoc[]</p>
+</div>
+<div class="paragraph">
+<p>Unresolved directive in book.adoc - include::index.adoc[]</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="appendix_a">附录 A: 本书转换工具</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://asciidoctor.org/docs/user-manual/">Asciidoctor User Manual</a></p>
+</li>
+<li>
+<p><a href="https://asciidoctor.org/docs/asciidoc-syntax-quick-reference/">AsciiDoc Syntax Quick Reference</a></p>
+</li>
+<li>
+<p><a href="https://math.meta.stackexchange.com/questions/5020/mathjax-basic-tutorial-and-quick-reference">MathJax basic tutorial and quick reference</a></p>
+</li>
+<li>
+<p><a href="https://www.whatsmyip.org/html-characters/">HTML Entities &amp; Special Characters</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<link rel="stylesheet" href="../../theme/js/highlight/styles/github.min.css">
+<script src="../../theme/js/highlight/highlight.min.js"></script>
+<script src="../../theme/js/highlight/languages/scheme.min.js"></script>
+<script src="../../theme/js/highlight/languages/bash.min.js"></script>
+<script src="../../theme/js/highlight/languages/javascript.min.js"></script>
+<script>hljs.initHighlighting()</script>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  messageStyle: "none",
+  tex2jax: {
+    inlineMath: [["\\(", "\\)"]],
+    displayMath: [["\\[", "\\]"]],
+    ignoreClass: "nostem|nolatexmath"
+  },
+  asciimath2jax: {
+    delimiters: [["\\$", "\\$"]],
+    ignoreClass: "nostem|noasciimath"
+  },
+  TeX: { equationNumbers: { autoNumber: "none" } }
+})
+MathJax.Hub.Register.StartupHook("AsciiMath Jax Ready", function () {
+  MathJax.InputJax.AsciiMath.postfilterHooks.Add(function (data, node) {
+    if ((node = data.script.parentNode) && (node = node.parentNode) && node.classList.contains('stemblock')) {
+      data.math.root.display = "block"
+    }
+    return data
+  })
+})
+</script>
+<script src="../../theme/js/mathjax/MathJax.js?config=TeX-MML-AM_HTMLorMML"></script>
+</body>
+</html>
