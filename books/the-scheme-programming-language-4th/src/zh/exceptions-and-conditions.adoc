@@ -1,0 +1,815 @@
+[#chp_11]
+== Chapter 11. Exceptions and Conditions
+
+image::images/ch11.png[]
+
+_Exceptions_ and _conditions_ provide the means for system and user code to signal, detect, and recover from errors that occur when a program is run.
+
+Exceptions are raised by the standard syntactic forms and procedures under a variety of circumstances, e.g., when the wrong number of arguments is passed to a procedure, when the syntax of an expression passed to `eval` is incorrect, or when a file cannot be opened by one of the file open procedures. In these situations, the exception is raised with a standard condition type.
+
+Exceptions may also be raised by user code via the `raise` or `raise-continuable` procedures. In this case, the exception may be raised with one of the standard condition types, a user-defined subtype of one of the standard condition types (possibly defined using `define-condition-type`), or an arbitrary Scheme value that is not a condition type.
+
+At any point during a program's execution, a single exception handler, called the _current exception handler_, is charged with handling all exceptions that are raised. By default, the current exception handler is one provided by the implementation. The default exception handler typically prints a message that describes the condition or other value with which the exception was raised and, for any serious condition, terminates the running program. In interactive systems, this typically means a reset to the read-eval-print loop.
+
+User code may establish a new current exception handler via the `guard` syntax or the `with-exception-handler` procedure. In either case, the user code may handle all exceptions or, based on the condition or other value with which the exception was raised, just some of the exceptions while reraising the others for the old current exception handler to handle. When `guard` forms and `with-exception-handler` calls are nested dynamically, a chain of exception handlers is established, and each may defer to the next in the chain.
+
+=== Section 11.1. Raising and Handling Exceptions [[section_11.1.]]
+
+[#exceptions:s3]
+[horizontal]
+procedure:: `(raise _obj_)`
+procedure:: `(raise-continuable _obj_)`
+returns:: see below
+libraries:: `(rnrs exceptions)`, `(rnrs)`
+
+Both of these procedures raise an exception, effectively invoking the current exception handler, passing `_obj_` as the only argument. For `raise`, the exception is _non-continuable_, while for `raise-continuable`, the exception is _continuable_. An exception handler may return (with zero or more values) to the continuation of a continuable exception. If an exception handler attempts to return to the continuation of a non-continuable exception, however, a new exception with condition type `&non-continuable` is raised. Thus, `raise` never returns, while `raise-continuable` may return zero or more values, depending upon the exception handler.
+
+If the current exception handler, `_p_`, was established via a `guard` form or call to `with-exception-handler`, the current exception handler is reset to the handler that was current when `_p_` was established before `raise` or `raise-continuable` invokes `_p_`. This allows `_p_` to defer to the preexisting exception handler simply by reraising the exception, and it helps prevent infinite regression when an exception handler inadvertently causes a different exception to be raised. If `_p_` returns and the exception is continuable, `_p_` is reinstated as the current exception handler.
+
+[source,scheme,subs="quotes"]
+----
+(raise
+  (condition
+    (make-error)
+    (make-message-condition "no go"))) ⇒ _error: no go_
+(raise-continuable
+  (condition
+    (make-violation)
+    (make-message-condition "oops"))) ⇒ _violation: oops_
+(list
+  (call/cc
+    (lambda (k)
+      (vector
+        (with-exception-handler
+          (lambda (x) (k (+ x 5)))
+          (lambda () (+ (raise 17) 8))))))) ⇒ (22)
+(list
+  (vector
+    (with-exception-handler
+      (lambda (x) (+ x 5))
+      (lambda () (+ (raise-continuable 17) 8))))) ⇒ (#(30))
+(list
+  (vector
+    (with-exception-handler
+      (lambda (x) (+ x 5))
+      (lambda () (+ (raise 17) 8))))) ⇒ _violation: non-continuable_
+----
+
+[#exceptions:s4]
+[horizontal]
+procedure:: `(error _who_ _msg_ _irritant_ \...)`
+procedure:: `(assertion-violation _who_ _msg_ _irritant_ \...)`
+libraries:: `(rnrs base)`, `(rnrs)`
+
+`error` raises a non-continuable exception with condition type `&error` and should be used to describe situations for which the `&error` condition type is appropriate, typically a situation involving the program's interaction with something outside of the program. `assertion-violation` raises a non-continuable exception with condition type `&assertion` and should be used to describe situations for which the `&assertion` condition type is appropriate, typically an invalid argument to a procedure or invalid value of a subexpression of a syntactic form.
+
+The continuation object with which the exception is raised also includes a `&who` condition whose who field is `_who_` if `_who_` is not `#f`, a `&message` condition whose message field is `_msg_`, and an `&irritants` condition whose irritants field is `(_irritant_ \...)`.
+
+`_who_` must be a string, a symbol, or `#f` identifying the procedure or syntactic form reporting the error upon whose behalf the error is being reported. It is usually best to identify a procedure the programmer has called rather than some other procedure the programmer may not be aware is involved in carrying out the operation. `_msg_` must be a string and should describe the exceptional situation. The irritants may be any Scheme objects and should include values that may have caused or been materially involved in the exceptional situation.
+
+[#exceptions:s5]
+[horizontal]
+syntax:: `(assert _expression_)`
+returns:: see below
+libraries:: `(rnrs base)`, `(rnrs)`
+
+`assert` evaluates `_expression_` and returns the value of `_expression_` if the value is not `#f`. If the value of `_expression_` is `#f`, `assert` raises a non-continuable exception with condition types `&assertion` and `&message`, with an implementation-dependent value in its message field. Implementations are encouraged to provide information about the location of the `assert` call within the condition whenever possible.
+
+[#exceptions:s6]
+[horizontal]
+procedure:: `(syntax-violation _who_ _msg_ _form_)`
+procedure:: `(syntax-violation _who_ _msg_ _form_ _subform_)`
+returns:: does not return
+libraries:: `(rnrs syntax-case)`, `(rnrs)`
+
+This procedure raises a non-continuable exception with a condition of type `&syntax`. It should be used to report a syntax error detected by the transformer of a syntactic extension. The value of the condition's form field is `_form_`, and the value of its subform field is `_subform_`, or `#f` if `_subform_` is not provided.
+
+The continuation object with which the exception is raised also includes a `&who` condition whose who field is `_who_`, if `_who_` is not `#f` or is inferred from `_form_`, and a `&message` condition whose message field is `_msg_`.
+
+`_who_` must be a string, a symbol, or `#f`. If `_who_` is `#f`, it is inferred to be the symbolic name of `_form_` if `_form_` is an identifier or the symbolic name of the first subform of `_form_` if `_form_` is a list-structured form whose first subform is an identifier. `_message_` must be a string. `_form_` should be the syntax object or datum representation of the syntactic form within which the syntax violation occurred, and `_subform_`, if not `#f`, should be a syntax object or datum representation of a subform more specifically involved in the violation. For example, if a duplicate formal parameter is found in a `lambda` expression, `_form_` might be the `lambda` expression and `_subform_` might be the duplicated parameter.
+
+Some implementations attach source information to syntax objects, e.g., line, character, and filename for forms originating in a file, in which case this information might also be present as some implementation-dependent condition type within the condition object.
+
+[#exceptions:s7]
+[horizontal]
+procedure:: `(with-exception-handler _procedure_ _thunk_)`
+returns:: see below
+libraries:: `(rnrs exceptions)`, `(rnrs)`
+
+This procedure establishes `_procedure_`, which should accept one argument, as the current exception handler in place of the old current exception handler, `_old-proc_`, and invokes `_thunk_` without arguments. If the call to `_thunk_` returns, `_old-proc_` is reestablished as the current exception handler and the values returned by `_thunk_` are returned. If control leaves or subsequently reenters the call to `_thunk_` via the invocation of a continuation obtained via `call/cc`, the procedure that was the current exception handler when the continuation was captured is reinstated.
+
+[source,scheme,subs="quotes"]
+----
+(define (try thunk)
+  (call/cc
+    (lambda (k)
+      (with-exception-handler
+        (lambda (x) (if (error? x) (k #f) (raise x)))
+        thunk))))
+(try (lambda () 17)) ⇒ 17
+(try (lambda () (raise (make-error)))) ⇒ #f
+(try (lambda () (raise (make-violation)))) ⇒ _violation_
+(with-exception-handler
+  (lambda (x)
+    (raise
+      (apply condition
+        (make-message-condition "oops")
+        (simple-conditions x))))
+  (lambda ()
+    (try (lambda () (raise (make-violation)))))) ⇒ _violation: oops_
+----
+
+[#exceptions:s8]
+[horizontal]
+syntax:: `(guard (_var_ _clause~1~_ _clause~2~_ \...) _b1_ _b2_ \...)`
+returns:: see below
+libraries:: `(rnrs exceptions)`, `(rnrs)`
+
+A `guard` expression establishes a new current exception handler, `_procedure_` (described below), in place of the old current exception handler, `_old-proc_`, and evaluates the body `_b1_ _b2_ \...`. If the body returns, `guard` reestablishes `_old-proc_` as the current exception handler. If control leaves or subsequently reenters the body via the invocation of a continuation obtained via `call/cc`, the procedure that was the current exception handler when the continuation was captured is reinstated.
+
+The procedure `_procedure_` established by `guard` binds `_var_` to the value it receives and, within the scope of that binding, processes the clauses `_clause~1~_ _clause~2~_ \...` in turn, as if contained within an implicit `cond` expression. This implicit `cond` expression is evaluated in the continuation of the `guard` expression, with `_old-proc_` as the current exception handler.
+
+If no `else` clause is provided, `guard` supplies one that reraises the exception with the same value, as if with `raise-continuable`, in the continuation of the call to `_procedure_`, with `_old-proc_` as the current exception handler.
+
+[source,scheme,subs="quotes"]
+----
+(guard (x [else x]) (raise "oops")) ⇒ "oops"
+(guard (x [#f #f]) (raise (make-error))) ⇒  _error_
+(define-syntax try
+  (syntax-rules ()
+    [(_ e1 e2 ...)
+     (guard (x [(error? x) #f]) e1 e2 ...)]))
+(define open-one
+  (lambda fn*
+    (let loop ([ls fn*])
+      (if (null? ls)
+          (error 'open-one "all open attempts failed" fn*)
+          (or (try (open-input-file (car ls)))
+              (loop (cdr ls)))))))
+; say bar.ss exists but not foo.ss:
+(open-one "foo.ss" "bar.ss") ⇒ #&lt;input port bar.ss&gt;
+----
+
+=== Section 11.2. Defining Condition Types [[section_11.2.]]
+
+While a program may pass `raise` or `raise-continuable` any Scheme value, the best way to describe an exceptional situation is usually to create and pass a _condition object_. Where the Revised^6^ Report requires the implementation to raise exceptions, the value passed to the current exception handler is always a condition object of one or more of the standard _condition types_ described in <<section_11.3.,Section 11.3>>. User code may create a condition object that is an instance of one or more standard condition types or it may create an extended condition type and create a condition object of that type.
+
+Condition types are similar to record types but are more flexible in that a condition object may be an instance of two or more condition types, even if neither is a subtype of the other. When a condition is an instance of multiple types, it is referred to as a _compound condition_. Compound conditions are useful for communicating multiple pieces of information about an exception to the exception handler. A condition that is not a compound condition is referred to as a _simple condition_. In most cases, the distinction between the two is unimportant, and a simple condition is treated as if it were a compound condition with itself as its only simple condition.
+
+[#exceptions:s13]
+[horizontal]
+syntax:: `&condition`
+libraries:: `(rnrs conditions)`, `(rnrs)`
+
+`&condition` is a record-type name (<<chp_9,Chapter 9>>) and the root of the condition-type hierarchy. All simple condition types are extensions of this type, and all conditions, whether simple or compound, are considered instances of this type.
+
+[#exceptions:s14]
+[horizontal]
+procedure:: `(condition? _obj_)`
+returns:: `#t` if `_obj_` is a condition object, otherwise `#f`
+libraries:: `(rnrs conditions)`, `(rnrs)`
+
+A condition object is an instance of a subtype of `&condition` or a compound condition, possibly created by user code with `condition`.
+
+[source,scheme,subs=""]
+----
+(condition? 'stable) ⇒ #f
+(condition? (make-error)) ⇒ #t
+(condition? (make-message-condition "oops")) ⇒ #t
+(condition?
+  (condition
+    (make-error)
+    (make-message-condition "no such element"))) ⇒ #t
+----
+
+[#exceptions:s15]
+[horizontal]
+procedure:: `(condition _condition_ \...)`
+returns:: a condition, possibly compound
+libraries:: `(rnrs conditions)`, `(rnrs)`
+
+`condition` is used to create condition objects that may consist of multiple simple conditions. Each argument `_condition_` may be simple or complex; if simple, it is treated as a compound condition with itself as its only simple condition. The simple conditions of the result condition are the simple conditions of the `_condition_` arguments, flattened into a single list and appearing in order, with the simple conditions of the first `_condition_` followed by the simple conditions of the second, and so on.
+
+If the list has exactly one element, the result condition may be simple or compound; otherwise it is compound. The distinction between simple and compound conditions is not usually important but can be detected, if `define-record-type` rather than `define-condition-type` is used to extend an existing condition type, via the predicate defined by `define-record-type`.
+
+[source,scheme,subs="quotes"]
+----
+(condition) ⇒ #&lt;condition&gt;
+(condition
+  (make-error)
+  (make-message-condition "oops")) ⇒ #&lt;condition&gt;
+
+(define-record-type (&xcond make-xcond xcond?) (parent &condition))
+(xcond? (make-xcond)) ⇒ #t
+(xcond? (condition (make-xcond))) ⇒ #t _or_ #f
+(xcond? (condition)) ⇒ #f
+(xcond? (condition (make-error) (make-xcond))) ⇒ #f
+----
+
+[#exceptions:s16]
+[horizontal]
+procedure:: `(simple-conditions _condition_)`
+returns:: a list of the simple conditions of `_condition_`
+libraries:: `(rnrs conditions)`, `(rnrs)`
+
+[source,scheme,subs=""]
+----
+(simple-conditions (condition)) ⇒ '()
+(simple-conditions (make-error)) ⇒ (#&lt;condition &error&gt;)
+(simple-conditions (condition (make-error))) ⇒ (#&lt;condition &error&gt;)
+(simple-conditions
+  (condition
+    (make-error)
+    (make-message-condition
+      "oops"))) ⇒ (#&lt;condition &error&gt; #&lt;condition &message&gt;)
+
+(let ([c1 (make-error)]
+      [c2 (make-who-condition "f")]
+      [c3 (make-message-condition "invalid argument")]
+      [c4 (make-message-condition
+            "error occurred while reading from file")]
+      [c5 (make-irritants-condition '("a.ss"))])
+  (equal?
+    (simple-conditions
+      (condition
+        (condition (condition c1 c2) c3)
+        (condition c4 (condition c5))))
+    (list c1 c2 c3 c4 c5))) ⇒ #t
+----
+
+[#exceptions:s17]
+[horizontal]
+syntax:: `(define-condition-type _name_ _parent_ _constructor_ _pred_ _field_ \...)`
+libraries:: `(rnrs conditions)`, `(rnrs)`
+
+A `define-condition-type` form is a definition and may appear anywhere other definitions may appear. It is used to define new simple condition types.
+
+The subforms `_name_`, `_parent_`, `_constructor_`, and `_pred_` must be identifiers. Each `_field_` must be of the form `(_field-name_ _accessor-name_)`, where `_field-name_` and `_accessor-name_` are identifiers.
+
+`define-condition-type` defines `_name_` as a new record type whose parent record type is `_parent_`, whose constructor name is `_constructor_`, whose predicate name is `_pred_`, whose fields are `_field-name_ \...`, and whose field accessors are named by `_accessor-name_ \...`.
+
+With the exception of the predicate and field accessors, `define-condition-type` is essentially an ordinary record definition equivalent to
+
+[source,scheme,subs="quotes"]
+----
+(define-record-type (_name_ _constructor_ _pred_)
+  (parent _parent_)
+  (fields ((immutable _field-name_ _accessor-name_) ...)))
+----
+
+The predicate differs from one that would be generated by a `define-record-type` form in that it returns `#t` not only for an instance of the new type but also for compound conditions whose simple conditions include an instance of the new type. Similarly, field accessors accept instances of the new type as well as compound conditions whose simple conditions include at least one instance of the new record type. If an accessor receives a compound condition whose simple conditions list includes one or more instances of the new type, the accessor operates on the first instance in the list.
+
+[source,scheme,subs=""]
+----
+(define-condition-type &mistake &condition make-mistake mistake?
+  (type mistake-type))
+
+(mistake? 'booboo) ⇒ #f
+
+(define c1 (make-mistake 'spelling))
+(mistake? c1) ⇒ #t
+(mistake-type c1) ⇒ spelling
+
+(define c2 (condition c1 (make-irritants-condition '(eggregius))))
+(mistake? c2) ⇒ #t
+(mistake-type c2) ⇒ spelling
+(irritants-condition? c2) ⇒ #t
+(condition-irritants c2) ⇒ (eggregius)
+----
+
+[#exceptions:s18]
+[horizontal]
+procedure:: `(condition-predicate _rtd_)`
+returns:: a condition predicate
+procedure:: `(condition-accessor _rtd_ _procedure_)`
+returns:: a condition accessor
+libraries:: `(rnrs conditions)`, `(rnrs)`
+
+These procedures may be used to create the same kind of special predicates and accessors that are created by `define-record-type` from a record-type descriptor, `_rtd_`, of a simple condition type or other type derived from a simple condition type.
+
+For both procedures, `_rtd_` must be a record-type descriptor of a subtype of `&condition`, and for `condition-accessor`, `_procedure_` should accept one argument.
+
+The predicate returned by `condition-predicate` accepts one argument, which may be any Scheme value. The predicate returns `#t` if the value is a condition of the type described by `_rtd_`, i.e., an instance of the type described by `_rtd_` (or one of its subtypes) or a compound condition whose simple conditions include an instance of the type described by `_rtd_`. Otherwise, the predicate returns `#f`.
+
+The accessor returned by `condition-accessor` accepts one argument, `_c_`, which must be a condition of the type described by `_rtd_`. The accessor applies `_procedure_` to a single argument, the first element of ``_c_``'s simple condition list that is an instance of the type described by `_rtd_` (this is `_c_` itself if `_c_` is a simple condition), and returns the result of this application. In most situations, `_procedure_` is a record accessor for a field of the type described by `_rtd_`.
+
+[source,scheme,subs="quotes"]
+----
+(define-record-type (&mistake make-mistake $mistake?)
+  (parent &condition)
+  (fields (immutable type $mistake-type)))
+
+; define predicate and accessor as if we'd used define-condition-type
+(define rtd (record-type-descriptor &mistake))
+(define mistake? (condition-predicate rtd))
+(define mistake-type (condition-accessor rtd $mistake-type))
+
+(define c1 (make-mistake 'spelling))
+(define c2 (condition c1 (make-irritants-condition '(eggregius))))
+(list (mistake? c1) (mistake? c2)) ⇒ (#t #t)
+(list ($mistake? c1) ($mistake? c2)) ⇒ (#t #f)
+(mistake-type c1) ⇒ spelling
+($mistake-type c1) ⇒ spelling
+(mistake-type c2) ⇒ spelling
+($mistake-type c2) ⇒ _violation_
+----
+
+=== Section 11.3. Standard Condition Types [[section_11.3.]]
+
+[#exceptions:s19]
+[horizontal]
+syntax:: `&serious`
+procedure:: `(make-serious-condition)`
+returns:: a condition of type `&serious`
+procedure:: `(serious-condition? _obj_)`
+returns:: `#t` if `_obj_` is a condition of type `&serious`, `#f` otherwise
+libraries:: `(rnrs conditions)`, `(rnrs)`
+
+Conditions of this type indicate situations of a serious nature that, if uncaught, generally result in termination of the program's execution. Conditions of this type typically occur as one of the more specific subtypes `&error` or `&violation`. This condition type might be defined as follows.
+
+[source,scheme,subs=""]
+----
+(define-condition-type &serious &condition
+  make-serious-condition serious-condition?)
+----
+
+[#exceptions:s20]
+[horizontal]
+syntax:: `&violation`
+procedure:: `(make-violation)`
+returns:: a condition of type `&violation`
+procedure:: `(violation? _obj_)`
+returns:: `#t` if `_obj_` is a condition of type `&violation`, `#f` otherwise
+libraries:: `(rnrs conditions)`, `(rnrs)`
+
+Conditions of this type indicate that the program has violated some requirement, usually due to a bug in the program. This condition type might be defined as follows.
+
+[source,scheme,subs=""]
+----
+(define-condition-type &violation &serious
+  make-violation violation?)
+----
+
+[#exceptions:s21]
+[horizontal]
+syntax:: `&assertion`
+procedure:: `(make-assertion-violation)`
+returns:: a condition of type `&assertion`
+procedure:: `(assertion-violation? _obj_)`
+returns:: `#t` if `_obj_` is a condition of type `&assertion`, `#f` otherwise
+libraries:: `(rnrs conditions)`, `(rnrs)`
+
+This condition type indicates a specific violation in which the program has passed the wrong number or types of arguments to a procedure. This condition type might be defined as follows.
+
+[source,scheme,subs=""]
+----
+(define-condition-type &assertion &violation
+  make-assertion-violation assertion-violation?)
+----
+
+[#exceptions:s22]
+[horizontal]
+syntax:: `&error`
+procedure:: `(make-error)`
+returns:: a condition of type `&error`
+procedure:: `(error? _obj_)`
+returns:: `#t` if `_obj_` is a condition of type `&error`, `#f` otherwise
+libraries:: `(rnrs conditions)`, `(rnrs)`
+
+Conditions of this type indicate that an error has occurred with the program's interaction with its operating environment, such as the failure of an attempt to open a file. It is not used to describe situations in which an error in the program has been detected. This condition type might be defined as follows.
+
+[source,scheme,subs=""]
+----
+(define-condition-type &error &serious
+  make-error error?)
+----
+
+[#exceptions:s23]
+[horizontal]
+syntax:: `&warning`
+procedure:: `(make-warning)`
+returns:: a condition of type `&warning`
+procedure:: `(warning? _obj_)`
+returns:: `#t` if `_obj_` is a condition of type `&warning`, `#f` otherwise
+libraries:: `(rnrs conditions)`, `(rnrs)`
+
+Warning conditions indicate situations that do not prevent the program from continuing its execution but, in some cases, might result in a more serious problem at some later point. For example, a compiler might use a condition of this type to indicate that it has processed a call to a standard procedure with the wrong number of arguments; this will not become a serious problem unless the call is actually evaluated at some later point. This condition type might be defined as follows.
+
+[source,scheme,subs=""]
+----
+(define-condition-type &warning &condition
+  make-warning warning?)
+----
+
+[#exceptions:s24]
+[horizontal]
+syntax:: `&message`
+procedure:: `(make-message-condition _message_)`
+returns:: a condition of type `&message`
+procedure:: `(message-condition? _obj_)`
+returns:: `#t` if `_obj_` is a condition of type `&message`, `#f` otherwise
+procedure:: `(condition-message _condition_)`
+returns:: the contents of ``_condition_``'s `message` field
+libraries:: `(rnrs conditions)`, `(rnrs)`
+
+Conditions of this type are usually included with a `&warning` condition or one of the `&serious` condition subtypes to provide a more specific description of the exceptional situation. The `_message_` argument to the constructor may be any Scheme value but is typically a string. This condition type might be defined as follows.
+
+[source,scheme,subs=""]
+----
+(define-condition-type &message &condition
+  make-message-condition message-condition?
+  (message condition-message))
+----
+
+[#exceptions:s25]
+[horizontal]
+syntax:: `&irritants`
+procedure:: `(make-irritants-condition _irritants_)`
+returns:: a condition of type `&irritants`
+procedure:: `(irritants-condition? _obj_)`
+returns:: `#t` if `_obj_` is a condition of type `&irritants`, `#f` otherwise
+procedure:: `(condition-irritants _condition_)`
+returns:: the contents of ``_condition_``'s `irritants` field
+libraries:: `(rnrs conditions)`, `(rnrs)`
+
+Conditions of this type are usually included with a `&message` condition to provide information about Scheme values that may have caused or been materially involved in the exceptional situation. For example, if a procedure receives the wrong type of argument, it may raise an exception with a compound condition consisting of an assertion condition, a who condition naming the procedure, a message condition stating that the wrong type of argument was received, and an irritants condition listing the argument. The `_irritants_` argument to the constructor should be a list. This condition type might be defined as follows.
+
+[source,scheme,subs=""]
+----
+(define-condition-type &irritants &condition
+  make-irritants-condition irritants-condition?
+  (irritants condition-irritants))
+----
+
+[#exceptions:s26]
+[horizontal]
+syntax:: `&who`
+procedure:: `(make-who-condition _who_)`
+returns:: a condition of type `&who`
+procedure:: `(who-condition? _obj_)`
+returns:: `#t` if `_obj_` is a condition of type `&who`, `#f` otherwise
+procedure:: `(condition-who _condition_)`
+returns:: the contents of ``_condition_``'s `who` field
+libraries:: `(rnrs conditions)`, `(rnrs)`
+
+Conditions of this type are often included with a `&message` condition to identify the syntactic form or procedure that detected the error. The `_who_` argument to the constructor should be a symbol or string. This condition type might be defined as follows.
+
+[source,scheme,subs=""]
+----
+(define-condition-type &who &condition
+  make-who-condition who-condition?
+  (who condition-who))
+----
+
+[#exceptions:s27]
+[horizontal]
+syntax:: `&non-continuable`
+procedure:: `(make-non-continuable-violation)`
+returns:: a condition of type `&non-continuable`
+procedure:: `(non-continuable-violation? _obj_)`
+returns:: `#t` if `_obj_` is a condition of type `&non-continuable`, `#f` otherwise
+libraries:: `(rnrs conditions)`, `(rnrs)`
+
+Conditions of this type indicate that a non-continuable violation has occurred. `raise` raises an exception with this type if the current exception handler returns. This condition type might be defined as follows.
+
+[source,scheme,subs=""]
+----
+(define-condition-type &non-continuable &violation
+  make-non-continuable-violation
+  non-continuable-violation?)
+----
+
+[#exceptions:s28]
+[horizontal]
+syntax:: `&implementation-restriction`
+procedure:: `(make-implementation-restriction-violation)`
+returns:: a condition of type `&implementation-restriction`
+procedure:: `(implementation-restriction-violation? _obj_)`
+returns:: `#t` if `_obj_` is a condition of type `&implementation-restriction`, `#f` otherwise
+libraries:: `(rnrs conditions)`, `(rnrs)`
+
+An implementation-restriction condition indicates that the program has attempted to exceed some limitation in the implementation, such as when the value of a fixnum addition operation would result in a number that exceeds the implementation's fixnum range. It does not normally indicate a deficiency in the implementation but rather a mismatch between what the program is attempting to do and what the implementation can support. In many cases, implementation restrictions are dictated by the underlying hardware. This condition type might be defined as follows.
+
+[source,scheme,subs=""]
+----
+(define-condition-type &implementation-restriction &violation
+  make-implementation-restriction-violation
+  implementation-restriction-violation?)
+----
+
+[#exceptions:s29]
+[horizontal]
+syntax:: `&lexical`
+procedure:: `(make-lexical-violation)`
+returns:: a condition of type `&lexical`
+procedure:: `(lexical-violation? _obj_)`
+returns:: `#t` if `_obj_` is a condition of type `&lexical`, `#f` otherwise
+libraries:: `(rnrs conditions)`, `(rnrs)`
+
+Conditions of this type indicate that a lexical error has occurred in the parsing of a Scheme program or datum, such as mismatched parentheses or an invalid character appearing within a numeric constant. This condition type might be defined as follows.
+
+[source,scheme,subs=""]
+----
+(define-condition-type &lexical &violation
+  make-lexical-violation lexical-violation?)
+----
+
+[#exceptions:s30]
+[horizontal]
+syntax:: `&syntax`
+procedure:: `(make-syntax-violation _form_ _subform_)`
+returns:: a condition of type `&syntax`
+procedure:: `(syntax-violation? _obj_)`
+returns:: `#t` if `_obj_` is a condition of type `&syntax`, `#f` otherwise
+procedure:: `(syntax-violation-form _condition_)`
+returns:: the contents of ``_condition_``'s `form` field
+procedure:: `(syntax-violation-subform _condition_)`
+returns:: the contents of ``_condition_``'s `subform` field
+libraries:: `(rnrs conditions)`, `(rnrs)`
+
+Conditions of this type indicate that a syntax error has occurred in the parsing of a Scheme program. In most implementations, syntax errors are detected by the macro expander. Each of the `_form_` and `_subform_` arguments to `make-syntax-violation` should be a syntax object (<<section_8.3.,Section 8.3>>) or datum, the former indicating the containing form and the latter indicating the specific subform. For example, if a duplicate formal parameter is found in a `lambda` expression, `_form_` might be the `lambda` expression and `_subform_` might be the duplicated parameter. If there is no need to identify a subform, `_subform_` should be `#f`. This condition type might be defined as follows.
+
+[source,scheme,subs=""]
+----
+(define-condition-type &syntax &violation
+  make-syntax-violation syntax-violation?
+  (form syntax-violation-form)
+  (subform syntax-violation-subform))
+----
+
+[#exceptions:s31]
+[horizontal]
+syntax:: `&undefined`
+procedure:: `(make-undefined-violation)`
+returns:: a condition of type `&undefined`
+procedure:: `(undefined-violation? _obj_)`
+returns:: `#t` if `_obj_` is a condition of type `&undefined`, `#f` otherwise
+libraries:: `(rnrs conditions)`, `(rnrs)`
+
+An undefined condition indicates an attempt to reference an unbound variable. This condition type might be defined as follows.
+
+[source,scheme,subs=""]
+----
+(define-condition-type &undefined &violation
+  make-undefined-violation undefined-violation?)
+----
+
+The next several condition types describe conditions that occur when input or output operations fail in some manner.
+
+[#exceptions:s32]
+[horizontal]
+syntax:: `&i/o`
+procedure:: `(make-i/o-error)`
+returns:: a condition of type `&i/o`
+procedure:: `(i/o-error? _obj_)`
+returns:: `#t` if `_obj_` is a condition of type `&i/o`, `#f` otherwise
+libraries:: `(rnrs io ports)`, `(rnrs io simple)`, `(rnrs files)`, `(rnrs)`
+
+A condition of type `&i/o` indicates that an input/output error of some sort has occurred. Conditions of this type typically occur as one of the more specific subtypes described below. This condition type might be defined as follows.
+
+[source,scheme,subs=""]
+----
+(define-condition-type &i/o &error
+  make-i/o-error i/o-error?)
+----
+
+[#exceptions:s33]
+[horizontal]
+syntax:: `&i/o-read`
+procedure:: `(make-i/o-read-error)`
+returns:: a condition of type `&i/o-read`
+procedure:: `(i/o-read-error? _obj_)`
+returns:: `#t` if `_obj_` is a condition of type `&i/o-read`, `#f` otherwise
+libraries:: `(rnrs io ports)`, `(rnrs io simple)`, `(rnrs files)`, `(rnrs)`
+
+This condition type indicates that an error has occurred while reading from a port. This condition type might be defined as follows.
+
+[source,scheme,subs=""]
+----
+(define-condition-type &i/o-read &i/o
+  make-i/o-read-error i/o-read-error?)
+----
+
+[#exceptions:s34]
+[horizontal]
+syntax:: `&i/o-write`
+procedure:: `(make-i/o-write-error)`
+returns:: a condition of type `&i/o-write`
+procedure:: `(i/o-write-error? _obj_)`
+returns:: `#t` if `_obj_` is a condition of type `&i/o-write`, `#f` otherwise
+libraries:: `(rnrs io ports)`, `(rnrs io simple)`, `(rnrs files)`, `(rnrs)`
+
+This condition type indicates that an error has occurred while writing to a port. This condition type might be defined as follows.
+
+[source,scheme,subs=""]
+----
+(define-condition-type &i/o-write &i/o
+  make-i/o-write-error i/o-write-error?)
+----
+
+[#exceptions:s35]
+[horizontal]
+syntax:: `&i/o-invalid-position`
+procedure:: `(make-i/o-invalid-position-error _position_)`
+returns:: a condition of type `&i/o-invalid-position`
+procedure:: `(i/o-invalid-position-error? _obj_)`
+returns:: `#t` if `_obj_` is a condition of type `&i/o-invalid-position`, `#f` otherwise
+procedure:: `(i/o-error-position _condition_)`
+returns:: the contents of ``_condition_``'s `position` field
+libraries:: `(rnrs io ports)`, `(rnrs io simple)`, `(rnrs files)`, `(rnrs)`
+
+This condition type indicates an attempt to set a port's position to a position that is out of range for the underlying file or other object. The `_position_` argument to the constructor should be the invalid position. This condition type might be defined as follows.
+
+[source,scheme,subs=""]
+----
+(define-condition-type &i/o-invalid-position &i/o
+  make-i/o-invalid-position-error
+  i/o-invalid-position-error?
+  (position i/o-error-position))
+----
+
+[#exceptions:s36]
+[horizontal]
+syntax:: `&i/o-filename`
+procedure:: `(make-i/o-filename-error _filename_)`
+returns:: a condition of type `&i/o-filename`
+procedure:: `(i/o-filename-error? _obj_)`
+returns:: `#t` if `_obj_` is a condition of type `&i/o-filename`, `#f` otherwise
+procedure:: `(i/o-error-filename _condition_)`
+returns:: the contents of ``_condition_``'s `filename` field
+libraries:: `(rnrs io ports)`, `(rnrs io simple)`, `(rnrs files)`, `(rnrs)`
+
+This condition type indicates an input/output error that occurred while operating on a file. The `_filename_` argument to the constructor should be the name of the file. This condition type might be defined as follows.
+
+[source,scheme,subs=""]
+----
+(define-condition-type &i/o-filename &i/o
+  make-i/o-filename-error i/o-filename-error?
+  (filename i/o-error-filename))
+----
+
+[#exceptions:s37]
+[horizontal]
+syntax:: `&i/o-file-protection`
+procedure:: `(make-i/o-file-protection-error _filename_)`
+returns:: a condition of type `&i/o-file-protection`
+procedure:: `(i/o-file-protection-error? _obj_)`
+returns:: `#t` if `_obj_` is a condition of type `&i/o-file-protection`, `#f` otherwise
+libraries:: `(rnrs io ports)`, `(rnrs io simple)`, `(rnrs files)`, `(rnrs)`
+
+A condition of this type indicates that an attempt has been made to perform some input/output operation on a file for which the program does not have the proper permission. This condition type might be defined as follows.
+
+[source,scheme,subs=""]
+----
+(define-condition-type &i/o-file-protection &i/o-filename
+  make-i/o-file-protection-error
+  i/o-file-protection-error?)
+----
+
+[#exceptions:s38]
+[horizontal]
+syntax:: `&i/o-file-is-read-only`
+procedure:: `(make-i/o-file-is-read-only-error _filename_)`
+returns:: a condition of type `&i/o-file-is-read-only`
+procedure:: `(i/o-file-is-read-only-error? _obj_)`
+returns:: `#t` if `_obj_` is a condition of type `&i/o-file-is-read-only`, `#f` otherwise
+libraries:: `(rnrs io ports)`, `(rnrs io simple)`, `(rnrs files)`, `(rnrs)`
+
+A condition of this type indicates an attempt to treat as writeable a read-only file. This condition type might be defined as follows.
+
+[source,scheme,subs=""]
+----
+(define-condition-type &i/o-file-is-read-only &i/o-file-protection
+  make-i/o-file-is-read-only-error
+  i/o-file-is-read-only-error?)
+----
+
+[#exceptions:s39]
+[horizontal]
+syntax:: `&i/o-file-already-exists`
+procedure:: `(make-i/o-file-already-exists-error _filename_)`
+returns:: a condition of type `&i/o-file-already-exists`
+procedure:: `(i/o-file-already-exists-error? _obj_)`
+returns:: `#t` if `_obj_` is a condition of type `&i/o-file-already-exists`, `#f` otherwise
+libraries:: `(rnrs io ports)`, `(rnrs io simple)`, `(rnrs files)`, `(rnrs)`
+
+A condition of this type indicates a situation in which an operation on a file failed because the file already exists, e.g., an attempt is made to open an existing file for output without the `no-fail` file option. This condition type might be defined as follows.
+
+[source,scheme,subs=""]
+----
+(define-condition-type &i/o-file-already-exists &i/o-filename
+  make-i/o-file-already-exists-error
+  i/o-file-already-exists-error?)
+----
+
+[#exceptions:s40]
+[horizontal]
+syntax:: `&i/o-file-does-not-exist`
+procedure:: `(make-i/o-file-does-not-exist-error _filename_)`
+returns:: a condition of type `&i/o-file-does-not-exist`
+procedure:: `(i/o-file-does-not-exist-error? _obj_)`
+returns:: `#t` if `_obj_` is a condition of type `&i/o-file-does-not-exist`, `#f` otherwise
+libraries:: `(rnrs io ports)`, `(rnrs io simple)`, `(rnrs files)`, `(rnrs)`
+
+A condition of this type indicates a situation in which an operation on a file failed because the file does not exist, e.g., an attempt is made to open a nonexistent file for input only. This condition type might be defined as follows.
+
+[source,scheme,subs=""]
+----
+(define-condition-type &i/o-file-does-not-exist &i/o-filename
+  make-i/o-file-does-not-exist-error
+  i/o-file-does-not-exist-error?)
+----
+
+[#exceptions:s41]
+[horizontal]
+syntax:: `&i/o-port`
+procedure:: `(make-i/o-port-error _pobj_)`
+returns:: a condition of type `&i/o-port`
+procedure:: `(i/o-port-error? _obj_)`
+returns:: `#t` if `_obj_` is a condition of type `&i/o-port`, `#f` otherwise
+procedure:: `(i/o-error-port _condition_)`
+returns:: the contents of ``_condition_``'s `pobj` field
+libraries:: `(rnrs io ports)`, `(rnrs io simple)`, `(rnrs files)`, `(rnrs)`
+
+A condition of this type is usually included with a condition of one of the other `&i/o` subtypes to indicate the port involved in the exceptional situation, if a port is involved. The `_pobj_` argument to the constructor should be the port. This condition type might be defined as follows.
+
+[source,scheme,subs=""]
+----
+(define-condition-type &i/o-port &i/o
+  make-i/o-port-error i/o-port-error?
+  (pobj i/o-error-port))
+----
+
+[#exceptions:s42]
+[horizontal]
+syntax:: `&i/o-decoding`
+procedure:: `(make-i/o-decoding-error _pobj_)`
+returns:: a condition of type `&i/o-decoding`
+procedure:: `(i/o-decoding-error? _obj_)`
+returns:: `#t` if `_obj_` is a condition of type `&i/o-decoding`, `#f` otherwise
+libraries:: `(rnrs io ports)`, `(rnrs)`
+
+A condition of this type indicates that a decoding error has occurred during the transcoding of bytes to characters. The `_pobj_` argument to the constructor should be the port involved, if any. The port should be positioned past the invalid encoding. This condition type might be defined as follows.
+
+[source,scheme,subs=""]
+----
+(define-condition-type &i/o-decoding &i/o-port
+  make-i/o-decoding-error i/o-decoding-error?)
+----
+
+[#exceptions:s43]
+[horizontal]
+syntax:: `&i/o-encoding`
+procedure:: `(make-i/o-encoding-error _pobj_ _cobj_)`
+returns:: a condition of type `&i/o-encoding`
+procedure:: `(i/o-encoding-error? _obj_)`
+returns:: `#t` if `_obj_` is a condition of type `&i/o-encoding`, `#f` otherwise
+procedure:: `(i/o-encoding-error-char _condition_)`
+returns:: the contents of ``_condition_``'s `cobj` field
+libraries:: `(rnrs io ports)`, `(rnrs)`
+
+A condition of this type indicates that an encoding error has occurred during the transcoding of characters to bytes. The `_pobj_` argument to the constructor should be the port involved, if any, and the `_cobj_` argument should be the character for which the encoding failed. This condition type might be defined as follows.
+
+[source,scheme,subs=""]
+----
+(define-condition-type &i/o-encoding &i/o-port
+  make-i/o-encoding-error i/o-encoding-error?
+  (cobj i/o-encoding-error-char))
+----
+
+The final two condition types describe conditions that occur when implementations are required to produce a NaN or infinity but have no representations for these values.
+
+[#exceptions:s44]
+[horizontal]
+syntax:: `&no-infinities`
+procedure:: `(make-no-infinities-violation)`
+returns:: a condition of type `&no-infinities`
+procedure:: `(no-infinities-violation? _obj_)`
+returns:: `#t` if `_obj_` is a condition of type `&no-infinities`, `#f` otherwise
+libraries:: `(rnrs arithmetic flonums)`, `(rnrs)`
+
+This condition indicates that the implementation has no representation for infinity. This condition type might be defined as follows.
+
+[source,scheme,subs=""]
+----
+(define-condition-type &no-infinities &implementation-restriction
+  make-no-infinities-violation
+  no-infinities-violation?)
+----
+
+[#exceptions:s45]
+[horizontal]
+syntax:: `&no-nans`
+procedure:: `(make-no-nans-violation)`
+returns:: a condition of type `&no-nans`
+procedure:: `(no-nans-violation? _obj_)`
+returns:: `#t` if `_obj_` is a condition of type `&no-nans`, `#f` otherwise
+libraries:: `(rnrs arithmetic flonums)`, `(rnrs)`
+
+This condition indicates that the implementation has no representation for NaN. This condition type might be defined as follows.
+
+[source,scheme,subs=""]
+----
+(define-condition-type &no-nans &implementation-restriction
+  make-no-nans-violation no-nans-violation?)
+----
