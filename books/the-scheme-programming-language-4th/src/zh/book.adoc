@@ -1,0 +1,113 @@
+= Scheme 编程语言（第四版）
+R\. Kent Dybvig
+插画作者 Jean-Pierre Hébert
+:author: R. Kent Dybvig
+:doctype: book
+:toc: left
+:toc-title: 章节目录
+:appendix-caption: 附录
+:toclevels: 2
+:favicon: images/icon.png
+//:data-uri:
+:nofooter:
+:stem: latexmath
+:stylesheet: asciidoctor.css
+:stylesdir: ../../theme/default
+:linkcss:
+:source-highlighter: highlightjs
+:highlightjs-languages: scheme, bash, javascript
+:highlightjsdir: ../../theme/js/highlight
+:mathjaxdir: ../../theme/js/mathjax
+ifdef::backend-pdf[]
+:title-logo-image: image::images/cover.png[align=center]
+endif::[]
+:footer-copyright: R. Kent Dybvig / https://www.scheme.com/tspl4/[Scheme 编程语言（第四版）] + \
+                    版权 (C) 2009 https://mitpress.mit.edu/books/scheme-programming-language-fourth-edition[MIT 出版社]。 \
+                    经许可以电子方式复制。 + \
+                    插画 (C) 2009 http://hebert.kitp.ucsb.edu/[Jean-Pierre Hébert] + \
+                    ISBN 978-0-262-51298-5 / LOC QA76.73.S34D93 + \
+                    https://mitpress.mit.edu/books/scheme-programming-language-fourth-edition[订购此书] \
+                    / https://www.scheme.com/tspl4/canned/about.html[关于此书] + \
+                    &nbsp; + \
+                    https://www.scheme.com
+
+
+ifndef::backend-pdf[]
+image::images/cover.png[align=center]
+endif::[]
+
+本译作采用许可协议 link:https://creativecommons.org/licenses/by-nc-sa/4.0/[署名-非商业性使用-相同方式共享 4.0 国际 (CC BY-NC-SA 4.0)] 进行授权和传播，
+转载需注明译文来源，且不得将本译作内容用于商业用途！
+
+本书由 flytreeleft (link:mailto:flytreeleft@crazydan.org[flytreeleft@crazydan.org]) 翻译并校对。
+
+[dedication]
+
+{footer-copyright}
+
+
+[toc]
+
+// Preface
+include::preface.adoc[]
+
+// Chapter 1. Introduction
+include::introduction.adoc[]
+
+// Chapter 2. Getting Started
+include::getting-started.adoc[]
+
+// Chapter 3. Going Further
+include::going-further.adoc[]
+
+// Chapter 4. Procedures and Variable Bindings
+include::procedures-and-variable-bindings.adoc[]
+
+// Chapter 5. Control Operations
+include::control-operations.adoc[]
+
+// Chapter 6. Operations on Objects
+include::operations-on-objects.adoc[]
+
+// Chapter 7. Input and Output
+include::input-and-output.adoc[]
+
+// Chapter 8. Syntactic Extension
+include::syntactic-extension.adoc[]
+
+// Chapter 9. Records
+include::records.adoc[]
+
+// Chapter 10. Libraries and Top-Level Programs
+include::libraries-and-top-level-programs.adoc[]
+
+// Chapter 11. Exceptions and Conditions
+include::exceptions-and-conditions.adoc[]
+
+// Chapter 12. Extended Examples
+include::extended-examples.adoc[]
+
+// References
+include::references.adoc[]
+
+// Answers to Selected Exercises
+include::answers-to-selected-exercises.adoc[]
+
+// Formal Syntax
+include::formal-syntax.adoc[]
+
+// Summary of Forms
+include::summary-of-forms.adoc[]
+
+// Index
+include::index.adoc[]
+
+
+[#appendix_a]
+[appendix]
+== 本书转换工具
+
+- link:https://asciidoctor.org/docs/user-manual/[Asciidoctor User Manual]
+- link:https://asciidoctor.org/docs/asciidoc-syntax-quick-reference/[AsciiDoc Syntax Quick Reference]
+- link:https://math.meta.stackexchange.com/questions/5020/mathjax-basic-tutorial-and-quick-reference[MathJax basic tutorial and quick reference]
+- link:https://www.whatsmyip.org/html-characters/[HTML Entities & Special Characters]
