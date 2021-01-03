@@ -9,6 +9,7 @@
 <link rel="icon" type="image/png" href="images/icon.png">
 <title>Scheme 编程语言（第四版）</title>
 <link rel="stylesheet" href="../../theme/default/asciidoctor.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 <body class="book toc2 toc-left">
 <div id="header">
@@ -20,7 +21,7 @@
 <div id="toc" class="toc2">
 <div id="toctitle">章节目录</div>
 <ul class="sectlevel1">
-<li><a href="#preface">序言</a></li>
+<li><a href="#preface">前言</a></li>
 <li><a href="#chp_1">第一章: 简介</a>
 <ul class="sectlevel2">
 <li><a href="#section_1.1.">Section 1.1. Scheme Syntax</a></li>
@@ -189,30 +190,54 @@ ISBN 978-0-262-51298-5 / LOC QA76.73.S34D93<br>
 </div>
 </div>
 <div class="sect1">
-<h2 id="preface">序言</h2>
+<h2 id="preface">前言</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>Scheme was introduced in 1975 by Gerald J. Sussman and Guy L. Steele Jr. (<a href="#ref28">[28]</a>,<a href="#ref29">[29]</a>),
-and was the first dialect of Lisp to fully support lexical scoping, first-class procedures, and continuations.
-In its earliest form it was a small language intended primarily for research and teaching,
+and was the first dialect of Lisp
+to fully support lexical scoping, first-class procedures, and continuations.
+In its earliest form
+it was a small language
+intended primarily for research and teaching,
 supporting only a handful of predefined syntactic forms and procedures.
 Scheme is now a complete general-purpose programming language,
-though it still derives its power from a small set of key concepts.
-Early implementations of the language were interpreter-based and slow,
-but some current Scheme implementations boast sophisticated compilers
+though it still derives its power
+from a small set of key concepts.
+Early implementations of the language
+were interpreter-based and slow,
+but some current Scheme implementations
+boast sophisticated compilers
 that generate code
-on par with code generated
+on par with
+code generated
 by the best optimizing compilers
 for lower-level languages
 such as C and Fortran.</p>
 </div>
 <div class="paragraph">
 <p>Scheme 是由 Gerald J. Sussman 和 Guy L. Steele Jr. 于 1975 年提出的（<a href="#ref28">[28]</a>、<a href="#ref29">[29]</a>），
-并且是首个完全支持 <em>词法作用域</em>、<em>处理过程优先</em> 和 <em>延续</em> 的 Lisp 方言。
+是首个完全支持 <em>词法作用域</em>（Lexical Scoping）、<em>处理过程优先</em>（First-class Procedure）
+和 <em>延续计算</em>（Continuation）的 Lisp 方言。
 在最早的版本中，它只是一门小型语言，主要用于研究和教学，仅支持少数预定义的 <em>语法形式</em> 和 <em>处理过程</em>。
-但 Scheme 现在已经是一门完整的、通用的编程语言了，尽管它的强大仍然来自于一小部分关键概念。
-该语言的早期实现是基于解释器的，运行缓慢，而当前的一些 Scheme 实现已拥有复杂的编译器，
-它们生成的代码与针对较低级语言（如 C 和 Fortran ）所做的最佳优化的编译器生成的代码相当。</p>
+虽然它的强大之处仍然源自于一小部分关键概念，但 Scheme 现在已经是一门完全通用的编程语言了。
+该语言的早期实现是基于解释器的，运行缓慢，而如今的一些 Scheme 实现拥有复杂巧妙的编译器，
+它们生成的代码与为较低级语言（如 C 和 Fortran ）进行最佳优化的编译器所生成的代码不相上下。</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="title">译注</div>
+<div class="paragraph">
+<p>可以从文章 <a href="https://zhuanlan.zhihu.com/p/34064549">柯里化的前生今世（七）：first-class continuation</a>
+中初步了解 处理过程优先、延续计算 等概念。</p>
+</div>
+</td>
+</tr>
+</table>
 </div>
 <div class="paragraph">
 <p>This book is intended to
