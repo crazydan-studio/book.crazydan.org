@@ -1,31 +1,42 @@
 [#preface]
 [preface]
-== 序言
+== 前言
 
 Scheme was introduced in 1975 by Gerald J. Sussman and Guy L. Steele Jr. (<<ref28>>,<<ref29>>),
-and was the first dialect of Lisp to fully support lexical scoping, first-class procedures, and continuations.
-In its earliest form it was a small language intended primarily for research and teaching,
+and was the first dialect of Lisp
+to fully support lexical scoping, first-class procedures, and continuations.
+In its earliest form
+it was a small language
+intended primarily for research and teaching,
 supporting only a handful of predefined syntactic forms and procedures.
 Scheme is now a complete general-purpose programming language,
-though it still derives its power from a small set of key concepts.
-Early implementations of the language were interpreter-based and slow,
-but some current Scheme implementations boast sophisticated compilers
+though it still derives its power
+from a small set of key concepts.
+Early implementations of the language
+were interpreter-based and slow,
+but some current Scheme implementations
+boast sophisticated compilers
 that generate code
-on par with code generated
+on par with
+code generated
 by the best optimizing compilers
 for lower-level languages
 such as C and Fortran.
 
 Scheme 是由 Gerald J. Sussman 和 Guy L. Steele Jr. 于 1975 年提出的（<<ref28>>、<<ref29>>），
-并且是首个完全支持 _词法作用域_、_处理过程优先_ 和 _延续_ 的 Lisp 方言。
+是首个完全支持 _词法作用域_（Lexical Scoping）、_处理过程优先_（First-class Procedure）
+和 _延续计算_（Continuation）的 Lisp 方言。
 在最早的版本中，它只是一门小型语言，主要用于研究和教学，仅支持少数预定义的 _语法形式_ 和 _处理过程_。
-但 Scheme 现在已经是一门完整的、通用的编程语言了，尽管它的强大仍然来自于一小部分关键概念。
-该语言的早期实现是基于解释器的，运行缓慢，而当前的一些 Scheme 实现已拥有复杂的编译器，
-它们生成的代码与针对较低级语言（如 C 和 Fortran ）所做的最佳优化的编译器生成的代码相当。
+虽然它的强大之处仍然源自于一小部分关键概念，但 Scheme 现在已经是一门完全通用的编程语言了。
+该语言的早期实现是基于解释器的，运行缓慢，而如今的一些 Scheme 实现拥有复杂巧妙的编译器，
+它们生成的代码与为较低级语言（如 C 和 Fortran ）进行最佳优化的编译器所生成的代码不相上下。
 
-// lexical scoping: 词法作用域，指？
-// first-class procedures: 处理过程优先？
-// continuations: 延续？
+[TIP]
+.译注
+====
+可以从文章 link:https://zhuanlan.zhihu.com/p/34064549[柯里化的前生今世（七）：first-class continuation]
+中初步了解 处理过程优先、延续计算 等概念。
+====
 
 This book is intended to
 provide an introduction to the Scheme programming language
