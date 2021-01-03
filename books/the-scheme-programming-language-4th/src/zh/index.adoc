@@ -1,0 +1,5 @@
+[#index]
+[index]
+== 索引
+
+All page numbers appearing here refer to the printed version of this book and also serve as hypertext links to the corresponding locations in the electronic version of this book.

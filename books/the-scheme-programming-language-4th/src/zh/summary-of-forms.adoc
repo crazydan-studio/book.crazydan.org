@@ -1,0 +1,787 @@
+[#summary_of_forms]
+== Summary of Forms
+
+The table that follows summarizes the Scheme syntactic forms and procedures described in Chapters <<chp_4,4>> through <<chp_11,11>>. It shows the category of the form and the page number where it is defined. The category states whether the form describes a syntactic form or a procedure.
+
+All page numbers appearing here refer to the printed version of this book and also serve as hypertext links to the corresponding locations in the electronic version of this book.
+
+[%autowidth,grid=none,frame=none]
+|===
+
+|Form |Category |Page
+
+|`'_obj_` |syntax |<<objects:s2,141>>
+|``_obj_` |syntax |<<objects:s5,142>>
+|`,_obj_` |syntax |<<objects:s5,142>>
+|`,@_obj_` |syntax |<<objects:s5,142>>
+|`\=>` |syntax |<<control:s16,112>>
+|`_` |syntax |<<syntax:s26,297>>
+|`\...` |syntax |<<syntax:s26,297>>
+|`#'_template_` |syntax |<<syntax:s33,300>>
+|`#`_template_` |syntax |<<syntax:s40,305>>
+|`#,_template_` |syntax |<<syntax:s40,305>>
+|`#,@_template_` |syntax |<<syntax:s40,305>>
+|`&assertion` |syntax |<<exceptions:s21,366>>
+|`&condition` |syntax |<<exceptions:s13,362>>
+|`&error` |syntax |<<exceptions:s22,367>>
+|`&i/o` |syntax |<<exceptions:s32,371>>
+|`&i/o-decoding` |syntax |<<exceptions:s42,375>>
+|`&i/o-encoding` |syntax |<<exceptions:s43,376>>
+|`&i/o-file-already-exists` |syntax |<<exceptions:s39,374>>
+|`&i/o-file-does-not-exist` |syntax |<<exceptions:s40,374>>
+|`&i/o-file-is-read-only` |syntax |<<exceptions:s38,374>>
+|`&i/o-file-protection` |syntax |<<exceptions:s37,373>>
+|`&i/o-filename` |syntax |<<exceptions:s36,373>>
+|`&i/o-invalid-position` |syntax |<<exceptions:s35,372>>
+|`&i/o-port` |syntax |<<exceptions:s41,375>>
+|`&i/o-read` |syntax |<<exceptions:s33,372>>
+|`&i/o-write` |syntax |<<exceptions:s34,372>>
+|`&implementation-restriction` |syntax |<<exceptions:s28,369>>
+|`&irritants` |syntax |<<exceptions:s25,368>>
+|`&lexical` |syntax |<<exceptions:s29,370>>
+|`&message` |syntax |<<exceptions:s24,368>>
+|`&no-infinities` |syntax |<<exceptions:s44,376>>
+|`&no-nans` |syntax |<<exceptions:s45,377>>
+|`&non-continuable` |syntax |<<exceptions:s27,369>>
+|`&serious` |syntax |<<exceptions:s19,366>>
+|`&syntax` |syntax |<<exceptions:s30,370>>
+|`&undefined` |syntax |<<exceptions:s31,371>>
+|`&violation` |syntax |<<exceptions:s20,366>>
+|`&warning` |syntax |<<exceptions:s23,367>>
+|`&who` |syntax |<<exceptions:s26,369>>
+|`(* _num_ \...)` |procedure |<<objects:s91,172>>
+|`(+ _num_ \...)` |procedure |<<objects:s89,171>>
+|`(- _num_)` |procedure |<<objects:s90,172>>
+|`(- _num~1~_ _num~2~_ _num~3~_ \...)` |procedure |<<objects:s90,172>>
+|`(/ _num_)` |procedure |<<objects:s92,172>>
+|`(/ _num~1~_ _num~2~_ _num~3~_ \...)` |procedure |<<objects:s92,172>>
+|`(< _real~1~_ _real~2~_ _real~3~_ \...)` |procedure |<<objects:s88,170>>
+|`(\<= _real~1~_ _real~2~_ _real~3~_ \...)` |procedure |<<objects:s88,170>>
+|`(= _num~1~_ _num~2~_ _num~3~_ \...)` |procedure |<<objects:s88,170>>
+|`(> _real~1~_ _real~2~_ _real~3~_ \...)` |procedure |<<objects:s88,170>>
+|`(>= _real~1~_ _real~2~_ _real~3~_ \...)` |procedure |<<objects:s88,170>>
+|`(abs _real_)` |procedure |<<objects:s105,178>>
+|`(acos _num_)` |procedure |<<objects:s132,185>>
+|`(and _expr_ \...)` |syntax |<<control:s11,110>>
+|`(angle _num_)` |procedure |<<objects:s124,183>>
+|`(append)` |procedure |<<objects:s49,160>>
+|`(append _list_ \... _obj_)` |procedure |<<objects:s49,160>>
+|`(apply _procedure_ _obj_ \... _list_)` |procedure |<<control:s3,107>>
+|`(asin _num_)` |procedure |<<objects:s132,185>>
+|`(assert _expression_)` |syntax |<<exceptions:s5,359>>
+|`(assertion-violation _who_ _msg_ _irritant_ \...)` |procedure |<<exceptions:s4,358>>
+|`(assertion-violation? _obj_)` |procedure |<<exceptions:s21,366>>
+|`(assoc _obj_ _alist_)` |procedure |<<objects:s58,165>>
+|`(assp _procedure_ _alist_)` |procedure |<<objects:s60,166>>
+|`(assq _obj_ _alist_)` |procedure |<<objects:s58,165>>
+|`(assv _obj_ _alist_)` |procedure |<<objects:s58,165>>
+|`(atan _num_)` |procedure |<<objects:s133,185>>
+|`(atan _real~1~_ _real~2~_)` |procedure |<<objects:s133,185>>
+|`(begin _expr~1~_ _expr~2~_ \...)` |syntax |<<control:s4,108>>
+|`(binary-port? _obj_)` |procedure |<<io:s45,270>>
+|`(bitwise-and _exint_ \...)` |procedure |<<objects:s134,186>>
+|`(bitwise-arithmetic-shift _exint~1~_ _exint~2~_)` |procedure |<<objects:s144,190>>
+|`(bitwise-arithmetic-shift-left _exint~1~_ _exint~2~_)` |procedure |<<objects:s143,189>>
+|`(bitwise-arithmetic-shift-right _exint~1~_ _exint~2~_)` |procedure |<<objects:s143,189>>
+|`(bitwise-bit-count _exint_)` |procedure |<<objects:s136,187>>
+|`(bitwise-bit-field _exint~1~_ _exint~2~_ _exint~3~_)` |procedure |<<objects:s141,189>>
+|`(bitwise-bit-set? _exint~1~_ _exint~2~_)` |procedure |<<objects:s139,188>>
+|`(bitwise-copy-bit _exint~1~_ _exint~2~_ _exint~3~_)` |procedure |<<objects:s140,188>>
+|`(bitwise-copy-bit-field _exint~1~_ _exint~2~_ _exint~3~_ _exint~4~_)` |procedure |<<objects:s142,189>>
+|`(bitwise-first-bit-set _exint_)` |procedure |<<objects:s138,187>>
+|`(bitwise-if _exint~1~_ _exint~2~_ _exint~3~_)` |procedure |<<objects:s135,186>>
+|`(bitwise-ior _exint_ \...)` |procedure |<<objects:s134,186>>
+|`(bitwise-length _exint_)` |procedure |<<objects:s137,187>>
+|`(bitwise-not _exint_)` |procedure |<<objects:s134,186>>
+|`(bitwise-reverse-bit-field _exint~1~_ _exint~2~_ _exint~3~_)` |procedure |<<objects:s146,191>>
+|`(bitwise-rotate-bit-field _exint~1~_ _exint~2~_ _exint~3~_ _exint~4~_)` |procedure |<<objects:s145,190>>
+|`(bitwise-xor _exint_ \...)` |procedure |<<objects:s134,186>>
+|`(boolean=? _boolean~1~_ _boolean~2~_)` |procedure |<<objects:s271,243>>
+|`(boolean? _obj_)` |procedure |<<objects:s14,150>>
+|`(bound-identifier=? _identifier~1~_ _identifier~2~_)` |procedure |<<syntax:s37,302>>
+|`(buffer-mode _symbol_)` |syntax |<<io:s27,261>>
+|`(buffer-mode? _obj_)` |syntax |<<io:s28,262>>
+|`(bytevector\->sint-list _bytevector_ _eness_ _size_)` |procedure |<<objects:s260,238>>
+|`(bytevector\->string _bytevector_ _transcoder_)` |procedure |<<io:s91,286>>
+|`(bytevector\->u8-list _bytevector_)` |procedure |<<objects:s252,232>>
+|`(bytevector\->uint-list _bytevector_ _eness_ _size_)` |procedure |<<objects:s260,238>>
+|`(bytevector-copy _bytevector_)` |procedure |<<objects:s246,229>>
+|`(bytevector-copy! _src_ _src-start_ _dst_ _dst-start_ _n_)` |procedure |<<objects:s247,230>>
+|`(bytevector-fill! _bytevector_ _fill_)` |procedure |<<objects:s245,229>>
+|`(bytevector-ieee-double-native-ref _bytevector_ _n_)` |procedure |<<objects:s262,239>>
+|`(bytevector-ieee-double-native-set! _bytevector_ _n_ _x_)` |procedure |<<objects:s263,239>>
+|`(bytevector-ieee-double-ref _bytevector_ _n_ _eness_)` |procedure |<<objects:s264,240>>
+|`(bytevector-ieee-double-set! _bytevector_ _n_ _x_ _eness_)` |procedure |<<objects:s265,240>>
+|`(bytevector-ieee-single-native-ref _bytevector_ _n_)` |procedure |<<objects:s262,239>>
+|`(bytevector-ieee-single-native-set! _bytevector_ _n_ _x_)` |procedure |<<objects:s263,239>>
+|`(bytevector-ieee-single-ref _bytevector_ _n_ _eness_)` |procedure |<<objects:s264,240>>
+|`(bytevector-ieee-single-set! _bytevector_ _n_ _x_ _eness_)` |procedure |<<objects:s265,240>>
+|`(bytevector-length _bytevector_)` |procedure |<<objects:s243,229>>
+|`(bytevector-s16-native-ref _bytevector_ _n_)` |procedure |<<objects:s254,232>>
+|`(bytevector-s16-native-set! _bytevector_ _n_ _s16_)` |procedure |<<objects:s255,233>>
+|`(bytevector-s16-ref _bytevector_ _n_ _eness_)` |procedure |<<objects:s256,235>>
+|`(bytevector-s16-set! _bytevector_ _n_ _s16_ _eness_)` |procedure |<<objects:s257,236>>
+|`(bytevector-s32-native-ref _bytevector_ _n_)` |procedure |<<objects:s254,232>>
+|`(bytevector-s32-native-set! _bytevector_ _n_ _s32_)` |procedure |<<objects:s255,233>>
+|`(bytevector-s32-ref _bytevector_ _n_ _eness_)` |procedure |<<objects:s256,235>>
+|`(bytevector-s32-set! _bytevector_ _n_ _s32_ _eness_)` |procedure |<<objects:s257,236>>
+|`(bytevector-s64-native-ref _bytevector_ _n_)` |procedure |<<objects:s254,232>>
+|`(bytevector-s64-native-set! _bytevector_ _n_ _s64_)` |procedure |<<objects:s255,233>>
+|`(bytevector-s64-ref _bytevector_ _n_ _eness_)` |procedure |<<objects:s256,235>>
+|`(bytevector-s64-set! _bytevector_ _n_ _s64_ _eness_)` |procedure |<<objects:s257,236>>
+|`(bytevector-s8-ref _bytevector_ _n_)` |procedure |<<objects:s249,231>>
+|`(bytevector-s8-set! _bytevector_ _n_ _s8_)` |procedure |<<objects:s251,231>>
+|`(bytevector-sint-ref _bytevector_ _n_ _eness_ _size_)` |procedure |<<objects:s258,237>>
+|`(bytevector-sint-set! _bytevector_ _n_ _sint_ _eness_ _size_)` |procedure |<<objects:s259,238>>
+|`(bytevector-u16-native-ref _bytevector_ _n_)` |procedure |<<objects:s254,232>>
+|`(bytevector-u16-native-set! _bytevector_ _n_ _u16_)` |procedure |<<objects:s255,233>>
+|`(bytevector-u16-ref _bytevector_ _n_ _eness_)` |procedure |<<objects:s256,235>>
+|`(bytevector-u16-set! _bytevector_ _n_ _u16_ _eness_)` |procedure |<<objects:s257,236>>
+|`(bytevector-u32-native-ref _bytevector_ _n_)` |procedure |<<objects:s254,232>>
+|`(bytevector-u32-native-set! _bytevector_ _n_ _u32_)` |procedure |<<objects:s255,233>>
+|`(bytevector-u32-ref _bytevector_ _n_ _eness_)` |procedure |<<objects:s256,235>>
+|`(bytevector-u32-set! _bytevector_ _n_ _u32_ _eness_)` |procedure |<<objects:s257,236>>
+|`(bytevector-u64-native-ref _bytevector_ _n_)` |procedure |<<objects:s254,232>>
+|`(bytevector-u64-native-set! _bytevector_ _n_ _u64_)` |procedure |<<objects:s255,233>>
+|`(bytevector-u64-ref _bytevector_ _n_ _eness_)` |procedure |<<objects:s256,235>>
+|`(bytevector-u64-set! _bytevector_ _n_ _u64_ _eness_)` |procedure |<<objects:s257,236>>
+|`(bytevector-u8-ref _bytevector_ _n_)` |procedure |<<objects:s248,230>>
+|`(bytevector-u8-set! _bytevector_ _n_ _u8_)` |procedure |<<objects:s250,231>>
+|`(bytevector-uint-ref _bytevector_ _n_ _eness_ _size_)` |procedure |<<objects:s258,237>>
+|`(bytevector-uint-set! _bytevector_ _n_ _uint_ _eness_ _size_)` |procedure |<<objects:s259,238>>
+|`(bytevector=? _bytevector~1~_ _bytevector~2~_)` |procedure |<<objects:s244,229>>
+|`(bytevector? _obj_)` |procedure |<<objects:s24,155>>
+|`(caaaar _pair_)` |procedure |<<objects:s42,157>>
+|`(caaadr _pair_)` |procedure |<<objects:s42,157>>
+|`(caaar _pair_)` |procedure |<<objects:s42,157>>
+|`(caadar _pair_)` |procedure |<<objects:s42,157>>
+|`(caaddr _pair_)` |procedure |<<objects:s42,157>>
+|`(caadr _pair_)` |procedure |<<objects:s42,157>>
+|`(caar _pair_)` |procedure |<<objects:s42,157>>
+|`(cadaar _pair_)` |procedure |<<objects:s42,157>>
+|`(cadadr _pair_)` |procedure |<<objects:s42,157>>
+|`(cadar _pair_)` |procedure |<<objects:s42,157>>
+|`(caddar _pair_)` |procedure |<<objects:s42,157>>
+|`(cadddr _pair_)` |procedure |<<objects:s42,157>>
+|`(caddr _pair_)` |procedure |<<objects:s42,157>>
+|`(cadr _pair_)` |procedure |<<objects:s42,157>>
+|`(call-with-bytevector-output-port _procedure_)` |procedure |<<io:s38,266>>
+|`(call-with-bytevector-output-port _procedure_ _?transcoder_)` |procedure |<<io:s38,266>>
+|`(call-with-current-continuation _procedure_)` |procedure |<<control:s54,123>>
+|`(call-with-input-file _path_ _procedure_)` |procedure |<<io:s77,281>>
+|`(call-with-output-file _path_ _procedure_)` |procedure |<<io:s78,282>>
+|`(call-with-port _port_ _procedure_)` |procedure |<<io:s51,272>>
+|`(call-with-string-output-port _procedure_)` |procedure |<<io:s39,267>>
+|`(call-with-values _producer_ _consumer_)` |procedure |<<control:s71,131>>
+|`(call/cc _procedure_)` |procedure |<<control:s54,123>>
+|`(car _pair_)` |procedure |<<objects:s38,156>>
+|`(case _expr~0~_ _clause~1~_ _clause~2~_ \...)` |syntax |<<control:s18,113>>
+|`(case-lambda _clause_ \...)` |syntax |<<binding:s13,94>>
+|`(cdaaar _pair_)` |procedure |<<objects:s42,157>>
+|`(cdaadr _pair_)` |procedure |<<objects:s42,157>>
+|`(cdaar _pair_)` |procedure |<<objects:s42,157>>
+|`(cdadar _pair_)` |procedure |<<objects:s42,157>>
+|`(cdaddr _pair_)` |procedure |<<objects:s42,157>>
+|`(cdadr _pair_)` |procedure |<<objects:s42,157>>
+|`(cdar _pair_)` |procedure |<<objects:s42,157>>
+|`(cddaar _pair_)` |procedure |<<objects:s42,157>>
+|`(cddadr _pair_)` |procedure |<<objects:s42,157>>
+|`(cddar _pair_)` |procedure |<<objects:s42,157>>
+|`(cdddar _pair_)` |procedure |<<objects:s42,157>>
+|`(cddddr _pair_)` |procedure |<<objects:s42,157>>
+|`(cdddr _pair_)` |procedure |<<objects:s42,157>>
+|`(cddr _pair_)` |procedure |<<objects:s42,157>>
+|`(cdr _pair_)` |procedure |<<objects:s39,156>>
+|`(ceiling _real_)` |procedure |<<objects:s103,177>>
+|`(char\->integer _char_)` |procedure |<<objects:s210,215>>
+|`(char-alphabetic? _char_)` |procedure |<<objects:s203,213>>
+|`(char-ci\<=? _char~1~_ _char~2~_ _char~3~_ \...)` |procedure |<<objects:s202,212>>
+|`(char-ci<? _char~1~_ _char~2~_ _char~3~_ \...)` |procedure |<<objects:s202,212>>
+|`(char-ci=? _char~1~_ _char~2~_ _char~3~_ \...)` |procedure |<<objects:s202,212>>
+|`(char-ci>=? _char~1~_ _char~2~_ _char~3~_ \...)` |procedure |<<objects:s202,212>>
+|`(char-ci>? _char~1~_ _char~2~_ _char~3~_ \...)` |procedure |<<objects:s202,212>>
+|`(char-downcase _char_)` |procedure |<<objects:s207,214>>
+|`(char-foldcase _char_)` |procedure |<<objects:s209,215>>
+|`(char-general-category _char_)` |procedure |<<objects:s205,214>>
+|`(char-lower-case? _char_)` |procedure |<<objects:s204,213>>
+|`(char-numeric? _char_)` |procedure |<<objects:s203,213>>
+|`(char-title-case? _char_)` |procedure |<<objects:s204,213>>
+|`(char-titlecase _char_)` |procedure |<<objects:s208,214>>
+|`(char-upcase _char_)` |procedure |<<objects:s206,214>>
+|`(char-upper-case? _char_)` |procedure |<<objects:s204,213>>
+|`(char-whitespace? _char_)` |procedure |<<objects:s203,213>>
+|`(char\<=? _char~1~_ _char~2~_ _char~3~_ \...)` |procedure |<<objects:s201,212>>
+|`(char<? _char~1~_ _char~2~_ _char~3~_ \...)` |procedure |<<objects:s201,212>>
+|`(char=? _char~1~_ _char~2~_ _char~3~_ \...)` |procedure |<<objects:s201,212>>
+|`(char>=? _char~1~_ _char~2~_ _char~3~_ \...)` |procedure |<<objects:s201,212>>
+|`(char>? _char~1~_ _char~2~_ _char~3~_ \...)` |procedure |<<objects:s201,212>>
+|`(char? _obj_)` |procedure |<<objects:s19,154>>
+|`(close-input-port _input-port_)` |procedure |<<io:s88,285>>
+|`(close-output-port _output-port_)` |procedure |<<io:s88,285>>
+|`(close-port _port_)` |procedure |<<io:s46,270>>
+|`(command-line)` |procedure |<<libraries:s17,350>>
+|`(complex? _obj_)` |procedure |<<objects:s17,151>>
+|`(cond _clause~1~_ _clause~2~_ \...)` |syntax |<<control:s13,111>>
+|`(condition _condition_ \...)` |procedure |<<exceptions:s15,362>>
+|`(condition-accessor _rtd_ _procedure_)` |procedure |<<exceptions:s18,365>>
+|`(condition-irritants _condition_)` |procedure |<<exceptions:s25,368>>
+|`(condition-message _condition_)` |procedure |<<exceptions:s24,368>>
+|`(condition-predicate _rtd_)` |procedure |<<exceptions:s18,365>>
+|`(condition-who _condition_)` |procedure |<<exceptions:s26,369>>
+|`(condition? _obj_)` |procedure |<<exceptions:s14,362>>
+|`(cons _obj~1~_ _obj~2~_)` |procedure |<<objects:s37,156>>
+|`(cons* _obj_ \... _final-obj_)` |procedure |<<objects:s44,158>>
+|`_constant_` |syntax |<<objects:s1,141>>
+|`(cos _num_)` |procedure |<<objects:s131,185>>
+|`(current-error-port)` |procedure |<<io:s32,263>>
+|`(current-input-port)` |procedure |<<io:s32,263>>
+|`(current-output-port)` |procedure |<<io:s32,263>>
+|`(datum\->syntax _template-identifier_ _obj_)` |procedure |<<syntax:s45,308>>
+|`(define _var_ _expr_)` |syntax |<<binding:s24,100>>
+|`(define _var_)` |syntax |<<binding:s24,100>>
+|`(define (_var~0~_ _var~1~_ \...) _body~1~_ _body~2~_ \...)` |syntax |<<binding:s24,100>>
+|`(define (_var~0~_ . _var~r~_) _body~1~_ _body~2~_ \...)` |syntax |<<binding:s24,100>>
+|`(define (_var~0~_ _var~1~_ _var~2~_ \... . _var~r~_) _body~1~_ _body~2~_ \...)` |syntax |<<binding:s24,100>>
+|`(define-condition-type _name_ _parent_ _constructor_ _pred_ _field_ \...)` |syntax |<<exceptions:s17,364>>
+|`(define-enumeration _name_ (_symbol_ \...) _constructor_)` |syntax |<<objects:s290,250>>
+|`(define-record-type _record-name_ _clause_ \...)` |syntax |<<records:s13,328>>
+|`(define-record-type (_record-name_ _constructor_ _pred_) _clause_ \...)` |syntax |<<records:s13,328>>
+|`(define-syntax _keyword_ _expr_)` |syntax |<<syntax:s12,292>>
+|`(delay _expr_)` |syntax |<<control:s65,128>>
+|`(delete-file _path_)` |procedure |<<io:s90,286>>
+|`(denominator _rat_)` |procedure |<<objects:s119,181>>
+|`(display _obj_)` |procedure |<<io:s85,285>>
+|`(display _obj_ _textual-output-port_)` |procedure |<<io:s85,285>>
+|`(div _x~1~_ _x~2~_)` |procedure |<<objects:s99,175>>
+|`(div-and-mod _x~1~_ _x~2~_)` |procedure |<<objects:s99,175>>
+|`(div0 _x~1~_ _x~2~_)` |procedure |<<objects:s100,176>>
+|`(div0-and-mod0 _x~1~_ _x~2~_)` |procedure |<<objects:s100,176>>
+|`(do ((_var_ _init_ _update_) \...) (_test_ _result_ \...) _expr_ \...)` |syntax |<<control:s25,115>>
+|`(dynamic-wind _in_ _body_ _out_)` |procedure |<<control:s56,124>>
+|`else` |syntax |<<control:s16,112>>
+|`(endianness _symbol_)` |syntax |<<objects:s240,228>>
+|`(enum-set\->list _enum-set_)` |procedure |<<objects:s294,252>>
+|`(enum-set-complement _enum-set_)` |procedure |<<objects:s299,254>>
+|`(enum-set-constructor _enum-set_)` |procedure |<<objects:s292,251>>
+|`(enum-set-difference _enum-set~1~_ _enum-set~2~_)` |procedure |<<objects:s298,253>>
+|`(enum-set-indexer _enum-set_)` |procedure |<<objects:s301,254>>
+|`(enum-set-intersection _enum-set~1~_ _enum-set~2~_)` |procedure |<<objects:s298,253>>
+|`(enum-set-member? _symbol_ _enum-set_)` |procedure |<<objects:s297,253>>
+|`(enum-set-projection _enum-set~1~_ _enum-set~2~_)` |procedure |<<objects:s300,254>>
+|`(enum-set-subset? _enum-set~1~_ _enum-set~2~_)` |procedure |<<objects:s295,252>>
+|`(enum-set-union _enum-set~1~_ _enum-set~2~_)` |procedure |<<objects:s298,253>>
+|`(enum-set-universe _enum-set_)` |procedure |<<objects:s293,252>>
+|`(enum-set=? _enum-set~1~_ _enum-set~2~_)` |procedure |<<objects:s296,252>>
+|`(environment _import-spec_ \...)` |procedure |<<control:s81,137>>
+|`(eof-object)` |procedure |<<io:s54,273>>
+|`(eof-object? _obj_)` |procedure |<<io:s53,273>>
+|`(eol-style _symbol_)` |syntax |<<io:s23,259>>
+|`(eq? _obj~1~_ _obj~2~_)` |procedure |<<objects:s10,143>>
+|`(equal-hash _obj_)` |procedure |<<objects:s279,245>>
+|`(equal? _obj~1~_ _obj~2~_)` |procedure |<<objects:s13,148>>
+|`(eqv? _obj~1~_ _obj~2~_)` |procedure |<<objects:s12,146>>
+|`(error _who_ _msg_ _irritant_ \...)` |procedure |<<exceptions:s4,358>>
+|`(error-handling-mode _symbol_)` |syntax |<<io:s25,260>>
+|`(error? _obj_)` |procedure |<<exceptions:s22,367>>
+|`(eval _obj_ _environment_)` |procedure |<<control:s80,136>>
+|`(even? _int_)` |procedure |<<objects:s96,174>>
+|`(exact _num_)` |procedure |<<objects:s114,180>>
+|`(exact\->inexact _num_)` |procedure |<<objects:s116,181>>
+|`(exact-integer-sqrt _n_)` |procedure |<<objects:s128,184>>
+|`(exact? _num_)` |procedure |<<objects:s86,170>>
+|`(exists _procedure_ _list~1~_ _list~2~_ \...)` |procedure |<<control:s36,119>>
+|`(exit)` |procedure |<<libraries:s18,350>>
+|`(exit _obj_)` |procedure |<<libraries:s18,350>>
+|`(exp _num_)` |procedure |<<objects:s129,184>>
+|`(expt _num~1~_ _num~2~_)` |procedure |<<objects:s111,179>>
+|`fields` |syntax |<<records:s16,331>>
+|`(file-exists? _path_)` |procedure |<<io:s89,286>>
+|`(file-options _symbol_ \...)` |syntax |<<io:s26,261>>
+|`(filter _procedure_ _list_)` |procedure |<<objects:s55,164>>
+|`(find _procedure_ _list_)` |procedure |<<objects:s57,165>>
+|`(finite? _real_)` |procedure |<<objects:s97,174>>
+|`(fixnum\->flonum _fx_)` |procedure |<<objects:s198,211>>
+|`(fixnum-width)` |procedure |<<objects:s152,193>>
+|`(fixnum? _obj_)` |procedure |<<objects:s150,193>>
+|`(fl* _fl_ \...)` |procedure |<<objects:s186,207>>
+|`(fl+ _fl_ \...)` |procedure |<<objects:s184,206>>
+|`(fl- _fl_)` |procedure |<<objects:s185,206>>
+|`(fl- _fl~1~_ _fl~2~_ _fl~3~_ \...)` |procedure |<<objects:s185,206>>
+|`(fl/ _fl_)` |procedure |<<objects:s187,207>>
+|`(fl/ _fl~1~_ _fl~2~_ _fl~3~_ \...)` |procedure |<<objects:s187,207>>
+|`(fl\<=? _fl~1~_ _fl~2~_ _fl~3~_ \...)` |procedure |<<objects:s178,203>>
+|`(fl<? _fl~1~_ _fl~2~_ _fl~3~_ \...)` |procedure |<<objects:s178,203>>
+|`(fl=? _fl~1~_ _fl~2~_ _fl~3~_ \...)` |procedure |<<objects:s178,203>>
+|`(fl>=? _fl~1~_ _fl~2~_ _fl~3~_ \...)` |procedure |<<objects:s178,203>>
+|`(fl>? _fl~1~_ _fl~2~_ _fl~3~_ \...)` |procedure |<<objects:s178,203>>
+|`(flabs _fl_)` |procedure |<<objects:s192,209>>
+|`(flacos _fl_)` |procedure |<<objects:s195,210>>
+|`(flasin _fl_)` |procedure |<<objects:s195,210>>
+|`(flatan _fl_)` |procedure |<<objects:s195,210>>
+|`(flatan _fl~1~_ _fl~2~_)` |procedure |<<objects:s195,210>>
+|`(flceiling _fl_)` |procedure |<<objects:s190,208>>
+|`(flcos _fl_)` |procedure |<<objects:s194,210>>
+|`(fldenominator _fl_)` |procedure |<<objects:s191,209>>
+|`(fldiv _fl~1~_ _fl~2~_)` |procedure |<<objects:s188,207>>
+|`(fldiv-and-mod _fl~1~_ _fl~2~_)` |procedure |<<objects:s188,207>>
+|`(fldiv0 _fl~1~_ _fl~2~_)` |procedure |<<objects:s189,208>>
+|`(fldiv0-and-mod0 _fl~1~_ _fl~2~_)` |procedure |<<objects:s189,208>>
+|`(fleven? _fl-int_)` |procedure |<<objects:s182,205>>
+|`(flexp _fl_)` |procedure |<<objects:s193,209>>
+|`(flexpt _fl~1~_ _fl~2~_)` |procedure |<<objects:s197,210>>
+|`(flfinite? _fl_)` |procedure |<<objects:s181,205>>
+|`(flfloor _fl_)` |procedure |<<objects:s190,208>>
+|`(flinfinite? _fl_)` |procedure |<<objects:s181,205>>
+|`(flinteger? _fl_)` |procedure |<<objects:s180,204>>
+|`(fllog _fl_)` |procedure |<<objects:s193,209>>
+|`(fllog _fl~1~_ _fl~2~_)` |procedure |<<objects:s193,209>>
+|`(flmax _fl~1~_ _fl~2~_ \...)` |procedure |<<objects:s183,205>>
+|`(flmin _fl~1~_ _fl~2~_ \...)` |procedure |<<objects:s183,205>>
+|`(flmod _fl~1~_ _fl~2~_)` |procedure |<<objects:s188,207>>
+|`(flmod0 _fl~1~_ _fl~2~_)` |procedure |<<objects:s189,208>>
+|`(flnan? _fl_)` |procedure |<<objects:s181,205>>
+|`(flnegative? _fl_)` |procedure |<<objects:s179,204>>
+|`(flnumerator _fl_)` |procedure |<<objects:s191,209>>
+|`(flodd? _fl-int_)` |procedure |<<objects:s182,205>>
+|`(flonum? _obj_)` |procedure |<<objects:s177,203>>
+|`(floor _real_)` |procedure |<<objects:s102,177>>
+|`(flpositive? _fl_)` |procedure |<<objects:s179,204>>
+|`(flround _fl_)` |procedure |<<objects:s190,208>>
+|`(flsin _fl_)` |procedure |<<objects:s194,210>>
+|`(flsqrt _fl_)` |procedure |<<objects:s196,210>>
+|`(fltan _fl_)` |procedure |<<objects:s194,210>>
+|`(fltruncate _fl_)` |procedure |<<objects:s190,208>>
+|`(flush-output-port _output-port_)` |procedure |<<io:s74,280>>
+|`(flzero? _fl_)` |procedure |<<objects:s179,204>>
+|`(fold-left _procedure_ _obj_ _list~1~_ _list~2~_ \...)` |procedure |<<control:s38,120>>
+|`(fold-right _procedure_ _obj_ _list~1~_ _list~2~_ \...)` |procedure |<<control:s41,121>>
+|`(for-all _procedure_ _list~1~_ _list~2~_ \...)` |procedure |<<control:s37,119>>
+|`(for-each _procedure_ _list~1~_ _list~2~_ \...)` |procedure |<<control:s33,118>>
+|`(force _promise_)` |procedure |<<control:s65,128>>
+|`(free-identifier=? _identifier~1~_ _identifier~2~_)` |procedure |<<syntax:s37,302>>
+|`(fx* _fx~1~_ _fx~2~_)` |procedure |<<objects:s159,195>>
+|`(fx*/carry _fx~1~_ _fx~2~_ _fx~3~_)` |procedure |<<objects:s162,197>>
+|`(fx+ _fx~1~_ _fx~2~_)` |procedure |<<objects:s157,195>>
+|`(fx+/carry _fx~1~_ _fx~2~_ _fx~3~_)` |procedure |<<objects:s162,197>>
+|`(fx- _fx_)` |procedure |<<objects:s158,195>>
+|`(fx- _fx~1~_ _fx~2~_)` |procedure |<<objects:s158,195>>
+|`(fx-/carry _fx~1~_ _fx~2~_ _fx~3~_)` |procedure |<<objects:s162,197>>
+|`(fx\<=? _fx~1~_ _fx~2~_ _fx~3~_ \...)` |procedure |<<objects:s153,193>>
+|`(fx<? _fx~1~_ _fx~2~_ _fx~3~_ \...)` |procedure |<<objects:s153,193>>
+|`(fx=? _fx~1~_ _fx~2~_ _fx~3~_ \...)` |procedure |<<objects:s153,193>>
+|`(fx>=? _fx~1~_ _fx~2~_ _fx~3~_ \...)` |procedure |<<objects:s153,193>>
+|`(fx>? _fx~1~_ _fx~2~_ _fx~3~_ \...)` |procedure |<<objects:s153,193>>
+|`(fxand _fx_ \...)` |procedure |<<objects:s163,197>>
+|`(fxarithmetic-shift _fx~1~_ _fx~2~_)` |procedure |<<objects:s173,201>>
+|`(fxarithmetic-shift-left _fx~1~_ _fx~2~_)` |procedure |<<objects:s172,201>>
+|`(fxarithmetic-shift-right _fx~1~_ _fx~2~_)` |procedure |<<objects:s172,201>>
+|`(fxbit-count _fx_)` |procedure |<<objects:s165,198>>
+|`(fxbit-field _fx~1~_ _fx~2~_ _fx~3~_)` |procedure |<<objects:s170,200>>
+|`(fxbit-set? _fx~1~_ _fx~2~_)` |procedure |<<objects:s168,199>>
+|`(fxcopy-bit _fx~1~_ _fx~2~_ _fx~3~_)` |procedure |<<objects:s169,200>>
+|`(fxcopy-bit-field _fx~1~_ _fx~2~_ _fx~3~_ _fx~4~_)` |procedure |<<objects:s171,200>>
+|`(fxdiv _fx~1~_ _fx~2~_)` |procedure |<<objects:s160,196>>
+|`(fxdiv-and-mod _fx~1~_ _fx~2~_)` |procedure |<<objects:s160,196>>
+|`(fxdiv0 _fx~1~_ _fx~2~_)` |procedure |<<objects:s161,196>>
+|`(fxdiv0-and-mod0 _fx~1~_ _fx~2~_)` |procedure |<<objects:s161,196>>
+|`(fxeven? _fx_)` |procedure |<<objects:s155,194>>
+|`(fxfirst-bit-set _fx_)` |procedure |<<objects:s167,199>>
+|`(fxif _fx~1~_ _fx~2~_ _fx~3~_)` |procedure |<<objects:s164,198>>
+|`(fxior _fx_ \...)` |procedure |<<objects:s163,197>>
+|`(fxlength _fx_)` |procedure |<<objects:s166,198>>
+|`(fxmax _fx~1~_ _fx~2~_ \...)` |procedure |<<objects:s156,195>>
+|`(fxmin _fx~1~_ _fx~2~_ \...)` |procedure |<<objects:s156,195>>
+|`(fxmod _fx~1~_ _fx~2~_)` |procedure |<<objects:s160,196>>
+|`(fxmod0 _fx~1~_ _fx~2~_)` |procedure |<<objects:s161,196>>
+|`(fxnegative? _fx_)` |procedure |<<objects:s154,194>>
+|`(fxnot _fx_)` |procedure |<<objects:s163,197>>
+|`(fxodd? _fx_)` |procedure |<<objects:s155,194>>
+|`(fxpositive? _fx_)` |procedure |<<objects:s154,194>>
+|`(fxreverse-bit-field _fx~1~_ _fx~2~_ _fx~3~_)` |procedure |<<objects:s175,202>>
+|`(fxrotate-bit-field _fx~1~_ _fx~2~_ _fx~3~_ _fx~4~_)` |procedure |<<objects:s174,201>>
+|`(fxxor _fx_ \...)` |procedure |<<objects:s163,197>>
+|`(fxzero? _fx_)` |procedure |<<objects:s154,194>>
+|`(gcd _int_ \...)` |procedure |<<objects:s109,179>>
+|`(generate-temporaries _list_)` |procedure |<<syntax:s49,310>>
+|`(get-bytevector-all _binary-input-port_)` |procedure |<<io:s60,275>>
+|`(get-bytevector-n _binary-input-port_ _n_)` |procedure |<<io:s57,274>>
+|`(get-bytevector-n! _binary-input-port_ _bytevector_ _start_ _n_)` |procedure |<<io:s58,274>>
+|`(get-bytevector-some _binary-input-port_)` |procedure |<<io:s59,275>>
+|`(get-char _textual-input-port_)` |procedure |<<io:s61,275>>
+|`(get-datum _textual-input-port_)` |procedure |<<io:s67,278>>
+|`(get-line _textual-input-port_)` |procedure |<<io:s66,277>>
+|`(get-string-all _textual-input-port_)` |procedure |<<io:s65,277>>
+|`(get-string-n _textual-input-port_ _n_)` |procedure |<<io:s63,276>>
+|`(get-string-n! _textual-input-port_ _string_ _start_ _n_)` |procedure |<<io:s64,276>>
+|`(get-u8 _binary-input-port_)` |procedure |<<io:s55,274>>
+|`(greatest-fixnum)` |procedure |<<objects:s151,193>>
+|`(guard (_var_ _clause~1~_ _clause~2~_ \...) _b1_ _b2_ \...)` |syntax |<<exceptions:s8,361>>
+|`(hashtable-clear! _hashtable_)` |procedure |<<objects:s287,249>>
+|`(hashtable-clear! _hashtable_ _size_)` |procedure |<<objects:s287,249>>
+|`(hashtable-contains? _hashtable_ _key_)` |procedure |<<objects:s282,246>>
+|`(hashtable-copy _hashtable_)` |procedure |<<objects:s286,248>>
+|`(hashtable-copy _hashtable_ _mutable?_)` |procedure |<<objects:s286,248>>
+|`(hashtable-delete! _hashtable_ _key_)` |procedure |<<objects:s284,248>>
+|`(hashtable-entries _hashtable_)` |procedure |<<objects:s289,250>>
+|`(hashtable-equivalence-function _hashtable_)` |procedure |<<objects:s278,245>>
+|`(hashtable-hash-function _hashtable_)` |procedure |<<objects:s278,245>>
+|`(hashtable-keys _hashtable_)` |procedure |<<objects:s288,249>>
+|`(hashtable-mutable? _hashtable_)` |procedure |<<objects:s277,245>>
+|`(hashtable-ref _hashtable_ _key_ _default_)` |procedure |<<objects:s281,246>>
+|`(hashtable-set! _hashtable_ _key_ _obj_)` |procedure |<<objects:s280,246>>
+|`(hashtable-size _hashtable_)` |procedure |<<objects:s285,248>>
+|`(hashtable-update! _hashtable_ _key_ _procedure_ _default_)` |procedure |<<objects:s283,247>>
+|`(hashtable? _obj_)` |procedure |<<objects:s25,155>>
+|`(i/o-decoding-error? _obj_)` |procedure |<<exceptions:s42,375>>
+|`(i/o-encoding-error-char _condition_)` |procedure |<<exceptions:s43,376>>
+|`(i/o-encoding-error? _obj_)` |procedure |<<exceptions:s43,376>>
+|`(i/o-error-filename _condition_)` |procedure |<<exceptions:s36,373>>
+|`(i/o-error-port _condition_)` |procedure |<<exceptions:s41,375>>
+|`(i/o-error-position _condition_)` |procedure |<<exceptions:s35,372>>
+|`(i/o-error? _obj_)` |procedure |<<exceptions:s32,371>>
+|`(i/o-file-already-exists-error? _obj_)` |procedure |<<exceptions:s39,374>>
+|`(i/o-file-does-not-exist-error? _obj_)` |procedure |<<exceptions:s40,374>>
+|`(i/o-file-is-read-only-error? _obj_)` |procedure |<<exceptions:s38,374>>
+|`(i/o-file-protection-error? _obj_)` |procedure |<<exceptions:s37,373>>
+|`(i/o-filename-error? _obj_)` |procedure |<<exceptions:s36,373>>
+|`(i/o-invalid-position-error? _obj_)` |procedure |<<exceptions:s35,372>>
+|`(i/o-port-error? _obj_)` |procedure |<<exceptions:s41,375>>
+|`(i/o-read-error? _obj_)` |procedure |<<exceptions:s33,372>>
+|`(i/o-write-error? _obj_)` |procedure |<<exceptions:s34,372>>
+|`(identifier-syntax _tmpl_)` |syntax |<<syntax:s27,297>>
+|`(identifier-syntax (_id~1~_ _tmpl~1~_) \((set! _id~2~_ _e~2~_) _tmpl~2~_))` |syntax |<<syntax:s27,297>>
+|`(identifier? _obj_)` |procedure |<<syntax:s35,301>>
+|`(if _test_ _consequent_ _alternative_)` |syntax |<<control:s8,109>>
+|`(if _test_ _consequent_)` |syntax |<<control:s8,109>>
+|`(imag-part _num_)` |procedure |<<objects:s121,182>>
+|`immutable` |syntax |<<records:s16,331>>
+|`(implementation-restriction-violation? _obj_)` |procedure |<<exceptions:s28,369>>
+|`(inexact _num_)` |procedure |<<objects:s112,180>>
+|`(inexact\->exact _num_)` |procedure |<<objects:s116,181>>
+|`(inexact? _num_)` |procedure |<<objects:s87,170>>
+|`(infinite? _real_)` |procedure |<<objects:s97,174>>
+|`(input-port? _obj_)` |procedure |<<io:s44,270>>
+|`(integer\->char _n_)` |procedure |<<objects:s211,215>>
+|`(integer-valued? _obj_)` |procedure |<<objects:s18,153>>
+|`(integer? _obj_)` |procedure |<<objects:s17,151>>
+|`(irritants-condition? _obj_)` |procedure |<<exceptions:s25,368>>
+|`(lambda _formals_ _body~1~_ _body~2~_ \...)` |syntax |<<binding:s3,92>>
+|`(latin-1-codec)` |procedure |<<io:s22,259>>
+|`(lcm _int_ \...)` |procedure |<<objects:s110,179>>
+|`(least-fixnum)` |procedure |<<objects:s151,193>>
+|`(length _list_)` |procedure |<<objects:s46,159>>
+|`(let ((_var_ _expr_) \...) _body~1~_ _body~2~_ \...)` |syntax |<<binding:s16,95>>
+|`(let _name_ ((_var_ _expr_) \...) _body~1~_ _body~2~_ \...)` |syntax |<<control:s20,114>>
+|`(let* ((_var_ _expr_) \...) _body~1~_ _body~2~_ \...)` |syntax |<<binding:s18,96>>
+|`(let*-values ((_formals_ _expr_) \...) _body~1~_ _body~2~_ \...)` |syntax |<<binding:s23,99>>
+|`(let-syntax ((_keyword_ _expr_) \...) _form~1~_ _form~2~_ \...)` |syntax |<<syntax:s13,293>>
+|`(let-values ((_formals_ _expr_) \...) _body~1~_ _body~2~_ \...)` |syntax |<<binding:s23,99>>
+|`(letrec ((_var_ _expr_) \...) _body~1~_ _body~2~_ \...)` |syntax |<<binding:s20,97>>
+|`(letrec* ((_var_ _expr_) \...) _body~1~_ _body~2~_ \...)` |syntax |<<binding:s22,98>>
+|`(letrec-syntax ((_keyword_ _expr_) \...) _form~1~_ _form~2~_ \...)` |syntax |<<syntax:s13,293>>
+|`(lexical-violation? _obj_)` |procedure |<<exceptions:s29,370>>
+|`(list _obj_ \...)` |procedure |<<objects:s43,158>>
+|`(list\->string _list_)` |procedure |<<objects:s229,223>>
+|`(list\->vector _list_)` |procedure |<<objects:s238,226>>
+|`(list-ref _list_ _n_)` |procedure |<<objects:s47,159>>
+|`(list-sort _predicate_ _list_)` |procedure |<<objects:s62,167>>
+|`(list-tail _list_ _n_)` |procedure |<<objects:s48,160>>
+|`(list? _obj_)` |procedure |<<objects:s45,158>>
+|`(log _num_)` |procedure |<<objects:s130,184>>
+|`(log _num~1~_ _num~2~_)` |procedure |<<objects:s130,184>>
+|`(lookahead-char _textual-input-port_)` |procedure |<<io:s62,275>>
+|`(lookahead-u8 _binary-input-port_)` |procedure |<<io:s56,274>>
+|`(magnitude _num_)` |procedure |<<objects:s125,183>>
+|`(make-assertion-violation)` |procedure |<<exceptions:s21,366>>
+|`(make-bytevector _n_)` |procedure |<<objects:s242,228>>
+|`(make-bytevector _n_ _fill_)` |procedure |<<objects:s242,228>>
+|`(make-custom-binary-input-port _id_ _r!_ _gp_ _sp!_ _close_)` |procedure |<<io:s41,267>>
+|`(make-custom-binary-input/output-port _id_ _r!_ _w!_ _gp_ _sp!_ _close_)` |procedure |<<io:s41,267>>
+|`(make-custom-binary-output-port _id_ _w!_ _gp_ _sp!_ _close_)` |procedure |<<io:s41,267>>
+|`(make-custom-textual-input-port _id_ _r!_ _gp_ _sp!_ _close_)` |procedure |<<io:s42,268>>
+|`(make-custom-textual-input/output-port _id_ _r!_ _w!_ _gp_ _sp!_ _close_)` |procedure |<<io:s42,268>>
+|`(make-custom-textual-output-port _id_ _w!_ _gp_ _sp!_ _close_)` |procedure |<<io:s42,268>>
+|`(make-enumeration _symbol-list_)` |procedure |<<objects:s291,251>>
+|`(make-eq-hashtable)` |procedure |<<objects:s274,243>>
+|`(make-eq-hashtable _size_)` |procedure |<<objects:s274,243>>
+|`(make-eqv-hashtable)` |procedure |<<objects:s275,244>>
+|`(make-eqv-hashtable _size_)` |procedure |<<objects:s275,244>>
+|`(make-error)` |procedure |<<exceptions:s22,367>>
+|`(make-hashtable _hash_ _equiv?_)` |procedure |<<objects:s276,244>>
+|`(make-hashtable _hash_ _equiv?_ _size_)` |procedure |<<objects:s276,244>>
+|`(make-i/o-decoding-error _pobj_)` |procedure |<<exceptions:s42,375>>
+|`(make-i/o-encoding-error _pobj_ _cobj_)` |procedure |<<exceptions:s43,376>>
+|`(make-i/o-error)` |procedure |<<exceptions:s32,371>>
+|`(make-i/o-file-already-exists-error _filename_)` |procedure |<<exceptions:s39,374>>
+|`(make-i/o-file-does-not-exist-error _filename_)` |procedure |<<exceptions:s40,374>>
+|`(make-i/o-file-is-read-only-error _filename_)` |procedure |<<exceptions:s38,374>>
+|`(make-i/o-file-protection-error _filename_)` |procedure |<<exceptions:s37,373>>
+|`(make-i/o-filename-error _filename_)` |procedure |<<exceptions:s36,373>>
+|`(make-i/o-invalid-position-error _position_)` |procedure |<<exceptions:s35,372>>
+|`(make-i/o-port-error _pobj_)` |procedure |<<exceptions:s41,375>>
+|`(make-i/o-read-error)` |procedure |<<exceptions:s33,372>>
+|`(make-i/o-write-error)` |procedure |<<exceptions:s34,372>>
+|`(make-implementation-restriction-violation)` |procedure |<<exceptions:s28,369>>
+|`(make-irritants-condition _irritants_)` |procedure |<<exceptions:s25,368>>
+|`(make-lexical-violation)` |procedure |<<exceptions:s29,370>>
+|`(make-message-condition _message_)` |procedure |<<exceptions:s24,368>>
+|`(make-no-infinities-violation)` |procedure |<<exceptions:s44,376>>
+|`(make-no-nans-violation)` |procedure |<<exceptions:s45,377>>
+|`(make-non-continuable-violation)` |procedure |<<exceptions:s27,369>>
+|`(make-polar _real~1~_ _real~2~_)` |procedure |<<objects:s123,183>>
+|`(make-record-constructor-descriptor _rtd_ _parent-rcd_ _protocol_)` |procedure |<<records:s24,332>>
+|`(make-record-type-descriptor _name_ _parent_ _uid_ _s?_ _o?_ _fields_)` |procedure |<<records:s20,331>>
+|`(make-rectangular _real~1~_ _real~2~_)` |procedure |<<objects:s122,182>>
+|`(make-serious-condition)` |procedure |<<exceptions:s19,366>>
+|`(make-string _n_)` |procedure |<<objects:s218,218>>
+|`(make-string _n_ _char_)` |procedure |<<objects:s218,218>>
+|`(make-syntax-violation _form_ _subform_)` |procedure |<<exceptions:s30,370>>
+|`(make-transcoder _codec_)` |procedure |<<io:s19,259>>
+|`(make-transcoder _codec_ _eol-style_)` |procedure |<<io:s19,259>>
+|`(make-transcoder _codec_ _eol-style_ _error-handling-mode_)` |procedure |<<io:s19,259>>
+|`(make-undefined-violation)` |procedure |<<exceptions:s31,371>>
+|`(make-variable-transformer _procedure_)` |procedure |<<syntax:s42,306>>
+|`(make-vector _n_)` |procedure |<<objects:s232,224>>
+|`(make-vector _n_ _obj_)` |procedure |<<objects:s232,224>>
+|`(make-violation)` |procedure |<<exceptions:s20,366>>
+|`(make-warning)` |procedure |<<exceptions:s23,367>>
+|`(make-who-condition _who_)` |procedure |<<exceptions:s26,369>>
+|`(map _procedure_ _list~1~_ _list~2~_ \...)` |procedure |<<control:s30,117>>
+|`(max _real~1~_ _real~2~_ \...)` |procedure |<<objects:s107,178>>
+|`(member _obj_ _list_)` |procedure |<<objects:s51,161>>
+|`(memp _procedure_ _list_)` |procedure |<<objects:s52,163>>
+|`(memq _obj_ _list_)` |procedure |<<objects:s51,161>>
+|`(memv _obj_ _list_)` |procedure |<<objects:s51,161>>
+|`(message-condition? _obj_)` |procedure |<<exceptions:s24,368>>
+|`(min _real~1~_ _real~2~_ \...)` |procedure |<<objects:s108,178>>
+|`(mod _x~1~_ _x~2~_)` |procedure |<<objects:s99,175>>
+|`(mod0 _x~1~_ _x~2~_)` |procedure |<<objects:s100,176>>
+|`(modulo _int~1~_ _int~2~_)` |procedure |<<objects:s98,175>>
+|`mutable` |syntax |<<records:s16,331>>
+|`(nan? _real_)` |procedure |<<objects:s97,174>>
+|`(native-endianness)` |procedure |<<objects:s241,228>>
+|`(native-eol-style)` |procedure |<<io:s24,260>>
+|`(native-transcoder)` |procedure |<<io:s21,259>>
+|`(negative? _real_)` |procedure |<<objects:s95,173>>
+|`(newline)` |procedure |<<io:s87,285>>
+|`(newline _textual-output-port_)` |procedure |<<io:s87,285>>
+|`(no-infinities-violation? _obj_)` |procedure |<<exceptions:s44,376>>
+|`(no-nans-violation? _obj_)` |procedure |<<exceptions:s45,377>>
+|`(non-continuable-violation? _obj_)` |procedure |<<exceptions:s27,369>>
+|`nongenerative` |syntax |<<records:s16,331>>
+|`(not _obj_)` |procedure |<<control:s10,110>>
+|`(null-environment _version_)` |procedure |<<control:s82,137>>
+|`(null? _obj_)` |procedure |<<objects:s15,151>>
+|`(number\->string _num_)` |procedure |<<objects:s148,191>>
+|`(number\->string _num_ _radix_)` |procedure |<<objects:s148,191>>
+|`(number\->string _num_ _radix_ _precision_)` |procedure |<<objects:s148,191>>
+|`(number? _obj_)` |procedure |<<objects:s17,151>>
+|`(numerator _rat_)` |procedure |<<objects:s118,181>>
+|`(odd? _int_)` |procedure |<<objects:s96,174>>
+|`opaque` |syntax |<<records:s16,331>>
+|`(open-bytevector-input-port _bytevector_)` |procedure |<<io:s34,264>>
+|`(open-bytevector-input-port _bytevector_ _?transcoder_)` |procedure |<<io:s34,264>>
+|`(open-bytevector-output-port)` |procedure |<<io:s36,265>>
+|`(open-bytevector-output-port _?transcoder_)` |procedure |<<io:s36,265>>
+|`(open-file-input-port _path_)` |procedure |<<io:s29,262>>
+|`(open-file-input-port _path_ _options_)` |procedure |<<io:s29,262>>
+|`(open-file-input-port _path_ _options_ _b-mode_)` |procedure |<<io:s29,262>>
+|`(open-file-input-port _path_ _options_ _b-mode_ _?transcoder_)` |procedure |<<io:s29,262>>
+|`(open-file-input/output-port _path_)` |procedure |<<io:s31,263>>
+|`(open-file-input/output-port _path_ _options_)` |procedure |<<io:s31,263>>
+|`(open-file-input/output-port _path_ _options_ _b-mode_)` |procedure |<<io:s31,263>>
+|`(open-file-input/output-port _path_ _options_ _b-mode_ _?transcoder_)` |procedure |<<io:s31,263>>
+|`(open-file-output-port _path_)` |procedure |<<io:s30,262>>
+|`(open-file-output-port _path_ _options_)` |procedure |<<io:s30,262>>
+|`(open-file-output-port _path_ _options_ _b-mode_)` |procedure |<<io:s30,262>>
+|`(open-file-output-port _path_ _options_ _b-mode_ _?transcoder_)` |procedure |<<io:s30,262>>
+|`(open-input-file _path_)` |procedure |<<io:s75,280>>
+|`(open-output-file _path_)` |procedure |<<io:s76,281>>
+|`(open-string-input-port _string_)` |procedure |<<io:s35,265>>
+|`(open-string-output-port)` |procedure |<<io:s37,266>>
+|`(or _expr_ \...)` |syntax |<<control:s12,110>>
+|`(output-port-buffer-mode _port_)` |procedure |<<io:s52,273>>
+|`(output-port? _obj_)` |procedure |<<io:s44,270>>
+|`(pair? _obj_)` |procedure |<<objects:s16,151>>
+|`parent` |syntax |<<records:s16,331>>
+|`parent-rtd` |syntax |<<records:s16,331>>
+|`(partition _procedure_ _list_)` |procedure |<<objects:s56,164>>
+|`(peek-char)` |procedure |<<io:s83,284>>
+|`(peek-char _textual-input-port_)` |procedure |<<io:s83,284>>
+|`(port-eof? _input-port_)` |procedure |<<io:s68,278>>
+|`(port-has-port-position? _port_)` |procedure |<<io:s49,271>>
+|`(port-has-set-port-position!? _port_)` |procedure |<<io:s50,272>>
+|`(port-position _port_)` |procedure |<<io:s49,271>>
+|`(port-transcoder _port_)` |procedure |<<io:s48,271>>
+|`(port? _obj_)` |procedure |<<io:s43,270>>
+|`(positive? _real_)` |procedure |<<objects:s94,173>>
+|`(_expr~0~_ _expr~1~_ \...)` |syntax |<<control:s1,107>>
+|`(procedure? _obj_)` |procedure |<<objects:s23,155>>
+|`protocol` |syntax |<<records:s16,331>>
+|`(put-bytevector _binary-output-port_ _bytevector_)` |procedure |<<io:s70,279>>
+|`(put-bytevector _binary-output-port_ _bytevector_ _start_)` |procedure |<<io:s70,279>>
+|`(put-bytevector _binary-output-port_ _bytevector_ _start_ _n_)` |procedure |<<io:s70,279>>
+|`(put-char _textual-output-port_ _char_)` |procedure |<<io:s71,279>>
+|`(put-datum _textual-output-port_ _obj_)` |procedure |<<io:s73,279>>
+|`(put-string _textual-output-port_ _string_)` |procedure |<<io:s72,279>>
+|`(put-string _textual-output-port_ _string_ _start_)` |procedure |<<io:s72,279>>
+|`(put-string _textual-output-port_ _string_ _start_ _n_)` |procedure |<<io:s72,279>>
+|`(put-u8 _binary-output-port_ _octet_)` |procedure |<<io:s69,278>>
+|`(quasiquote _obj_ \...)` |syntax |<<objects:s5,142>>
+|`(quasisyntax _template_ \...)` |syntax |<<syntax:s40,305>>
+|`(quote _obj_)` |syntax |<<objects:s2,141>>
+|`(quotient _int~1~_ _int~2~_)` |procedure |<<objects:s98,175>>
+|`(raise _obj_)` |procedure |<<exceptions:s3,357>>
+|`(raise-continuable _obj_)` |procedure |<<exceptions:s3,357>>
+|`(rational-valued? _obj_)` |procedure |<<objects:s18,153>>
+|`(rational? _obj_)` |procedure |<<objects:s17,151>>
+|`(rationalize _real~1~_ _real~2~_)` |procedure |<<objects:s117,181>>
+|`(read)` |procedure |<<io:s81,284>>
+|`(read _textual-input-port_)` |procedure |<<io:s81,284>>
+|`(read-char)` |procedure |<<io:s82,284>>
+|`(read-char _textual-input-port_)` |procedure |<<io:s82,284>>
+|`(real\->flonum _real_)` |procedure |<<objects:s198,211>>
+|`(real-part _num_)` |procedure |<<objects:s120,182>>
+|`(real-valued? _obj_)` |procedure |<<objects:s18,153>>
+|`(real? _obj_)` |procedure |<<objects:s17,151>>
+|`(record-accessor _rtd_ _idx_)` |procedure |<<records:s31,334>>
+|`(record-constructor _rcd_)` |procedure |<<records:s29,333>>
+|`(record-constructor-descriptor _record-name_)` |syntax |<<records:s28,333>>
+|`(record-field-mutable? _rtd_ _idx_)` |procedure |<<records:s39,338>>
+|`(record-mutator _rtd_ _idx_)` |procedure |<<records:s32,334>>
+|`(record-predicate _rtd_)` |procedure |<<records:s30,333>>
+|`(record-rtd _record_)` |procedure |<<records:s41,338>>
+|`(record-type-descriptor _record-name_)` |syntax |<<records:s28,333>>
+|`(record-type-descriptor? _obj_)` |procedure |<<records:s23,332>>
+|`(record-type-field-names _rtd_)` |procedure |<<records:s38,337>>
+|`(record-type-generative? _rtd_)` |procedure |<<records:s37,337>>
+|`(record-type-name _rtd_)` |procedure |<<records:s34,336>>
+|`(record-type-opaque? _rtd_)` |procedure |<<records:s37,337>>
+|`(record-type-parent _rtd_)` |procedure |<<records:s35,336>>
+|`(record-type-sealed? _rtd_)` |procedure |<<records:s37,337>>
+|`(record-type-uid _rtd_)` |procedure |<<records:s36,336>>
+|`(record? _obj_)` |procedure |<<records:s40,338>>
+|`(remainder _int~1~_ _int~2~_)` |procedure |<<objects:s98,175>>
+|`(remove _obj_ _list_)` |procedure |<<objects:s53,163>>
+|`(remp _procedure_ _list_)` |procedure |<<objects:s54,163>>
+|`(remq _obj_ _list_)` |procedure |<<objects:s53,163>>
+|`(remv _obj_ _list_)` |procedure |<<objects:s53,163>>
+|`(reverse _list_)` |procedure |<<objects:s50,161>>
+|`(round _real_)` |procedure |<<objects:s104,178>>
+|`(scheme-report-environment _version_)` |procedure |<<control:s82,137>>
+|`sealed` |syntax |<<records:s16,331>>
+|`(serious-condition? _obj_)` |procedure |<<exceptions:s19,366>>
+|`(set! _var_ _expr_)` |syntax |<<binding:s28,102>>
+|`(set-car! _pair_ _obj_)` |procedure |<<objects:s40,157>>
+|`(set-cdr! _pair_ _obj_)` |procedure |<<objects:s41,157>>
+|`(set-port-position! _port_ _pos_)` |procedure |<<io:s50,272>>
+|`(simple-conditions _condition_)` |procedure |<<exceptions:s16,363>>
+|`(sin _num_)` |procedure |<<objects:s131,185>>
+|`(sint-list\->bytevector _list_ _eness_ _size_)` |procedure |<<objects:s261,239>>
+|`(sqrt _num_)` |procedure |<<objects:s127,183>>
+|`(standard-error-port)` |procedure |<<io:s33,264>>
+|`(standard-input-port)` |procedure |<<io:s33,264>>
+|`(standard-output-port)` |procedure |<<io:s33,264>>
+|`(string _char_ \...)` |procedure |<<objects:s217,218>>
+|`(string\->bytevector _string_ _transcoder_)` |procedure |<<io:s92,287>>
+|`(string\->list _string_)` |procedure |<<objects:s228,222>>
+|`(string\->number _string_)` |procedure |<<objects:s147,191>>
+|`(string\->number _string_ _radix_)` |procedure |<<objects:s147,191>>
+|`(string\->symbol _string_)` |procedure |<<objects:s269,242>>
+|`(string\->utf16 _string_)` |procedure |<<io:s94,287>>
+|`(string\->utf16 _string_ _endianness_)` |procedure |<<io:s94,287>>
+|`(string\->utf32 _string_)` |procedure |<<io:s94,287>>
+|`(string\->utf32 _string_ _endianness_)` |procedure |<<io:s94,287>>
+|`(string\->utf8 _string_)` |procedure |<<io:s93,287>>
+|`(string-append _string_ \...)` |procedure |<<objects:s223,219>>
+|`(string-ci-hash _string_)` |procedure |<<objects:s279,245>>
+|`(string-ci\<=? _string~1~_ _string~2~_ _string~3~_ \...)` |procedure |<<objects:s216,217>>
+|`(string-ci<? _string~1~_ _string~2~_ _string~3~_ \...)` |procedure |<<objects:s216,217>>
+|`(string-ci=? _string~1~_ _string~2~_ _string~3~_ \...)` |procedure |<<objects:s216,217>>
+|`(string-ci>=? _string~1~_ _string~2~_ _string~3~_ \...)` |procedure |<<objects:s216,217>>
+|`(string-ci>? _string~1~_ _string~2~_ _string~3~_ \...)` |procedure |<<objects:s216,217>>
+|`(string-copy _string_)` |procedure |<<objects:s222,219>>
+|`(string-downcase _string_)` |procedure |<<objects:s226,221>>
+|`(string-fill! _string_ _char_)` |procedure |<<objects:s225,220>>
+|`(string-foldcase _string_)` |procedure |<<objects:s226,221>>
+|`(string-for-each _procedure_ _string~1~_ _string~2~_ \...)` |procedure |<<control:s50,122>>
+|`(string-hash _string_)` |procedure |<<objects:s279,245>>
+|`(string-length _string_)` |procedure |<<objects:s219,218>>
+|`(string-normalize-nfc _string_)` |procedure |<<objects:s227,222>>
+|`(string-normalize-nfd _string_)` |procedure |<<objects:s227,222>>
+|`(string-normalize-nfkc _string_)` |procedure |<<objects:s227,222>>
+|`(string-normalize-nfkd _string_)` |procedure |<<objects:s227,222>>
+|`(string-ref _string_ _n_)` |procedure |<<objects:s220,218>>
+|`(string-set! _string_ _n_ _char_)` |procedure |<<objects:s221,219>>
+|`(string-titlecase _string_)` |procedure |<<objects:s226,221>>
+|`(string-upcase _string_)` |procedure |<<objects:s226,221>>
+|`(string\<=? _string~1~_ _string~2~_ _string~3~_ \...)` |procedure |<<objects:s215,216>>
+|`(string<? _string~1~_ _string~2~_ _string~3~_ \...)` |procedure |<<objects:s215,216>>
+|`(string=? _string~1~_ _string~2~_ _string~3~_ \...)` |procedure |<<objects:s215,216>>
+|`(string>=? _string~1~_ _string~2~_ _string~3~_ \...)` |procedure |<<objects:s215,216>>
+|`(string>? _string~1~_ _string~2~_ _string~3~_ \...)` |procedure |<<objects:s215,216>>
+|`(string? _obj_)` |procedure |<<objects:s20,154>>
+|`(substring _string_ _start_ _end_)` |procedure |<<objects:s224,220>>
+|`(symbol\->string _symbol_)` |procedure |<<objects:s270,242>>
+|`(symbol-hash _symbol_)` |procedure |<<objects:s279,245>>
+|`(symbol=? _symbol~1~_ _symbol~2~_)` |procedure |<<objects:s268,242>>
+|`(symbol? _obj_)` |procedure |<<objects:s22,154>>
+|`(syntax _template_)` |syntax |<<syntax:s33,300>>
+|`(syntax\->datum _obj_)` |procedure |<<syntax:s44,308>>
+|`(syntax-case _expr_ (_literal_ \...) _clause_ \...)` |syntax |<<syntax:s30,299>>
+|`(syntax-rules (_literal_ \...) _clause_ \...)` |syntax |<<syntax:s14,294>>
+|`(syntax-violation _who_ _msg_ _form_)` |procedure |<<exceptions:s6,359>>
+|`(syntax-violation _who_ _msg_ _form_ _subform_)` |procedure |<<exceptions:s6,359>>
+|`(syntax-violation-form _condition_)` |procedure |<<exceptions:s30,370>>
+|`(syntax-violation-subform _condition_)` |procedure |<<exceptions:s30,370>>
+|`(syntax-violation? _obj_)` |procedure |<<exceptions:s30,370>>
+|`(tan _num_)` |procedure |<<objects:s131,185>>
+|`(textual-port? _obj_)` |procedure |<<io:s45,270>>
+|`(transcoded-port _binary-port_ _transcoder_)` |procedure |<<io:s47,271>>
+|`(transcoder-codec _transcoder_)` |procedure |<<io:s20,259>>
+|`(transcoder-eol-style _transcoder_)` |procedure |<<io:s20,259>>
+|`(transcoder-error-handling-mode _transcoder_)` |procedure |<<io:s20,259>>
+|`(truncate _real_)` |procedure |<<objects:s101,177>>
+|`(u8-list\->bytevector _list_)` |procedure |<<objects:s253,232>>
+|`(uint-list\->bytevector _list_ _eness_ _size_)` |procedure |<<objects:s261,239>>
+|`(undefined-violation? _obj_)` |procedure |<<exceptions:s31,371>>
+|`(unless _test-expr_ _expr~1~_ _expr~2~_ \...)` |syntax |<<control:s17,112>>
+|`(unquote _obj_ \...)` |syntax |<<objects:s5,142>>
+|`(unquote-splicing _obj_ \...)` |syntax |<<objects:s5,142>>
+|`(unsyntax _template_ \...)` |syntax |<<syntax:s40,305>>
+|`(unsyntax-splicing _template_ \...)` |syntax |<<syntax:s40,305>>
+|`(utf-16-codec)` |procedure |<<io:s22,259>>
+|`(utf-8-codec)` |procedure |<<io:s22,259>>
+|`(utf16\->string _bytevector_ _endianness_)` |procedure |<<io:s96,288>>
+|`(utf16\->string _bytevector_ _endianness_ _endianness-mandatory?_)` |procedure |<<io:s96,288>>
+|`(utf32\->string _bytevector_ _endianness_)` |procedure |<<io:s96,288>>
+|`(utf32\->string _bytevector_ _endianness_ _endianness-mandatory?_)` |procedure |<<io:s96,288>>
+|`(utf8\->string _bytevector_)` |procedure |<<io:s95,287>>
+|`(values _obj_ \...)` |procedure |<<control:s70,131>>
+|`_variable_` |syntax |<<binding:s2,91>>
+|`(vector _obj_ \...)` |procedure |<<objects:s231,224>>
+|`(vector\->list _vector_)` |procedure |<<objects:s237,225>>
+|`(vector-fill! _vector_ _obj_)` |procedure |<<objects:s236,225>>
+|`(vector-for-each _procedure_ _vector~1~_ _vector~2~_ \...)` |procedure |<<control:s47,122>>
+|`(vector-length _vector_)` |procedure |<<objects:s233,224>>
+|`(vector-map _procedure_ _vector~1~_ _vector~1~_ \...)` |procedure |<<control:s44,121>>
+|`(vector-ref _vector_ _n_)` |procedure |<<objects:s234,224>>
+|`(vector-set! _vector_ _n_ _obj_)` |procedure |<<objects:s235,225>>
+|`(vector-sort _predicate_ _vector_)` |procedure |<<objects:s239,226>>
+|`(vector-sort! _predicate_ _vector_)` |procedure |<<objects:s239,226>>
+|`(vector? _obj_)` |procedure |<<objects:s21,154>>
+|`(violation? _obj_)` |procedure |<<exceptions:s20,366>>
+|`(warning? _obj_)` |procedure |<<exceptions:s23,367>>
+|`(when _test-expr_ _expr~1~_ _expr~2~_ \...)` |syntax |<<control:s17,112>>
+|`(who-condition? _obj_)` |procedure |<<exceptions:s26,369>>
+|`(with-exception-handler _procedure_ _thunk_)` |procedure |<<exceptions:s7,360>>
+|`(with-input-from-file _path_ _thunk_)` |procedure |<<io:s79,283>>
+|`(with-output-to-file _path_ _thunk_)` |procedure |<<io:s80,283>>
+|`(with-syntax ((_pattern_ _expr_) \...) _body~1~_ _body~2~_ \...)` |syntax |<<syntax:s38,304>>
+|`(write _obj_)` |procedure |<<io:s84,284>>
+|`(write _obj_ _textual-output-port_)` |procedure |<<io:s84,284>>
+|`(write-char _char_)` |procedure |<<io:s86,285>>
+|`(write-char _char_ _textual-output-port_)` |procedure |<<io:s86,285>>
+|`(zero? _num_)` |procedure |<<objects:s93,173>>
+
+|===
