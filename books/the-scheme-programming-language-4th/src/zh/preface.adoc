@@ -25,7 +25,7 @@ such as C and Fortran.
 
 Scheme 是由 Gerald J. Sussman 和 Guy L. Steele Jr. 于 1975 年提出的（<<ref28>>、<<ref29>>），
 是首个完全支持 _词法作用域_（Lexical Scoping）、_处理过程优先_（First-class Procedure）
-和 _延续计算_（Continuation）的 Lisp 方言。
+和 _延续_（Continuation）的 Lisp 方言。
 在最早的版本中，它只是一门小型语言，主要用于研究和教学，仅支持少数预定义的 _语法形式_ 和 _处理过程_。
 虽然它的强大之处仍然源自于一小部分关键概念，但 Scheme 现在已经是一门完全通用的编程语言了。
 该语言的早期实现是基于解释器的，运行缓慢，而如今的一些 Scheme 实现拥有复杂巧妙的编译器，
@@ -34,8 +34,10 @@ Scheme 是由 Gerald J. Sussman 和 Guy L. Steele Jr. 于 1975 年提出的（<<
 [TIP]
 .译注
 ====
-可以从文章 link:https://zhuanlan.zhihu.com/p/34064549[柯里化的前生今世（七）：first-class continuation]
-中初步了解 处理过程优先、延续计算 等概念。
+可以从文章
+link:https://zhuanlan.zhihu.com/p/34064549[柯里化的前生今世（七）：first-class continuation]、
+link:https://zhuanlan.zhihu.com/p/180473795[Scheme 的 call/cc]
+中初步了解 处理过程优先、延续 等概念。
 ====
 
 This book is intended to
@@ -69,21 +71,23 @@ is the "Revised^6^ Report on the Algorithmic Language Scheme" <<ref24>>,
 which was completed in 2007.
 
 Scheme 已经被正式和非正式地标准化了。
-_《Scheme 编程语言 IEEE 标准》_<<ref18>> 描述了一个正式的 ANSI/IEEE Scheme 标准，但得追溯到1991年。
-相关系列的报告《算法语言 Scheme 修订报告》记录了大多数实现所支持的不断演进的非正式标准。
+_《Scheme 编程语言 IEEE 标准》_<<ref18>> 描述了一个正式的 Scheme ANSI/IEEE 标准，但得追溯到1991年。
+相关系列的报告--《算法语言 Scheme 修订报告》记录了大多数实现所支持的不断演进的非正式标准。
 本系列的最新报告是《算法语言 Scheme 修订报告^6^》<<ref24>> ，于2007年完成。
 
 This book covers the language of the Revised^6^ Report.
 It is not intended to supplant the Revised^6^ Report
 but rather to
-provide a more comprehensive introduction and reference manual for the language,
+provide a more comprehensive introduction
+and reference manual for the language,
 with more explanatory text and examples,
 suitable more for users than for implementors.
-Features specific to particular implementations of Scheme
-are not included.
-In particular, features specific to the author's Chez Scheme and Petite Chez Scheme implementations
+Features specific to particular implementations of Scheme are not included.
+In particular,
+features specific to the author's Chez Scheme and Petite Chez Scheme implementations
 are described separately in the _Chez Scheme User's Guide_ <<ref9>>.
-On the other hand, no book on Scheme would be complete
+On the other hand,
+no book on Scheme would be complete
 without some coverage of the interactive top level,
 since nearly every Scheme system
 supports interactive use in one form or another,
@@ -91,26 +95,26 @@ even though the behavior is not standardized by the Revised^6^ Report.
 Chapters <<chp_2,2>> and <<chp_3,3>> are thus written
 assuming that the reader has available a Scheme implementation
 that supports an interactive top level,
-with behavior consistent with
-the description of the top-level environment
+with behavior
+consistent with the description of the top-level environment
 in earlier reports and the IEEE/ANSI standard.
 
-本书涵盖了《修订报告^6^》的语言。但它并不是要取代《修订报告^6^》，而是通过更多的说明性文字和示例，
-为该语言提供更全面的介绍，并作为参考手册使用。所以，比起实现者，本书更适合该语言的使用者。
-特定于 Scheme 实现的特性不包含在本书内，特别是那些针对作者的 Chez Scheme 和 Petite Chez Scheme 实现的特性，
-则会在《Chez Scheme 用户指南》<<ref9>>
+本书涵盖了《修订报告^6^》的内容，但它并不是要取代《修订报告^6^》，而是通过更多的说明性文字和示例，
+为该语言提供更全面的介绍，并作为参考手册使用。所以，比起语言实现者，本书更适合该语言的使用者。
+针对 Scheme 实现的特定的特性，不包含在本书内，特别是针对作者的 Chez Scheme 和 Petite Chez Scheme 的实现的那些特性，
+它们会在《Chez Scheme 用户指南》<<ref9>>
 （译注：该书第九版译作在 link:../../chez-scheme-version-9-user-guide/zh/index.html[这里]）中单独描述。
-另外，若是没有涵盖 _交互式顶层_，那么，任何关于 Scheme 的书都是不完整的，因为，即使《修订报告^6^》没有对交互行为进行标准化，
+另外，若没有包含对 _交互顶层_ 的介绍，那么，任何关于 Scheme 的书都是不完整的，因为，即使《修订报告^6^》没有对交互方式进行标准化，
 但几乎每个 Scheme 系统都会以这种或那种形式支持交互操作。
-因此，在撰写 <<chp_2,第二>> 和 <<chp_3,第三>> 章时，便假定读者已经拥有一个支持 _交互式顶层_ 的 Scheme 实现，
-并且其行为与早期报告和 IEEE/ANSI 标准中对 _顶层环境_ 的描述一致。
+因此，在撰写 <<chp_2,第二>> 和 <<chp_3,第三>> 章时，便假定读者已经拥有一个支持 _交互顶层_ 的 Scheme 实现，
+并且其操作方式与在早期报告以及 IEEE/ANSI 标准中对 _顶层环境_ 的描述一致。
 
 A large number of small- to medium-sized examples
 are spread throughout the text,
 and one entire chapter is dedicated to
 the presentation of a set of longer examples.
-Many of the examples
-show how a standard Scheme syntactic form or procedure
+Many of the examples show
+how a standard Scheme syntactic form or procedure
 might be implemented;
 others implement useful extensions.
 All of the examples
@@ -118,7 +122,7 @@ can be entered directly
 from the keyboard into an interactive Scheme session.
 
 本书全文中散布了大量中小型示例，并且一个完整的篇章会专门介绍一组较长的例子。
-许多示例展示了如何实现标准的 Scheme _语法形式_ 和 _处理过程_，以及其他实现的有用扩展。
+许多示例展示了标准的 Scheme _语法形式_ 和 _处理过程_ 是如何实现的，其他的还实现了一些有用的扩展。
 所有示例都可以直接从键盘输入到交互式 Scheme 会话中。
 
 This book is organized into twelve chapters, plus back matter.
@@ -128,12 +132,9 @@ that make it a useful and enjoyable language to use.
 Scheme's notational conventions and the typographical conventions
 employed in this book.
 
-本书加上补充资料，共分为十二章。
-<<chp_1,第一章>> 描述了那些使得 Scheme 成为一门有用且好用的语言的特征和特性。
-<<chp_1,第一章>> 还介绍了本书采用的 Scheme 符号约定和排版约定。
-
-// properties: 特征？
-// features: 特性？
+加上补充资料，本书共分为十二章。
+<<chp_1,第一章>> 描述了让 Scheme 成为一门有用且让人乐于使用的语言的那些特征和特性。
+<<chp_1,第一章>> 还介绍了本书采用的 Scheme 符号注解和排版约定。
 
 <<chp_2,Chapter 2>> is an introduction to Scheme programming
 for the novice Scheme programmer
@@ -154,7 +155,7 @@ and trying the exercises.
 <<chp_2,第二章>> 是针对 Scheme 新手程序员的 Scheme 编程简介，
 它从简单的 Scheme 表达式开始，引导读者接触一系列示例，并逐步深入更难的表达式。
 <<chp_2,第二章>> 的每个章节都会介绍一小部分相关的特性，并在每个章节的末尾安排一组习题，以供进一步练习。
-通过在键盘上输入示例并做习题练习，读者将从 <<chp_2,第二章>> 中获益匪浅。
+通过在键盘上输入这些示例并尝试这些习题，读者将从 <<chp_2,第二章>> 中获益匪浅。
 
 <<chp_3,Chapter 3>> continues the introduction
 but covers more advanced features and concepts.
@@ -162,12 +163,12 @@ Even readers with prior Scheme experience
 may wish to work through the examples and exercises found there.
 
 <<chp_3,第三章>> 会继续介绍 Scheme，但涵盖了更高级的特性和概念。
-即使是先前已经有 Scheme 经验的读者，也可能会希望研究里面的示例和习题。
+即使是先前已经有 Scheme 经验的读者，也会希望去研究里面的示例和习题的。
 
 <<chp_4,Chapter 4>> through <<chp_11,11>> make up the reference portion of the text.
-They present each of Scheme's primitive procedures and syntactic forms in turn,
-grouping them into short sections
-of related procedures and forms.
+They present each of
+Scheme's primitive procedures and syntactic forms in turn,
+grouping them into short sections of related procedures and forms.
 <<chp_4,Chapter 4>> describes operations for creating procedures and variable bindings;
 <<chp_5,Chapter 5>>, program control operations;
 <<chp_6,Chapter 6>>, operations on the various object types (including lists, numbers, and strings);
@@ -177,17 +178,17 @@ of related procedures and forms.
 <<chp_10,Chapter 10>>, libraries and top-level programs;
 and <<chp_11,Chapter 11>>, exceptions and conditions.
 
-第 <<chp_4,四章>> 到 <<chp_11,十一章>> 构成了本文的参考部分。
-他们依次介绍了 Scheme 的每个原始（Primitive）的 _处理过程_ 和 _语法形式_，
-并将它们组织在与处理过程和语法形式相关的较短的章节中。
-<<chp_4,第四章>> 描述的是创建 _处理过程_ 和 _变量绑定_ 的操作；
-<<chp_5,第五章>> 是程序控制操作；
-<<chp_6,第六章>> 是在各种对象类型（包括 _列表_、_数字_、_字符串_）上的操作；
-<<chp_7,第七章>> 是输入和输出的操作；
-<<chp_8,第八章>> 是扩展语法；
-<<chp_9,第九章>> 是 _记录类型_ 的定义；
-<<chp_10,第十章>> 是库和高级程序；
-<<chp_11,第十一章>> 则是异常和条件；
+第 <<chp_4,四章>> 到 <<chp_11,十一章>> 为本书的参考章节。
+他们依次介绍了 Scheme 的每个原始（Primitive） _处理过程_ 和 _语法形式_，
+并将相关联的 _处理过程_ 和 _语法形式_ 组织在较短的章节中。
+<<chp_4,第四章>> - 创建 _处理过程_ 和 _变量绑定_ 的操作；
+<<chp_5,第五章>> - 程序控制操作；
+<<chp_6,第六章>> - 对各种对象类型（包括 _列表_、_数字_、_字符串_）的操作；
+<<chp_7,第七章>> - 输入与输出操作；
+<<chp_8,第八章>> - 扩展语法；
+<<chp_9,第九章>> - _记录类型_ 的定义；
+<<chp_10,第十章>> - 库和高级程序；
+<<chp_11,第十一章>> - 异常和条件。
 
 <<chp_12,Chapter 12>> contains a collection of example procedures, libraries, and programs,
 each with a short overview, some examples of its use,
@@ -197,8 +198,8 @@ Each of these programs demonstrates a particular set of features,
 and together they illustrate an appropriate style for programming in Scheme.
 
 <<chp_12,第十二章>> 包含一组处理过程、库和程序的示例，
-每一个都有一个简短的概述、一些用法示例、简要的实现说明，以及一系列用于进一步展开的习题。
-这些程序中的每一个都演示了一组特定的特性，并一起展示了 Scheme 中一种适合的编程风格。
+每一个示例都有一个简短的概述、一些使用例子、简要的实现说明，以及一系列用于进一步展开的习题。
+每一个程序都演示了一组特定的特性，并一起展示了 Scheme 中一种恰当的编程风格。
 
 Following <<chp_12,Chapter 12>> are
 bibliographical references, answers to selected exercises,
@@ -212,15 +213,16 @@ unsure of the structure of a syntactic form
 or the arguments expected by a primitive procedure.
 The page numbers
 appearing in the summary of forms and procedures
-and the italicized page numbers appearing in the index
+and the italicized page numbers
+appearing in the index
 indicate the locations in the text
 where forms and procedures are defined.
 
-在 <<chp_12,第十二章>> 后面的是参考文献、习题答案、对 Scheme 程序和数据的 _形式化语法_ 的详细描述、
+在 <<chp_12,第十二章>> 后面的是参考文献、习题答案、对 Scheme 程序和数据的正式语法的详细描述、
 对 Scheme _语法形式_ 和 _处理过程_ 的简要总结，以及索引。
-对 _语法形式_ 和 _处理过程_ 的总结，对于不确定 _语法形式_ 的结构或原始 _处理过程_ 所预期的参数的程序员来说，
-是一个有用的开始。在“语法形式和处理过程的总结”中出现的页码，和在“索引”中出现的斜体页码，
-指示了 _语法形式_ 和 _处理过程_ 在本文中所定义的位置。
+对 _语法形式_ 和 _处理过程_ 的总结，对于不确定 _语法形式_ 的结构或原始 _处理过程_ 的期望参数的程序员来说，
+是一个有益的开始。在 <对语法形式和处理过程的总结> 中出现的页码，和在 <索引> 中出现的斜体页码，
+表示 _语法形式_ 和 _处理过程_ 在本书中定义的位置。
 
 Because the reference portion describes
 a number of aspects of the language
@@ -228,21 +230,23 @@ not covered by the introductory chapters
 along with a number of interesting short examples,
 most readers will find it profitable
 to read through most of the material
-to become familiar
-with each feature and how it relates to other features.
+to become familiar with
+each feature and how it relates to other features.
 <<chp_6,Chapter 6>> is lengthy, however, and may be skimmed and later referenced as needed.
 
-因为，参考部分描述了入门章节未涵盖的语言的许多方面以及一些有趣的简短示例，
-所以，大多数读者会发现通读大多数材料以熟悉每个特性及其与其他特性之间的关系是有好处的。
+通过一些有趣的简短示例，参考章节描述了在入门章节中未涵盖到的该语言的许多方面，
+因此，大多数读者会发现，通读大部分材料以熟悉每个特性及其与其他特性之间的联系，将会获益良多。
 但是，<<chp_6,第六章>> 的篇幅很长，可以略读一下，以后再根据需要查阅。
 
 An online version of this book is available at http://www.scheme.com/tspl/.
-The summary of forms and index in the online edition
+The summary of forms
+and index
+in the online edition
 include page numbers for the printed version
 and are thus useful as searchable indexes.
 
 本书的在线版本可从 http://www.scheme.com/tspl/ 获得。
-在线版本中的形式和索引摘要包含印刷版的页码，因此可用作可查询的索引使用。
+在线版本的 <语法形式总结> 和 <索引> 章节中包含印刷版的页码，因此可作为可查询的索引使用。
 
 _About the illustrations_:
 The cover illustration and
@@ -265,13 +269,13 @@ Masks introduce holes in some layers.
 For the cover illustration, the grids are colored in different hues.
 
 _关于插图_ :
-封面插图和每章开头的插图是艺术家 Jean-Pierre Hébert 受 John Cage 的著作启发而创建的算法线场。
-每条线场都是由任意数量的平行线网格组成的。网格是规则的，但线场不是。
-例如，线条的长度不规则，这会产生参差不齐的边缘。
-它们的色调和宽度略有不同。它们不是完全等距的。
-它们以一定角度彼此相交。当该角度小时，会产生干涉图样。
-这些线条首先浸入各种标量场，这些标量场会扰乱其原始的笔直形状，然后投射到纸张平面上。
-遮罩会在某些层中引入空洞。对于封面插图，网格以不同的颜色着色。
+封面插画和每章开头的插图是艺术家 Jean-Pierre Hébert 受 John Cage 的著作启发而创建的算法 _线场_。
+每个线场都是由任意数量的平行线网格组成的。网格是规则的，但线场不是。
+比如，线条的长度不规则，会出现参差不齐的边缘；
+它们的色调和宽度略有不同；它们不是完全等距的；
+它们以一定角度彼此相交，当该角度较小时，会产生干涉图案。
+这些线条首先浸入各种标量场以扰乱其原始的笔直形状，然后投射到纸面上，
+遮罩则会在层中造成空洞。在封面插画中，网格是以不同的颜色着色的。
 
 All the images are created by a single Scheme program
 that makes most of the decisions, based heavily on chance.
@@ -283,10 +287,10 @@ so that the results are at the same time surprising, interesting,
 and in line with the artist's sense of aesthetics.
 This is a game of uncertainty, chaos, and harmony.
 
-所有图像都是由单个 Scheme 程序创建的，该程序在很大程度上基于偶然性来做出大多数决策。
-艺术家仅控制画布的大小、宽高比、整体色彩以及偶然性和模糊性的水平。
-艺术家的任务是在适当的地方引入足够的偶然性，以使结果同时令人惊讶、有趣并符合艺术家的审美观。
-这是一个充满不确定性的、混乱的且和谐的游戏。
+所有图像都是由单个 Scheme 程序创建的，该程序在很大程度上是基于偶然性来做出大多数决策的。
+艺术家仅需控制画布的大小、宽高比、整体色彩以及偶然性和模糊性的程度。
+艺术家的任务则是在适当的地方引入足够的偶然性，以使结果能够同时让人感到惊奇、有趣且又符合艺术家的审美观。
+这是一个充满不确定性的、混乱的、和谐的游戏。
 
 _Acknowledgments_:
 Many individuals contributed in one way or another
@@ -311,13 +315,13 @@ and lent her expertise and assistance
 to the production and publication of this and the previous editions.
 
 _致谢_ :
-许多人以一种或另一种方式为本书的一个或多个版本的编写做出了贡献，包括
+许多人以这种或那种方式为本书的一个或多个版本的准备工作做出了贡献，包括
 Bruce Smith、Eugene Kohlbecker、Matthias Felleisen、Dan Friedman、Bruce Duba、Phil Dybvig、
 Guy Steele、Bob Hieb、Chris Haynes、Dave Plaisted、Joan Curry、Frank Silbermann、Pavel Curtis、
 John Wait、Carl Bruggeman、Sam Daniel、Oscar Waddell、Mike Ashley、John LaLonde、John Zuckerman、
 John Simmons、Bob Prior、Bob Burger 和 Aziz Ghuloum。
-许多其他人提出了一些小的更正和建议。
+许多其他人也提出了一些小的更正和建议。
 Oscar Waddell 帮助创建了用于对本书的印刷版和在线版进行格式化的排版系统。
-本书改编了《修订报告^6^》中的少量文本和一些示例，该报告的编辑和许多对此做出贡献的人都对此表示赞赏。
-最后也是最重要的一点是，是我的妻子 Susan Dybvig 建议我首先写这本书，
-并借用她的专业知识和帮助来制作和发行了此版本以及以前的版本。
+本书改编了《修订报告^6^》中的少量内容和一些示例，该报告的编辑者们和许多对其做出过贡献的人都对此表示赞赏。
+最后也是最重要的一点，是我的妻子 Susan Dybvig 建议我先写这本书，
+并借用她的专业技能和协助来完成了该版本及其先前版本的制作和发行。
