@@ -27,7 +27,7 @@ Scheme is a challenging language to understand fully, however;
 developing the ability to use its full potential
 requires careful study and practice.
 
-Scheme是一门通用的计算机编程语言。
+Scheme 是一门通用的计算机编程语言。
 它是一门高级语言，支持对字符串、列表和向量等结构化数据的操作，
 也支持对数字和字符等更为传统的数据的操作。
 虽然 Scheme 经常被等同于符号化应用程序，但它丰富的数据类型和灵活的控制结构使得它成为了一门真正通用的语言。
