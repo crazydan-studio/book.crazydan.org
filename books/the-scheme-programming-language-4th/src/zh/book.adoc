@@ -1,6 +1,6 @@
 = Scheme 编程语言（第四版）
 R\. Kent Dybvig
-插画作者 Jean-Pierre Hébert
+插画 Jean-Pierre Hébert
 :author: R. Kent Dybvig
 :doctype: book
 :toc: left
